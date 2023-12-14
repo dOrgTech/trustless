@@ -62,7 +62,7 @@ class Footer extends StatelessWidget {
                         children: [
                     Image.asset(
                                    'trustless_dark.png',
-                                  height: 80,
+                                  height: 60,
                                    // color: Colors.red,
                              ),
                           SizedBox(width: 8),
@@ -131,8 +131,6 @@ class Footer extends StatelessWidget {
                   ),
                     ],
                   ),
-                 
-                
                  
                 ],
               ),

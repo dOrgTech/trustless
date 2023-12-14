@@ -1,47 +1,11 @@
 import "package:flutter/material.dart";
 
 import "../entities/project.dart";
+import "../main.dart";
 import "../widgets/footer.dart";
 import "../widgets/hovermenu.dart";
 import "../widgets/projectCard.dart";
-List<Project> projects=[
-  Project(
-   name: "Sample project" ,arbiter: "tz1T5kk65F9oZw2z1YV4osfcrX7eD5KtLj3c",
-   description: "If you miss an appointment to voluntarily turn yourself in, they don't usually ask twice so it would be wise to arrive in a timely fashion on this one.",
-   client: "tz1QE8c3H5BG7HGHk2CPs41tffkhLGd14hyu",
-   terms: "",
-   requirements:"",
-   status:"Open"
-  ),
-  Project(
-   name: "Engagement with another DAO" ,arbiter: "tz1T5kk65F9oZw2z1YV4osfcrX7eD5KtLj3c",
-   description: "This is the description of the Project. Doesn't need to be super long cause we also link the Terms (on the right) and that should contain all...",
-   client: "tz1QE8c3H5BG7HGHk2CPs41tffkhLGd14hyu",
-   terms: "https://ipfs.io/sdj1wqsa0se0a9fjq2f3fsa1w99jsq",
-   status:"Ongoing"
-  ),
-  Project(
-   name: "Sample project" ,arbiter: "tz1T5kk65F9oZw2z1YV4osfcrX7eD5KtLj3c",
-   description: "If you miss an appointment to voluntarily turn yourself in, they don't usually ask twice so it would be wise to arrive in a timely fashion on this one.",
-   client: "tz1QE8c3H5BG7HGHk2CPs41tffkhLGd14hyu",
-   terms: "https://ipfs.io/sdj1wqsa0se0a9fjq2f3fsa1w99jsq",
-   status:"Dispute"
-  ),
-   Project( 
-   name: "Research decentralized inference" ,arbiter: "tz49jro65F9oZw2z1YV4osfcrX7eD5KtAl2e",
-   description: "If you miss an appointment to voluntarily turn yourself in, they don't usually ask twice so it would be wise to arrive in a timely fashion on this one.",
-   client: "tz1QE8c3H5BG7HGHk2CPs41tffkhLGd14hyu",
-   terms: "https://ipfs.io/sdj1wqsa0se0a9fjq2f3fsa1w99jsq",
-   status:"Closed"
-  ),
-   Project( 
-   name: "P2P IRC Protocol" ,arbiter: "tz49jro65F9oZw2z1YV4osfcrX7eD5KtAl2e",
-   description: "If you miss an appointment to voluntarily turn yourself in, they don't usually ask twice so it would be wise to arrive in a timely fashion on this one.",
-   client: "tz1QE8c3H5BG7HGHk2CPs41tffkhLGd14hyu",
-   terms: "https://ipfs.io/sdj1wqsa0se0a9fjq2f3fsa1w99jsq",
-   status:"Pending"
-  ),
-];
+
 List<Widget> projectCards=[];
 String? selectedStatus = 'All';
 String? selectedNewProject="Open to proposals";
@@ -61,7 +25,16 @@ class _ProjectsState extends State<Projects> {
     projectCards=[];
     super.initState();
      for (Project p in projects){
+      print("making a project card from "+p.name!);
       projectCards.add(ProjectCard(project:p));   
+    }
+
+    if (projects.length<4){
+      for (int i=0;i < 5-projects.length;i++){
+        projectCards.add(SizedBox( width: 490,
+          height: 260,));
+      }
+      
     }
   }
   @override
@@ -157,7 +130,7 @@ class _ProjectsState extends State<Projects> {
                       spacing: 14,
                       runSpacing: 14,
                       alignment: WrapAlignment.start,
-                      children: projectCards as List<Widget>,
+                      children: projectCards,
                      ),
                    ), 
                   const SizedBox(height: 64),

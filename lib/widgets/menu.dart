@@ -176,7 +176,11 @@ class _WalletButtonState extends State<WalletButton> {
     if (_isConnecting) {
   return SizedBox(
     width: 180,
-    child: LinearProgressIndicator(),
+    height: 7,
+    child: LinearProgressIndicator(
+      
+      backgroundColor: Colors.black54,
+    ),
   );
 }
 

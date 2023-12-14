@@ -5,20 +5,41 @@ import 'package:provider/provider.dart';
 import 'package:trustless/screens/projects.dart';
 import 'package:trustless/utils/reusable.dart';
 import 'package:trustless/widgets/menu.dart';
+import 'entities/project.dart';
 import 'firebase_options.dart';
+
+
+List<Project> projects=[];
 
 var collection = FirebaseFirestore.instance.collection('projects');
     void main() async {
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-      runApp( MyApp());
-      // var querySnapshot = await collection.get();
+    
+      var querySnapshot = await collection.get();
 
   // Iterate through the documents and print their data
-  // for (var doc in querySnapshot.docs) {
-  //   print(doc.data());
-  // }
+  for (var doc in querySnapshot.docs) {
+    print("doc "+doc.data().toString());
+    projects.add(
+      Project(
+       name: doc.data()["name"],
+       creationDate: DateTime.now(),
+       description: doc.data()["description"],
+       client: doc.data()["client"],
+       arbiter: doc.data()["arbiter"],
+       requirements: doc.data()["specs"],
+       terms: doc.data()["specs"],
+       status: doc.data()["status"],
+       
+      )
+    );
+  }
+  print("lungimea la proecte "+projects.length.toString());
+  print("un proiect "+projects[0].toString());
+ 
+    runApp( MyApp());
     }
 
 class MyApp extends StatelessWidget {
@@ -56,6 +77,8 @@ class BaseScaffold extends StatelessWidget {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 38,
+        elevation: 0.8,
         automaticallyImplyLeading: false,
         title: Row(
           children: [
@@ -64,13 +87,13 @@ class BaseScaffold extends StatelessWidget {
             Image.asset(
              "trustless_dark.png"
              ,
-            height: 30,)
+            height: 27,)
             ),SizedBox(width: MediaQuery.of(context).size.width/13),
             TextButton(onPressed: (){}, child: 
             Row(children: [
               Icon(Icons.local_activity),
               SizedBox(width: 8),
-              Text("PROJECTS", style: TextStyle(fontSize: 23),)
+              Text("PROJECTS", style: TextStyle(fontSize: 19),)
             ],)
             ),
             SizedBox(width: 40),
@@ -78,7 +101,7 @@ class BaseScaffold extends StatelessWidget {
             Row(children: [
               Icon(Icons.gavel_sharp),
               SizedBox(width: 8),
-              Text("TRIALS", style: TextStyle(fontSize: 23),)
+              Text("TRIALS", style: TextStyle(fontSize: 19),)
             ],)
             ),  
             SizedBox(width: 40),
@@ -86,7 +109,7 @@ class BaseScaffold extends StatelessWidget {
             Row(children: [
               Icon(Icons.person_search),
               SizedBox(width: 8),
-              Text("ARBITERS", style: TextStyle(fontSize: 23),)
+              Text("ARBITERS", style: TextStyle(fontSize: 19),)
             ],)
             )
           ],

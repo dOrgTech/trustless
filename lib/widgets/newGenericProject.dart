@@ -99,7 +99,6 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                       print("after set state"+projects.length.toString());
                       await projectsCollection.doc(widget.project.contractAddress)
                       .set(widget.project.toJson());
-                      print("after adding doc"+projects.length.toString());
                       await Future.delayed(Duration(milliseconds: 100));
                       Navigator.of(context).pushNamed("/");
                     },

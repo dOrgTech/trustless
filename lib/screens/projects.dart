@@ -6,39 +6,48 @@ import "../widgets/footer.dart";
 import "../widgets/hovermenu.dart";
 import "../widgets/projectCard.dart";
 
-List<Widget> projectCards=[];
-String? selectedStatus = 'All';
+
+
 String? selectedNewProject="Open to proposals";
   final List<String> statuses = ['All', 'Open', 'Ongoing','Dispute',"Pending","Closed"];
   final List<String> projectTypes = ['Open to proposals', 'Set parties','Import project'];
 
+// ignore: must_be_immutable
 class Projects extends StatefulWidget {
-  const Projects({super.key});
-
+  String? selectedStatus = 'All';
+  Projects({super.key});
+  String query="";
   @override
   State<Projects> createState() => ProjectsState();
 }
 
 class ProjectsState extends State<Projects> {
-  List<Widget>projectCards=[];
-   @override
-  void initState() {
-    
-    super.initState();
-     for (Project p in projects){
-      projectCards.add(ProjectCard(project:p));   
-    }
-
-    if (projects.length<4){
-      for (int i=0;i < 5-projects.length;i++){
-        projectCards.add(SizedBox( width: 490,
-          height: 260,)); 
-      }
-    }
-  }
   @override
   Widget build(BuildContext context) {
-    print("building projects");
+    List<Widget>projectCards=[];
+     for (Project p in projects){
+      if (
+        p.name!.toLowerCase().contains(widget.query.toLowerCase())
+      ){
+        if (widget.selectedStatus!="All"){
+          if(p.status!.toLowerCase()==widget.selectedStatus!.toLowerCase()){
+          projectCards.add(ProjectCard(project:p));   
+          }
+        }
+        else{
+          projectCards.add(ProjectCard(project:p));   
+        }
+      }
+    }
+    if (projectCards.length==0){
+      projectCards.add(const Center(child:SizedBox(
+        height: 300,
+        child: Center(child: Text("No projects match applied filters.",
+        style: TextStyle(fontSize: 24, color:Colors.grey),
+        )))));
+    }
+   
+   
     return  Container(
           alignment: Alignment.topCenter,
           child: ListView( // Start of ListView
@@ -66,6 +75,11 @@ class ProjectsState extends State<Projects> {
                                 500:
                                 MediaQuery.of(context).size.width * 0.5,
                                 child: TextField(
+                                  onChanged: (value){
+                                     setState(() {
+                                      widget.query = value;
+                                    });
+                                  },
                                   decoration: InputDecoration(
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(8),
@@ -73,9 +87,7 @@ class ProjectsState extends State<Projects> {
                                       ),
                                     prefixIcon: Icon(Icons.search),
                                     hintText: 'Search project',
-                                    // other properties
                                   ),
-                                  // other properties
                                 ),
                               ),
                             ),
@@ -84,7 +96,7 @@ class ProjectsState extends State<Projects> {
                                 const Text("Status:"),
                                         const SizedBox(width: 10),
                                          DropdownButton<String>(
-                                               value: selectedStatus,
+                                               value: widget.selectedStatus,
                                                focusColor: Colors.transparent,
                                                items: statuses.map((String value) {
                                        return DropdownMenuItem<String>(
@@ -94,7 +106,7 @@ class ProjectsState extends State<Projects> {
                                                }).toList(),
                                                onChanged: (String? newValue) {
                                        setState(() {
-                                         selectedStatus = newValue;
+                                         widget.selectedStatus = newValue;
                                        });
                                            },
                                              ),
@@ -124,7 +136,7 @@ class ProjectsState extends State<Projects> {
                    Container(
                     alignment: Alignment.topCenter,
                     width: double.infinity,
-                        constraints: BoxConstraints(maxWidth: 1200),
+                        constraints: const BoxConstraints(maxWidth: 1200),
                      child: Wrap(
                       spacing: 14,
                       runSpacing: 14,
@@ -132,7 +144,10 @@ class ProjectsState extends State<Projects> {
                       children: projectCards,
                      ),
                    ), 
-                  const SizedBox(height: 64),
+                  SizedBox(
+                    height: 
+                    projectCards.length<=4?690:
+                     64),
                    Footer()
                 ],
               ), // End of Column

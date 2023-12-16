@@ -1,18 +1,7 @@
 
-import 'dart:js_util';
-import 'dart:math';
-import 'package:trustless/entities/token.dart';
-import 'package:flutter_web3_provider/ethereum.dart';
-import 'package:flutter_web3_provider/ethers.dart';
-import '../main.dart';
-import 'org.dart';
-
 var orgs=[];
-
-
 class Human {  
   String? address;
-  
   bool metamask=true;
   Human._internal();
   // Singleton instance
@@ -35,8 +24,9 @@ class Human {
   //     return "nogo";
   //  }
   // address=ethereum?.selectedAddress.toString();
-  Future.delayed(Duration(seconds: 1));
+  await Future.delayed(const Duration(seconds: 1)).then((value) {
   address="TZ122pd87ahiufh3piuf";
+  });
   
   }
 

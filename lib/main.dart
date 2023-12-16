@@ -30,6 +30,7 @@ var projectsCollection = FirebaseFirestore.instance.collection('projects');
        requirements: doc.data()["specs"],
        terms: doc.data()["specs"],
        status: doc.data()["status"],
+       
       );
     p.contractAddress=doc.id.toString();
     projects.add(p);
@@ -61,7 +62,7 @@ class MyApp extends StatelessWidget {
   WidgetBuilder builder;
 
   if (settings.name == '/') {
-    builder = (_) => BaseScaffold(body: const Projects(), title: "Projects");
+    builder = (_) => BaseScaffold(body: Projects(), title: "Projects");
   } else if (settings.name!.startsWith('/projects/')) {
     final projectId = settings.name!.replaceFirst('/projects/', '');
     Project? project;
@@ -265,13 +266,10 @@ class _WalletBTNState extends State<WalletBTN> {
       ),
     );
    }
-   
-  
-}
+ }
 
 class ThemeNotifier with ChangeNotifier {
   late ThemeData _themeData;
-
   final ThemeData _lightTheme = ThemeData(
     brightness: Brightness.light,
     highlightColor: const Color.fromARGB(255, 43, 43, 43),
@@ -292,9 +290,6 @@ class ThemeNotifier with ChangeNotifier {
     fontFamily: 'CascadiaCode', // Set default font here
     // Add other light theme customizations
   );
-
-
-
   final ThemeData _darkTheme = ThemeData(
     brightness: Brightness.dark,
     primaryColor: const Color.fromARGB(255, 194, 194, 194),

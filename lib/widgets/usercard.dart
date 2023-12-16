@@ -54,18 +54,18 @@ class UserCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 120),
-              Container(
-                height: 42,
-                color: const Color.fromARGB(0, 76, 175, 79),
-                child: Center(child: Text(human.balances!.length.toString()))
-                ),  
-               const SizedBox(width: 110),
-                Container(
-                height: 42,
-                color: const Color.fromARGB(0, 76, 175, 79),
-                child: Center(child: Text(
-                  DateFormat('MMM d, yyyy').format(human.lastActive!)
-                  ))),
+              // Container(
+              //   height: 42,
+              //   color: const Color.fromARGB(0, 76, 175, 79),
+              //   child: Center(child: Text(human.balances!.length.toString()))
+              //   ),  
+              //  const SizedBox(width: 110),
+              //   Container(
+              //   height: 42,
+              //   color: const Color.fromARGB(0, 76, 175, 79),
+              //   child: Center(child: Text(
+              //     DateFormat('MMM d, yyyy').format(human.lastActive!)
+              //     ))),
             
             ],
         )

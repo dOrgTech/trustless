@@ -16,30 +16,29 @@ class Projects extends StatefulWidget {
   const Projects({super.key});
 
   @override
-  State<Projects> createState() => _ProjectsState();
+  State<Projects> createState() => ProjectsState();
 }
 
-class _ProjectsState extends State<Projects> {
+class ProjectsState extends State<Projects> {
+  List<Widget>projectCards=[];
    @override
   void initState() {
-    projectCards=[];
+    
     super.initState();
      for (Project p in projects){
-      print("making a project card from "+p.name!);
       projectCards.add(ProjectCard(project:p));   
     }
 
     if (projects.length<4){
       for (int i=0;i < 5-projects.length;i++){
         projectCards.add(SizedBox( width: 490,
-          height: 260,));
+          height: 260,)); 
       }
-      
     }
   }
   @override
   Widget build(BuildContext context) {
-    
+    print("building projects");
     return  Container(
           alignment: Alignment.topCenter,
           child: ListView( // Start of ListView
@@ -106,7 +105,7 @@ class _ProjectsState extends State<Projects> {
                                     children:   [
                                      Text(" Projects"),
                                       SizedBox(width: 60),
-                        HoverExpandWidget(),
+                        HoverExpandWidget(projectsState: this),
 
 
                       

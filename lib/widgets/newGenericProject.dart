@@ -4,24 +4,23 @@ import 'dart:isolate';
 import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:trustless/main.dart';
+import 'package:trustless/utils/reusable.dart';
 
 import '../entities/project.dart';
-
-
+import '../screens/projects.dart';
 
 const String escape = '\uE00C';
 
-
-
-
 class NewGenericProject extends StatefulWidget {
+ProjectsState projectsState;
 bool loading=false;
 bool done=false;
 bool error=false;
 Project project=Project();
 
 // ignore: use_key_in_widget_constructors
-NewGenericProject() ;
+NewGenericProject( {required this.projectsState}) ;
 
   @override
   _NewGenericProjectState createState() => _NewGenericProjectState();
@@ -31,11 +30,10 @@ class _NewGenericProjectState extends State<NewGenericProject> {
   
   @override
   Widget build(BuildContext context) {
-    DateTime.now().add(Duration(days:1825 ));
-    List<DropdownMenuItem<int>> paymentTokens=[];
+    DateTime.now().add(const Duration(days:1825 ));
     return
     Container(
-          padding: EdgeInsets.symmetric(horizontal: 60),
+          padding: const EdgeInsets.symmetric(horizontal: 60),
           decoration: BoxDecoration(
             border: Border.all(
               color: Theme.of(context).highlightColor,
@@ -65,10 +63,8 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                       )
                     ],
                   ),
-                  const SizedBox(height: 8,),
-              
+                const SizedBox(height: 8,),
                 const SizedBox(height: 60,),
-             
                 SizedBox(
                   width:630,
                   child: TextField(
@@ -76,7 +72,7 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                       widget.project.terms=value;
                     },
                     style: const TextStyle(fontSize: 13),
-                    decoration:  InputDecoration(
+                    decoration:  const InputDecoration(
                       labelText: "Project Requirements",
                       hintText: 'Link to a detailed description of the good or service you wish to acquire.'),),
                 ),
@@ -96,17 +92,16 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                       ),
                     ),
                     onPressed: ()async{
-
-                      // setState(() {widget.loading=true;});
-                      // String projectAddress=await createClientProject(
-                      //   widget.project,
-                      //   this,
-                       
-                      //   );
-                      //   receivePort.listen((message) {
-                      //   projectAddress=message;
-                      // //  });               
-                      Navigator.of(context).pop();
+                      widget.project.contractAddress=generateContractAddress();
+                      projects.add(widget.project);
+                      print("before set state "+projects.length.toString());
+                      widget.projectsState.setState(() {});
+                      print("after set state"+projects.length.toString());
+                      await projectsCollection.doc(widget.project.contractAddress)
+                      .set(widget.project.toJson());
+                      print("after adding doc"+projects.length.toString());
+                      await Future.delayed(Duration(milliseconds: 100));
+                      Navigator.of(context).pushNamed("/");
                     },
                      child: const Center(
                     child: Text("CREATE PROJECT", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color:Colors.black),),
@@ -122,7 +117,7 @@ class _NewGenericProjectState extends State<NewGenericProject> {
   bool pressedName = false;
   bool pressedDesc = false;
 
-  UploadPic(){return SizedBox(
+  UploadPic(){return const SizedBox(
     width: 150,height: 150,
     child: Placeholder());}
   createClientProject(project,state){print("create project");}
@@ -153,7 +148,7 @@ class _NewGenericProjectState extends State<NewGenericProject> {
             maxLength: 200,
             maxLines: 4,
             decoration: const InputDecoration(
-              hintText: 'Brief description of the project. Include specific technologies that will be used so they may show up if someone searches for them.',
+              hintText: 'Brieff description of the project. Include specific technologies that will be used so they may show up if someone searches for them.',
             ),
             onChanged: (value) {
               widget.project.description = value;

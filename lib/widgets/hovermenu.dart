@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:trustless/widgets/newGenericProject.dart';
 
+import '../screens/projects.dart';
+
 class HoverExpandWidget extends StatefulWidget {
+  HoverExpandWidget({required this.projectsState});
+  ProjectsState projectsState;
   @override
   _HoverExpandWidgetState createState() => _HoverExpandWidgetState();
 }
@@ -61,7 +65,7 @@ Widget _overlayBuilder(BuildContext context) {
   final RenderBox box = _key.currentContext!.findRenderObject() as RenderBox;
   final Offset position = box.localToGlobal(Offset.zero);
   final options = [
-    ["Open", "Post a definition of your desired deliverable and receive proposals"],
+    ["Open", "Post a definition of your desired deliverable to start receiving proposals"],
     ["Set parties", "Formalize an existing agreement between two parties"],
     ["Import project", "Port over legal contracts from legacy governance providers"],
   ];
@@ -168,7 +172,7 @@ Widget _overlayBuilder(BuildContext context) {
                   content: Container(
                     width: 900,
                     height: 500,
-                    child: NewGenericProject()
+                    child: NewGenericProject(projectsState:widget.projectsState)
                   )
                 )
               );

@@ -5,6 +5,7 @@ import 'package:trustless/entities/token.dart';
 
 
 class Project{
+  String? contractAddress;
   String? name;
   DateTime? creationDate;
   DateTime? expiresAt;
@@ -52,8 +53,18 @@ class Project{
     // return the string
     return buffer.toString();
   }
-
-  
+  toJson(){
+    return {
+      'name':name,
+      'created':DateTime.now(),
+      'description':description,
+      'specs':terms,
+      'status':"open",
+      'author':"client",
+      'client':client
+    };
+  }
+    
 }
 
 

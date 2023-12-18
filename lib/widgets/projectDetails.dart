@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:trustless/widgets/arbitrate.dart';
 import 'package:trustless/widgets/dispute.dart';
 import 'package:trustless/widgets/projectCard.dart';
@@ -70,7 +71,6 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               // SizedBox(height: 40),
-
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
@@ -80,7 +80,6 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
-
                               Container(
                                 constraints: const BoxConstraints(
                                   maxWidth: 450,
@@ -130,14 +129,17 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                     children: [
                                       const Text("Contract Address: "),
                                       Text(
-                                        "daisuhdqwiuhdalxzijhnbljiwebi",
+                                       widget.project.contractAddress!,
                                         style: TextStyle(fontSize: 11),
                                       ),
                                       const SizedBox(
                                         width: 2,
                                       ),
                                       TextButton(
-                                          onPressed: () {
+                                          onPressed: ()async {
+                                            await Clipboard.setData(
+                                              ClipboardData(text:widget.project.contractAddress!)
+                                           );
                                             copied(context, "whatever");
                                           },
                                           child: const Icon(Icons.copy)),
@@ -164,10 +166,10 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                             copied(context, "whatever");
                                           },
                                           child: const Icon(Icons.copy)),
-                                    ],
+                                        ],
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
                               widget.project.status == "Ongoing" ||
                                       widget.project.status == "Dispute" ||
                                       widget.project.status == "Closed" ||

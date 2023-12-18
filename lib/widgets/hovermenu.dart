@@ -171,7 +171,7 @@ Widget _overlayBuilder(BuildContext context) {
                 builder: (context) => AlertDialog(
                   content: Container(
                     width: 900,
-                    height: 500,
+                    // height: 500,
                     child: NewGenericProject(projectsState:widget.projectsState)
                   )
                 )

@@ -1,12 +1,11 @@
 import "package:flutter/material.dart";
+import "package:trustless/widgets/newGenericProject.dart";
 
 import "../entities/project.dart";
 import "../main.dart";
 import "../widgets/footer.dart";
 import "../widgets/hovermenu.dart";
 import "../widgets/projectCard.dart";
-
-
 
 String? selectedNewProject="Open to proposals";
   final List<String> statuses = ['All', 'Open', 'Ongoing','Dispute',"Pending","Closed"];
@@ -24,6 +23,7 @@ class Projects extends StatefulWidget {
 class ProjectsState extends State<Projects> {
   @override
   Widget build(BuildContext context) {
+    print("projects "+projects.length.toString());
     List<Widget>projectCards=[];
      for (Project p in projects){
       if (
@@ -48,7 +48,8 @@ class ProjectsState extends State<Projects> {
     }
    
    
-    return  Container(
+    // return Text("something");
+   return  Container(
           alignment: Alignment.topCenter,
           child: ListView( // Start of ListView
             shrinkWrap: true, // Set this property to true
@@ -118,9 +119,7 @@ class ProjectsState extends State<Projects> {
                                      Text(" Projects"),
                                       SizedBox(width: 60),
                         HoverExpandWidget(projectsState: this),
-
-
-                      
+                        
                       SizedBox(
                         width: 10,
                       ),
@@ -133,6 +132,7 @@ class ProjectsState extends State<Projects> {
                            ),
                       )),
                     SizedBox(height: 24,),
+                    NewGenericProject(projectsState: this),
                    Container(
                     alignment: Alignment.topCenter,
                     width: double.infinity,

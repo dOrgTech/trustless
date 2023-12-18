@@ -14,7 +14,7 @@ class Release extends StatefulWidget {
 bool loading=false;
 bool done=false;
 bool error=false;
-Project project=Project();
+Project project=Project(isUSDT: false);
 
 // ignore: use_key_in_widget_constructors
 Release() ;

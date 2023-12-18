@@ -13,7 +13,7 @@ class SendFunds extends StatefulWidget {
   bool loading = false;
   bool done = false;
   bool error = false;
-  Project project = Project();
+  Project project = Project(isUSDT: false);
 
 // ignore: use_key_in_widget_constructors
   SendFunds();
@@ -50,16 +50,16 @@ class SendFundsState extends State<SendFunds> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            SizedBox(height: 70,
-            child:capacity(),
-            ),
+            // SizedBox(height: 70,
+            // child:capacity(),
+            // ),
 
             const Text(
               "Fund Project",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 19),
             ),
-            const SizedBox(height: 40),
+            
             SizedBox(
               
               child: Column(
@@ -86,11 +86,7 @@ class SendFundsState extends State<SendFunds> {
                           value: value,
                           child: Text(
                             value,
-                            style: TextStyle(
-                              color: idx == 0
-                                  ? Theme.of(context).indicatorColor
-                                  : Colors.white, // First item will be green
-                            ),
+                            
                           ),
                         );
                       }).toList(),
@@ -163,21 +159,18 @@ class SendFundsState extends State<SendFunds> {
                   ),
                 ),
               ),
-      SizedBox(height: 60),
+      SizedBox(height: 160),
             Padding(
               padding: const EdgeInsets.only(bottom: 25),
               child: SizedBox(
                 height: 40,
                 width: 130,
-                child: TextButton(
+                child: ElevatedButton(
                     style: ButtonStyle(
-                      overlayColor: MaterialStateProperty.all<Color>(
-                          Theme.of(context).indicatorColor),
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                          Theme.of(context).indicatorColor),
-                      elevation: MaterialStateProperty.all(1.0),
+                      
                       shape: MaterialStateProperty.all(
                         RoundedRectangleBorder(
+                          
                           borderRadius: BorderRadius.circular(7.0),
                         ),
                       ),
@@ -191,7 +184,7 @@ class SendFundsState extends State<SendFunds> {
                         style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black),
+                            ),
                       ),
                     )),
               ),

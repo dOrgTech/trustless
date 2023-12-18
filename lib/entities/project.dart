@@ -5,6 +5,7 @@ import 'package:trustless/entities/token.dart';
 
 
 class Project{
+  bool isUSDT=false;
   String? contractAddress;
   String? name;
   DateTime? creationDate;
@@ -16,18 +17,18 @@ class Project{
   String? requirements;
   double? amountInEscrow;
   String? status;
+  Map<String,int>contributions={};
   List<Token>? acceptedTokens;
   // Constructor with logic
-  Project({this.name,  this.creationDate, this.description,this.client, this.arbiter, this.requirements, this.status, this.terms}){
+  Project({required this.isUSDT, this.name,  this.creationDate, this.description,this.client, this.arbiter, this.requirements, this.status, this.terms}){
     int random = Random().nextInt(331) + 90;
     amountInEscrow = random * 100;
     creationDate=DateTime.now();
     expiresAt=creationDate!.add(Duration(days: 30));
     acceptedTokens=[
       Token(address: "---", name: "Native", symbol: "XTZ", decimals: 5),
-      Token(address: "KT1MzN5jLkbbq9P6WEFmTffUrYtK8niZavzH", name: "Bug Hunt Thursday", symbol: "BGT", decimals: 5),
-      Token(address: "KT1Dmemf2YRbA5vEejvaGWa6ghYn9fH7EKu4", name: "Very Tasty Jelly", symbol: "VTJ", decimals: 6),
-      Token(address: "KT1E7jkyAWhCoMbPZbVUJMo7xAfKcqYyCG6Z", name: "FLToken", symbol: "FLT", decimals: 2)
+      Token(address: "KT1MzN5jLkbbq9P6WEFmTffUrYtK8niZavzH", name: "Tether", symbol: "USDT", decimals: 5),
+      
     ];
   }
   @override
@@ -55,6 +56,7 @@ class Project{
   }
   toJson(){
     return {
+      'isUSDT':isUSDT,
       'name':name,
       'created':DateTime.now(),
       'description':description,

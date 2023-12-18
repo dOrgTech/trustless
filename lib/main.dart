@@ -22,6 +22,7 @@ var projectsCollection = FirebaseFirestore.instance.collection('projects');
   for (var doc in querySnapshot.docs) {
     print("doc "+doc.data().toString());
       Project p =Project(
+        isUSDT: doc.data()["isUSDT"],
        name: doc.data()["name"],
        creationDate: DateTime.now(),
        description: doc.data()["description"],
@@ -30,7 +31,7 @@ var projectsCollection = FirebaseFirestore.instance.collection('projects');
        requirements: doc.data()["specs"],
        terms: doc.data()["specs"],
        status: doc.data()["status"],
-       
+
       );
     p.contractAddress=doc.id.toString();
     projects.add(p);
@@ -62,7 +63,9 @@ class MyApp extends StatelessWidget {
   WidgetBuilder builder;
 
   if (settings.name == '/') {
-    builder = (_) => BaseScaffold(body: Projects(), title: "Projects");
+    builder = (_) => BaseScaffold(
+      body: Projects(), 
+      title: "Projects");
   } else if (settings.name!.startsWith('/projects/')) {
     final projectId = settings.name!.replaceFirst('/projects/', '');
     Project? project;
@@ -83,7 +86,9 @@ class MyApp extends StatelessWidget {
     builder = (_) => BaseScaffold(body: Trials(), title: "Trials");
   } else {
     // Handle other routes or unknown routes
-    builder = (_) => const Text("Page not found");
+    builder = (_) =>  BaseScaffold(
+      title: "Not a valid URL",
+      body: Center(child:Text("This is nothing.", style: TextStyle(fontSize: 40),)),);
   }
 
   // Implementing the crossfade transition

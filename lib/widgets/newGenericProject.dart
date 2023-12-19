@@ -294,13 +294,13 @@ class _NewGenericProjectState extends State<NewGenericProject> {
       child: Column(
         children: [
            StepProgressIndicator(currentStep: 4),
-          SizedBox(height: 20),
+          SizedBox(height: 40),
           const Opacity(
             opacity: 0.9,
             child: Text("Set an Arbiter",style: TextStyle(fontSize: 22),)),
-          const SizedBox(height: 60),
+          const SizedBox(height: 40),
            Text("This is a third party with authority to allocate the funds held in escrow in the event of a dispute. Both you and the Contractor hold the prerogative to initiate a dispute. The address must be of a Smart Contract, not of a User Wallet."),
-          const SizedBox(height: 60),
+          const SizedBox(height: 50),
           SizedBox(
                     // width:630,
                     child: TextField(
@@ -314,7 +314,7 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                         ),),
                   ),
            
-          const SizedBox(height: 60),
+          const SizedBox(height: 70),
           const Text("The Arbiter may also be set after deploying the contract. Skip to proceed without a designated Arbiter."),
           const SizedBox(height: 100),
            Row(
@@ -364,13 +364,13 @@ class _NewGenericProjectState extends State<NewGenericProject> {
       child: Column(
         children: [
            StepProgressIndicator(currentStep: 3),
-          SizedBox(height: 20),
+          SizedBox(height: 40),
           const Opacity(
             opacity: 0.9,
             child: Text("Set a Contractor",style: TextStyle(fontSize: 22),)),
-          const SizedBox(height: 60),
+          const SizedBox(height: 40),
           const Text("If you already have already reached an arrangement with someone for the work specified in this Project, add their wallet or contract address in the field below. Their participation will be formalized once they sign this Project contract and stake half of the arbitration fee."),
-          const SizedBox(height: 60),
+          const SizedBox(height: 50),
           SizedBox(
                     // width:630,
                     child:  TextField(
@@ -385,7 +385,7 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                   ),
            
            
-          const SizedBox(height: 60),
+          const SizedBox(height: 70),
           const Text("The Contractor may also be set after deploying the Project on chain. Skip to proceed without a designated Contractor."),
           const SizedBox(height: 100),
            Row(
@@ -443,7 +443,7 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("Provide a detailed description of the good or service you wish to acquire, to set expectations for the contractor and also serve as a reference point during any potentioal dispute.", textAlign: TextAlign.left, style: TextStyle(fontSize: 17.5),),
+                    const Text("Provide a detailed description of the good or service you wish to acquire, to set expectations for the contractor and also to serve as reference during a potentioal dispute.", textAlign: TextAlign.left, style: TextStyle(fontSize: 17.5),),
 
                 const SizedBox(height: 19),
                 const Text("To ensure a smooth arbitration process we recommend cloning and customizing this template.", textAlign: TextAlign.left),

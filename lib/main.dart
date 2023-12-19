@@ -29,9 +29,9 @@ var projectsCollection = FirebaseFirestore.instance.collection('projects');
        client: doc.data()["client"],
        arbiter: doc.data()["arbiter"],
        requirements: doc.data()["specs"],
-       terms: doc.data()["specs"],
+       repo: doc.data()["specs"],
        status: doc.data()["status"],
-
+      
       );
     p.contractAddress=doc.id.toString();
     projects.add(p);
@@ -150,15 +150,15 @@ class BaseScaffold extends StatelessWidget {
                 Navigator.of(context).pushNamed("/trials");
               }, child: 
             Row(children: const [
-              Icon(Icons.gavel_sharp),
+              Icon(Icons.compare_arrows_outlined),
               SizedBox(width: 8),
-              Text("TRIALS", style: TextStyle(fontSize: 19),)
+              Text("DISPUTES", style: TextStyle(fontSize: 19),)
             ],)
             ),  
             const SizedBox(width: 40),
               TextButton(onPressed: (){}, child: 
             Row(children:const [
-              Icon(Icons.person_search),
+              Icon(Icons.gavel_sharp),
               SizedBox(width: 8),
               Text("ARBITERS", style: TextStyle(fontSize: 19),)
             ],)

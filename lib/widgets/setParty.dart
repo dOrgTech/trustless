@@ -58,7 +58,7 @@ class SetPartytate extends State<SetParty> {
               width:450,
               child: TextField(
                 onChanged: (value) {
-                  widget.project.terms=value;
+                  widget.project.repo=value;
                 },
                 style: const TextStyle(fontSize: 13),
                 decoration:  const InputDecoration(

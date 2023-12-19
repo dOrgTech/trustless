@@ -12,15 +12,18 @@ class Project{
   DateTime? expiresAt;
   String? description;
   String? client;
-  String ?arbiter;
-  String? terms;
+  String? arbiter="";
+  String contractor="";
+  String? hashedFileName="";
+  String? termsHash;
+  String? repo="";
   String? requirements;
   double? amountInEscrow;
   String? status;
   Map<String,int>contributions={};
   List<Token>? acceptedTokens;
   // Constructor with logic
-  Project({required this.isUSDT, this.name,  this.creationDate, this.description,this.client, this.arbiter, this.requirements, this.status, this.terms}){
+  Project({required this.isUSDT, this.name,  this.creationDate, this.description,this.client, this.arbiter, this.requirements, this.status, this.repo}){
     int random = Random().nextInt(331) + 90;
     amountInEscrow = random * 100;
     creationDate=DateTime.now();
@@ -42,7 +45,7 @@ class Project{
     buffer.write('Description: $description\n');
     buffer.write('Client: $client\n');
     buffer.write('Arbiter: $arbiter\n');
-    buffer.write('Terms: $terms\n');
+    buffer.write('Terms Hash: $termsHash\n');
     buffer.write('Requirements: $requirements\n');
     buffer.write('Amount in escrow: $amountInEscrow\n');
     buffer.write('Status: $status\n');
@@ -58,9 +61,12 @@ class Project{
     return {
       'isUSDT':isUSDT,
       'name':name,
+      'contractor':contractor,
       'created':DateTime.now(),
       'description':description,
-      'specs':terms,
+      'hashedFileName':hashedFileName,
+      'repo':repo,
+      'termsHash':termsHash,
       'status':"open",
       'author':"client",
       'client':client

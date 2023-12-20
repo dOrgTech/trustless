@@ -77,7 +77,8 @@ class StepProgressIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     currentStep =currentStep+ 2; // Adjust the step inside the build method
     return Container(
-      padding: EdgeInsets.all(10),
+      
+     padding: EdgeInsets.only(left:this.currentStep==2?0:80),
       child: SizedBox(
         width:300,
         child: Row(
@@ -92,13 +93,13 @@ class StepProgressIndicator extends StatelessWidget {
     bool isCompleted = index < currentStep - 1;
     return Expanded(
       child: Container(
-        
+       
         height: 4, // Smaller height for a more discrete look
         margin: EdgeInsets.symmetric(horizontal: 12),
         decoration: BoxDecoration(
           
           color: isCompleted ? Theme.of(context).highlightColor.withOpacity(0.3) : Theme.of(context).hoverColor,
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(8),
           boxShadow: isCompleted
               ? [
                   BoxShadow(

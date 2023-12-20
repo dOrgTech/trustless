@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:flutter_web3_provider/ethereum.dart';
 import 'package:provider/provider.dart';
 import 'package:trustless/screens/projects.dart';
@@ -125,7 +126,7 @@ class BaseScaffold extends StatelessWidget {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 38,
+        toolbarHeight: 42,
         elevation: 0.8,
         automaticallyImplyLeading: false,
         title: Row(
@@ -140,27 +141,28 @@ class BaseScaffold extends StatelessWidget {
             ),SizedBox(width: MediaQuery.of(context).size.width/13),
             TextButton(onPressed: (){ Navigator.of(context).pushNamed("/");}, child: 
             Row(children: const [
-              Icon(Icons.local_activity),
+              Icon(Icons.local_activity,size:30),
               SizedBox(width: 8),
-              Text("PROJECTS", style: TextStyle(fontSize: 19),)
+              Text("PROJECTS", style: TextStyle(fontSize: 17),)
             ],)
             ),
             const SizedBox(width: 40),
               TextButton(onPressed: (){
                 Navigator.of(context).pushNamed("/trials");
               }, child: 
-            Row(children: const [
-              Icon(Icons.compare_arrows_outlined),
+            Row(children:  [
+       
+             Image.asset('assets/scale2.png', height:30, color: Theme.of(context).textTheme.bodyLarge!.color,),
               SizedBox(width: 8),
-              Text("DISPUTES", style: TextStyle(fontSize: 19),)
+              Text("DISPUTES", style: TextStyle(fontSize: 17),)
             ],)
             ),  
             const SizedBox(width: 40),
               TextButton(onPressed: (){}, child: 
             Row(children:const [
-              Icon(Icons.gavel_sharp),
+              Icon(Icons.gavel_sharp,size:33),
               SizedBox(width: 8),
-              Text("ARBITERS", style: TextStyle(fontSize: 19),)
+              Text("ARBITERS", style: TextStyle(fontSize: 17),)
             ],)
             )
           ],
@@ -206,7 +208,7 @@ class _WalletBTNState extends State<WalletBTN> {
             child: Center(
               child: LinearProgressIndicator(
                   minHeight: 2,
-                backgroundColor: Colors.black54,
+                // backgroundColor: Colors.black54,
               ),
             ),
           );
@@ -273,63 +275,96 @@ class _WalletBTNState extends State<WalletBTN> {
    }
  }
 
+// import 'package:flutter/material.dart';
+
+
+
+
 class ThemeNotifier with ChangeNotifier {
   late ThemeData _themeData;
+
+  static const Color _lightThemeHighlightColor = Color.fromARGB(255, 100, 87, 68); // For light theme
+  static const Color _darkThemeHighlightColor = Color.fromARGB(255, 175, 161, 113); // For dark theme
+
+  // Light Theme
   final ThemeData _lightTheme = ThemeData(
     brightness: Brightness.light,
-    highlightColor: const Color.fromARGB(255, 43, 43, 43),
-    indicatorColor: const Color.fromARGB(255, 68, 68, 68),
-    hoverColor: const Color.fromARGB(255, 221, 221, 221),
-    accentColor: const Color.fromARGB(255, 190, 190, 190),
-    primaryColor: const Color.fromARGB(255, 56, 56, 56),
+    primaryColor: Color.fromARGB(255, 155, 155, 155), // Main background color
+    accentColor: _lightThemeHighlightColor, // Primary accent/highlight color
+    colorScheme: ColorScheme.light(
+      primary: _lightThemeHighlightColor,
+      onPrimary: Colors.black, // Text on primary color
+      secondary: Colors.black, // Icon and other secondary elements
+      onSecondary: _lightThemeHighlightColor,
+      background: Color.fromARGB(255, 153, 153, 153),
+      onBackground: Colors.black,
+      surface: Color.fromARGB(255, 46, 46, 46), // Card and dialog backgrounds
+      onSurface: Colors.black, // Text on surface
+      error: Colors.red,
+      onError: Colors.white,
+      brightness: Brightness.light,
+    ),
+    buttonTheme: ButtonThemeData(
+      buttonColor: _lightThemeHighlightColor, // Button background color
+      textTheme: ButtonTextTheme.primary,
+    ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        onSurface:  Colors.white,
-        primary: const Color.fromARGB(255, 59, 59, 59), // Set your desired color for light theme
+        primary: Colors.black, // Ensuring text color is black and not the highlight color
       ),
     ),
-    secondaryHeaderColor: const Color.fromARGB(255, 78, 78, 78),
     appBarTheme: const AppBarTheme(
-      backgroundColor: Color.fromARGB(255, 204, 204, 204),
+      backgroundColor: Color.fromARGB(255, 199, 199, 199),
+      iconTheme: IconThemeData(color: Colors.black),
     ),
-    fontFamily: 'CascadiaCode', // Set default font here
-    // Add other light theme customizations
+    inputDecorationTheme: InputDecorationTheme(
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: _lightThemeHighlightColor),
+      ),
+    ),
+    fontFamily: 'CascadiaCode',
   );
+
+  // Dark Theme
   final ThemeData _darkTheme = ThemeData(
     brightness: Brightness.dark,
-    primaryColor: const Color.fromARGB(255, 194, 194, 194),
-    colorScheme: const ColorScheme.dark().copyWith(
-    secondary: Colors.grey, // Replace with your desired color
+    primaryColor: Colors.grey[850], // Main background color
+    accentColor: _darkThemeHighlightColor, // Primary accent/highlight color
+    colorScheme: ColorScheme.dark(
+      primary: _darkThemeHighlightColor,
+      onPrimary: Colors.white, // Text on primary color
+      secondary: Colors.white, // Icon and other secondary elements
+      onSecondary: _darkThemeHighlightColor,
+      background: Color.fromARGB(255, 53, 53, 53),
+      onBackground: Colors.white,
+      surface: Color.fromARGB(255, 37, 37, 37), // Card and dialog backgrounds
+      onSurface: Colors.white, // Text on surface
+      error: Colors.red,
+      onError: Colors.black,
+      brightness: Brightness.dark,
     ),
-    indicatorColor: const Color.fromARGB(255, 172, 172, 172),
-    progressIndicatorTheme: const ProgressIndicatorThemeData(
-      color: Color.fromARGB(255, 145, 145, 145), // Set your desired color for dark theme
+    buttonTheme: ButtonThemeData(
+      textTheme: ButtonTextTheme.primary,
     ),
-    splashColor: const Color.fromARGB(255, 37, 37, 37),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        primary: const Color.fromARGB(255, 212, 212, 212), // Set your desired color for light theme
+        primary: Colors.white, // Ensuring text color is white and not the highlight color
       ),
     ),
-    secondaryHeaderColor: const Color.fromARGB(255, 51, 51, 51),
-        accentColor: const Color(0xff3bffdb),
-        dividerColor: createMaterialColor(const Color(0xffcfc099)),
-    hintColor: Colors.white70,
-    buttonColor: Colors.grey,
-    focusColor: Colors.grey,
-    highlightColor: const Color.fromARGB(255, 255, 255, 255),
-    primaryColorDark: Colors.grey,
-
-    appBarTheme: const AppBarTheme(
-      foregroundColor: Colors.white,
-      backgroundColor: Color.fromARGB(255, 70, 70, 70),
+    appBarTheme: AppBarTheme(
+      backgroundColor: Color.fromARGB(255, 66, 66, 66),
+      iconTheme: const IconThemeData(color: Colors.white),
     ),
-    fontFamily: 'CascadiaCode', // Set default font here
-    // Add other dark theme customizations
+    inputDecorationTheme: InputDecorationTheme(
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: _darkThemeHighlightColor),
+      ),
+    ),
+    fontFamily: 'CascadiaCode',
   );
 
   ThemeNotifier({bool isDarkMode = true}) {
-    _themeData = isDarkMode ? _darkTheme : _lightTheme;
+    _themeData = isDarkMode ? _darkTheme: _lightTheme;
   }
 
   ThemeData getTheme() => _themeData;
@@ -341,6 +376,9 @@ class ThemeNotifier with ChangeNotifier {
 
   bool get isDarkMode => _themeData.brightness == Brightness.dark;
 }
+
+
+
 
 
 

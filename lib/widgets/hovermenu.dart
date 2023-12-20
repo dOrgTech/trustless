@@ -125,14 +125,16 @@ Widget _overlayBuilder(BuildContext context) {
                           child: Column(
                             children: [
                               SizedBox(height: 8.0),
-                              Text(
-                                "Add Project",
-                                style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                  fontSize: 19,
-                                  fontWeight: FontWeight.bold,
+                             Opacity(opacity: 0.6,
+                                child: Text(
+                                  "Add Project",
+                                  style: TextStyle(
+                                  
+                                    fontSize: 19,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
                                 ),
-                                textAlign: TextAlign.center,
                               ),
                               Divider(color: Theme.of(context).indicatorColor, thickness: 1),
                               Expanded(
@@ -186,7 +188,7 @@ Widget _overlayBuilder(BuildContext context) {
                   Text(
                     options[index][0],
                     style: TextStyle(
-                      color: Theme.of(context).highlightColor,
+                      // color: Theme.of(context).highlightColor,
                       fontSize: 18,
                       fontWeight: FontWeight.w100,
                     ),
@@ -195,12 +197,14 @@ Widget _overlayBuilder(BuildContext context) {
                  ValueListenableBuilder<int?>(
   valueListenable: _hoverNotifier,
   builder: (context, hoveredIndex, child) {
-    return Text(
-                      options[index][1],
-                      style: TextStyle(
-                        color:Theme.of(context).indicatorColor,
-                        fontSize: 14
-    ));
+    return Opacity(opacity: 0.8,
+      child: Text(
+                        options[index][1],
+                        style: TextStyle(
+                          // color:Theme.of(context).indicatorColor,
+                          fontSize: 14
+      )),
+    );
                     },
                   ),
                 ],
@@ -253,9 +257,9 @@ Widget _overlayBuilder(BuildContext context) {
           child: Center(
             child: Text(
               'Add Project',
-              style:  TextStyle(color: 
-              Theme.of(context).highlightColor
-              , fontSize: 19),
+              style:  TextStyle(
+              
+               fontSize: 19),
               textAlign: TextAlign.center,
             ),
           ),

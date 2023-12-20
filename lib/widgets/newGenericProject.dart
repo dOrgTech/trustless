@@ -251,34 +251,35 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                        TextButton(onPressed: (){setState(() {
                                   widget.stage=4;
                                 });}, child: const Text("< Back")),
+                                 StepProgressIndicator(currentStep: 5),
                       SizedBox(
                         height: 40,
                         width: 170,
-                        child: TextButton(
-                          style: ButtonStyle(
-                            overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
-                            backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
-                            elevation: MaterialStateProperty.all(1.0),
-                            shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(7.0),
-                              ),
-                            ),
-                          ),
-                          onPressed: ()async{
-                            widget.project.contractAddress=generateContractAddress();
-                            projects.add(widget.project);
-                            print("before set state "+projects.length.toString());
-                            widget.projectsState.setState(() {});
-                            print("after set state"+projects.length.toString());
-                            await projectsCollection.doc(widget.project.contractAddress)
-                            .set(widget.project.toJson());
-                            await Future.delayed(const Duration(milliseconds: 100));
-                            Navigator.of(context).pushNamed("/");
-                          },
-                           child: const Center(
-                          child: Text("CREATE PROJECT", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color:Colors.black),),
-                        )),
+                        child: 
+                        TextButton(
+  style: ButtonStyle(
+    overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
+    backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent), // Set background color to black
+    elevation: MaterialStateProperty.all(1.0),
+    shape: MaterialStateProperty.all(
+      RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(1.0),
+        side: BorderSide(color: Theme.of(context).indicatorColor, width: 1.0), // Use current indicatorColor for outline
+      ),
+    ),
+    shadowColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor), // Optional: Use for shadow
+  ),
+  onPressed: () async {
+    // ... Your existing onPressed code ...
+  },
+  child: const Center(
+    child: Text(
+      "DEPLOY PROJECT",
+      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+    ),
+  ),
+),
+
                       ),
                     ],
                   )
@@ -293,8 +294,8 @@ class _NewGenericProjectState extends State<NewGenericProject> {
        constraints: const BoxConstraints(minHeight: 500),
       child: Column(
         children: [
-           StepProgressIndicator(currentStep: 4),
-          SizedBox(height: 40),
+           
+          SizedBox(height: 10),
           const Opacity(
             opacity: 0.9,
             child: Text("Set an Arbiter",style: TextStyle(fontSize: 22),)),
@@ -324,17 +325,18 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                         onPressed: (){setState(() {
                                   widget.stage=3;
                                 });}, child: const Text("< Back")),
+                                 StepProgressIndicator(currentStep: 4),
                       SizedBox(
                         height: 40,
                         width: 170,
                         child: TextButton(
                           style: ButtonStyle(
-                            overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
-                            backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
+                            // overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
+                            // backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
                             elevation: MaterialStateProperty.all(1.0),
                             shape: MaterialStateProperty.all(
                               RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(7.0),
+                                borderRadius: BorderRadius.circular(1.0),
                               ),
                             ),
                           ),
@@ -345,9 +347,9 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                           },
                            child:  Center(
                          child:  widget.project.arbiter!.length<3?
-                          Text("   Skip   ", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color:Colors.black),)
+                          Text("   Skip   ", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, ),)
                           :
-                          Text("CONTINUE", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color:Colors.black),),
+                          Text("CONTINUE", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, ),),
                                                  )),
                       ),
                     ],
@@ -363,8 +365,8 @@ class _NewGenericProjectState extends State<NewGenericProject> {
        constraints: const BoxConstraints(minHeight: 500),
       child: Column(
         children: [
-           StepProgressIndicator(currentStep: 3),
-          SizedBox(height: 40),
+           
+          SizedBox(height: 10),
           const Opacity(
             opacity: 0.9,
             child: Text("Set a Contractor",style: TextStyle(fontSize: 22),)),
@@ -396,17 +398,18 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                                   widget.stage=2;
                                 });}
                          , child: const Text("< Back")),
+                          StepProgressIndicator(currentStep: 3),
                       SizedBox(
                         height: 40,
                         width: 170,
                         child: TextButton(
                           style: ButtonStyle(
-                            overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
-                            backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
+                            // overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
+                            // backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
                             elevation: MaterialStateProperty.all(1.0),
                             shape: MaterialStateProperty.all(
                               RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(7.0),
+                                borderRadius: BorderRadius.circular(1.0),
                               ),
                             ),
                           ),
@@ -418,9 +421,9 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                            child: Center(
                           child: 
                           widget.project.contractor.length<3?
-                          Text("   Skip   ", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color:Colors.black),)
+                          Text("   Skip   ", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,),)
                           :
-                          Text("CONTINUE", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color:Colors.black),),
+                          Text("CONTINUE", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, ),),
                         )),
                       ),
                     ],
@@ -438,15 +441,30 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                     StepProgressIndicator(currentStep: 2),
-                const SizedBox(height: 30),
+                     
+                const SizedBox(height: 6),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text("Provide a detailed description of the good or service you wish to acquire, to set expectations for the contractor and also to serve as reference during a potentioal dispute.", textAlign: TextAlign.left, style: TextStyle(fontSize: 17.5),),
 
                 const SizedBox(height: 19),
-                const Text("To ensure a smooth arbitration process we recommend cloning and customizing this template.", textAlign: TextAlign.left),
+        RichText(
+      text: TextSpan(
+        style: DefaultTextStyle.of(context).style,
+        children: <TextSpan>[
+          TextSpan(text: "For a smooth arbitration, it's recommended to clone and customize "),
+          TextSpan(
+            text: 'this template',
+            style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                launch('https://github.com/autonet-code/demo-project/tree/master');
+              },
+          ),
+        ],
+      ),
+    ),
                      const SizedBox(height: 60,),
                   ],
                 ),
@@ -526,17 +544,18 @@ const SizedBox(
                        TextButton(onPressed: (){setState(() {
                                   widget.stage=1;
                                 });}, child: const Text("< Back")),
+                                 StepProgressIndicator(currentStep: 2),
                       SizedBox(
                         height: 40,
                         width: 170,
                         child: TextButton(
                     style: ButtonStyle(
-                      overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
-                      backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
+                      // overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
+                      // backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
                       elevation: MaterialStateProperty.all(1.0),
                       shape: MaterialStateProperty.all(
                         RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(7.0),
+                          borderRadius: BorderRadius.circular(1.0),
                         ),
                       ),
                     ),
@@ -546,7 +565,7 @@ const SizedBox(
                      });
                     },
                      child: const Center(
-                    child: Text("CONTINUE", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color:Colors.black),),
+                    child: Text("CONTINUE", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
                   )),
                       ),
                     ],
@@ -562,8 +581,8 @@ const SizedBox(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-           StepProgressIndicator(currentStep: 1),
-          const SizedBox(height: 80),
+           
+          const SizedBox(height: 30),
            agentName(),
           const SizedBox(height: 30),
 
@@ -576,6 +595,7 @@ const SizedBox(
                               TextButton(onPressed: (){setState(() {
                                 widget.stage=0;
                               });}, child: const Text("< Back")),
+                               StepProgressIndicator(currentStep: 1),
                                 SizedBox(
                   height: 40,
                   width: 170,
@@ -583,12 +603,12 @@ const SizedBox(
                     
                     style: ButtonStyle(
                       
-                      overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
-                      backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
+                      // overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
+                      // backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
                       elevation: MaterialStateProperty.all(1.0),
                       shape: MaterialStateProperty.all(
                         RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(7.0),
+                          borderRadius: BorderRadius.circular(1.0),
                         ),
                       ),
                     ),
@@ -599,7 +619,7 @@ const SizedBox(
                      });
                     }:null,
                      child: const Center(
-                    child: Text("CONTINUE", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color:Colors.black),),
+                    child: Text("CONTINUE", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, ),),
                   )),
                 )
                             ],
@@ -617,8 +637,8 @@ const SizedBox(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      StepProgressIndicator(currentStep: 0),
-                      const SizedBox(height: 69),
+                      
+                      const SizedBox(height: 29),
                       const Opacity(opacity: 0.9, child:  Text("Select Project Currency:", style: TextStyle(fontSize: 19,fontWeight: FontWeight.bold),)),
                       const SizedBox(height: 39),
       
@@ -683,8 +703,8 @@ const SizedBox(
                         ),
                       ),
                   SizedBox(
-        width: 400,
-        height: 250,
+      
+        height: 290,
         child: Center(
           child: Opacity(
         opacity: 0.8,
@@ -692,11 +712,14 @@ const SizedBox(
           mainAxisSize: MainAxisSize.min, // To keep the Row size to a minimum
           children: [
             Flexible(
-              child: Text(
-                widget.project.isUSDT
-                    ? "Stablecoin pegged to the US dollar, offering market stability and widespread acceptance across major exchanges."
-                    : "The token baked into the main consensus protocol of the chain, accounting for the execution of all smart contracts.",
-                textAlign: TextAlign.center,
+              child: SizedBox(
+                width:400,
+                child: Text(
+                  widget.project.isUSDT
+                      ? "Stablecoin pegged to the US dollar, offering market stability and widespread acceptance across major exchanges."
+                      : "The token baked into the main consensus protocol of the chain, accounting for the execution of all smart contracts.",
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
             const Spacer(),
@@ -711,30 +734,38 @@ const SizedBox(
                 style: TextStyle(color: Colors.blue),
               ),
             ),
-            const Spacer(),
-             SizedBox(
-                    height: 40,
-                    width: 170,
-                    child: TextButton(
-                      style: ButtonStyle(
-                        overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
-                        backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
-                        elevation: MaterialStateProperty.all(1.0),
-                        shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(7.0),
+            // const Spacer(),
+            SizedBox(height: 100),
+             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+               children: [
+               SizedBox(width: 160),
+                StepProgressIndicator(currentStep: 0),
+                 SizedBox(
+                        height: 40,
+                        width: 170,
+                        child: TextButton(
+                          style: ButtonStyle(
+                            // overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
+                            // backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
+                            elevation: MaterialStateProperty.all(1.0),
+                            shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(1.0),
+                              ),
+                            ),
                           ),
-                        ),
+                          onPressed: (){
+                           setState(() {
+                             widget.stage=1;
+                           });
+                          },
+                           child: const Center(
+                          child: Text("CONTINUE", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,),),
+                        )),
                       ),
-                      onPressed: (){
-                       setState(() {
-                         widget.stage=1;
-                       });
-                      },
-                       child: const Center(
-                      child: Text("CONTINUE", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color:Colors.black),),
-                    )),
-                  )
+               ],
+             )
       
           ],
         ),

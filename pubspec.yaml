@@ -24,6 +24,7 @@ dependencies:
   flutter_web3_provider: ^1.0.6
   file_picker: ^5.2.2
   crypto: ^3.0.2
+  flutter_svg:
   
 dev_dependencies:
   flutter_test:

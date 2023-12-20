@@ -8,6 +8,7 @@ import 'package:trustless/widgets/release.dart';
 import 'package:trustless/widgets/sendfunds.dart';
 import 'package:trustless/widgets/setParty.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../entities/project.dart';
 import '../main.dart';
 import '../widgets/withdraw.dart';
@@ -61,206 +62,218 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                   children: [
                     Container(
                       constraints: const BoxConstraints(maxWidth: 1200),
-                      height: 240,
+                      // height: 240,
                       color: Theme.of(context).cardColor,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              // SizedBox(height: 40),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  widget.project!.name!.toString(),
-                                  style: const TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              Container(
-                                constraints: const BoxConstraints(
-                                  maxWidth: 450,
-                                ),
-                                padding: const EdgeInsets.all(18.0),
-                                child: const Text(
-                                  "This is the description of the Project. Doesn't need to be super long cause we also link the Terms (on the right) and that should contain all the details needed for executing the task and making a judgement on the state of the project.",
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                height: 35,
-                                width: 500,
-                                child: Center(
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        widget.project.status == "Dispute"
-                                            ? MainAxisAlignment.spaceBetween
-                                            : MainAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        "Created: ${DateFormat.yMMMd().format(widget.project.creationDate!)}    ",
-                                        style: const TextStyle(fontSize: 13),
-                                      ),
-                                      widget.project.status == "Dispute"
-                                          ? Text(
-                                              "Expires: ${DateFormat.yMMMd().format(widget.project.expiresAt!)}",
-                                              style:
-                                                  const TextStyle(fontSize: 13))
-                                          : const Text(""),
-                                      StatusBox(project: widget.project)
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 35,
-                                child: Center(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Text("Contract Address: "),
-                                      Text(
-                                       widget.project.contractAddress!,
-                                        style: TextStyle(fontSize: 11),
-                                      ),
-                                      const SizedBox(
-                                        width: 2,
-                                      ),
-                                      TextButton(
-                                          onPressed: ()async {
-                                            await Clipboard.setData(
-                                              ClipboardData(text:widget.project.contractAddress!)
-                                           );
-                                            copied(context, "whatever");
-                                          },
-                                          child: const Icon(Icons.copy)),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 35,
-                                child: Center(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Text("Author Address: "),
-                                      const Text(
-                                        "KT1LyPqdRVBFdQvhjyybG5osRCXnGSrk15M5",
-                                        style: TextStyle(fontSize: 11),
-                                      ),
-                                      const SizedBox(
-                                        width: 2,
-                                      ),
-                                      TextButton(
-                                          onPressed: () {
-                                            copied(context, "whatever");
-                                          },
-                                          child: const Icon(Icons.copy)),
-                                        ],
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical:25.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    // SizedBox(height: 40),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        widget.project!.name!.toString(),
+                                        style: const TextStyle(
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                     ),
-                                  ),
-                              widget.project.status == "Ongoing" ||
-                                      widget.project.status == "Dispute" ||
-                                      widget.project.status == "Closed" ||
-                                      widget.project.status == "Pending"
-                                  ? SizedBox(
+                                    SizedBox(
                                       height: 35,
+                                      width: 500,
                                       child: Center(
                                         child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          mainAxisAlignment:MainAxisAlignment.center,
                                           children: [
-                                            const Text("Other Party Address: "),
-                                            const Text(
-                                              "KT1LyPqdRVBFdQvhjyybG5osRCXnGSrk15M5",
-                                              style: TextStyle(fontSize: 11),
+                                            Text(
+                                              "Created: ${DateFormat.yMMMd().format(widget.project.creationDate!)}    ",
+                                              style: const TextStyle(fontSize: 13),
                                             ),
-                                            const SizedBox(
-                                              width: 2,
-                                            ),
-                                            TextButton(
-                                                onPressed: () {
-                                                  copied(context, "whatever");
-                                                },
-                                                child: const Icon(Icons.copy)),
+                                            widget.project.status == "Dispute"
+                                                ? Text(
+                                                    "Expires: ${DateFormat.yMMMd().format(widget.project.expiresAt!)}",
+                                                    style:
+                                                        const TextStyle(fontSize: 13))
+                                                : const Text(""),
+                                            StatusBox(project: widget.project)
                                           ],
                                         ),
                                       ),
-                                    )
-                                  : const SizedBox(),
-                              widget.project.status == "Ongoing" ||
-                                      widget.project.status == "Dispute" ||
-                                      widget.project.status == "Closed" ||
-                                      widget.project.status == "Pending"
-                                  ? SizedBox(
-                                      height: 35,
-                                      child: Center(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text("Arbiter Address: "),
-                                            const Text(
-                                              "KT1LyPqdRVBFdQvhjyybG5osRCXnGSrk15M5",
-                                              style: TextStyle(fontSize: 11),
-                                            ),
-                                            const SizedBox(
-                                              width: 2,
-                                            ),
-                                            TextButton(
-                                                onPressed: () {
-                                                  copied(context, "whatever");
-                                                },
-                                                child: const Icon(Icons.copy)),
-                                          ],
-                                        ),
+                                    ),
+                                    Container(
+                                      constraints: const BoxConstraints(
+                                        maxWidth: 450,
                                       ),
-                                    )
-                                  : const SizedBox(),
-                              SizedBox(
-                                height: 35,
-                                child: Center(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(widget.project.status == "Ongoing" ||
-                                              widget.project.status ==
-                                                  "Dispute" ||
-                                              widget.project.status ==
-                                                  "Closed" ||
-                                              widget.project.status == "Pending"
-                                          ? "Terms of Engagement: "
-                                          : "Requirements: "),
-                                      const Text(
-                                        "https://ipfs/QmNrgEMcUygbKzZe...",
-                                        style: TextStyle(fontSize: 11),
+                                      padding: const EdgeInsets.all(18.0),
+                                      child:  Text(
+                                        widget.project.description!,
+                                        textAlign: TextAlign.center,
                                       ),
-                                      const SizedBox(
-                                        width: 2,
-                                      ),
-                                      TextButton(
-                                          onPressed: () {
-                                            copied(context, "whatever");
-                                          },
-                                          child: const Icon(Icons.copy)),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    
+                                    SizedBox(
+                                      height: 35,
+                                      child: Center(
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            const Text("Contract Address: "),
+                                            Text(
+                                             widget.project.contractAddress!,
+                                              style: TextStyle(fontSize: 11),
+                                            ),
+                                            const SizedBox(
+                                              width: 2,
+                                            ),
+                                            TextButton(
+                                                onPressed: ()async {
+                                                  copied(context,widget.project.contractAddress!);
+                                                },
+                                                child: const Icon(Icons.copy)),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 35,
+                                      child: Center(
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            const Text("Client: "),
+                                             Text(
+                                             widget.project.client!,
+                                              style: TextStyle(fontSize: 11),
+                                            ),
+                                            const SizedBox(
+                                              width: 2,
+                                            ),
+                                            TextButton(
+                                                onPressed: () {
+                                                  copied(context, widget.project.client);
+                                                },
+                                                child: const Icon(Icons.copy)),
+                                              ],
+                                            ),
+                                          ),
+                                          ),
+                                           SizedBox(
+                                      height: 35,
+                                      child: Center(
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            const Text("Contractor: "),
+                                             Text(
+                                             widget.project.contractor!,
+                                              style: TextStyle(fontSize: 11),
+                                            ),
+                                            const SizedBox(
+                                              width: 2,
+                                            ),
+                                            TextButton(
+                                                onPressed: () {
+                                                  copied(context, widget.project.contractor);
+                                                },
+                                                child: const Icon(Icons.copy)),
+                                              ],
+                                            ),
+                                          ),
+                                          ),
+                                            SizedBox(
+                                      height: 35,
+                                      child: Center(
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            const Text("Arbiter: "),
+                                             Text(
+                                             widget.project.arbiter!,
+                                              style: TextStyle(fontSize: 11),
+                                            ),
+                                            const SizedBox(
+                                              width: 2,
+                                            ),
+                                            TextButton(
+                                                onPressed: () {
+                                                  copied(context, widget.project.arbiter);
+                                                },
+                                                child: const Icon(Icons.copy)),
+                                              ],
+                                            ),
+                                          ),
+                                          ),
+                                      SizedBox(
+                                      height: 35,
+                                      child: Center(
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                             Text("Repository: "),
+                                             Text(
+                                             fit(widget.project.repo!),
+                                              style: TextStyle(fontSize: 11),
+                                            ),
+                                             SizedBox(
+                                              width: 2,
+                                            ),
+                                            TextButton(
+                                                onPressed: () {
+                                                  launch(widget.project.repo!);
+                                                },
+                                                child: const Icon(Icons.open_in_new)),
+                                              ],
+                                            ),
+                                          ),
+                                          ), 
+                                          
+                               
+                                  ],
+                                )
+                              ],
+                            ),
+                            SizedBox(height: 25),
+                            Container(
+                              constraints: BoxConstraints(
+                                maxWidth: 850,
                               ),
-                            ],
-                          )
-                        ],
+                              height: 33,
+                              decoration: BoxDecoration(
+                                border: Border.all(width: 0.1 , color: Theme.of(context).indicatorColor ),
+                                color: Theme.of(context).dividerColor.withOpacity(0.1)
+                              ),
+                              child:Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Opacity(opacity: 0.8, child: Text("Hash of ${widget.project.hashedFileName??""} :")),
+                                  SizedBox(width: 10),
+                                  Text(widget.project.termsHash??"" , style: TextStyle(backgroundColor: Colors.black54, color: Colors.white70), ),
+                                  SizedBox(width: 10),
+                                  TextButton(
+                                      onPressed: () {
+                                        copied(context, widget.project.termsHash??"");
+                                      },
+                                      child: const Icon(Icons.copy)),
+                                ],
+                              )
+                            )
+                          ],
+                        ),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -383,6 +396,8 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                 ],
                               ),
                             ),
+
+
                             const Padding(
                               padding: EdgeInsets.symmetric(horizontal: 28.0),
                               child: Opacity(
@@ -435,14 +450,26 @@ class _ProjectDetailsState extends State<ProjectDetails> {
           )),
     );
   }
+  fit(text){
+    if (text.length<33){
+      return text;
+    }
+    else {
+      return text.toString().substring(0,33)+"...";
+      }
+  }
 
-  copied(context, text) {
+  copied(context, text) async{
+    
+    await Clipboard.setData(
+          ClipboardData(text:text)
+        );
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         // The content of the SnackBar.
         content: Center(
             child: Text(
-          'Address copied',
+          'Item copied to clipboard',
           style: TextStyle(fontSize: 15),
         )),
         // The duration of the SnackBar.

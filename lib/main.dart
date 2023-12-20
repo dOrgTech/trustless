@@ -23,18 +23,21 @@ var projectsCollection = FirebaseFirestore.instance.collection('projects');
   for (var doc in querySnapshot.docs) {
     print("doc "+doc.data().toString());
       Project p =Project(
-        isUSDT: doc.data()["isUSDT"],
+       isUSDT: doc.data()["isUSDT"],
        name: doc.data()["name"],
        creationDate: DateTime.now(),
        description: doc.data()["description"],
        client: doc.data()["client"],
+       contractor:doc.data()['contractor'],
        arbiter: doc.data()["arbiter"],
        requirements: doc.data()["specs"],
-       repo: doc.data()["specs"],
+       repo: doc.data()["repo"],
        status: doc.data()["status"],
-      
+       contractAddress: doc.id.toString()
       );
     p.contractAddress=doc.id.toString();
+    p.termsHash=doc.data()['termsHash'];
+    p.hashedFileName=doc.data()['hashedFilename'];
     projects.add(p);
   }
   print("lungimea la proecte "+projects.length.toString());
@@ -59,7 +62,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'Trustless Business',
           theme: theme.getTheme(),
-          initialRoute: '/',
+          initialRoute: '/projects/KT1662nulp5e3kddtb64quu2sfzekx5eou2k',
     onGenerateRoute: (settings) {
   WidgetBuilder builder;
 
@@ -72,8 +75,9 @@ class MyApp extends StatelessWidget {
     Project? project;
     try {
       project = projects.firstWhere(
-        (proj) => proj.contractAddress == projectId,
+        (proj)=>proj.contractAddress == projectId
       );
+      print("project "+project.toString());
     } catch (e) {
       project = null;
     }

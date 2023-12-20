@@ -13,9 +13,9 @@ class Project{
   String? description;
   String? client;
   String? arbiter="";
-  String contractor="";
+  String? contractor="";
   String? hashedFileName="";
-  String? termsHash;
+  String? termsHash="";
   String? repo="";
   String? requirements;
   double? amountInEscrow;
@@ -23,7 +23,7 @@ class Project{
   Map<String,int>contributions={};
   List<Token>? acceptedTokens;
   // Constructor with logic
-  Project({required this.isUSDT, this.name,  this.creationDate, this.description,this.client, this.arbiter, this.requirements, this.status, this.repo}){
+  Project({required this.isUSDT,this.contractAddress, this.contractor,this.name,  this.creationDate, this.description,this.client, this.arbiter, this.requirements, this.status, this.repo}){
     int random = Random().nextInt(331) + 90;
     amountInEscrow = random * 100;
     creationDate=DateTime.now();
@@ -31,7 +31,6 @@ class Project{
     acceptedTokens=[
       Token(address: "---", name: "Native", symbol: "XTZ", decimals: 5),
       Token(address: "KT1MzN5jLkbbq9P6WEFmTffUrYtK8niZavzH", name: "Tether", symbol: "USDT", decimals: 5),
-      
     ];
   }
   @override
@@ -49,14 +48,26 @@ class Project{
     buffer.write('Requirements: $requirements\n');
     buffer.write('Amount in escrow: $amountInEscrow\n');
     buffer.write('Status: $status\n');
-    // use a loop to append the accepted tokens
     buffer.write('Accepted tokens: ');
-   
-    // remove the trailing comma and space
     buffer.toString().substring(0, buffer.length - 2);
     // return the string
     return buffer.toString();
   }
+
+  // The constructor that takes a JSON string and parses it into an object
+fromJson(Map<String, dynamic> json) {
+  isUSDT = json['isUSDT'];
+  name = json['name'];
+  contractor = json['contractor'];
+  creationDate = DateTime.parse(json['created']);
+  description = json['description'];
+  hashedFileName = json['hashedFileName'];
+  repo = json['repo'];
+  termsHash = json['termsHash'];
+  status = json['status'];
+  client = json['client'];
+}
+
   toJson(){
     return {
       'isUSDT':isUSDT,

@@ -24,8 +24,12 @@ ProjectsState projectsState;
 bool loading=false;
 bool done=false;
 bool error=false;
-Project project=Project(isUSDT: false);
-
+Project project=Project(isUSDT: false,
+arbiter: "",
+contractor: "",
+contractAddress: "",
+status: "open"
+);
 TextEditingController arbiterControlla = TextEditingController();
 TextEditingController contractorControlla = TextEditingController();
 TextEditingController nameControlla = TextEditingController();
@@ -49,8 +53,7 @@ class _NewGenericProjectState extends State<NewGenericProject> {
     widget.project.hashedFileName="";
     widget.project.termsHash="";
     widget.arbiterControlla.text=widget.project.arbiter!;
-    widget.contractorControlla.text=widget.project.contractor;
-    widget.contractorControlla.text=widget.project.contractor;
+    widget.contractorControlla.text=widget.project.contractor!;
     widget.repoControlla.text=widget.project.repo!;
     // TODO: implement initState
     super.initState();
@@ -77,25 +80,27 @@ class _NewGenericProjectState extends State<NewGenericProject> {
   Widget build(BuildContext context) {
     DateTime.now().add(const Duration(days:1825 ));
     main(){
-         switch (widget.stage) {
-    case 0:
-      return stage0();
-    case 1:
-      return stage1();
-    case 2:
-      return stage2();
-    case 3:
-      return stage3();
-    case 4:
-      return stage4();
-    case 5:
-      return stage5();
-    default:
-      return stage0();
-  }
+        switch (widget.stage) {
+          case 0:
+            return stage0();
+          case 1:
+            return stage1();
+          case 2:
+            return stage2();
+          case 3:
+            return stage3();
+          case 4:
+            return stage4();
+          case 5:
+            return stage5();
+          default:
+            return stage0();
+        }
     }
     return
     Container(
+            // width:700,
+            // height: 800,
           padding: const EdgeInsets.symmetric(horizontal:60,vertical: 35),
           decoration: BoxDecoration(
             border: Border.all(
@@ -122,7 +127,9 @@ class _NewGenericProjectState extends State<NewGenericProject> {
           },
           child: KeyedSubtree(
             key: ValueKey<int>(widget.stage),
-            child: main(),
+            child: 
+            // Container(child:Text("this works")),
+            main(),
           ),
         ),
       ),
@@ -210,14 +217,14 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                 SizedBox(height: 10),
                 Text(widget.project.repo!,style: TextStyle( backgroundColor: Colors.black,color: Colors.white),),
                 SizedBox(height: 8),
-                Text(widget.project.contractor.length<3?"N/A":widget.project.contractor, style: TextStyle( backgroundColor: Colors.black,color: Colors.white),),
+                Text(widget.project.contractor!.length<3?"N/A":widget.project.contractor!, style: TextStyle( backgroundColor: Colors.black,color: Colors.white),),
                 SizedBox(height: 8),
                 Text(widget.project.arbiter!.length<3?"N/A":widget.project.arbiter!, style: TextStyle( backgroundColor: Colors.black,color: Colors.white),),
             ],)
           ],),
           SizedBox(height: 45),
           Text(
-            widget.project.contractor.length<22 ?
+            widget.project.contractor!.length<22 ?
             "To deploy the Project you must stake your half of the arbitration fee. Before the contractor signs and stakes their half, you will still be able to withdraw this amount.  The stake will be released back to the parties if the Project concludes without a dispute."
             :
             ""
@@ -269,20 +276,29 @@ class _NewGenericProjectState extends State<NewGenericProject> {
     ),
     shadowColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor), // Optional: Use for shadow
   ),
-  onPressed: () async {
-    // ... Your existing onPressed code ...
-  },
-  child: const Center(
-    child: Text(
-      "DEPLOY PROJECT",
-      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-    ),
-  ),
-),
-
+                  onPressed: () async {
+                      widget.project.client = Human().address ?? generateWalletAddress();
+                      widget.project.contractAddress=generateContractAddress();
+                      await projectsCollection.doc(widget.project.contractAddress)
+                      .set(widget.project.toJson());
+                      await Future.delayed(const Duration(milliseconds: 100));
+                      setState(() {
+                        widget.projectsState.setState(() {    
+                          projects.add(widget.project);
+                        });
+                      });
+                      Navigator.of(context).pushNamed("/");
+                  },
+                  child: const Center(
+                    child: Text(
+                      "DEPLOY PROJECT",
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                       ),
-                    ],
-                  )
+                    ),
+                  ),
+                ),
+             ],
+          )
         ],
       ),
     );
@@ -420,7 +436,7 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                           },
                            child: Center(
                           child: 
-                          widget.project.contractor.length<3?
+                          widget.project.contractor!.length<3?
                           Text("   Skip   ", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,),)
                           :
                           Text("CONTINUE", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, ),),
@@ -446,7 +462,7 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("Provide a detailed description of the good or service you wish to acquire, to set expectations for the contractor and also to serve as reference during a potentioal dispute.", textAlign: TextAlign.left, style: TextStyle(fontSize: 17.5),),
+                    const Text("Provide a detailed description of the good or service you wish to acquire, to set expectations for the contractor and also to serve as reference during a potential dispute.", textAlign: TextAlign.left, style: TextStyle(fontSize: 17.5),),
 
                 const SizedBox(height: 19),
         RichText(
@@ -459,7 +475,7 @@ class _NewGenericProjectState extends State<NewGenericProject> {
             style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
             recognizer: TapGestureRecognizer()
               ..onTap = () {
-                launch('https://github.com/autonet-code/demo-project/tree/master');
+                launch('https://github.com/dOrgTech/template-project');
               },
           ),
         ],
@@ -478,7 +494,7 @@ class _NewGenericProjectState extends State<NewGenericProject> {
   child: const Text('Select File', textAlign: TextAlign.center,),
   style: ElevatedButton.styleFrom(
     primary: Colors.transparent, // Transparent background
-    onPrimary: Colors.white, // White text color
+   // White text color
     shadowColor: Colors.transparent, // No shadow
     side: const BorderSide(color: Color.fromARGB(255, 102, 102, 102), width: 2.0), // Visible border
     shape: RoundedRectangleBorder(
@@ -490,7 +506,7 @@ class _NewGenericProjectState extends State<NewGenericProject> {
 const SizedBox(width: 48),
 const SizedBox(
                         width: 460,
-                        child: Text("Select the README.md file. This should not be modified throughout the life cycle of the project. A hash of its content will be immutably stored in the contract."
+                        child: Text("Select the TERMS.md file. This should not be modified throughout the life cycle of the project. A hash of its content will be immutably stored in the contract."
                         ,textAlign: TextAlign.justify,
                         )),
                     ],
@@ -559,11 +575,14 @@ const SizedBox(
                         ),
                       ),
                     ),
-                    onPressed: (){
+                    onPressed: widget.project.hashedFileName!.length>1
+                    && 
+                    widget.project.repo!.length>3?
+                    (){
                      setState(() {
                        widget.stage=3;
                      });
-                    },
+                    }:null,
                      child: const Center(
                     child: Text("CONTINUE", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
                   )),
@@ -632,7 +651,7 @@ const SizedBox(
   stage0(){
     return  Container(
       key: ValueKey(0),
-      constraints: const BoxConstraints(minHeight: 500),
+      // constraints: const BoxConstraints(minHeight: 500),
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,

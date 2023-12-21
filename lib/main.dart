@@ -13,7 +13,6 @@ import 'firebase_options.dart';
 
 
 List<Project> projects=[];
-
 var projectsCollection = FirebaseFirestore.instance.collection('projects');
     void main() async {
       WidgetsFlutterBinding.ensureInitialized();
@@ -21,11 +20,10 @@ var projectsCollection = FirebaseFirestore.instance.collection('projects');
       var querySnapshot = await projectsCollection.get();
   // Iterate through the documents and print their data
   for (var doc in querySnapshot.docs) {
-    print("doc "+doc.data().toString());
       Project p =Project(
        isUSDT: doc.data()["isUSDT"],
        name: doc.data()["name"],
-       creationDate: DateTime.now(),
+       creationDate : (doc.data()['created'] as Timestamp).toDate(),
        description: doc.data()["description"],
        client: doc.data()["client"],
        contractor:doc.data()['contractor'],
@@ -36,12 +34,12 @@ var projectsCollection = FirebaseFirestore.instance.collection('projects');
        contractAddress: doc.id.toString()
       );
     p.contractAddress=doc.id.toString();
-    p.termsHash=doc.data()['termsHash'];
-    p.hashedFileName=doc.data()['hashedFilename'];
+    p.termsHash=doc.data()['termsHash']??"";
+    p.hashedFileName=doc.data()['hashedFileName']??"";
     projects.add(p);
   }
   print("lungimea la proecte "+projects.length.toString());
- 
+  // print("primex creation date ${projects[0].creationDate.toString()}");
     runApp( MyApp());
     }
 
@@ -62,7 +60,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'Trustless Business',
           theme: theme.getTheme(),
-          initialRoute: '/projects/KT1662nulp5e3kddtb64quu2sfzekx5eou2k',
+          initialRoute: '/projects/KT1ay23f7cfr37v5xeuvqh0emfawfrht4txh',
     onGenerateRoute: (settings) {
   WidgetBuilder builder;
 

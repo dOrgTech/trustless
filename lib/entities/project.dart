@@ -26,7 +26,7 @@ class Project{
   Project({required this.isUSDT,this.contractAddress, this.contractor,this.name,  this.creationDate, this.description,this.client, this.arbiter, this.requirements, this.status, this.repo}){
     int random = Random().nextInt(331) + 90;
     amountInEscrow = random * 100;
-    creationDate=DateTime.now();
+    creationDate=this.creationDate??DateTime.now();
     expiresAt=creationDate!.add(Duration(days: 30));
     acceptedTokens=[
       Token(address: "---", name: "Native", symbol: "XTZ", decimals: 5),
@@ -73,12 +73,13 @@ fromJson(Map<String, dynamic> json) {
       'isUSDT':isUSDT,
       'name':name,
       'contractor':contractor,
-      'created':DateTime.now(),
+      'created':creationDate,
       'description':description,
       'hashedFileName':hashedFileName,
       'repo':repo,
       'termsHash':termsHash,
-      'status':"open",
+      'status':status,
+      'arbiter':arbiter,
       'author':"client",
       'client':client
     };

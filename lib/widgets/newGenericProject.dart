@@ -28,7 +28,7 @@ Project project=Project(isUSDT: false,
 arbiter: "",
 contractor: "",
 contractAddress: "",
-status: "open"
+status: "pending"
 );
 TextEditingController arbiterControlla = TextEditingController();
 TextEditingController contractorControlla = TextEditingController();
@@ -147,18 +147,15 @@ class _NewGenericProjectState extends State<NewGenericProject> {
       child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
         children: [
-         
-          Text("Deploying Project to the Trustless Business Ecosystem:"),
+         const Text("Deploying Project to the Trustless Business Ecosystem:"),
           const SizedBox(height: 45),
           Row(children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
+              children: const [
                 SizedBox(height:50, child:Text("")),
                 SizedBox(height: 13),
                 Text(""),
-              
-             
             ],),
          const SizedBox(width: 60),
             Column(
@@ -172,22 +169,18 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                    color: Colors.white,
                    ),),
                  ),
-                
                   SizedBox(
                     width: 470,
                     child: Text(widget.project.description!, style: TextStyle(  backgroundColor: Colors.black,
                               color: Colors.white,),),
                   ),
-             
             ],)
           ],),
           SizedBox(height: 30),
              Row(children: [
             Column(
-              
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-             
                 Text("Currency:"),
                 SizedBox(height: 8),
                 Text("Author (you):"),
@@ -206,7 +199,6 @@ class _NewGenericProjectState extends State<NewGenericProject> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-             
                 Text(widget.project.isUSDT?"USDT":"XTZ", style: TextStyle( backgroundColor: Colors.black,color: Colors.white),),
                 SizedBox(height: 8),
                 Text(Human().address??"3dp317hdqo8we7dhoq873hod827dh" ,style: TextStyle( backgroundColor: Colors.black,color: Colors.white), ),
@@ -245,25 +237,25 @@ class _NewGenericProjectState extends State<NewGenericProject> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(widget.project.isUSDT?"160.0 USDT":"214.00 XTZ", style: TextStyle( backgroundColor: Colors.black,color: Colors.white),),
+                Text(widget.project.isUSDT?"160.0 USDT":"214.00 XTZ"),
                 const SizedBox(height: 8),
-                Text(widget.project.isUSDT?"80.0 USDT":"107.00 XTZ", style: TextStyle( backgroundColor: Colors.black,color: Colors.white),),
+                Text(widget.project.isUSDT?"80.0 USDT":"107.00 XTZ"),
             ],),
            
           ],),
            const SizedBox(height: 60),
            Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                       TextButton(onPressed: (){setState(() {
-                                  widget.stage=4;
-                                });}, child: const Text("< Back")),
-                                 StepProgressIndicator(currentStep: 5),
-                      SizedBox(
-                        height: 40,
-                        width: 170,
-                        child: 
-                        TextButton(
+               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+               children: [
+                TextButton(onPressed: (){setState(() {
+                          widget.stage=4;
+                        });}, child: const Text("< Back")),
+                          StepProgressIndicator(currentStep: 5),
+                SizedBox(
+                  height: 40,
+                  width: 170,
+                  child: 
+                  TextButton(
   style: ButtonStyle(
     overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
     backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent), // Set background color to black
@@ -272,13 +264,14 @@ class _NewGenericProjectState extends State<NewGenericProject> {
       RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(1.0),
         side: BorderSide(color: Theme.of(context).indicatorColor, width: 1.0), // Use current indicatorColor for outline
-      ),
+      ),                                                                                                                                                                                
     ),
     shadowColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor), // Optional: Use for shadow
   ),
                   onPressed: () async {
                       widget.project.client = Human().address ?? generateWalletAddress();
                       widget.project.contractAddress=generateContractAddress();
+                      widget.project.status=widget.project.contractor!.length>3?"pending":"open";
                       await projectsCollection.doc(widget.project.contractAddress)
                       .set(widget.project.toJson());
                       await Future.delayed(const Duration(milliseconds: 100));

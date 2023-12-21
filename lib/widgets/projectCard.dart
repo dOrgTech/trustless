@@ -121,7 +121,7 @@ class StatusBox extends StatelessWidget {
   Widget build(BuildContext context) {
       
     return
-    project.status =="Ongoing"?
+    project.status =="ongoing"?
                 Container(
                       width: 90,
                       height: 20,
@@ -129,13 +129,13 @@ class StatusBox extends StatelessWidget {
                         color:Color.fromARGB(255, 80, 109, 96),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: Center(child: Text(project!.status! , 
+                      child: Center(child: Text(project.status! , 
                       style: 
                      
                       TextStyle(color: Color.fromARGB(255, 185, 253, 206), fontWeight: FontWeight.bold, fontSize: 12)
                       ))) 
               :
-    project.status =="Dispute"?
+    project.status =="dispute"?
 
               Container(
                       width: 90,
@@ -149,7 +149,7 @@ class StatusBox extends StatelessWidget {
                   
                       TextStyle(color: Color.fromARGB(255, 253, 185, 185), fontWeight: FontWeight.bold, fontSize: 12))))
                 :
-                project.status =="Open"?
+                project.status =="open"?
                     Container(
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.black38,width: 0.01),
@@ -169,7 +169,7 @@ class StatusBox extends StatelessWidget {
                       project.status.toString(),style: TextStyle(color: Color.fromARGB(255, 8, 29, 9)),
                     ),)
                   ):
-                   project.status =="Pending"?
+                   project.status =="pending"?
                     Container(
                     decoration: BoxDecoration(
                       border: Border.all(color: Color.fromARGB(96, 202, 202, 202),width: 0.01),

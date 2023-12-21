@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:trustless/widgets/arbitrate.dart';
 import 'package:trustless/widgets/dispute.dart';
+import 'package:trustless/widgets/footer.dart';
 import 'package:trustless/widgets/projectCard.dart';
 import 'package:trustless/widgets/proposalDetails.dart';
 import 'package:trustless/widgets/release.dart';
@@ -12,6 +14,8 @@ import 'package:url_launcher/url_launcher.dart';
 import '../entities/project.dart';
 import '../main.dart';
 import '../widgets/withdraw.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:http/http.dart' as http;
 
 class ProjectDetails extends StatefulWidget {
   ProjectDetails({super.key, required this.project});
@@ -21,12 +25,27 @@ class ProjectDetails extends StatefulWidget {
 }
 
 class _ProjectDetailsState extends State<ProjectDetails> {
+   MarkdownStyleSheet getMarkdownStyleSheet(BuildContext context) {
+  return MarkdownStyleSheet.fromCupertinoTheme(
+    CupertinoThemeData(
+      brightness: Theme.of(context).brightness,
+      textTheme: CupertinoTextThemeData(
+        textStyle: TextStyle(
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Colors.white
+              : Colors.black,
+          fontSize: Theme.of(context).textTheme.bodyText1?.fontSize ?? 20,
+        ),
+      ),
+    ),
+  );
+}
   @override
   Widget build(BuildContext context) {
     List<Widget> openProjectFunctions = [
       functionItem("Send Funds to Project", "Anyone", SendFunds()),
       functionItem("Set Other Party", "Author", SetParty()),
-      functionItem("Withdraw/Reimburse", "Author", Withdraw()),
+      functionItem("Withdraw Support", "Anyone", Withdraw()),
     ];
     List<Widget> ongoingProjectFunctions = [
       functionItem("Send Funds to Project", "Anyone", SendFunds()),
@@ -37,11 +56,11 @@ class _ProjectDetailsState extends State<ProjectDetails> {
       functionItem("Arbitrate", "Arbiter", Arbitrate(project: widget.project)),
     ];
     List<Widget> closedProjectFunctions = [
-      functionItem("Withdraw/Reinburse", "Anyone", Withdraw()),
+      functionItem("Withdraw Support", "Anyone", Withdraw()),
     ];
 
     List<Widget> pendingProjectFunctions = [
-      functionItem("Withdraw/Reimburse", "Author", Withdraw()),
+      functionItem("Withdraw Support", "Anyone", Withdraw()),
       functionItem("Sign Contract", "Contractor", Withdraw()),
     ];
     return BaseScaffold(
@@ -179,13 +198,16 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             const Text("Contractor: "),
+                                              widget.project.contractor!.length>3?
                                              Text(
                                              widget.project.contractor!,
                                               style: TextStyle(fontSize: 11),
-                                            ),
+                                            ):const SizedBox(width:235,child: Text("N/A")),
+                                          
                                             const SizedBox(
                                               width: 2,
                                             ),
+                                            widget.project.contractor!.length<3?SizedBox(width:54):
                                             TextButton(
                                                 onPressed: () {
                                                   copied(context, widget.project.contractor);
@@ -202,13 +224,14 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             const Text("Arbiter: "),
+                                             widget.project.arbiter!.length>3?
                                              Text(
                                              widget.project.arbiter!,
                                               style: TextStyle(fontSize: 11),
-                                            ),
+                                            ):const SizedBox(width:235,child: Text("N/A")),
                                             const SizedBox(
                                               width: 2,
-                                            ),
+                                            ), widget.project.contractor!.length<3?SizedBox(width:54):
                                             TextButton(
                                                 onPressed: () {
                                                   copied(context, widget.project.arbiter);
@@ -430,21 +453,58 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                       ),
                     ),
                     const SizedBox(height: 40),
-                    const Text("Implementation:"),
-                    const SizedBox(height: 10),
-                    Container(
-                        alignment: Alignment.topCenter,
-                        constraints: const BoxConstraints(maxWidth: 1200),
-                        padding: const EdgeInsets.all(11),
-                        decoration:
-                            const BoxDecoration(color: Color(0xff121416)),
-                        child: Align(
-                            alignment: Alignment.topLeft,
-                            child: Transform(
-                                transform:
-                                    scaleXYZTransform(scaleX: 1.3, scaleY: 1.3),
-                                child: Image.network(
-                                    "https://i.ibb.co/fDJhKkt/image.png"))))
+                    
+
+                     Container(
+                      decoration: BoxDecoration(
+                        
+                        color:Theme.of(context).brightness==Brightness.light?Color.fromARGB(255, 223, 223, 223):Colors.black,
+                        border: Border.all(width: 0.5)
+                      ),
+                            padding: const EdgeInsets.all(50),
+                            child: 
+                            
+                            FutureBuilder(
+                              future: http.get(
+                                Uri.https(
+                                  'raw.githubusercontent.com',
+                                 '/dOrgTech/template-project/master/README.md',
+                                ),
+                              ),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState !=
+                                    ConnectionState.done) {
+                                  return Align( 
+                                    alignment: Alignment.topCenter,
+                                    child: Padding(
+                                      padding: EdgeInsets.only(top: 20),
+                                      child: SizedBox(
+                                        width: 120,
+                                        height: 120,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 13,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  return Container(
+                                    height: 700,
+                                    width: 1100,
+                                    child: Markdown(
+                                      styleSheet:
+                                          getMarkdownStyleSheet(context),
+                                      data: (snapshot.data as http.Response)
+                                          .body
+                                          .toString(),
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          ),
+                   SizedBox(height: 30),
+                   Footer()
                   ]),
             ],
           )),

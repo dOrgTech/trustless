@@ -132,7 +132,7 @@ class ProjectsState extends State<Projects> {
                            ),
                       )),
                     SizedBox(height: 24,),
-                    // NewGenericProject(projectsState: this),
+                    NewGenericProject(projectsState: this),
                    Container(
                     alignment: Alignment.topCenter,
                     width: double.infinity,

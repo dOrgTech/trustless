@@ -60,7 +60,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'Trustless Business',
           theme: theme.getTheme(),
-          initialRoute: '/projects/KT1ay23f7cfr37v5xeuvqh0emfawfrht4txh',
+          initialRoute: '/',
     onGenerateRoute: (settings) {
   WidgetBuilder builder;
 
@@ -293,7 +293,7 @@ class ThemeNotifier with ChangeNotifier {
     brightness: Brightness.light,
     primaryColor: Color.fromARGB(255, 155, 155, 155), // Main background color
     accentColor: _lightThemeHighlightColor, // Primary accent/highlight color
-    colorScheme: ColorScheme.light(
+    colorScheme:const  ColorScheme.light(
       primary: _lightThemeHighlightColor,
       onPrimary: Colors.black, // Text on primary color
       secondary: Colors.black, // Icon and other secondary elements
@@ -306,7 +306,7 @@ class ThemeNotifier with ChangeNotifier {
       onError: Colors.white,
       brightness: Brightness.light,
     ),
-    buttonTheme: ButtonThemeData(
+    buttonTheme:const  ButtonThemeData(
       buttonColor: _lightThemeHighlightColor, // Button background color
       textTheme: ButtonTextTheme.primary,
     ),
@@ -319,7 +319,7 @@ class ThemeNotifier with ChangeNotifier {
       backgroundColor: Color.fromARGB(255, 199, 199, 199),
       iconTheme: IconThemeData(color: Colors.black),
     ),
-    inputDecorationTheme: InputDecorationTheme(
+    inputDecorationTheme:const  InputDecorationTheme(
       focusedBorder: OutlineInputBorder(
         borderSide: BorderSide(color: _lightThemeHighlightColor),
       ),
@@ -332,7 +332,7 @@ class ThemeNotifier with ChangeNotifier {
     brightness: Brightness.dark,
     primaryColor: Colors.grey[850], // Main background color
     accentColor: _darkThemeHighlightColor, // Primary accent/highlight color
-    colorScheme: ColorScheme.dark(
+    colorScheme: const ColorScheme.dark(
       primary: _darkThemeHighlightColor,
       onPrimary: Colors.white, // Text on primary color
       secondary: Colors.white, // Icon and other secondary elements

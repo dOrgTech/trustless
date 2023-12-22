@@ -70,7 +70,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
           child: ListView(
             shrinkWrap: true, // Set this property to true
             children: [
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               Column(
                   // Start of Column
                   crossAxisAlignment: CrossAxisAlignment
@@ -154,7 +154,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                             const Text("Contract Address: "),
                                             Text(
                                              widget.project.contractAddress!,
-                                              style: TextStyle(fontSize: 11),
+                                              style: const TextStyle(fontSize: 11),
                                             ),
                                             const SizedBox(
                                               width: 2,
@@ -177,7 +177,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                             const Text("Client: "),
                                              Text(
                                              widget.project.client!,
-                                              style: TextStyle(fontSize: 11),
+                                              style: const TextStyle(fontSize: 11),
                                             ),
                                             const SizedBox(
                                               width: 2,
@@ -201,13 +201,13 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                               widget.project.contractor!.length>3?
                                              Text(
                                              widget.project.contractor!,
-                                              style: TextStyle(fontSize: 11),
+                                              style: const TextStyle(fontSize: 11),
                                             ):const SizedBox(width:235,child: Text("N/A")),
                                           
                                             const SizedBox(
                                               width: 2,
                                             ),
-                                            widget.project.contractor!.length<3?SizedBox(width:54):
+                                            widget.project.contractor!.length<3?const SizedBox(width:54):
                                             TextButton(
                                                 onPressed: () {
                                                   copied(context, widget.project.contractor);
@@ -227,11 +227,11 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                              widget.project.arbiter!.length>3?
                                              Text(
                                              widget.project.arbiter!,
-                                              style: TextStyle(fontSize: 11),
+                                              style: const TextStyle(fontSize: 11),
                                             ):const SizedBox(width:235,child: Text("N/A")),
                                             const SizedBox(
                                               width: 2,
-                                            ), widget.project.contractor!.length<3?SizedBox(width:54):
+                                            ), widget.project.contractor!.length<3?const SizedBox(width:54):
                                             TextButton(
                                                 onPressed: () {
                                                   copied(context, widget.project.arbiter);
@@ -247,12 +247,12 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
-                                             Text("Repository: "),
+                                             const Text("Repository: "),
                                              Text(
                                              fit(widget.project.repo!),
-                                              style: TextStyle(fontSize: 11),
+                                              style: const TextStyle(fontSize: 11),
                                             ),
-                                             SizedBox(
+                                             const SizedBox(
                                               width: 2,
                                             ),
                                             TextButton(
@@ -270,9 +270,10 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                 )
                               ],
                             ),
-                            SizedBox(height: 25),
+                             SizedBox(height: widget.project.status =="open" ? 25:0),
+                            !(widget.project.status=="open")?
                             Container(
-                              constraints: BoxConstraints(
+                              constraints: const BoxConstraints(
                                 maxWidth: 850,
                               ),
                               height: 33,
@@ -284,9 +285,9 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Opacity(opacity: 0.8, child: Text("Hash of ${widget.project.hashedFileName??""} :")),
-                                  SizedBox(width: 10),
-                                  Text(widget.project.termsHash??"" , style: TextStyle(backgroundColor: Colors.black54, color: Colors.white70), ),
-                                  SizedBox(width: 10),
+                                  const SizedBox(width: 10),
+                                  Text(widget.project.termsHash??"" , style: const TextStyle(backgroundColor: Colors.black54, color: Colors.white70), ),
+                                  const SizedBox(width: 10),
                                   TextButton(
                                       onPressed: () {
                                         copied(context, widget.project.termsHash??"");
@@ -294,12 +295,12 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                       child: const Icon(Icons.copy)),
                                 ],
                               )
-                            )
+                            ):SizedBox(),
                           ],
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20),
+                     SizedBox(height:  widget.project.status =="open" ? 20:0),
                     Container(
                       alignment: Alignment.topCenter,
                       width: double.infinity,
@@ -344,9 +345,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                         padding:
                                             const EdgeInsets.only(left: 28.0),
                                         child: Text(
-                                          widget.project.amountInEscrow!
-                                                  .toString() +
-                                              ".000000 USDT",
+                                          "${widget.project.amountInEscrow!}.000000 USDT",
                                           style: const TextStyle(
                                               fontSize: 25,
                                               fontWeight: FontWeight.normal),
@@ -458,7 +457,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                      Container(
                       decoration: BoxDecoration(
                         
-                        color:Theme.of(context).brightness==Brightness.light?Color.fromARGB(255, 223, 223, 223):Colors.black,
+                        color:Theme.of(context).brightness==Brightness.light?const Color.fromARGB(255, 223, 223, 223):Colors.black,
                         border: Border.all(width: 0.5)
                       ),
                             padding: const EdgeInsets.all(50),
@@ -467,14 +466,14 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                             FutureBuilder(
                               future: http.get(
                                 Uri.https(
-                                  'raw.githubusercontent.com',
-                                 '/dOrgTech/template-project/master/README.md',
+                                 'raw.githubusercontent.com',
+                                  '${widget.project.repo?.split('github.com/')[1]}/master/README.md',
                                 ),
                               ),
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState !=
                                     ConnectionState.done) {
-                                  return Align( 
+                                  return const Align( 
                                     alignment: Alignment.topCenter,
                                     child: Padding(
                                       padding: EdgeInsets.only(top: 20),
@@ -488,7 +487,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                     ),
                                   );
                                 } else {
-                                  return Container(
+                                  return SizedBox(
                                     height: 700,
                                     width: 1100,
                                     child: Markdown(
@@ -503,7 +502,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                               },
                             ),
                           ),
-                   SizedBox(height: 30),
+                   const SizedBox(height: 30),
                    Footer()
                   ]),
             ],
@@ -525,7 +524,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
           ClipboardData(text:text)
         );
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
+      const SnackBar(
         // The content of the SnackBar.
         content: Center(
             child: Text(

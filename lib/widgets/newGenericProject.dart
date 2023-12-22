@@ -88,11 +88,11 @@ class _NewGenericProjectState extends State<NewGenericProject> {
           case 2:
             return stage2();
           case 3:
-            return stage3();
+            return stage13();
           case 4:
-            return stage4();
+            return stage14();
           case 5:
-            return stage5();
+            return stage2();
           default:
             return stage0();
         }
@@ -139,15 +139,15 @@ class _NewGenericProjectState extends State<NewGenericProject> {
 
   bool pressedName = false;
   bool pressedDesc = false;
-  stage5(){
+  stage2(){
          return Container(
-          key: ValueKey(5),
+          key: ValueKey(2),
        constraints: const BoxConstraints(
        ),
       child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
         children: [
-         const Text("Deploying Project to the Trustless Business Ecosystem:"),
+          Text("Deploying ${widget.project.status!.toUpperCase()} Project to the Trustless Business Ecosystem:"),
           const SizedBox(height: 45),
           Row(children: [
             Column(
@@ -185,11 +185,11 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                 SizedBox(height: 8),
                 Text("Author (you):"),
                 SizedBox(height: 8),
+                Text("Project Repository:"),
+                SizedBox(height: 8),
                 Text("Terms File:"),
                 SizedBox(height: 8),
                 Text("Terms Hash:"),
-                SizedBox(height: 8),
-                Text("Project Repository:"),
                 SizedBox(height: 8),
                 Text("Contractor:"),
                 SizedBox(height: 8),
@@ -202,24 +202,24 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                 Text(widget.project.isUSDT?"USDT":"XTZ", style: TextStyle( backgroundColor: Colors.black,color: Colors.white),),
                 SizedBox(height: 8),
                 Text(Human().address??"3dp317hdqo8we7dhoq873hod827dh" ,style: TextStyle( backgroundColor: Colors.black,color: Colors.white), ),
-                SizedBox(height: 8),
-                Text(widget.project.hashedFileName!,style: TextStyle( backgroundColor: Colors.black,color: Colors.white),),
-                SizedBox(height: 10),
-                Text(widget.project.termsHash!,style: TextStyle(fontSize: 11, backgroundColor: Colors.black,color: Colors.white),),
                 SizedBox(height: 10),
                 Text(widget.project.repo!,style: TextStyle( backgroundColor: Colors.black,color: Colors.white),),
+                SizedBox(height: 8),
+                Text(widget.project.hashedFileName!.length<3?"N/A":widget.project.hashedFileName!,style: TextStyle( backgroundColor: Colors.black,color: Colors.white),),
+                SizedBox(height: 10),
+                Text(widget.project.termsHash!.length<3?"N/A":widget.project.termsHash!,style: TextStyle(fontSize: 11, backgroundColor: Colors.black,color: Colors.white),),
                 SizedBox(height: 8),
                 Text(widget.project.contractor!.length<3?"N/A":widget.project.contractor!, style: TextStyle( backgroundColor: Colors.black,color: Colors.white),),
                 SizedBox(height: 8),
                 Text(widget.project.arbiter!.length<3?"N/A":widget.project.arbiter!, style: TextStyle( backgroundColor: Colors.black,color: Colors.white),),
             ],)
           ],),
-          SizedBox(height: 45),
+          const SizedBox(height: 45),
           Text(
-            widget.project.contractor!.length<22 ?
+            widget.project.status=="pending"?
             "To deploy the Project you must stake your half of the arbitration fee. Before the contractor signs and stakes their half, you will still be able to withdraw this amount.  The stake will be released back to the parties if the Project concludes without a dispute."
             :
-            ""
+            "You may deploy this open project without staking half of the arbitration fee, but will need to to so later when you set the parties and terms. While the project is open and/or pending, people can send and withdraw funds from it at will. One can only withdraw what they previously put in."
             ),
           SizedBox(height: 25),
             Row(children: [
@@ -239,7 +239,15 @@ class _NewGenericProjectState extends State<NewGenericProject> {
               children: [
                 Text(widget.project.isUSDT?"160.0 USDT":"214.00 XTZ"),
                 const SizedBox(height: 8),
-                Text(widget.project.isUSDT?"80.0 USDT":"107.00 XTZ"),
+                Text(
+                  widget.project.status=="pending"
+                         ?
+                  widget.project.isUSDT?"80.0 USDT":"107.00 XTZ"
+                         :
+                 widget.project.isUSDT?"0.00 USDT":"0.00 XTZ"
+                )
+                
+                ,
             ],),
            
           ],),
@@ -248,7 +256,7 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                children: [
                 TextButton(onPressed: (){setState(() {
-                          widget.stage=4;
+                          widget.stage=1;
                         });}, child: const Text("< Back")),
                           StepProgressIndicator(currentStep: 5),
                 SizedBox(
@@ -271,7 +279,7 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                   onPressed: () async {
                       widget.project.client = Human().address ?? generateWalletAddress();
                       widget.project.contractAddress=generateContractAddress();
-                      widget.project.status=widget.project.contractor!.length>3?"pending":"open";
+                      
                       await projectsCollection.doc(widget.project.contractAddress)
                       .set(widget.project.toJson());
                       await Future.delayed(const Duration(milliseconds: 100));
@@ -296,7 +304,7 @@ class _NewGenericProjectState extends State<NewGenericProject> {
       ),
     );
   }
-  stage4(){
+  stage14(){
       return Container(
         key: ValueKey(4),
       width:800,
@@ -322,7 +330,7 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                       decoration:  const InputDecoration(
                         labelText: "Arbiter Address",
                         ),),
-                  ),
+                  ), 
            
           const SizedBox(height: 70),
           const Text("The Arbiter may also be set after deploying the contract. Skip to proceed without a designated Arbiter."),
@@ -332,7 +340,7 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                     children: [
                        TextButton(
                         onPressed: (){setState(() {
-                                  widget.stage=3;
+                                  widget.stage=1;
                                 });}, child: const Text("< Back")),
                                  StepProgressIndicator(currentStep: 4),
                       SizedBox(
@@ -367,7 +375,7 @@ class _NewGenericProjectState extends State<NewGenericProject> {
       ),
     );
   }
-  stage3(){
+  stage13(){
     return Container(
       key: ValueKey(3),
       width:800,
@@ -424,7 +432,7 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                           ),
                           onPressed: (){
                           setState(() {
-                            widget.stage=4;
+                            widget.stage=1;
                           });
                           },
                            child: Center(
@@ -441,7 +449,7 @@ class _NewGenericProjectState extends State<NewGenericProject> {
       ),
     );
   }
-  stage2(){
+  stage12(){
     
     return Container(
       key: ValueKey(2),
@@ -498,16 +506,15 @@ class _NewGenericProjectState extends State<NewGenericProject> {
 ),    
 const SizedBox(width: 48),
 const SizedBox(
-                        width: 460,
-                        child: Text("Select the TERMS.md file. This should not be modified throughout the life cycle of the project. A hash of its content will be immutably stored in the contract."
-                        ,textAlign: TextAlign.justify,
-                        )),
-                    ],
-                  ),
+                  width: 460,
+                  child: Text("Select the TERMS.md file. This should not be modified throughout the life cycle of the project. A hash of its content will be immutably stored in the contract."
+                  ,textAlign: TextAlign.justify,
+                  )),
+                ],
+                ),
                 ),
                 Column(
       children: <Widget>[
-      
         const SizedBox(height: 20),
         Align(
           alignment: Alignment.centerLeft,
@@ -593,13 +600,113 @@ const SizedBox(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-           
-          const SizedBox(height: 30),
-           agentName(),
-          const SizedBox(height: 30),
+             const Opacity(
+            opacity: 0.9,
+            child: Text("Set Parties",style: TextStyle(fontSize: 22),)),
+          const SizedBox(height: 25),
+  RichText(
+  text: TextSpan(
+    style: DefaultTextStyle.of(context).style, // Set default text style from the theme
+    children: <TextSpan>[
+      TextSpan(
+        text: "If you already have already reached an arrangement with someone for the work specified in this Project, add their wallet or contract address in the field below. Their participation will be formalized once they sign this Project contract and stake half of the arbitration fee. You also need to specify the Arbiter at this point. Please refer to ",
+      ),
+      TextSpan(
+        text: 'the docs',
+        style: TextStyle(color: Colors.blue),
+        recognizer: TapGestureRecognizer()
+          ..onTap = () {
+            // Link handling code
+            launch("https://your-link-to-the-docs.com");
+          },
+      ),
+      TextSpan(
+        text: " to learn more about the role of the arbiter.",
+      ),
+    ],
+  ),
+)
+,
 
-          agentDescription(),
-                        const SizedBox(height: 175),
+          const SizedBox(height: 60),
+          SizedBox(
+                    // width:630,
+                    child:  TextField(
+                      controller: widget.contractorControlla,
+                      onChanged: (value){setState(() {
+                        widget.project.contractor=value;
+                      });},
+                      style: const TextStyle(fontSize: 13),
+                      decoration:  const InputDecoration(
+                        labelText: "Contractor Address",
+                        ),),
+                  ),
+           
+           
+          const SizedBox(height: 40),
+          SizedBox(
+                    // width:630,
+                    child: TextField(
+                      controller: widget.arbiterControlla,
+                       onChanged: (value){setState(() {
+                        widget.project.arbiter=value;
+                      });},
+                      style: const TextStyle(fontSize: 13),
+                      decoration:  const InputDecoration(
+                        labelText: "Arbiter Address",
+                        ),),
+                  ), 
+                const SizedBox(height: 39),
+ SizedBox(
+                  // width:600,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                     ElevatedButton(
+  onPressed: _pickFile,
+  child: const Text('Select File', textAlign: TextAlign.center,),
+  style: ElevatedButton.styleFrom(
+    primary: Colors.transparent, // Transparent background
+   // White text color
+    shadowColor: Colors.transparent, // No shadow
+    side: const BorderSide(color: Color.fromARGB(255, 102, 102, 102), width: 2.0), // Visible border
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(0), // Square shape
+    ),
+    fixedSize: const Size(100, 100), // Square size
+  ),
+),    
+const SizedBox(width: 38),
+const SizedBox(
+                        
+                        child: SizedBox(
+                          width: 500,
+                          child: Text("Select the TERMS.md file. This should not be modified throughout the life cycle of the project. A hash of its content will be immutably stored in the contract."
+                          ,textAlign: TextAlign.justify,
+                          ),
+                        )),
+                    ],
+                  ),
+                ),
+              const SizedBox(height: 24),
+                  Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.only(left:38.0),
+            child: Row(
+              children: [
+                Opacity(
+                  opacity: 0.7,
+                  child: Text(_fileName.isNotEmpty ? 'File hash: ':"",)
+                  ),
+                Text('$_hash', style:  TextStyle(fontWeight: FontWeight.w100, color:Color.fromRGBO(253, 251, 231, 1), backgroundColor: Colors.black),),
+              ],
+            ),
+          )),
+          const SizedBox(height: 60),
+          const Text("The Parties may also be set after deploying the Project on chain. Skip to proceed without a designated Contractor and deploy your contract as Open, allowing potential contractors to compete in proposals."),
+          
+                        const SizedBox(height: 45),
                         SizedBox(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -612,9 +719,7 @@ const SizedBox(
                   height: 40,
                   width: 170,
                   child: TextButton(
-                    
                     style: ButtonStyle(
-                      
                       // overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
                       // backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
                       elevation: MaterialStateProperty.all(1.0),
@@ -624,14 +729,41 @@ const SizedBox(
                         ),
                       ),
                     ),
-                     onPressed: (widget.project.name!.length > 1 && widget.project.description!.length > 1) 
-                    ? (){
+                     onPressed:
+                    (){
+                      
+                      if(
+                       widget.project.contractor!.length > 1
+                      && widget.project.arbiter!.length > 1
+                      && widget.project.termsHash!.length> 3
+                      ){
+                      print("pending");
+                      widget.project.status="pending";
+                      }else{
+                      print("open");
+                     
+                      }
                      setState(() {
                        widget.stage=2;
+                        widget.project.status="open";
+                      widget.project.contractor="";
+                      widget.project.arbiter="";
+                      widget.project.termsHash="";
+                      widget.contractorControlla.text="";
+                      widget.arbiterControlla.clear();
+                      widget.contractorControlla.clear();
                      });
-                    }:null,
-                     child: const Center(
-                    child: Text("CONTINUE", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, ),),
+                    },
+                     child:  Center(
+                    child: Text(
+                       (widget.project.contractor!.length > 1
+                      && widget.project.arbiter!.length > 1
+                      && widget.project.termsHash!.length> 3
+                      ) 
+                          ? 
+                      "CONTINUE":"Skip"
+                    
+                    , style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, ),),
                   )),
                 )
                             ],
@@ -649,151 +781,225 @@ const SizedBox(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      
-                      const SizedBox(height: 29),
-                      const Opacity(opacity: 0.9, child:  Text("Select Project Currency:", style: TextStyle(fontSize: 19,fontWeight: FontWeight.bold),)),
+                        const SizedBox(height: 30),
+                        agentName(),
+                      const SizedBox(height: 30),
+
+          agentDescription(),
+                      // const SizedBox(height: 29),
+                      // const Opacity(opacity: 0.9, child:  Text("Select Project Currency:", style: TextStyle(fontSize: 19,fontWeight: FontWeight.bold),)),
                       const SizedBox(height: 39),
       
-                      SizedBox(
-                        width: 700,
-                        child: Padding(
-                          padding: const EdgeInsets.all(13.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 200,
-                                child: TextButton(
-                                  onPressed: () =>
-                                      setState(() => widget.project.isUSDT = false),
-                                  style: TextButton.styleFrom(
-                                    primary: Colors
-                                        .transparent, // Prevent color change on hover
-                                  ),
-                                  child: Text(
-                                    "Native (XTZ)",
-                                    style: TextStyle(
-                                      color: !widget.project.isUSDT
-                                          ? const Color.fromARGB(255, 110, 152, 206)
-                                          : Colors.grey,
-                                      fontSize: !widget.project.isUSDT ? 20 : 16,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Switch(
-                                value: widget.project.isUSDT,
-                                onChanged: (value) =>
-                                    setState(() => widget.project.isUSDT = value),
-                                activeColor: Theme.of(context).primaryColor,
-                                activeTrackColor: Colors.grey,
-                                inactiveThumbColor: Theme.of(context).primaryColor,
-                                inactiveTrackColor: Colors.grey,
-                              ),
-                              SizedBox(
-                                width:200,
-                                child: TextButton(
-                                  onPressed: () =>
-                                      setState(() => widget.project.isUSDT = true),
-                                  style: TextButton.styleFrom(
-                                    primary: Colors
-                                        .transparent, // Prevent color change on hover
-                                  ),
-                                  child: Text(
-                                    "Tether (USDT)",
-                                    style: TextStyle(
-                                      color: widget.project.isUSDT
-                                          ? const Color.fromARGB(255, 110, 206, 113)
-                                          : Colors.grey,
-                                      fontSize: widget.project.isUSDT ? 20 : 16,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                      Container(
+                         padding: const EdgeInsets.only(bottom:30),
+                         decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor.withOpacity(0.2),
+                          border: Border.all(width: .5,
+                          color: 
+                             widget.project.isUSDT?
+                              Color.fromARGB(255, 122, 133, 126):
+                              Color.fromARGB(255, 122, 127, 133)
+                          )
                         ),
-                      ),
-                  SizedBox(
-      
-        height: 290,
-        child: Center(
-          child: Opacity(
-        opacity: 0.8,
-        child: Column(
-          mainAxisSize: MainAxisSize.min, // To keep the Row size to a minimum
-          children: [
-            Flexible(
-              child: SizedBox(
-                width:400,
-                child: Text(
-                  widget.project.isUSDT
-                      ? "Stablecoin pegged to the US dollar, offering market stability and widespread acceptance across major exchanges."
-                      : "The token baked into the main consensus protocol of the chain, accounting for the execution of all smart contracts.",
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-            const Spacer(),
-            GestureDetector(
-              onTap: () {
-                launch(widget.project.isUSDT
-                    ? "https://coinmarketcap.com/currencies/tether/"
-                    : "https://coinmarketcap.com/currencies/tezos/");
-              },
-              child: const Text(
-                " Learn more",
-                style: TextStyle(color: Colors.blue),
-              ),
-            ),
-            // const Spacer(),
-            SizedBox(height: 100),
-             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-               children: [
-               SizedBox(width: 160),
-                StepProgressIndicator(currentStep: 0),
-                 SizedBox(
-                        height: 40,
-                        width: 170,
-                        child: TextButton(
-                          style: ButtonStyle(
-                            // overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
-                            // backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
-                            elevation: MaterialStateProperty.all(1.0),
-                            shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(1.0),
+                        child: Column(
+                          
+                          children: [
+
+                            Container(
+                              width:550,
+                              color:
+                              widget.project.isUSDT?
+                              Color.fromARGB(255, 122, 133, 126):
+                              Color.fromARGB(255, 122, 127, 133)
+                              ,
+                              
+                              height: 30,child:Center(child: Text("Select Currency", style:TextStyle(color:Colors.white)))),
+                            SizedBox(
+                             
+                              width: 550,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left:13.0,right:13,top:13,bottom:10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    SizedBox(
+                                      width: 200,
+                                      child: TextButton(
+                                        onPressed: () =>
+                                            setState(() => widget.project.isUSDT = false),
+                                        style: TextButton.styleFrom(
+                                          primary: Colors
+                                              .transparent, // Prevent color change on hover
+                                        ),
+                                        child: Text(
+                                          "Native (XTZ)",
+                                          style: TextStyle(
+                                            color: !widget.project.isUSDT
+                                                ? const Color.fromARGB(255, 110, 152, 206)
+                                                : Colors.grey,
+                                            fontSize: !widget.project.isUSDT ? 20 : 16,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Switch(
+                                      value: widget.project.isUSDT,
+                                      onChanged: (value) =>
+                                          setState(() => widget.project.isUSDT = value),
+                                      activeColor:  Colors.white24,
+                                      activeTrackColor: Colors.grey,
+                                      inactiveThumbColor: Colors.white24,
+                                      inactiveTrackColor:Colors.grey,
+                                    ),
+                                    SizedBox(
+                                      width:200,
+                                      child: TextButton(
+                                        onPressed: () =>
+                                            setState(() => widget.project.isUSDT = true),
+                                        style: TextButton.styleFrom(
+                                          primary: Colors
+                                              .transparent, // Prevent color change on hover
+                                        ),
+                                        child: Text(
+                                          "Tether (USDT)",
+                                          style: TextStyle(
+                                            color: widget.project.isUSDT
+                                                ? const Color.fromARGB(255, 110, 206, 113)
+                                                : Colors.grey,
+                                            fontSize: widget.project.isUSDT ? 20 : 16,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                          onPressed: (){
-                           setState(() {
-                             widget.stage=1;
-                           });
-                          },
-                           child: const Center(
-                          child: Text("CONTINUE", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,),),
-                        )),
-                      ),
-               ],
-             )
-      
-          ],
-        ),
+                             SizedBox(
+  width: 440,
+  child: Opacity(
+    opacity: 0.7,
+    child: RichText(
+      textAlign: TextAlign.center,
+      text: TextSpan(
+        style: DefaultTextStyle.of(context).style,
+        children: <TextSpan>[
+          TextSpan(
+            text: widget.project.isUSDT
+              ? "Stablecoin pegged to the US dollar, offering market stability and widespread acceptance across major exchanges."
+              : "The token baked into the main consensus protocol of the chain, accounting for the execution of all smart contracts.",
           ),
+          TextSpan(
+            text: " Learn more",
+            style: TextStyle(color: Colors.blue),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+              launch(widget.project.isUSDT
+                  ? "https://coinmarketcap.com/currencies/tether/"
+                  : "https://coinmarketcap.com/currencies/tezos/");
+              },
+          ),
+        ],
+      ),
+    ),
+  ),
+            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 35),
+      // const Text("Link the project repository. The README.md file should contain a detailed description of the good or service you wish to acquire, to set expectations for your potential contractor.", textAlign: TextAlign.left, style: TextStyle(fontSize: 17.5),),
+SizedBox(
+  width:560,
+  child:   RichText(
+        text: TextSpan(
+          style: DefaultTextStyle.of(context).style.copyWith(fontSize: 14),
+          
+          children: <TextSpan>[
+            TextSpan(text: "Link the project repository. The README.md file should contain a detailed description of the good or service you wish to acquire, to set expectations for your potential contractor. "),
+            TextSpan(text: "For a smooth arbitration, it's recommended to clone and customize "),
+            TextSpan(
+              text: 'this template.',
+              style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  launch('https://github.com/dOrgTech/template-project');
+                },
+  
+            ),
+  
+          ],
+  
         ),
-      )
-      
-      
-                    ],
+  
+      ),
+),
+  const SizedBox(height: 18),
+       SizedBox(
+                    width:550,
+                    child: TextField(
+                      controller: widget.repoControlla,
+                      onChanged: (value) {
+                        setState(() {
+                        widget.project.repo=value;
+                        });
+                      },
+                      style: const TextStyle(fontSize: 13),
+                      decoration:  const InputDecoration(
+                        labelText: "Link to your project reposiory",
+                        ),),
                   ),
+            SizedBox(height: 60),
+                  SizedBox(
+        height: 70,
+        child: Center(
+          child: 
+               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                 children: [
+                 SizedBox(width: 160),
+                  StepProgressIndicator(currentStep: 0),
+                   SizedBox(
+                          height: 40,
+                          width: 170,
+                          child: TextButton(
+                            style: ButtonStyle(
+                              // overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
+                              // backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
+                              elevation: MaterialStateProperty.all(1.0),
+                              shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(1.0),
+                                ),
+                              ),
+                            ),
+                             onPressed: widget.project.name!.length>1
+                              && 
+                              widget.project.repo!.length>3
+                              && 
+                              widget.project.description!.length>3?
+                            (){
+                             setState(() {
+                               widget.stage=1;
+                             });
+                            }:null,
+                             child: const Center(
+                            child: Text("CONTINUE", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,),),
+                          )),
+                        ),
+                 ],
+               )
+      
+           
+      ),
+      
+      
+                    
+        )])
       ),
     );
     }
-  UploadPic(){return const SizedBox(
-    width: 150,height: 150,
-    child: Placeholder());}
+
   createClientProject(project,state){print("create project");}
   Widget agentName() {
     return SizedBox(
@@ -814,6 +1020,7 @@ const SizedBox(
   }
   Widget agentDescription() {
     return SizedBox(
+      height: 110,
       width:530,
       child: TextField(
         onChanged: (value){
@@ -823,7 +1030,7 @@ const SizedBox(
           },
         controller: widget.descriptionControlla,
               maxLength: 200,
-              maxLines: 5,
+              maxLines: 4,
               decoration: const InputDecoration(
                 hintText: 'Very short description of the project. Include specific technologies that will be used so they may show up if someone searches for them.',
               ),

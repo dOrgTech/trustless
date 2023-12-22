@@ -80,10 +80,10 @@ class StepProgressIndicator extends StatelessWidget {
       
      padding: EdgeInsets.only(left:this.currentStep==2?0:80),
       child: SizedBox(
-        width:300,
+        width:200,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: List.generate(6, (index) => _buildStepIndicator(index, context)),
+          children: List.generate(3, (index) => _buildStepIndicator(index, context)),
         ),
       ),
     );

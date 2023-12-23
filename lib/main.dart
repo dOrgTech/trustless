@@ -129,7 +129,7 @@ class BaseScaffold extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 42,
-        elevation: 0.8,
+        elevation: 1.8,
         automaticallyImplyLeading: false,
         title: Row(
           children: [

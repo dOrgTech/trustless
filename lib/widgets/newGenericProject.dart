@@ -35,7 +35,7 @@ TextEditingController contractorControlla = TextEditingController();
 TextEditingController nameControlla = TextEditingController();
 TextEditingController descriptionControlla = TextEditingController();
 TextEditingController repoControlla = TextEditingController();
-int stage=0;
+int stage=1;
 // ignore: use_key_in_widget_constructors
 NewGenericProject( {required this.projectsState}) ;
   @override
@@ -781,14 +781,14 @@ const SizedBox(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 5),
                         agentName(),
-                      const SizedBox(height: 30),
+                      const SizedBox(height: 10),
 
           agentDescription(),
                       // const SizedBox(height: 29),
                       // const Opacity(opacity: 0.9, child:  Text("Select Project Currency:", style: TextStyle(fontSize: 19,fontWeight: FontWeight.bold),)),
-                      const SizedBox(height: 39),
+                      const SizedBox(height: 2),
       
                       Container(
                          padding: const EdgeInsets.only(bottom:30),
@@ -815,7 +815,6 @@ const SizedBox(
                               
                               height: 30,child:Center(child: Text("Select Currency", style:TextStyle(color:Colors.white)))),
                             SizedBox(
-                             
                               width: 550,
                               child: Padding(
                                 padding: const EdgeInsets.only(left:13.0,right:13,top:13,bottom:10),
@@ -876,38 +875,38 @@ const SizedBox(
                               ),
                             ),
                              SizedBox(
-  width: 440,
-  child: Opacity(
-    opacity: 0.7,
-    child: RichText(
-      textAlign: TextAlign.center,
-      text: TextSpan(
-        style: DefaultTextStyle.of(context).style,
-        children: <TextSpan>[
-          TextSpan(
-            text: widget.project.isUSDT
-              ? "Stablecoin pegged to the US dollar, offering market stability and widespread acceptance across major exchanges."
-              : "The token baked into the main consensus protocol of the chain, accounting for the execution of all smart contracts.",
-          ),
-          TextSpan(
-            text: " Learn more",
-            style: TextStyle(color: Colors.blue),
-            recognizer: TapGestureRecognizer()
-              ..onTap = () {
-              launch(widget.project.isUSDT
-                  ? "https://coinmarketcap.com/currencies/tether/"
-                  : "https://coinmarketcap.com/currencies/tezos/");
-              },
-          ),
-        ],
-      ),
-    ),
-  ),
-            ),
+                            width: 440,
+                            child: Opacity(
+                              opacity: 0.7,
+                              child: RichText(
+                                textAlign: TextAlign.center,
+                                text: TextSpan(
+                                  style: DefaultTextStyle.of(context).style,
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: widget.project.isUSDT
+                                        ? "Stablecoin pegged to the US dollar, offering market stability and widespread acceptance across major exchanges."
+                                        : "The token baked into the main consensus protocol of the chain, accounting for the execution of all smart contracts.",
+                                    ),
+                                    TextSpan(
+                                      text: " Learn more",
+                                      style: TextStyle(color: Colors.blue),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
+                                        launch(widget.project.isUSDT
+                                            ? "https://coinmarketcap.com/currencies/tether/"
+                                            : "https://coinmarketcap.com/currencies/tezos/");
+                                        },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                           ),
                           ],
                         ),
                       ),
-                      SizedBox(height: 35),
+                      SizedBox(height: 15),
       // const Text("Link the project repository. The README.md file should contain a detailed description of the good or service you wish to acquire, to set expectations for your potential contractor.", textAlign: TextAlign.left, style: TextStyle(fontSize: 17.5),),
 SizedBox(
   width:560,
@@ -934,7 +933,7 @@ SizedBox(
   
       ),
 ),
-  const SizedBox(height: 18),
+  const SizedBox(height: 12),
        SizedBox(
                     width:550,
                     child: TextField(
@@ -949,7 +948,7 @@ SizedBox(
                         labelText: "Link to your project reposiory",
                         ),),
                   ),
-            SizedBox(height: 60),
+            SizedBox(height: 30),
                   SizedBox(
         height: 70,
         child: Center(

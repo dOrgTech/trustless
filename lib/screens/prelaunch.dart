@@ -11,9 +11,9 @@ import 'package:trustless/screens/projects.dart';
 import 'package:universal_html/html.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webviewx/webviewx.dart';
-
 import '../main.dart';
-
+import '../widgets/gameoflife.dart';
+import 'dart:ui' as ui;
 
 int caree = 1;
 String col = "#7b8c94 9%, #9cb1b8 46%, #7f9191 66%, #63767d 96%";
@@ -24,10 +24,25 @@ List<Color> colors1 = [
   Color.fromARGB(178, 116, 118, 126),
   Color.fromARGB(195, 113, 115, 124),
   Color.fromARGB(188, 121, 120, 133),
-   Color.fromARGB(190, 107, 115, 134),
-   Color.fromARGB(192, 107, 122, 134),
+  Color.fromARGB(190, 107, 115, 134),
+  Color.fromARGB(192, 107, 122, 134),
 ];
 List<double> stops1 = [0.0, 0.3, 0.6, 0.8, 0.9];
+List<Color> colors2 = [
+ Color.fromARGB(255, 185, 209, 219),
+ Color(0xff899dac),
+ Color.fromARGB(255, 157, 180, 197),
+ Color.fromARGB(255, 172, 192, 216),
+ Color.fromARGB(255, 192, 209, 241)
+];
+List<Color> the_colors = [
+  Color.fromARGB(255, 163, 170, 177),
+  Color.fromARGB(255, 155, 158, 170),
+  Color.fromARGB(255, 160, 158, 175),
+  Color.fromARGB(255, 107, 115, 134),
+  Color.fromARGB(255, 100, 100, 114),
+];
+List<double> stops2 = [0.0, 0.14, 0.5, 0.8, 0.9];
 
 class Prelaunch extends StatefulWidget {
   Prelaunch({Key? key, }) : super(key: key);
@@ -46,10 +61,37 @@ class Prelaunch extends StatefulWidget {
   State<Prelaunch> createState() => _PrelaunchState();
 }
 
-class _PrelaunchState extends State<Prelaunch> {
+class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixin  {
   late WebViewXController webviewController;
+     AnimationController? _controller;
+  Animation<double>? _opacityAnimation;
+  Animation<double>? _blurAnimation;
   @override
   void initState() {
+  
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 860), // Total duration for both animations
+      vsync: this,
+    );
+
+
+    _opacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller!,
+        curve: Interval(0.0, 0.5, curve: Curves.easeIn), // Opacity for first half
+      ),
+    );
+
+    _blurAnimation = Tween<double>(begin: 10.0, end: 0.0).animate(
+      CurvedAnimation(
+        parent: _controller!,
+        curve: Interval(0.5, 1.0, curve: Curves.easeOut), // Blur for second half
+      ),
+    );
+
+    _controller!.forward(); // Start the animation on build
+  
+
     Future.delayed(const Duration(milliseconds: 440), () {
       setState(() {
         widget.sevede0 = true;
@@ -73,7 +115,9 @@ class _PrelaunchState extends State<Prelaunch> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: Container(
+       color: Colors.transparent,
         // color: Color.fromARGB(255, 155, 155, 155),
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
@@ -81,26 +125,51 @@ class _PrelaunchState extends State<Prelaunch> {
           child: Stack(
             alignment: Alignment.topLeft,
             children: [
-              Container(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: colors, stops: stops)
-                  ),
-                  child: const Text("o", style: TextStyle(color: Colors.black))),
-              //  Lottie.asset("images/gol.json"),
-        
-              Positioned(
+              
+               Positioned(
                   left: 0,
                   child: Container(
                     padding: EdgeInsets.only(left:260,top:140,bottom:70),
-                   color: Color(0xff899dac),
+                   decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: colors2, stops: stops2)
+                  ),
+                  
                       height: MediaQuery.of(context).size.height,
                       width: MediaQuery.of(context).size.width,
-                      child: Opacity(opacity: 1, child: 
-                      // AnimatedImages()
-                      Pattern()
-                      ))),
+                      child: Text(""))),
+              Opacity(
+                opacity: 0.05,
+                child: GameOfLife()),
+
+              Positioned(
+                  left: 0,
+                  child: Container(
+                    padding: EdgeInsets.only(left:320,top:180,bottom:130),
+                  
+                  
+                      height: MediaQuery.of(context).size.height,
+                      width: MediaQuery.of(context).size.width,
+                      child: 
+                      AnimatedBuilder(
+          animation: _controller!,
+          builder: (context, child) {
+            return FadeTransition(
+              opacity: _opacityAnimation!,
+              child: ImageFiltered(
+                imageFilter: ui.ImageFilter.blur(
+                  sigmaX: _blurAnimation!.value,
+                  sigmaY: _blurAnimation!.value,
+                ),
+                child: Pattern(),
+              ),
+            );
+          },
+        )
+                      
+
+
+                      )),
+                
               Padding(
                 padding: EdgeInsets.only(
                   right: MediaQuery.of(context).size.width / 4,
@@ -435,7 +504,7 @@ class _PrelaunchState extends State<Prelaunch> {
           height: 11,
         ),
        SizedBox(
-            width: 160,
+            width: 158,
             height: 33,
             child: widget.loading
                 ? const Center(
@@ -445,7 +514,7 @@ class _PrelaunchState extends State<Prelaunch> {
                 : TextButton(
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(
-                          const Color.fromARGB(204, 0, 0, 0)),
+                          Color.fromARGB(75, 0, 0, 0)),
                     ),
                     onPressed: () async {
                      Navigator.of(context).push(
@@ -455,14 +524,16 @@ class _PrelaunchState extends State<Prelaunch> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.account_tree),
+                        Icon(Icons.password),
+                        SizedBox(width: 6),
                         Placeholder(
-                          color: Colors.grey,
+                          color: Color.fromARGB(255, 192, 192, 192),
                           child: SizedBox(height: 24),
                         ),
-                        const Text("  BETA",
+
+                        const Text(" ENTER CODE",
                             style: TextStyle(
-                              color: Color.fromARGB(255, 145, 145, 145),
+                              color: Color.fromARGB(255, 255, 255, 255),
                             )),
                       ],
                     )),
@@ -616,7 +687,7 @@ class _PatternState extends State<Pattern> with TickerProviderStateMixin {
           animation: _controller2,
           builder: (context, child) {
             return Opacity(
-              opacity: _opacity2.value,
+              opacity: 1,
               child: ImageFiltered(
                 imageFilter: ImageFilter.blur(sigmaX: _blur2.value, sigmaY: _blur2.value),
                 child: Image.asset("assets/tgri.png"),

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_web3_provider/ethereum.dart';
 import 'package:provider/provider.dart';
+import 'package:trustless/screens/prelaunch.dart';
 import 'package:trustless/screens/projects.dart';
 import 'package:trustless/utils/reusable.dart';
 import 'package:trustless/widgets/projectDetails.dart';
@@ -65,9 +66,12 @@ class MyApp extends StatelessWidget {
   WidgetBuilder builder;
 
   if (settings.name == '/') {
-    builder = (_) => BaseScaffold(
-      body: Projects(), 
-      title: "Projects");
+    builder = (_) => 
+    Prelaunch()
+      // BaseScaffold(
+      // body: Projects(), 
+      // title: "Projects")
+      ;
   } else if (settings.name!.startsWith('/projects/')) {
     final projectId = settings.name!.replaceFirst('/projects/', '');
     Project? project;

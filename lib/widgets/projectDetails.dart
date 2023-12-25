@@ -271,7 +271,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                               ],
                             ),
                              SizedBox(height: widget.project.status =="open" ? 25:0),
-                            !(widget.project.status=="open")?
+                            !(widget.project.status=="open")? 
                             Container(
                               constraints: const BoxConstraints(
                                 maxWidth: 850,

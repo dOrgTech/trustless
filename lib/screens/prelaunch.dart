@@ -14,7 +14,8 @@ import 'package:webviewx/webviewx.dart';
 import '../main.dart';
 import '../widgets/gameoflife.dart';
 import 'dart:ui' as ui;
-
+import 'dart:math' as math;
+import 'dart:ui';
 int caree = 1;
 String col = "#7b8c94 9%, #9cb1b8 46%, #7f9191 66%, #63767d 96%";
 List<Color> colors = [Color.fromARGB(255, 52, 56, 58), const Color(0xff899dac),const Color(0xff9cb1b8),   Color.fromARGB(255, 162, 164, 173),
@@ -160,7 +161,7 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
                   sigmaX: _blurAnimation!.value,
                   sigmaY: _blurAnimation!.value,
                 ),
-                child: Pattern(),
+                child: Pattern1(),
               ),
             );
           },
@@ -639,6 +640,135 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
     }
   }
 }
+
+class Pattern1 extends StatefulWidget {
+  @override
+  _Pattern1State createState() => _Pattern1State();
+}
+
+class _Pattern1State extends State<Pattern1> with TickerProviderStateMixin {
+  late AnimationController _controller1, _controller2, _sizeController, _positionController;
+  late Animation<double> _opacity1, _opacity2, _blur1, _blur2, _size;
+  late Animation<Offset> _position;
+
+  @override
+  void initState() {
+    super.initState();
+    
+    _controller1 = AnimationController(
+      duration: const Duration(seconds: 3),
+      vsync: this,
+    )..repeat(reverse: true);
+
+    _controller2 = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    )..repeat(reverse: true);
+
+    _sizeController = AnimationController(
+      duration: const Duration(milliseconds: 810),
+      vsync: this,
+    )..repeat(reverse: true);
+
+    _opacity1 = Tween<double>(begin: 0.1, end: 0.4).animate(_controller1);
+    _blur1 = Tween<double>(begin: 0.0, end: 3.5).animate(_controller1);
+
+    _opacity2 = Tween<double>(begin: 0.6, end: 0.7).animate(_controller2);
+    _blur2 = Tween<double>(begin: 0.0, end: 2.0).animate(_controller2); // More subtle effect
+
+    _size = Tween<double>(begin: 0.99, end: 1.001).animate(_sizeController); // S
+
+    _positionController = AnimationController(
+      duration: const Duration(milliseconds: 50), // Rapid changes for glitch effect
+      vsync: this,
+    )..repeat();
+
+   _positionController.addListener(() {
+      if (_positionController.isCompleted || _positionController.isDismissed) {
+        // Randomizing both the duration and the end offset for a more glitch-like effect
+        _positionController.duration = Duration(milliseconds: math.Random().nextInt(50) + 20);
+        _position = Tween<Offset>(
+          begin: Offset.zero,
+          end: Offset(math.Random().nextDouble() * 0.05, math.Random().nextDouble() * 0.05), // Smaller, random movements
+        ).animate(_positionController);
+        _positionController.forward(from: 0); // Restart the animation from the beginning
+      }
+    });
+
+   _position = Tween<Offset>(
+      begin: Offset.zero,
+      end: Offset(0.02, 0.02),
+    ).animate(_positionController);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.topLeft,
+      children: [
+         AnimatedBuilder(
+          animation: _controller2,
+          builder: (context, child) {
+            return Opacity(
+              opacity: 1,
+              child: ImageFiltered(
+                imageFilter: ImageFilter.blur(sigmaX: _blur2.value, sigmaY: _blur2.value),
+                child: Image.asset("assets/tgri.png"),
+              ),
+            );
+          },
+        ),
+        // AnimatedBuilder(
+        //   animation: Listenable.merge([_controller1, _sizeController]),
+        //   builder: (context, child) {
+        //     return 
+        //     Transform.scale(
+        //       scale: _size.value,
+        //       child: Opacity(
+        //         opacity: _opacity1.value,
+        //         child: ImageFiltered(
+        //           imageFilter: ImageFilter.blur(sigmaX: _blur1.value, sigmaY: _blur1.value),
+        //           child: Image.asset("assets/taur.png"),
+        //         ),
+        //       ),
+        //     );
+        //   },
+        // ),
+
+         AnimatedBuilder(
+          animation: Listenable.merge([_sizeController, _positionController]),
+          builder: (context, child) {
+            return Transform.translate(
+              offset: _position.value,
+              child: Transform.scale(
+                scale: _size.value,
+                child: Opacity(
+                  opacity: _opacity1.value,
+                  child: ImageFiltered(
+                    imageFilter: ImageFilter.blur(sigmaX: _blur1.value, sigmaY: _blur1.value),
+                    child: Image.asset("assets/taur.png"),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller1.dispose();
+    _controller2.dispose();
+    _sizeController.dispose();
+    _positionController.dispose();
+    super.dispose();
+  }
+}
+
+
+
 
 class Pattern extends StatefulWidget {
   @override

@@ -64,6 +64,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
       functionItem("Sign Contract", "Contractor", Withdraw()),
     ];
     return BaseScaffold(
+      selectedItem: 1,
       title: "Project",
       body: Container(
           alignment: Alignment.topCenter,

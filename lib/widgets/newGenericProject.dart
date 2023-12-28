@@ -35,7 +35,7 @@ TextEditingController contractorControlla = TextEditingController();
 TextEditingController nameControlla = TextEditingController();
 TextEditingController descriptionControlla = TextEditingController();
 TextEditingController repoControlla = TextEditingController();
-int stage=1;
+int stage=0;
 // ignore: use_key_in_widget_constructors
 NewGenericProject( {required this.projectsState}) ;
   @override
@@ -214,7 +214,7 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                 Text(widget.project.arbiter!.length<3?"N/A":widget.project.arbiter!, style: TextStyle( backgroundColor: Colors.black,color: Colors.white),),
             ],)
           ],),
-          const SizedBox(height: 45),
+          const SizedBox(height: 45), 
           Text(
             widget.project.status=="pending"?
             "To deploy the Project you must stake your half of the arbitration fee. Before the contractor signs and stakes their half, you will still be able to withdraw this amount.  The stake will be released back to the parties if the Project concludes without a dispute."
@@ -363,7 +363,7 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                           });
                           },
                            child:  Center(
-                         child:  widget.project.arbiter!.length<3?
+                         child:  widget.project.arbiter!.length<3||widget.project.contractor!.length<3||widget.project.termsHash!.length < 3 ?
                           Text("   Skip   ", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, ),)
                           :
                           Text("CONTINUE", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, ),),
@@ -641,8 +641,6 @@ const SizedBox(
                         labelText: "Contractor Address",
                         ),),
                   ),
-           
-           
           const SizedBox(height: 40),
           SizedBox(
                     // width:630,
@@ -731,18 +729,18 @@ const SizedBox(
                     ),
                      onPressed:
                     (){
-                      
                       if(
-                       widget.project.contractor!.length > 1
+                        widget.project.contractor!.length > 1
                       && widget.project.arbiter!.length > 1
                       && widget.project.termsHash!.length> 3
                       ){
                       print("pending");
                       widget.project.status="pending";
+                      setState(() {
+                          widget.stage=2;
+                      });
                       }else{
                       print("open");
-                     
-                      }
                      setState(() {
                        widget.stage=2;
                         widget.project.status="open";
@@ -753,7 +751,7 @@ const SizedBox(
                       widget.arbiterControlla.clear();
                       widget.contractorControlla.clear();
                      });
-                    },
+                    }},
                      child:  Center(
                     child: Text(
                        (widget.project.contractor!.length > 1

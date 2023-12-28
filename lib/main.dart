@@ -4,13 +4,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_web3_provider/ethereum.dart';
 import 'package:provider/provider.dart';
+import 'package:trustless/screens/landing.dart';
 import 'package:trustless/screens/prelaunch.dart';
 import 'package:trustless/screens/projects.dart';
+import 'package:trustless/screens/users.dart';
 import 'package:trustless/utils/reusable.dart';
 import 'package:trustless/widgets/projectDetails.dart';
 import 'entities/human.dart';
 import 'entities/project.dart';
 import 'firebase_options.dart';
+import 'screens/disputes.dart';
 
 
 List<Project> projects=[];
@@ -67,10 +70,11 @@ class MyApp extends StatelessWidget {
 
   if (settings.name == '/') {
     builder = (_) => 
-    Prelaunch()
-      // BaseScaffold(
-      // body: Projects(), 
-      // title: "Projects")
+    // Prelaunch()
+      BaseScaffold(
+        selectedItem: 1,
+      body: Projects(), 
+      title: "Projects")
       ;
   } else if (settings.name!.startsWith('/projects/')) {
     final projectId = settings.name!.replaceFirst('/projects/', '');
@@ -83,17 +87,21 @@ class MyApp extends StatelessWidget {
     } catch (e) {
       project = null;
     }
-
     if (project != null) {
       builder = (context) => ProjectDetails(project: project!);
     } else {
       builder = (context) => const Text("Project not found");
     }
   } else if (settings.name == '/trials') {
-    builder = (_) => BaseScaffold(body: Trials(), title: "Trials");
+    builder = (_) => BaseScaffold(selectedItem: 2, body: Trials(), title: "Trials");
+    } else if (settings.name == '/stats') {
+    builder = (_) => BaseScaffold(selectedItem: 0, body: Landing(), title: "Stats");
+  } else if (settings.name == '/users') {
+    builder = (_) => BaseScaffold(selectedItem: 3,body: Users(), title: "Users");
   } else {
     // Handle other routes or unknown routes
     builder = (_) =>  BaseScaffold(
+      selectedItem: 0,
       title: "Not a valid URL",
       body: Center(child:Text("This is nothing.", style: TextStyle(fontSize: 40),)),);
   }
@@ -121,57 +129,128 @@ class MyApp extends StatelessWidget {
 
 
 
-class BaseScaffold extends StatelessWidget {
+class BaseScaffold extends StatefulWidget {
   final Widget body;
   final String title;
-
-  BaseScaffold({required this.body, required this.title});
+    late bool isTrustless;
+    late  bool isProjects;
+    late bool isDisputes;
+    late bool isUsers;
+    int selectedItem;
+  BaseScaffold({required this.body, required this.title,
+  required this.selectedItem} ) {
+    isTrustless = selectedItem == 0;
+    isProjects = selectedItem == 1;
+    isDisputes = selectedItem == 2;
+    isUsers = selectedItem == 3;
+  }
 
   @override
+  State<BaseScaffold> createState() => _BaseScaffoldState();
+}
+
+class _BaseScaffoldState extends State<BaseScaffold> {
+
+  Color blendColors(Color color1, Color color2, double amount) {
+  amount = amount.clamp(0.0, 1.0);
+  return Color.lerp(color1, color2, amount)!;
+}
+
+  void changeButton(int position) {
+    setState(() {
+        widget.isTrustless = position == 0;
+        widget.isProjects = position == 1;
+        widget.isDisputes = position == 2;
+        widget.isUsers = position == 3;
+    });
+  }
+  
+  @override
   Widget build(BuildContext context) {
+    Color indicatorColor = Theme.of(context).indicatorColor;
+    Color textThemeColor = Theme.of(context).textTheme.bodyLarge!.color!;
+    Color blendedColor = blendColors(indicatorColor, textThemeColor, 0.5);
+    final TextStyle? selectedMenuItem=TextStyle(fontSize: 19, color: blendedColor);
+    final TextStyle? nonSelectedMenuItem=TextStyle(fontSize: 16, color: textThemeColor);
     final themeNotifier = Provider.of<ThemeNotifier>(context);
+    List<Widget> botoane=[
+            Opacity(
+              opacity: widget.isTrustless?1:0.6,
+              child: SizedBox(
+                width:200,
+                child: TextButton(onPressed: 
+                (){
+                   Navigator.pushNamed(context, '/stats');
+                 changeButton(0);
+                }, child: 
+                Image.asset(
+                 "trustless_dark.png",
+                height: widget.isTrustless?27:26,)
+                ),
+              ),
+            ),SizedBox(width: MediaQuery.of(context).size.width/13),
+            TextButton(onPressed: (){ 
+             changeButton(1);
+              Navigator.of(context).pushNamed("/");
+              }, child: 
+            SizedBox(
+              width:140,
+              child: Center(
+                child: Opacity(
+                  opacity: widget.isProjects?1:0.6,
+                  child: Row(children:  [
+                    Icon(Icons.local_activity,size:30, color:widget.isProjects?Theme.of(context).indicatorColor:Theme.of(context).textTheme.bodyLarge!.color!),
+                    SizedBox(width: 8),
+                    Text("PROJECTS", style: widget.isProjects?selectedMenuItem:nonSelectedMenuItem)
+                  ],),
+                ),
+              ),
+            )
+            ),
+            const SizedBox(width: 30),
+              SizedBox( width:145,
+                child: Center(
+                  child: Opacity(
+                    opacity: widget.isDisputes?1:0.6,
+                    child: TextButton(onPressed: (){
+                      changeButton(2);
+                      Navigator.of(context).pushNamed("/trials");
+                    }, child: 
+                              Row(children:  [
+                               Image.asset('assets/scale2.png', height:30, color:widget.isDisputes?Theme.of(context).indicatorColor:Theme.of(context).textTheme.bodyLarge!.color!),
+                    SizedBox(width: 8),
+                    Text("DISPUTES", style: widget.isDisputes?selectedMenuItem:nonSelectedMenuItem,)
+                              ],)
+                              ),
+                  ),
+                ),
+              ),  
+             const SizedBox(width: 33),
+              Center(
+                child: SizedBox( width:148,
+                  child: TextButton(onPressed: (){
+                  changeButton(3);
+                   Navigator.of(context).pushNamed("/users");
+                  }, child: 
+                            Opacity(
+                  opacity: widget.isUsers?1:0.6,
+                  child: Row(children: [
+                    Icon(Icons.gavel_sharp,size:33,color:widget.isUsers?Theme.of(context).indicatorColor:Theme.of(context).textTheme.bodyLarge!.color!),
+                    SizedBox(width: 8),
+                    Text("ARBITERS", style: widget.isUsers?selectedMenuItem:nonSelectedMenuItem)
+                  ],),
+                            )
+                            ),
+                ),
+              )
+          ];
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 42,
         elevation: 1.8,
         automaticallyImplyLeading: false,
         title: Row(
-          children: [
-            TextButton(onPressed: 
-            (){
-               Navigator.pushNamed(context, '/');
-            }, child: 
-            Image.asset(
-             "trustless_dark.png",
-            height: 27,)
-            ),SizedBox(width: MediaQuery.of(context).size.width/13),
-            TextButton(onPressed: (){ Navigator.of(context).pushNamed("/");}, child: 
-            Row(children: const [
-              Icon(Icons.local_activity,size:30),
-              SizedBox(width: 8),
-              Text("PROJECTS", style: TextStyle(fontSize: 17),)
-            ],)
-            ),
-            const SizedBox(width: 40),
-              TextButton(onPressed: (){
-                Navigator.of(context).pushNamed("/trials");
-              }, child: 
-            Row(children:  [
-       
-             Image.asset('assets/scale2.png', height:30, color: Theme.of(context).textTheme.bodyLarge!.color,),
-              SizedBox(width: 8),
-              Text("DISPUTES", style: TextStyle(fontSize: 17),)
-            ],)
-            ),  
-            const SizedBox(width: 40),
-              TextButton(onPressed: (){}, child: 
-            Row(children:const [
-              Icon(Icons.gavel_sharp,size:33),
-              SizedBox(width: 8),
-              Text("ARBITERS", style: TextStyle(fontSize: 17),)
-            ],)
-            )
-          ],
+          children: botoane
         ),
 
         actions: <Widget>[
@@ -186,7 +265,7 @@ class BaseScaffold extends StatelessWidget {
           const SizedBox(width: 20)
         ],
       ),
-      body: body,
+      body: widget.body,
     );
   }
 }
@@ -390,17 +469,4 @@ class ThemeNotifier with ChangeNotifier {
 
 
 
-class Trials extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('Trials'));
-  }
-}
-
-class Arbiters extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('Arbiters'));
-  }
-}
 

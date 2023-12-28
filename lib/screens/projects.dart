@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
 import "package:trustless/widgets/newGenericProject.dart";
-
 import "../entities/project.dart";
 import "../main.dart";
 import "../widgets/footer.dart";
@@ -46,8 +45,6 @@ class ProjectsState extends State<Projects> {
         style: TextStyle(fontSize: 24, color:Colors.grey),
         )))));
     }
-   
-   
     // return Text("something");
    return  Container(
           alignment: Alignment.topCenter,
@@ -108,10 +105,10 @@ class ProjectsState extends State<Projects> {
                                                onChanged: (String? newValue) {
                                        setState(() {
                                          widget.selectedStatus = newValue;
-                                       });
-                                           },
-                                             ),
-                                             SizedBox(width: 20),
+                                      });
+                                          },
+                                            ),
+                                            SizedBox(width: 20),
                                 Padding(
                                   padding:  EdgeInsets.only(right:8.0),
                                   child: Row(
@@ -119,7 +116,6 @@ class ProjectsState extends State<Projects> {
                                      Text(" Projects"),
                                       SizedBox(width: 60),
                         HoverExpandWidget(projectsState: this),
-                        
                       SizedBox(
                         width: 10,
                       ),
@@ -132,7 +128,7 @@ class ProjectsState extends State<Projects> {
                            ),
                       )),
                     SizedBox(height: 24,),
-                    NewGenericProject(projectsState: this),
+                    // NewGenericProject(projectsState: this),
                    Container(
                     alignment: Alignment.topCenter,
                     width: double.infinity,

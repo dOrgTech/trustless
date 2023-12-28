@@ -126,18 +126,16 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
           child: Stack(
             alignment: Alignment.topLeft,
             children: [
-              
                Positioned(
                   left: 0,
                   child: Container(
                     padding: EdgeInsets.only(left:260,top:140,bottom:70),
-                   decoration: BoxDecoration(
+                    decoration: BoxDecoration(
                     gradient: LinearGradient(colors: colors2, stops: stops2)
                   ),
-                  
-                      height: MediaQuery.of(context).size.height,
-                      width: MediaQuery.of(context).size.width,
-                      child: Text(""))),
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
+                    child: Text(""))),
               Opacity(
                 opacity: 0.05,
                 child: GameOfLife()),
@@ -146,7 +144,6 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
                   left: 0,
                   child: Container(
                     padding: EdgeInsets.only(left:320,top:180,bottom:130),
-                  
                   
                       height: MediaQuery.of(context).size.height,
                       width: MediaQuery.of(context).size.width,
@@ -519,7 +516,7 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
                     ),
                     onPressed: () async {
                      Navigator.of(context).push(
-                      MaterialPageRoute(builder: ((context) => BaseScaffold(body:Projects(), title: 'Projects',))
+                      MaterialPageRoute(builder: ((context) => BaseScaffold(selectedItem:1, body:Projects(), title: 'Projects',))
                      ));
                     },
                     child: Row(
@@ -654,7 +651,6 @@ class _Pattern1State extends State<Pattern1> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    
     _controller1 = AnimationController(
       duration: const Duration(seconds: 3),
       vsync: this,
@@ -666,7 +662,7 @@ class _Pattern1State extends State<Pattern1> with TickerProviderStateMixin {
     )..repeat(reverse: true);
 
     _sizeController = AnimationController(
-      duration: const Duration(milliseconds: 810),
+      duration: const Duration(milliseconds:810),
       vsync: this,
     )..repeat(reverse: true);
 

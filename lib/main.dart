@@ -18,6 +18,7 @@ import 'screens/disputes.dart';
 
 List<Project> projects=[];
 var projectsCollection = FirebaseFirestore.instance.collection('projects');
+var prelaunchCollection = FirebaseFirestore.instance.collection('prelaunch');
     void main() async {
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -29,7 +30,7 @@ var projectsCollection = FirebaseFirestore.instance.collection('projects');
        name: doc.data()["name"],
        creationDate : (doc.data()['created'] as Timestamp).toDate(),
        description: doc.data()["description"],
-       client: doc.data()["client"],
+       author: doc.data()["client"],
        contractor:doc.data()['contractor'],
        arbiter: doc.data()["arbiter"],
        requirements: doc.data()["specs"],
@@ -70,6 +71,7 @@ class MyApp extends StatelessWidget {
 
   if (settings.name == '/') {
     builder = (_) => 
+    // ProjectDetails(project: projects[0])
     // Prelaunch()
       BaseScaffold(
         selectedItem: 1,
@@ -128,15 +130,16 @@ class MyApp extends StatelessWidget {
 }
 
 
-
 class BaseScaffold extends StatefulWidget {
+
   final Widget body;
   final String title;
-    late bool isTrustless;
-    late  bool isProjects;
-    late bool isDisputes;
-    late bool isUsers;
-    int selectedItem;
+  late bool isTrustless;
+  late  bool isProjects;
+  late bool isDisputes;
+  late bool isUsers;
+  int selectedItem;
+
   BaseScaffold({required this.body, required this.title,
   required this.selectedItem} ) {
     isTrustless = selectedItem == 0;
@@ -148,6 +151,7 @@ class BaseScaffold extends StatefulWidget {
   @override
   State<BaseScaffold> createState() => _BaseScaffoldState();
 }
+
 
 class _BaseScaffoldState extends State<BaseScaffold> {
 
@@ -164,7 +168,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
         widget.isUsers = position == 3;
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     Color indicatorColor = Theme.of(context).indicatorColor;
@@ -198,9 +202,9 @@ class _BaseScaffoldState extends State<BaseScaffold> {
               child: Center(
                 child: Opacity(
                   opacity: widget.isProjects?1:0.6,
-                  child: Row(children:  [
+                  child: Row(children: [
                     Icon(Icons.local_activity,size:30, color:widget.isProjects?Theme.of(context).indicatorColor:Theme.of(context).textTheme.bodyLarge!.color!),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Text("PROJECTS", style: widget.isProjects?selectedMenuItem:nonSelectedMenuItem)
                   ],),
                 ),

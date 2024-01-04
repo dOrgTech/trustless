@@ -11,7 +11,7 @@ class Project{
   DateTime? creationDate;
   DateTime? expiresAt;
   String? description;
-  String? client;
+  String? author;
   String? arbiter="";
   String? contractor="";
   String? hashedFileName="";
@@ -23,7 +23,7 @@ class Project{
   Map<String,int>contributions={};
   List<Token>? acceptedTokens;
   // Constructor with logic
-  Project({required this.isUSDT,this.contractAddress, this.contractor,this.name,  this.creationDate, this.description,this.client, this.arbiter, this.requirements, this.status, this.repo}){
+  Project({required this.isUSDT,this.contractAddress, this.contractor,this.name,  this.creationDate, this.description,this.author, this.arbiter, this.requirements, this.status, this.repo}){
     int random = Random().nextInt(331) + 90;
     amountInEscrow = random * 100;
     creationDate=this.creationDate??DateTime.now();
@@ -42,7 +42,7 @@ class Project{
     buffer.write('Creation date: $creationDate\n');
     buffer.write('Expires at: $expiresAt\n');
     buffer.write('Description: $description\n');
-    buffer.write('Client: $client\n');
+    buffer.write('Client: $author\n');
     buffer.write('Arbiter: $arbiter\n');
     buffer.write('Terms Hash: $termsHash\n');
     buffer.write('Requirements: $requirements\n');
@@ -65,7 +65,7 @@ fromJson(Map<String, dynamic> json) {
   repo = json['repo'];
   termsHash = json['termsHash'];
   status = json['status'];
-  client = json['client'];
+  author = json['author'];
 }
 
   toJson(){
@@ -80,8 +80,8 @@ fromJson(Map<String, dynamic> json) {
       'termsHash':termsHash,
       'status':status,
       'arbiter':arbiter,
-      'author':"client",
-      'client':client
+      'author':author,
+     
     };
   }
     

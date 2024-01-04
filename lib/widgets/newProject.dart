@@ -79,12 +79,12 @@ class _NewProjectState extends State<NewProject> {
                   width:430,
                   child: TextField(
                     onChanged: (value) {
-                      widget.project.client=value;
+                      widget.project.author=value;
                     },
                     maxLength: 42,
                     style: TextStyle(fontSize: 16),
                     decoration: InputDecoration(
-                      labelText: "Client Address",
+                      labelText: "author Address",
                       ),),
                 ),
                  // ignore: prefer_const_constructors
@@ -128,7 +128,7 @@ class _NewProjectState extends State<NewProject> {
                     onPressed: ()async{
 
                       // setState(() {widget.loading=true;});
-                      // String projectAddress=await createClientProject(
+                      // String projectAddress=await createauthorProject(
                       //   widget.project,
                       //   this,
                        
@@ -155,7 +155,7 @@ class _NewProjectState extends State<NewProject> {
   UploadPic(){return SizedBox(
     width: 150,height: 150,
     child: Placeholder());}
-  createClientProject(project,state){print("create project");}
+  createauthorProject(project,state){print("create project");}
   Widget agentName() {
     var whatis =  SizedBox(
           width:400,

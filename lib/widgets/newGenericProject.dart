@@ -183,7 +183,7 @@ class _NewGenericProjectState extends State<NewGenericProject> {
               children: [
                 Text("Currency:"),
                 SizedBox(height: 8),
-                Text("Author (you):"),
+                Text("author (you):"),
                 SizedBox(height: 8),
                 Text("Project Repository:"),
                 SizedBox(height: 8),
@@ -277,7 +277,7 @@ class _NewGenericProjectState extends State<NewGenericProject> {
     shadowColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor), // Optional: Use for shadow
   ),
                   onPressed: () async {
-                      widget.project.client = Human().address ?? generateWalletAddress();
+                      widget.project.author = Human().address ?? generateWalletAddress();
                       widget.project.contractAddress=generateContractAddress();
                       
                       await projectsCollection.doc(widget.project.contractAddress)
@@ -997,7 +997,7 @@ SizedBox(
     );
     }
 
-  createClientProject(project,state){print("create project");}
+  createauthorProject(project,state){print("create project");}
   Widget agentName() {
     return SizedBox(
           width:400,

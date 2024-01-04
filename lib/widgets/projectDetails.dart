@@ -175,9 +175,9 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
-                                            const Text("Client: "),
+                                            const Text("author: "),
                                              Text(
-                                             widget.project.client!,
+                                             widget.project.author!,
                                               style: const TextStyle(fontSize: 11),
                                             ),
                                             const SizedBox(
@@ -185,7 +185,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                             ),
                                             TextButton(
                                                 onPressed: () {
-                                                  copied(context, widget.project.client);
+                                                  copied(context, widget.project.author);
                                                 },
                                                 child: const Icon(Icons.copy)),
                                               ],

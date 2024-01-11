@@ -28,7 +28,7 @@ class _ArbitrateState extends State<Arbitrate> {
 
   @override
   Widget build(BuildContext context) {
-    double awardToBackers = _useSlider ? widget.project.amountInEscrow! - _sliderValue : widget.project.amountInEscrow! - (double.tryParse(_awardToContractorController.text) ?? 0);
+    double awardToBackers = _useSlider ? widget.project.holding! - _sliderValue : widget.project.holding! - (double.tryParse(_awardToContractorController.text) ?? 0);
     double awardToContractor = _useSlider ? _sliderValue : (double.tryParse(_awardToContractorController.text) ?? 0);
     bool isNegative = awardToBackers < 0 || awardToContractor < 0;
     return Container(
@@ -51,7 +51,7 @@ class _ArbitrateState extends State<Arbitrate> {
           ),
           SizedBox(height: 20),
           Text(
-            "Amount in Escrow: ${widget.project.amountInEscrow!}",
+            "Amount in Escrow: ${widget.project.holding!}",
             style: Theme.of(context).textTheme.subtitle1!,
           ),
           SizedBox(height: 20),
@@ -81,7 +81,7 @@ class _ArbitrateState extends State<Arbitrate> {
                   ? Slider(
                       value: _sliderValue,
                       min: 0,
-                      max: widget.project.amountInEscrow!,
+                      max: widget.project.holding!,
                       onChanged: (value) {
                         setState(() {
                           _sliderValue = value;
@@ -99,7 +99,7 @@ class _ArbitrateState extends State<Arbitrate> {
                       ),
                       onChanged: (value) {
                         setState(() {
-                          _canSubmit = double.tryParse(value) != null && double.parse(value) <= widget.project.amountInEscrow!;
+                          _canSubmit = double.tryParse(value) != null && double.parse(value) <= widget.project.holding!;
                         });
                       },
                     ),

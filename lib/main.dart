@@ -19,7 +19,7 @@ import 'screens/disputes.dart';
 List<Project> projects=[];
 var projectsCollection = FirebaseFirestore.instance.collection('projects');
 var prelaunchCollection = FirebaseFirestore.instance.collection('prelaunch');
-    void main() async {
+    void main() async  {
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
       var querySnapshot = await projectsCollection.get();
@@ -30,7 +30,7 @@ var prelaunchCollection = FirebaseFirestore.instance.collection('prelaunch');
        name: doc.data()["name"],
        creationDate : (doc.data()['created'] as Timestamp).toDate(),
        description: doc.data()["description"],
-       author: doc.data()["client"],
+       author: doc.data()["author"],
        contractor:doc.data()['contractor'],
        arbiter: doc.data()["arbiter"],
        requirements: doc.data()["specs"],
@@ -38,6 +38,7 @@ var prelaunchCollection = FirebaseFirestore.instance.collection('prelaunch');
        status: doc.data()["status"],
        contractAddress: doc.id.toString()
       );
+    p.contributions=doc.data()['contributions'];
     p.contractAddress=doc.id.toString();
     p.termsHash=doc.data()['termsHash']??"";
     p.hashedFileName=doc.data()['hashedFileName']??"";
@@ -73,6 +74,7 @@ class MyApp extends StatelessWidget {
     builder = (_) => 
     // ProjectDetails(project: projects[0])
     // Prelaunch()
+    
       BaseScaffold(
         selectedItem: 1,
       body: Projects(), 

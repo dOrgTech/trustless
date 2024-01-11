@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:trustless/widgets/newGenericProject.dart";
+import "package:trustless/widgets/sendfunds.dart";
 import "../entities/project.dart";
 import "../main.dart";
 import "../widgets/footer.dart";
@@ -137,7 +138,7 @@ class ProjectsState extends State<Projects> {
                       spacing: 14,
                       runSpacing: 14,
                       alignment: WrapAlignment.start,
-                      children: projectCards,
+                      children: [...projectCards],
                      ),
                    ), 
                   SizedBox(

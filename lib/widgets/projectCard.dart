@@ -54,7 +54,7 @@ class ProjectCard extends StatelessWidget {
                             child: Column(
                               children: [
                                 // Text("Holding" , textAlign: TextAlign.center, style: TextStyle( fontWeight: FontWeight.w100, fontSize: 14 ) ,),
-                                Text(project!.amountInEscrow!.toString(), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 19)),
+                                Text(project!.holding!.toString(), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 19)),
                                 Text(
                                   project!.isUSDT?
                                   "USDT":"XTZ" , textAlign: TextAlign.center, 

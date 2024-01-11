@@ -3,6 +3,8 @@ import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/services.dart';
+import 'package:trustless/entities/human.dart';
+import 'package:trustless/main.dart';
 import '../entities/org.dart';
 import '../entities/project.dart';
 import '../entities/token.dart';
@@ -13,10 +15,10 @@ class SendFunds extends StatefulWidget {
   bool loading = false;
   bool done = false;
   bool error = false;
-  Project project = Project(isUSDT: false);
+  Project project;
 
 // ignore: use_key_in_widget_constructors
-  SendFunds();
+  SendFunds({required this.project});
 
   @override
   SendFundsState createState() => SendFundsState();
@@ -29,12 +31,10 @@ class SendFundsState extends State<SendFunds> {
   String? selectedAddress;
   TextEditingController amountController = TextEditingController();
   String amount = "";
+  String token="XTZ";
   @override
   Widget build(BuildContext context) {
-    List<String> paymentTokens = [];
-    for (Token t in widget.project.acceptedTokens!) {
-      paymentTokens.add(t.symbol + " (" + t.name + ")");
-    }
+   if (widget.project.isUSDT){token="USDC";}
     return Container(
         width: 650,
         padding: const EdgeInsets.symmetric(horizontal: 60),
@@ -50,99 +50,15 @@ class SendFundsState extends State<SendFunds> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            // SizedBox(height: 70,
-            // child:capacity(),
-            // ),
-
+           const  SizedBox(height: 30),
             const Text(
               "Fund Project",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 19),
             ),
-            
-            SizedBox(
-              
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                Container(
-              
-                padding: const EdgeInsets.all(18),
-                decoration: const BoxDecoration(
-                  color: Colors.black38,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    DropdownButton<String>(
-                      hint: Text("Select accepted token "),
-                      value: selectedToken,
-                      items: paymentTokens.asMap().entries.map((entry) {
-                        int idx = entry.key;
-                        String value = entry.value;
-
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(
-                            value,
-                            
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          selectedToken = newValue;
-                          amountController.text = "";
-                          amount = "";
-                          selectedAddress = widget.project.acceptedTokens!
-                              .firstWhere((token) =>
-                                  token.symbol + " (" + token.name + ")" ==
-                                  newValue)
-                              .address;
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 33),
-                    if (selectedToken != null &&
-                        paymentTokens.indexOf(selectedToken!) != 0)
-                      SizedBox(
-                        width: 400,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "$selectedAddress",
-                              style: TextStyle(fontSize: 14),
-                            ),
-                            const SizedBox(
-                              width: 14,
-                            ),
-                            TextButton(
-                                onPressed: () {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      // The content of the SnackBar.
-                                      content: Center(
-                                          child: Text(
-                                        'Address copied',
-                                        style: TextStyle(fontSize: 15),
-                                      )),
-                                      // The duration of the SnackBar.
-                                      duration: Duration(seconds: 2),
-                                    ),
-                                  );
-                                },
-                                child: const Icon(Icons.copy))
-                          ],
-                        ),
-                      ),
-                  ],
-                )),
-            if (selectedToken != null)
-             const SizedBox(height:10),
-
-            if (selectedToken != null) // Only display if a token is selected
+             const SizedBox(height:200),
+            //  const Text("Your contribution will be stored in the contract.")
+           
               SizedBox(
                 width: 200,
                 child: TextField(
@@ -155,7 +71,7 @@ class SendFundsState extends State<SendFunds> {
                     amount = value;
                   },
                   decoration: InputDecoration(
-                    labelText: 'Enter amount',
+                    labelText: 'Enter ${token} amount',
                   ),
                 ),
               ),
@@ -176,12 +92,20 @@ class SendFundsState extends State<SendFunds> {
                       ),
                     ),
                     onPressed: () async {
-                      Navigator.of(context).pop();
+                      if ( widget.project.contributions.containsKey(Human().address!)) {
+                            widget.project.contributions[Human().address!] = widget.project.contributions[Human().address!]! + int.parse(amount);
+                          } else {
+                            widget.project.contributions[Human().address!] = int.parse(amount);
+                          }
+                      projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
+                      Navigator.of(context).pushNamed("/");
+
                     },
-                    child: const Center(
+                    child:  Center(
                       child: Text(
                         "SUBMIT",
                         style: TextStyle(
+                          color: Theme.of(context).canvasColor,
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             ),
@@ -189,10 +113,10 @@ class SendFundsState extends State<SendFunds> {
                     )),
               ),
             ),
+           const  SizedBox(height: 30),
               ],),
-            ),
-          ],
-        ));
+            
+        );
   }
 
 var humans=[];

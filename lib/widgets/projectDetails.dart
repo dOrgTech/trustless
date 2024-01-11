@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:trustless/entities/human.dart';
 import 'package:trustless/widgets/arbitrate.dart';
 import 'package:trustless/widgets/dispute.dart';
 import 'package:trustless/widgets/footer.dart';
@@ -42,13 +43,15 @@ class _ProjectDetailsState extends State<ProjectDetails> {
 }
   @override
   Widget build(BuildContext context) {
+    widget.project.holding= widget.project.contributions.values.fold(0, (a, b) => a! + b);
+
     List<Widget> openProjectFunctions = [
-      functionItem("Send Funds to Project", "Anyone", SendFunds()),
+      functionItem("Send Funds to Project", "Anyone", SendFunds(project: widget.project)),
       functionItem("Set Other Party", "Author", SetParty()),
       functionItem("Withdraw Support", "Anyone", Withdraw()),
     ];
     List<Widget> ongoingProjectFunctions = [
-      functionItem("Send Funds to Project", "Anyone", SendFunds()),
+      functionItem("Send Funds to Project", "Anyone", SendFunds(project: widget.project)),
       functionItem("Initiate Dispute", "Parties", Dispute()),
       functionItem("Release funds to contractor", "Author", Release()),
     ];
@@ -60,6 +63,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
     ];
 
     List<Widget> pendingProjectFunctions = [
+      functionItem("Send Funds to Project", "Anyone", SendFunds(project: widget.project)),
       functionItem("Withdraw Support", "Anyone", Withdraw()),
       functionItem("Sign Contract", "Contractor", Withdraw()),
     ];
@@ -145,7 +149,6 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    
                                     SizedBox(
                                       height: 35,
                                       child: Center(
@@ -185,7 +188,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                             ),
                                             TextButton(
                                                 onPressed: () {
-                                                  copied(context, widget.project.author);
+                                                  copied(context,widget.project.author!);
                                                 },
                                                 child: const Icon(Icons.copy)),
                                               ],
@@ -204,7 +207,6 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                              widget.project.contractor!,
                                               style: const TextStyle(fontSize: 11),
                                             ):const SizedBox(width:235,child: Text("N/A")),
-                                          
                                             const SizedBox(
                                               width: 2,
                                             ),
@@ -264,14 +266,12 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                               ],
                                             ),
                                           ),
-                                          ), 
-                                          
-                               
+                                      ), 
                                   ],
                                 )
                               ],
                             ),
-                             SizedBox(height: widget.project.status =="open" ? 25:0),
+                           const SizedBox(height: 25),
                             !(widget.project.status=="open")? 
                             Container(
                               constraints: const BoxConstraints(
@@ -290,9 +290,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                   Text(widget.project.termsHash??"" , style: const TextStyle(backgroundColor: Colors.black54, color: Colors.white70), ),
                                   const SizedBox(width: 10),
                                   TextButton(
-                                      onPressed: () {
-                                        copied(context, widget.project.termsHash??"");
-                                      },
+                                      onPressed: () {copied(context, widget.project.termsHash??"");},
                                       child: const Icon(Icons.copy)),
                                 ],
                               )
@@ -301,7 +299,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                         ),
                       ),
                     ),
-                     SizedBox(height:  widget.project.status =="open" ? 20:0),
+                    const SizedBox(height:  20),
                     Container(
                       alignment: Alignment.topCenter,
                       width: double.infinity,
@@ -329,7 +327,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                         child: Text(
                                           widget.project.status == "Pending" ||
                                                   widget.project.status ==
-                                                      "Pending"
+                                                      "pending"
                                               ? "Funds in Contract"
                                               : "Funds in Escrow",
                                           style: TextStyle(
@@ -345,11 +343,21 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                       Padding(
                                         padding:
                                             const EdgeInsets.only(left: 28.0),
-                                        child: Text(
-                                          "${widget.project.amountInEscrow!}.000000 USDT",
-                                          style: const TextStyle(
-                                              fontSize: 25,
-                                              fontWeight: FontWeight.normal),
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              "${widget.project.holding!} ",
+                                              style: const TextStyle(
+                                                  fontSize: 25,
+                                                  fontWeight: FontWeight.normal),
+                                            ),
+                                            Text(
+                                              widget.project.isUSDT?"USDT":"XTZ",
+                                              style: const TextStyle(
+                                                  fontSize: 25,
+                                                  fontWeight: FontWeight.normal),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ],
@@ -366,9 +374,9 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
                                             children: [
-                                              const Text(
-                                                "32",
-                                                style: TextStyle(
+                                               Text(
+                                               widget.project.contributions.length.toString(),
+                                                style: const TextStyle(
                                                     fontSize: 27,
                                                     fontWeight:
                                                         FontWeight.normal),
@@ -388,38 +396,13 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                         const SizedBox(
                                           width: 70,
                                         ),
-                                        TextButton(
-                                          onPressed: () {},
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              const Text(
-                                                "4",
-                                                style: TextStyle(
-                                                    fontSize: 27,
-                                                    fontWeight:
-                                                        FontWeight.normal),
-                                              ),
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
-                                              Text(
-                                                "Asset Types",
-                                                style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .indicatorColor),
-                                              ),
-                                            ],
-                                          ),
-                                        )
+                                       
                                       ],
                                     ),
                                   )
                                 ],
                               ),
                             ),
-
 
                             const Padding(
                               padding: EdgeInsets.symmetric(horizontal: 28.0),
@@ -541,6 +524,17 @@ class _ProjectDetailsState extends State<ProjectDetails> {
   Widget functionItem(String title, String access, target) {
     return InkWell(
       onTap: () {
+        Human().address==null?
+         showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  content: SizedBox(height:100, width: 400,child:Center(child: 
+                  Text("Connect your wallet to call functions.")
+                  )),
+                ))
+
+                :
+
         showDialog(
             context: context,
             builder: (context) => AlertDialog(

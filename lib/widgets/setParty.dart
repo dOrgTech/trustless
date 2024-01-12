@@ -2,24 +2,27 @@
 
 import 'dart:isolate';
 import 'dart:html' as html;
+import 'package:crypto/crypto.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import 'package:url_launcher/url_launcher.dart';
+import '../entities/human.dart';
 import '../entities/project.dart';
+import '../main.dart';
 const String escape = '\uE00C';
-
-
-
 
 class SetParty extends StatefulWidget {
 bool loading=false;
 bool done=false;
 bool error=false;
-Project project=Project(isUSDT: false);
+Project project;
 
 // ignore: use_key_in_widget_constructors
-SetParty() ;
-
+SetParty({required this.project}) ;
+TextEditingController arbiterControlla = TextEditingController();
+TextEditingController contractorControlla = TextEditingController();
   @override
   SetPartytate createState() => SetPartytate();
 }
@@ -29,86 +32,193 @@ class SetPartytate extends State<SetParty> {
   @override
   Widget build(BuildContext context) {
     
-    List<DropdownMenuItem<int>> paymentTokens=[];
     return
     Container(
-          padding: const EdgeInsets.symmetric(horizontal: 60),
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Theme.of(context).highlightColor,
-              width: 0.3,
-            ),
-          ),
-          // width: MediaQuery.of(context).size.width*0.7,
-          height:450,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-             
-            const  SizedBox(
-                width: 360,
-                child: Text("Set Other Party",
-                textAlign: TextAlign.center,
-                 style: TextStyle(fontSize: 19), 
-                  ),
-              ),
-             
-            SizedBox(
-              width:450,
-              child: TextField(
-                onChanged: (value) {
-                  widget.project.repo=value;
-                },
-                style: const TextStyle(fontSize: 13),
-                decoration:  const InputDecoration(
-                  labelText: "Other party address",
-                  hintText: 'Cannot be changed after submitting.'),),
-            ),
-          //  const SizedBox(height: 90),
-            Padding(
-              padding: const EdgeInsets.only(top:58),
-              child: SizedBox(
-                height: 40,
-                width: 130,
-                child: TextButton(
-                  style: ButtonStyle(
-                    overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
-                    backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
-                    elevation: MaterialStateProperty.all(1.0),
-                    shape: MaterialStateProperty.all(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(7.0),
-                      ),
-                    ),
-                  ),
-                  onPressed: ()async{
-            
-                    // setState(() {widget.loading=true;});
-                    // String projectAddress=await createClientProject(
-                    //   widget.project,
-                    //   this,
-                     
-                    //   );
-                    //   receivePort.listen((message) {
-                    //   projectAddress=message;
-                    // //  });               
-                    Navigator.of(context).pop();
-                  },
-                   child: const Center(
-                  child: Text("SUBMIT", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color:Colors.black),),
-                )),
-              ),
-            ),
-            
-            ],
-          )
+      margin: EdgeInsets.all(10),
+      padding: EdgeInsets.all(40),
+      decoration: BoxDecoration(border: Border.all(width: 0.5)),
+    child: stage1()
     );
-
   }
 
   bool pressedName = false;
   bool pressedDesc = false;
+ String _hash = '';
+  String _fileName = '';
+    Future<void> _pickFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    if (result != null) {
+      Uint8List fileBytes = result.files.first.bytes!;
+      _fileName = result.files.first.name; // Store the file name
+      
+      var digest = sha256.convert(fileBytes);
+      setState(() {
+        widget.project.hashedFileName=_fileName;
+        _hash = digest.toString();
+        widget.project.termsHash=_hash;
+      });
+    }
+  }
+ stage1(){
+    return Container(
+      key: ValueKey(1),
+      constraints: const BoxConstraints(minHeight: 500,maxWidth: 1200),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+             const Opacity(
+            opacity: 0.9,
+            child: Text("Set Parties",style: TextStyle(fontSize: 22),)),
+          const SizedBox(height: 25),
+  RichText(
+  text: TextSpan(
+    style: DefaultTextStyle.of(context).style, // Set default text style from the theme
+    children: <TextSpan>[
+      TextSpan(
+        text: "If you already have already reached an arrangement with someone for the work specified in this Project, add their wallet or contract address in the field below. Their participation will be formalized once they sign this Project contract and stake half of the arbitration fee. You also need to specify the Arbiter at this point. Please refer to ",
+      ),
+      TextSpan(
+        text: 'the docs',
+        style: TextStyle(color: Colors.blue),
+        recognizer: TapGestureRecognizer()
+          ..onTap = () {
+            // Link handling code
+            launch("https://your-link-to-the-docs.com");
+          },
+      ),
+      TextSpan(
+        text: " to learn more about the role of the arbiter.",
+      ),
+    ],
+  ),
+)
+,
+
+          const SizedBox(height: 60),
+          SizedBox(
+                    // width:630,
+                    child:  TextField(
+                      controller: widget.contractorControlla,
+                      onChanged: (value){setState(() {
+                        widget.project.contractor=value;
+                      });},
+                      style: const TextStyle(fontSize: 13),
+                      decoration:  const InputDecoration(
+                        labelText: "Contractor Address",
+                        ),),
+                  ),
+          const SizedBox(height: 40),
+          SizedBox(
+                    // width:630,
+                    child: TextField(
+                      controller: widget.arbiterControlla,
+                       onChanged: (value){setState(() {
+                        widget.project.arbiter=value;
+                      });},
+                      style: const TextStyle(fontSize: 13),
+                      decoration:  const InputDecoration(
+                        labelText: "Arbiter Address",
+                        ),),
+                  ), 
+                const SizedBox(height: 39),
+ SizedBox(
+                  // width:600,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                     ElevatedButton(
+  onPressed: _pickFile,
+  child: const Text('Select File', textAlign: TextAlign.center,),
+  style: ElevatedButton.styleFrom(
+    primary: Colors.transparent, // Transparent background
+   // White text color
+    shadowColor: Colors.transparent, // No shadow
+    side: const BorderSide(color: Color.fromARGB(255, 102, 102, 102), width: 2.0), // Visible border
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(0), // Square shape
+    ),
+    fixedSize: const Size(100, 100), // Square size
+  ),
+),    
+const SizedBox(width: 38),
+const SizedBox(      
+   child: SizedBox(
+                          width: 500,
+                          child: Text("Select the TERMS.md file. This should not be modified throughout the life cycle of the project. A hash of its content will be immutably stored in the contract."
+                          ,textAlign: TextAlign.justify,
+                          ),
+                        )),
+                    ],
+                  ),
+                ),
+              const SizedBox(height: 24),
+                  Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.only(left:38.0),
+            child: Row(
+              children: [
+                Opacity(
+                  opacity: 0.7,
+                  child: Text(_fileName.isNotEmpty ? 'File hash: ':"",)
+                  ),
+                Text('$_hash', style:  TextStyle(fontWeight: FontWeight.w100, color:Color.fromRGBO(253, 251, 231, 1), backgroundColor: Colors.black),),
+              ],
+            ),
+          )),
+          const SizedBox(height: 60),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal:80.0),
+            child: const Text("The Contractor will need to sign this Project contract before the funds are locked in Escrow. Make sure they agree with the terms as well as the designated Arbiter."),
+          ),
+          
+                        Spacer(),
+                        Center(
+                          child: SizedBox(
+                            child: SizedBox(
+                                          height: 40,
+                                          width: 170,
+                                          child: TextButton(
+                                          style: ButtonStyle(
+                                            overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
+                                            backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
+                                            elevation: MaterialStateProperty.all(1.0),
+                                            shape: MaterialStateProperty.all(
+                                              RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(7.0),
+                                              ),
+                                            ),
+                                          ),
+                                          onPressed: 
+                                            widget.project.contractor!.length > 2
+                                            && widget.project.arbiter!.length > 2
+                                            && widget.project.termsHash!.length> 4?
+                                          ()async{
+                                          !(Human().address?.toString() == widget.project.author?.toString())?
+                                      showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                        content: SizedBox(height:100, width: 400,child:Center(child: 
+                                          Text("You are not signed in as the Author of this Project.", textAlign: TextAlign.center,)
+                                          )),
+                                        ))
+                                             :
+                                            widget.project.status="pending";
+                                           await projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
+                                            Navigator.of(context).pushNamed("/projects/${widget.project.contractAddress}");
+                                          }:null,
+                                           child: const Center(
+                                          child: Text("SUBMIT", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color:Colors.black),),
+                                        ))
+                                        ),
+                          ),
+                        ) 
+        ],
+      ),
+    );
+  }
 
  
 }
+
+

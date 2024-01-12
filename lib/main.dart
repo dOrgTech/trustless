@@ -38,7 +38,8 @@ var prelaunchCollection = FirebaseFirestore.instance.collection('prelaunch');
        status: doc.data()["status"],
        contractAddress: doc.id.toString()
       );
-    p.contributions=doc.data()['contributions'];
+    Map<String, dynamic> firebaseData = doc.data()['contributions'];
+    p.contributions = Map<String, int>.from(firebaseData);
     p.contractAddress=doc.id.toString();
     p.termsHash=doc.data()['termsHash']??"";
     p.hashedFileName=doc.data()['hashedFileName']??"";
@@ -87,7 +88,7 @@ class MyApp extends StatelessWidget {
       project = projects.firstWhere(
         (proj)=>proj.contractAddress == projectId
       );
-      print("project "+project.toString());
+      
     } catch (e) {
       project = null;
     }

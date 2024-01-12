@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:trustless/utils/reusable.dart';
 import '../entities/project.dart';
 import 'package:intl/intl.dart';
 
@@ -9,6 +10,7 @@ class ProjectCard extends StatelessWidget {
   Project? project;
   @override
   Widget build(BuildContext context) {
+    project!.holding= project!.contributions.values.fold(0, (a, b) => a! + b);
     return Card(
       elevation: 4,
       child: TextButton(
@@ -82,7 +84,7 @@ class ProjectCard extends StatelessWidget {
                         child: SizedBox(
                           width: 290,
                           child: Text(project!.description!)),
-                                       ),
+                           ),
                          ],
                        ),
                      ),
@@ -94,8 +96,8 @@ class ProjectCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text("Author: "),
-                  Text("Cotoflender ", style: TextStyle(fontWeight: FontWeight.bold),),
-                  Text("(tz1QEBc....d14hyu)"),
+                
+                  Text(getShortAddress(project!.author!)),
                 ],
               )
               ),

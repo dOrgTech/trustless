@@ -58,7 +58,6 @@ class _NewGenericProjectState extends State<NewGenericProject> {
     // TODO: implement initState
     super.initState();
   }
-
   String _hash = '';
   String _fileName = '';
     Future<void> _pickFile() async {
@@ -75,7 +74,6 @@ class _NewGenericProjectState extends State<NewGenericProject> {
       });
     }
   }
-  
   @override
   Widget build(BuildContext context) {
     DateTime.now().add(const Duration(days:1825 ));
@@ -228,7 +226,7 @@ class _NewGenericProjectState extends State<NewGenericProject> {
               child: Column(  
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text("Arnotratopm fee: "),
+                  Text("Arbitration fee: "),
                   SizedBox(height: 8),
                   Text("Due now: "),
               ],),
@@ -245,11 +243,8 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                   widget.project.isUSDT?"80.0 USDT":"107.00 XTZ"
                          :
                  widget.project.isUSDT?"0.00 USDT":"0.00 XTZ"
-                )
-                
-                ,
+                ),
             ],),
-           
           ],),
            const SizedBox(height: 60),
            Row(
@@ -730,7 +725,7 @@ const SizedBox(
                      onPressed:
                     (){
                       if(
-                        widget.project.contractor!.length > 1
+                      widget.project.contractor!.length > 1
                       && widget.project.arbiter!.length > 1
                       && widget.project.termsHash!.length> 3
                       ){

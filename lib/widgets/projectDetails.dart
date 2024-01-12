@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:trustless/entities/human.dart';
+import 'package:trustless/utils/reusable.dart';
 import 'package:trustless/widgets/arbitrate.dart';
 import 'package:trustless/widgets/dispute.dart';
 import 'package:trustless/widgets/footer.dart';
@@ -47,8 +48,8 @@ class _ProjectDetailsState extends State<ProjectDetails> {
 
     List<Widget> openProjectFunctions = [
       functionItem("Send Funds to Project", "Anyone", SendFunds(project: widget.project)),
-      functionItem("Set Other Party", "Author", SetParty()),
-      functionItem("Withdraw Support", "Anyone", Withdraw()),
+      functionItem("Set Parties", "Author", SetParty(project: widget.project)),
+      functionItem("Withdraw", "Anyone", Withdraw(project: widget.project)),
     ];
     List<Widget> ongoingProjectFunctions = [
       functionItem("Send Funds to Project", "Anyone", SendFunds(project: widget.project)),
@@ -59,13 +60,14 @@ class _ProjectDetailsState extends State<ProjectDetails> {
       functionItem("Arbitrate", "Arbiter", Arbitrate(project: widget.project)),
     ];
     List<Widget> closedProjectFunctions = [
-      functionItem("Withdraw Support", "Anyone", Withdraw()),
+      functionItem("Withdraw", "Anyone", Withdraw(project: widget.project)),
     ];
 
     List<Widget> pendingProjectFunctions = [
       functionItem("Send Funds to Project", "Anyone", SendFunds(project: widget.project)),
-      functionItem("Withdraw Support", "Anyone", Withdraw()),
-      functionItem("Sign Contract", "Contractor", Withdraw()),
+      functionItem("Withdraw", "Anyone", Withdraw(project: widget.project)),
+      functionItem("Sign Contract", "Contractor", Withdraw(project: widget.project)),
+      functionItem("Set Parties", "Author", SetParty(project: widget.project)),
     ];
     return BaseScaffold(
       selectedItem: 1,
@@ -125,8 +127,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                             widget.project.status == "Dispute"
                                                 ? Text(
                                                     "Expires: ${DateFormat.yMMMd().format(widget.project.expiresAt!)}",
-                                                    style:
-                                                        const TextStyle(fontSize: 13))
+                                                    style: const TextStyle(fontSize: 13))
                                                 : const Text(""),
                                             StatusBox(project: widget.project)
                                           ],
@@ -362,41 +363,44 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                       ),
                                     ],
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 18.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        TextButton(
-                                          onPressed: () {},
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                               Text(
-                                               widget.project.contributions.length.toString(),
-                                                style: const TextStyle(
-                                                    fontSize: 27,
-                                                    fontWeight:
-                                                        FontWeight.normal),
-                                              ),
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 18.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      TextButton(
+                                        onPressed: () {
+                                          showDialog(context: context, builder: ((context) => 
+                                          AlertDialog(content: BackersList(project: widget.project),)));
+                                        },
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
                                               Text(
-                                                "Backers",
-                                                style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .indicatorColor),
-                                              ),
-                                            ],
-                                          ),
+                                              widget.project.contributions.length.toString(),
+                                              style: const TextStyle(
+                                                  fontSize: 27,
+                                                  fontWeight:
+                                                      FontWeight.normal),
+                                            ),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text(
+                                              "Backers",
+                                              style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .indicatorColor),
+                                            ),
+                                          ],
                                         ),
-                                        const SizedBox(
-                                          width: 70,
-                                        ),
-                                       
+                                      ),
+                                      const SizedBox(
+                                        width: 70,
+                                      ),
+                                      
                                       ],
                                     ),
                                   )
@@ -502,25 +506,6 @@ class _ProjectDetailsState extends State<ProjectDetails> {
       }
   }
 
-  copied(context, text) async{
-    
-    await Clipboard.setData(
-          ClipboardData(text:text)
-        );
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        // The content of the SnackBar.
-        content: Center(
-            child: Text(
-          'Item copied to clipboard',
-          style: TextStyle(fontSize: 15),
-        )),
-        // The duration of the SnackBar.
-        duration: Duration(seconds: 2),
-      ),
-    );
-  }
-
   Widget functionItem(String title, String access, target) {
     return InkWell(
       onTap: () {
@@ -532,9 +517,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                   Text("Connect your wallet to call functions.")
                   )),
                 ))
-
-                :
-
+        : 
         showDialog(
             context: context,
             builder: (context) => AlertDialog(
@@ -581,3 +564,88 @@ class _ProjectDetailsState extends State<ProjectDetails> {
     );
   }
 }
+
+
+class BackersList extends StatelessWidget {
+  Project project;
+   BackersList({super.key, required this.project});
+  List<Widget> rows = [];
+  @override
+  Widget build(BuildContext context) {
+    project.contributions.forEach((key, value) {
+  rows.add(
+    Container(
+      padding:const EdgeInsets.all(5),
+      margin: const EdgeInsets.all(2),
+      color:Theme.of(context).canvasColor,
+      height: 40,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Row(
+            children: [
+              SizedBox(
+                width: 160,
+                child: Center(child: Text( getShortAddress( "$key")))),
+              TextButton(onPressed: (){
+               copied(context, key);
+              }, child: Icon(Icons.copy))
+            ],
+          ),
+          SizedBox(width: 70), // Adjust as needed
+          Text("$value"),
+        ],
+      ),
+    ),
+  );
+});
+
+    return Container(
+      height:600,
+      width: 500,
+      child: Center(
+        child: ListView(
+          children:[
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+              Text("Address"), SizedBox(width: 130,), Text("Amount"),
+            ],),
+            SizedBox(height: 10),
+            ...rows,
+            ...rows,
+            ...rows,
+            ...rows,
+            ...rows,
+            ...rows,
+            ...rows,
+            ...rows,
+            ...rows,
+            ...rows
+            
+            ]
+        ),
+      ),
+    );
+  }
+}
+
+  copied(context, text) async{
+    
+    await Clipboard.setData(
+          ClipboardData(text:text)
+        );
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        // The content of the SnackBar.
+        content: Center(
+            child: Text(
+          'Item copied to clipboard',
+          style: TextStyle(fontSize: 15),
+        )),
+        // The duration of the SnackBar.
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }

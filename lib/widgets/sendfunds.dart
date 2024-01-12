@@ -83,22 +83,20 @@ class SendFundsState extends State<SendFunds> {
                 width: 130,
                 child: ElevatedButton(
                     style: ButtonStyle(
-                      
                       shape: MaterialStateProperty.all(
                         RoundedRectangleBorder(
-                          
                           borderRadius: BorderRadius.circular(7.0),
                         ),
                       ),
                     ),
-                    onPressed: () async {
+                     onPressed: () async {
                       if ( widget.project.contributions.containsKey(Human().address!)) {
                             widget.project.contributions[Human().address!] = widget.project.contributions[Human().address!]! + int.parse(amount);
                           } else {
                             widget.project.contributions[Human().address!] = int.parse(amount);
                           }
-                      projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
-                      Navigator.of(context).pushNamed("/");
+                     projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
+                     Navigator.of(context).pushNamed("/projects/${widget.project.contractAddress}");
 
                     },
                     child:  Center(

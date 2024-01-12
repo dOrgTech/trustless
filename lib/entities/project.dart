@@ -47,8 +47,8 @@ fromJson(Map<String, dynamic> json) {
   status = json['status'];
   author = json['author'];
   contributions=json['contributions'];
-  
 }
+
   @override
   String toString() {
     // use a StringBuffer to efficiently build the string

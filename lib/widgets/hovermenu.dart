@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trustless/widgets/newGenericProject.dart';
 
+import '../entities/human.dart';
 import '../screens/projects.dart';
 
 class HoverExpandWidget extends StatefulWidget {
@@ -168,6 +169,15 @@ Widget _overlayBuilder(BuildContext context) {
             onPressed: () async {
               print('${options[index][0]} clicked');
               _controller.reverse();  
+               Human().address==null?
+         showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  content: SizedBox(height:100, width: 400,child:Center(child: 
+                  Text("Connect your wallet first.")
+                  )),
+                ))
+        : 
               showDialog(
                 context: context, 
                 builder: (context) => AlertDialog(

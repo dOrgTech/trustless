@@ -25,7 +25,7 @@ class Human {
   //  }
   // address=ethereum?.selectedAddress.toString();
   await Future.delayed(const Duration(seconds: 1)).then((value) {
-  address="354b4wrtwbn45yne46ug";
+  address="tz1492wk3db1b38rpwtfg02ns0ak7i41osui";
   });
   
   }

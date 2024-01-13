@@ -179,7 +179,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
-                                            const Text("author: "),
+                                            const Text("Author: "),
                                              Text(
                                              widget.project.author!,
                                               style: const TextStyle(fontSize: 11),
@@ -609,19 +609,11 @@ class BackersList extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-              Text("Address"), SizedBox(width: 130,), Text("Amount"),
+            SizedBox(width: 40,), Text("Address"), SizedBox(width: 210,), Text("Amount"),SizedBox(width: 10,) 
             ],),
             SizedBox(height: 10),
             ...rows,
-            ...rows,
-            ...rows,
-            ...rows,
-            ...rows,
-            ...rows,
-            ...rows,
-            ...rows,
-            ...rows,
-            ...rows
+          
             
             ]
         ),

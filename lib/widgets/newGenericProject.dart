@@ -96,6 +96,11 @@ class _NewGenericProjectState extends State<NewGenericProject> {
         }
     }
     return
+   MediaQuery(
+  data: MediaQuery.of(context).copyWith(textScaleFactor: 
+ MediaQuery.of(context).size.height<900? 0.7:0.93
+  ),
+  child: 
     Container(
             // width:700,
             // height: 800,
@@ -132,7 +137,7 @@ class _NewGenericProjectState extends State<NewGenericProject> {
         ),
       ),
     ),
-  );
+  ));
   }
 
   bool pressedName = false;

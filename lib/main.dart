@@ -174,6 +174,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
 
   @override
   Widget build(BuildContext context) {
+    print("height ${MediaQuery.of(context).size.height}");
     Color indicatorColor = Theme.of(context).indicatorColor;
     Color textThemeColor = Theme.of(context).textTheme.bodyLarge!.color!;
     Color blendedColor = blendColors(indicatorColor, textThemeColor, 0.5);

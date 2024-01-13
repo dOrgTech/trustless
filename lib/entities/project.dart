@@ -8,6 +8,7 @@ class Project{
   bool isUSDT=false;
   String? contractAddress;
   String? name;
+  
   DateTime? creationDate;
   DateTime? expiresAt;
   String? description;

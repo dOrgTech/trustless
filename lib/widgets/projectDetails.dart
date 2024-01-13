@@ -565,7 +565,6 @@ class _ProjectDetailsState extends State<ProjectDetails> {
   }
 }
 
-
 class BackersList extends StatelessWidget {
   Project project;
    BackersList({super.key, required this.project});

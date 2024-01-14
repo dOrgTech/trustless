@@ -12,6 +12,7 @@ import 'package:trustless/widgets/release.dart';
 import 'package:trustless/widgets/sendfunds.dart';
 import 'package:trustless/widgets/setParty.dart';
 import 'package:intl/intl.dart';
+import 'package:trustless/widgets/sign.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../entities/project.dart';
 import '../main.dart';
@@ -52,9 +53,9 @@ class _ProjectDetailsState extends State<ProjectDetails> {
       functionItem("Withdraw", "Anyone", Withdraw(project: widget.project)),
     ];
     List<Widget> ongoingProjectFunctions = [
-      functionItem("Send Funds to Project", "Anyone", SendFunds(project: widget.project)),
       functionItem("Initiate Dispute", "Parties", Dispute()),
-      functionItem("Release funds to contractor", "Author", Release()),
+      functionItem("Release Funds to Contractor", "Backers", Release(project: widget.project)),
+      functionItem("Reinburse Backers", "Contractor", Release(project: widget.project)),
     ];
     List<Widget> disputedProjectFunctions = [
       functionItem("Arbitrate", "Arbiter", Arbitrate(project: widget.project)),
@@ -66,7 +67,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
     List<Widget> pendingProjectFunctions = [
       functionItem("Send Funds to Project", "Anyone", SendFunds(project: widget.project)),
       functionItem("Withdraw", "Anyone", Withdraw(project: widget.project)),
-      functionItem("Sign Contract", "Contractor", Withdraw(project: widget.project)),
+      functionItem("Sign Contract", "Contractor", Sign(project: widget.project)),
       functionItem("Set Parties", "Author", SetParty(project: widget.project)),
     ];
     return BaseScaffold(
@@ -403,7 +404,50 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                       
                                       ],
                                     ),
-                                  )
+                                  ),
+                                  widget.project.status == "ongoing"?
+                                    Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding:
+                                          const EdgeInsets.only(left: 0),
+                                        child: Text(
+                                          "Voting to release",
+                                          style: TextStyle(
+                                              fontSize: 17,
+                                              color: Theme.of(context)
+                                                  .indicatorColor,
+                                              fontWeight: FontWeight.normal),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 8,
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 28.0),
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              "${
+                                                widget.project.contributorsReleasing.values.fold(0, (a, b) => a + b)
+                                              } ",
+                                              style: const TextStyle(
+                                                  fontSize: 25,
+                                                  fontWeight: FontWeight.normal),
+                                            ),
+                                            Text(
+                                              widget.project.isUSDT?"USDT":"XTZ",
+                                              style: const TextStyle(
+                                                  fontSize: 25,
+                                                  fontWeight: FontWeight.normal),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ):Text(""),
                                 ],
                               ),
                             ),
@@ -508,6 +552,9 @@ class _ProjectDetailsState extends State<ProjectDetails> {
 
   Widget functionItem(String title, String access, target) {
     return InkWell(
+      borderRadius: BorderRadius.all(Radius.circular(4.0)),
+      customBorder: Border.all(),
+      hoverColor: Color.fromARGB(37, 182, 182, 182),
       onTap: () {
         Human().address==null?
          showDialog(
@@ -525,11 +572,15 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                 ));
       },
       child: Container(
+        margin:EdgeInsets.all(1),
         width: 410,
         height: 146,
         decoration: BoxDecoration(
-            color: const Color(0x31000000),
-            border: Border.all(width: 1, color: const Color(0x2111111))),
+            color: Color.fromARGB(46, 37, 37, 37),
+            borderRadius:BorderRadius.all(Radius.circular(3.0)),
+            border: Border.all(
+            
+              width: 3, color: Color.fromARGB(19, 39, 39, 39))),
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [

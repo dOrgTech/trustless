@@ -20,13 +20,19 @@ class Project{
   String? repo="";
   String? requirements;
   double? holding;
+  double releasing=0;
+  double disputing=0;
   String? status;
   Map<String,int>contributions={};
+  Map<String,int>contributorsReleasing={};
+  Map<String,int>contributorsDisputing={};
   List<Token>? acceptedTokens;
   // Constructor with logic
   Project({required this.isUSDT,this.contractAddress, this.contractor,this.name,  this.creationDate, this.description,this.author, this.arbiter, this.requirements, this.status, this.repo}){
     int random = Random().nextInt(331) + 90;
     holding = contributions.values.fold(0, (a, b) => a! + b);
+    releasing = contributorsReleasing.values.fold(0, (a, b) => a + b);
+    disputing = contributorsDisputing.values.fold(0, (a, b) => a + b);
     creationDate=this.creationDate??DateTime.now();
     expiresAt=creationDate!.add(Duration(days: 30));
     acceptedTokens=[
@@ -84,7 +90,9 @@ fromJson(Map<String, dynamic> json) {
       'status':status,
       'arbiter':arbiter,
       'author':author,
-      'contributions':contributions
+      'contributions':contributions,
+      'contributorsReleasing':contributorsReleasing,
+      'contributorsDisputing':contributorsDisputing
     };
   }
     

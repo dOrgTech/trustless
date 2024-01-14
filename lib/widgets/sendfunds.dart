@@ -117,39 +117,5 @@ class SendFundsState extends State<SendFunds> {
         );
   }
 
-var humans=[];
-String selectedCapacity = 'Individual';
-Widget capacity() {
-List<String> capacities = ['Individual'];
-for (Token token in humans[1].balances!.keys) {
-  capacities.add(token.name);
-  print("added token " + token.name);
-}
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      const Text(
-        "Act as: ",
-      ),
-      DropdownButton<String>(
-        value: selectedCapacity,
-        onChanged: (value) {
-          setState(() {
-            selectedCapacity = value!;
-          });
-        },
-        items: capacities.map((String capacity) {
-          return DropdownMenuItem<String>(
-            value: capacity,
-            child: Text(capacity,
-              style: TextStyle(
-                color: capacity == 'Individual' ? Theme.of(context).indicatorColor : null,
-              ),
-            ),
-          );
-        }).toList(),
-      ),
-    ],
-  );
-}
+
 }

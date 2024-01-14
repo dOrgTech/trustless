@@ -38,8 +38,12 @@ var prelaunchCollection = FirebaseFirestore.instance.collection('prelaunch');
        status: doc.data()["status"],
        contractAddress: doc.id.toString()
       );
-    Map<String, dynamic> firebaseData = doc.data()['contributions'];
-    p.contributions = Map<String, int>.from(firebaseData);
+    Map<String, dynamic> fbContributions = doc.data()['contributions'];
+    p.contributions = Map<String, int>.from(fbContributions);
+    Map<String, dynamic> fbReleasing = doc.data()['contributorsReleasing'];
+    p.contributorsReleasing = Map<String, int>.from(fbReleasing);
+    Map<String, dynamic> fbDisputing = doc.data()['contributorsDisputing'];
+    p.contributorsDisputing = Map<String, int>.from(fbDisputing);
     p.contractAddress=doc.id.toString();
     p.termsHash=doc.data()['termsHash']??"";
     p.hashedFileName=doc.data()['hashedFileName']??"";
@@ -376,12 +380,13 @@ class _WalletBTNState extends State<WalletBTN> {
 class ThemeNotifier with ChangeNotifier {
   late ThemeData _themeData;
 
-  static const Color _lightThemeHighlightColor = Color.fromARGB(255, 100, 87, 68); // For light theme
-  static const Color _darkThemeHighlightColor = Color.fromARGB(255, 175, 161, 113); // For dark theme
+  static const Color _lightThemeHighlightColor = Color.fromARGB(255, 124, 112, 93); // For light theme
+  static const Color _darkThemeHighlightColor = Color.fromARGB(255, 212, 195, 140); // For dark theme
 
   // Light Theme
   final ThemeData _lightTheme = ThemeData(
     brightness: Brightness.light,
+    canvasColor:Color.fromARGB(255, 235, 235, 235),
     primaryColor: Color.fromARGB(255, 155, 155, 155), // Main background color
     accentColor: _lightThemeHighlightColor, // Primary accent/highlight color
     colorScheme:const  ColorScheme.light(
@@ -389,25 +394,28 @@ class ThemeNotifier with ChangeNotifier {
       onPrimary: Colors.black, // Text on primary color
       secondary: Colors.black, // Icon and other secondary elements
       onSecondary: _lightThemeHighlightColor,
-      background: Color.fromARGB(255, 153, 153, 153),
+      background: Color.fromARGB(255, 99, 99, 99),
+      
       onBackground: Colors.black,
-      surface: Color.fromARGB(255, 46, 46, 46), // Card and dialog backgrounds
-      onSurface: Colors.black, // Text on surface
+      surface: Color.fromARGB(255, 39, 39, 39), // Card and dialog backgrounds
+      onSurface: Color.fromARGB(255, 211, 211, 211), // Text on surface
       error: Colors.red,
       onError: Colors.white,
       brightness: Brightness.light,
     ),
+
     buttonTheme:const  ButtonThemeData(
       buttonColor: _lightThemeHighlightColor, // Button background color
+      hoverColor: Colors.white,
       textTheme: ButtonTextTheme.primary,
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        primary: Colors.black, // Ensuring text color is black and not the highlight color
+        primary: Color.fromARGB(255, 20, 20, 20), // Ensuring text color is black and not the highlight color
       ),
     ),
     appBarTheme: const AppBarTheme(
-      backgroundColor: Color.fromARGB(255, 199, 199, 199),
+      backgroundColor: Color.fromARGB(255, 226, 226, 226),
       iconTheme: IconThemeData(color: Colors.black),
     ),
     inputDecorationTheme:const  InputDecorationTheme(

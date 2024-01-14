@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:trustless/widgets/newGenericProject.dart";
 import "package:trustless/widgets/sendfunds.dart";
+import "../entities/human.dart";
 import "../entities/project.dart";
 import "../main.dart";
 import "../widgets/footer.dart";
@@ -116,7 +117,40 @@ class ProjectsState extends State<Projects> {
                                     children:   [
                                      Text(" Projects"),
                                       SizedBox(width: 60),
-                        HoverExpandWidget(projectsState: this),
+                        // HoverExpandWidget(projectsState: this),
+                        ElevatedButton(onPressed: (){
+                                Human().address==null?
+         showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  content: SizedBox(height:100, width: 400,child:Center(child: 
+                  Text("Connect your wallet first.")
+                  )),
+                ))
+        : 
+              showDialog(
+                context: context, 
+                builder: (context) => AlertDialog(
+                  content: Container(
+                    width: 900,
+                    // height: 500,
+                    child: NewGenericProject(projectsState:this)
+                  )
+                )
+              );
+                        }
+                        , child: SizedBox(
+                          width:110,
+                          height:35,
+                          child: Center(
+                            child: Text("Add Project",
+                            style: TextStyle(
+                              fontSize: 19,
+                              color:Theme.of(context).brightness==Brightness.dark?Color.fromARGB(255, 0, 0, 0):Color.fromARGB(255, 255, 255, 255)),
+                            
+                            ),
+                          ),
+                        )),
                       SizedBox(
                         width: 10,
                       ),

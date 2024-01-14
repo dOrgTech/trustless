@@ -290,10 +290,12 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                       });
                       Navigator.of(context).pushNamed("/");
                   },
-                  child: const Center(
+                  child:  Center(
                     child: Text(
                       "DEPLOY PROJECT",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                         color:Color.fromARGB(255, 255, 255, 255),
+                        fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),

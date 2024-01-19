@@ -37,6 +37,7 @@ dependencies:
   gojs: ^2.0.0
   dio:
   webviewx: ^0.2.1
+  web3dart: ^2.0.0
   ext_video_player: 
   
 dev_dependencies:

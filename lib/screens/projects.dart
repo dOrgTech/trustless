@@ -65,61 +65,61 @@ class ProjectsState extends State<Projects> {
                         constraints: BoxConstraints(maxWidth: 1200),
                        child:  MediaQuery(
             data: MediaQuery.of(context).copyWith(textScaleFactor: 0.8),child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left:5.0),
-                              child: SizedBox(
-                                width: 
-                                MediaQuery.of(context).size.width>1200?
-                                500:
-                                MediaQuery.of(context).size.width * 0.5,
-                                child: TextField(
-                                  onChanged: (value){
-                                     setState(() {
-                                      widget.query = value;
-                                    });
-                                  },
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                         borderSide: BorderSide(width: 0.1),
-                                      ),
-                                    prefixIcon: Icon(Icons.search),
-                                    hintText: 'Search project',
-                                  ),
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                Padding(
+                  padding: const EdgeInsets.only(left:5.0),
+                  child: SizedBox(
+                    width: 
+                    MediaQuery.of(context).size.width>1200?
+                    500:
+                    MediaQuery.of(context).size.width * 0.5,
+                    child: TextField(
+                      onChanged: (value){
+                          setState(() {
+                          widget.query = value;
+                        });
+                      },
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(width: 0.1),
+                          ),
+                        prefixIcon: Icon(Icons.search),
+                        hintText: 'Search project',
+                      ),
+                    ),
+                  ),
+                ),
+                Row(
+                  children: [
+                    const Text("Show "),
+                            const SizedBox(width: 10),
+                              DropdownButton<String>(
+                                    value: widget.selectedStatus,
+                                    focusColor: Colors.transparent,
+                                    items: statuses.map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                                    }).toList(),
+                                    onChanged: (String? newValue) {
+                            setState(() {
+                              widget.selectedStatus = newValue;
+                          });
+                              },
                                 ),
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                const Text("Status:"),
-                                        const SizedBox(width: 10),
-                                         DropdownButton<String>(
-                                               value: widget.selectedStatus,
-                                               focusColor: Colors.transparent,
-                                               items: statuses.map((String value) {
-                                       return DropdownMenuItem<String>(
-                                         value: value,
-                                         child: Text(value),
-                                       );
-                                               }).toList(),
-                                               onChanged: (String? newValue) {
-                                       setState(() {
-                                         widget.selectedStatus = newValue;
-                                      });
-                                          },
-                                            ),
-                                            SizedBox(width: 20),
-                                Padding(
-                                  padding:  EdgeInsets.only(right:8.0),
-                                  child: Row(
-                                    children:   [
-                                     Text(" Projects"),
-                                      SizedBox(width: 60),
-                        // HoverExpandWidget(projectsState: this),
-                        ElevatedButton(onPressed: (){
-                                Human().address==null?
+                                SizedBox(width: 15),
+                    Padding(
+                      padding:  EdgeInsets.only(right:8.0),
+                      child: Row(
+                        children:   [
+                          Text("projects"),
+                          SizedBox(width: 60),
+            // HoverExpandWidget(projectsState: this),
+            ElevatedButton(onPressed: (){
+                    Human().address==null?
          showDialog(
             context: context,
             builder: (context) => AlertDialog(

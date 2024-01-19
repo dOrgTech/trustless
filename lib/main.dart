@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_web3_provider/ethereum.dart';
 import 'package:provider/provider.dart';
 import 'package:trustless/screens/landing.dart';
+import 'package:trustless/screens/poll.dart';
 import 'package:trustless/screens/prelaunch.dart';
 import 'package:trustless/screens/projects.dart';
 import 'package:trustless/screens/users.dart';
@@ -17,8 +18,10 @@ import 'screens/disputes.dart';
 
 
 List<Project> projects=[];
+List<Voter> voters=[];
 var projectsCollection = FirebaseFirestore.instance.collection('projects');
 var prelaunchCollection = FirebaseFirestore.instance.collection('prelaunch');
+var voteCollection = FirebaseFirestore.instance.collection('vote');
     void main() async  {
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -49,8 +52,17 @@ var prelaunchCollection = FirebaseFirestore.instance.collection('prelaunch');
     p.hashedFileName=doc.data()['hashedFileName']??"";
     projects.add(p);
   }
-  print("lungimea la proecte "+projects.length.toString());
-  // print("primex creation date ${projects[0].creationDate.toString()}");
+  var vquerySnapshot = await voteCollection.get();
+  for (var doc in vquerySnapshot.docs) {
+      Voter v =Voter(
+       address: doc.id.toString(),
+       name: doc.data()["name"],
+       voted: doc.data()["voted"], 
+      );
+      voters.add(v);
+  }
+ 
+  print("primex creation date ${projects[0].creationDate.toString()}");
     runApp( MyApp());
     }
 
@@ -79,7 +91,7 @@ class MyApp extends StatelessWidget {
     builder = (_) => 
     // ProjectDetails(project: projects[0])
     // Prelaunch()
-    
+    // Poll();
       BaseScaffold(
         selectedItem: 1,
       body: Projects(), 
@@ -316,6 +328,7 @@ class _WalletBTNState extends State<WalletBTN> {
    
    TextButton(onPressed: ()async{
     if (Human().metamask==false){
+      
       showDialog(context: context, builder: (context){return 
       const AlertDialog(
         content: Text("Metamask not detected.")
@@ -330,6 +343,7 @@ class _WalletBTNState extends State<WalletBTN> {
     setState((){
       _isConnecting=false;
     });
+            
 
    }, child: 
    Text(

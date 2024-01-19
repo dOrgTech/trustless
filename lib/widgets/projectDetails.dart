@@ -58,10 +58,12 @@ class _ProjectDetailsState extends State<ProjectDetails> {
       functionItem("Reinburse Backers", "Contractor", Release(project: widget.project)),
     ];
     List<Widget> disputedProjectFunctions = [
-      functionItem("Arbitrate", "Arbiter", Arbitrate(project: widget.project)),
+      const Text("Implementing... ", style: TextStyle(fontSize: 25),),
+      // functionItem("Arbitrate", "Arbiter", Arbitrate(project: widget.project)),
     ];
     List<Widget> closedProjectFunctions = [
-      functionItem("Withdraw", "Anyone", Withdraw(project: widget.project)),
+        const Text("Implementing... ", style: TextStyle(fontSize: 25),),
+      // functionItem("Withdraw", "Anyone", Withdraw(project: widget.project)),
     ];
 
     List<Widget> pendingProjectFunctions = [
@@ -398,9 +400,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                           ],
                                         ),
                                       ),
-                                      const SizedBox(
-                                        width: 70,
-                                      ),
+                                     
                                       
                                       ],
                                     ),
@@ -434,20 +434,64 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                                 widget.project.contributorsReleasing.values.fold(0, (a, b) => a + b)
                                               } ",
                                               style: const TextStyle(
-                                                  fontSize: 25,
+                                                  fontSize: 21,
                                                   fontWeight: FontWeight.normal),
                                             ),
                                             Text(
                                               widget.project.isUSDT?"USDT":"XTZ",
                                               style: const TextStyle(
-                                                  fontSize: 25,
+                                                  fontSize: 21,
                                                   fontWeight: FontWeight.normal),
                                             ),
                                           ],
                                         ),
                                       ),
                                     ],
-                                  ):Text(""),
+                                  ):Text("")
+                                  ,
+                                    widget.project.status == "ongoing"?
+                                    Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding:
+                                          const EdgeInsets.only(left: 0),
+                                        child: Text(
+                                          "Voting to dispute",
+                                          style: TextStyle(
+                                              fontSize: 17,
+                                              color: Theme.of(context)
+                                                  .indicatorColor,
+                                              fontWeight: FontWeight.normal),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 8,
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 28.0),
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              "${
+                                                widget.project.contributorsDisputing.values.fold(0, (a, b) => a + b)
+                                              } ",
+                                              style: const TextStyle(
+                                                  fontSize: 21,
+                                                  fontWeight: FontWeight.normal),
+                                            ),
+                                            Text(
+                                              widget.project.isUSDT?"USDT":"XTZ",
+                                              style: const TextStyle(
+                                                  fontSize: 21,
+                                                  fontWeight: FontWeight.normal),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ):Text("")
                                 ],
                               ),
                             ),
@@ -625,15 +669,23 @@ class BackersList extends StatelessWidget {
     project.contributions.forEach((key, value) {
   rows.add(
     Container(
-      padding:const EdgeInsets.all(5),
-      margin: const EdgeInsets.all(2),
+     
+      margin: const EdgeInsets.all(4),
       color:Theme.of(context).canvasColor,
       height: 40,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Row(
             children: [
+              SizedBox(width:60, child:
+         project.contributorsReleasing.containsKey(key)?
+          
+          Icon(Icons.lock_open, color: Colors.green):project.contributorsDisputing.containsKey(key)?
+          
+          Icon(Icons.safety_divider):
+
+          Text("")),
               SizedBox(
                 width: 160,
                 child: Center(child: Text( getShortAddress( "$key")))),
@@ -642,7 +694,7 @@ class BackersList extends StatelessWidget {
               }, child: Icon(Icons.copy))
             ],
           ),
-          SizedBox(width: 70), // Adjust as needed
+          SizedBox(width: 140), // Adjust as needed
           Text("$value"),
         ],
       ),

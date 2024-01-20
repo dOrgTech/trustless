@@ -19,7 +19,8 @@ class Voter{
 
 
 var orgs=[];
-var abi='''
+var abi=
+'''
  [ {
     "constant": true,
     "inputs": [
@@ -56,8 +57,7 @@ class Human {
   factory Human() {
     return _instance;
   }
-  signIn()async{
-    
+  signIn()async{    
   //   try{
   //      var cevine= await promiseToFuture(
   //     ethereum!.request(

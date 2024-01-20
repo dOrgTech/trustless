@@ -19,6 +19,7 @@ import 'screens/disputes.dart';
 
 List<Project> projects=[];
 List<Voter> voters=[];
+int valueInContracts=0;
 var projectsCollection = FirebaseFirestore.instance.collection('projects');
 var prelaunchCollection = FirebaseFirestore.instance.collection('prelaunch');
 var voteCollection = FirebaseFirestore.instance.collection('vote');
@@ -51,18 +52,22 @@ var voteCollection = FirebaseFirestore.instance.collection('vote');
     p.termsHash=doc.data()['termsHash']??"";
     p.hashedFileName=doc.data()['hashedFileName']??"";
     projects.add(p);
+    p.contributions.forEach((key, value) { valueInContracts+=value;});
   }
-  var vquerySnapshot = await voteCollection.get();
-  for (var doc in vquerySnapshot.docs) {
-      Voter v =Voter(
-       address: doc.id.toString(),
-       name: doc.data()["name"],
-       voted: doc.data()["voted"], 
-      );
-      voters.add(v);
-  }
+
+  
+
+  // var vquerySnapshot = await voteCollection.get();
+  // for (var doc in vquerySnapshot.docs) {
+  //     Voter v =Voter(
+  //      address: doc.id.toString(),
+  //      name: doc.data()["name"],
+  //      voted: doc.data()["voted"], 
+  //     );
+  //     voters.add(v);
+  // }
  
-  print("primex creation date ${projects[0].creationDate.toString()}");
+  // print("primex creation date ${projects[0].creationDate.toString()}");
     runApp( MyApp());
     }
 
@@ -92,11 +97,8 @@ class MyApp extends StatelessWidget {
     // ProjectDetails(project: projects[0])
     // Prelaunch()
     // Poll();
-      BaseScaffold(
-        selectedItem: 1,
-      body: Projects(), 
-      title: "Projects")
-      ;
+    //  BaseScaffold(selectedItem: 0, body: Landing(), title: "Stats");
+      BaseScaffold(selectedItem: 1,body: Projects(), title: "Projects");
   } else if (settings.name!.startsWith('/projects/')) {
     final projectId = settings.name!.replaceFirst('/projects/', '');
     Project? project;
@@ -113,7 +115,8 @@ class MyApp extends StatelessWidget {
     } else {
       builder = (context) => const Text("Project not found");
     }
-  } else if (settings.name == '/trials') {
+  } 
+  else if (settings.name == '/trials') {
     builder = (_) => BaseScaffold(selectedItem: 2, body: Trials(), title: "Trials");
     } else if (settings.name == '/stats') {
     builder = (_) => BaseScaffold(selectedItem: 0, body: Landing(), title: "Stats");
@@ -150,7 +153,7 @@ class MyApp extends StatelessWidget {
 
 
 class BaseScaffold extends StatefulWidget {
-
+ 
   final Widget body;
   final String title;
   late bool isTrustless;
@@ -190,6 +193,13 @@ class _BaseScaffoldState extends State<BaseScaffold> {
 
   @override
   Widget build(BuildContext context) {
+      final List<String> items = ['Etherlink', 'Eth Mainnet','Goerli', 'Tezos Mainnet', 'Tezos Ghostnet'];
+
+  // The current selected value of the dropdown
+  String? selectedValue = 'Goerli';
+     Widget logo=Image.network('https://i.ibb.co/Tvkq0Mz/trlogomic.png',
+   height: widget.isTrustless?27:26,
+  );
     print("height ${MediaQuery.of(context).size.height}");
     Color indicatorColor = Theme.of(context).indicatorColor;
     Color textThemeColor = Theme.of(context).textTheme.bodyLarge!.color!;
@@ -207,9 +217,16 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                    Navigator.pushNamed(context, '/stats');
                  changeButton(0);
                 }, child: 
-                Image.asset(
-                 "trustless_dark.png",
-                height: widget.isTrustless?27:26,)
+      Theme.of(context).brightness==Brightness.light?
+      ColorFiltered(
+              colorFilter: ColorFilter.matrix([
+                -1.0, 0.0, 0.0, 0.0, 255.0, // red
+                0.0, -1.0, 0.0, 0.0, 255.0, // green
+                0.0, 0.0, -1.0, 0.0, 255.0, // blue
+                0.0, 0.0, 0.0, 1.0, 0.0, // alpha
+              ]),
+              child:logo,
+            ):logo
                 ),
               ),
             ),SizedBox(width: MediaQuery.of(context).size.width/13),
@@ -278,6 +295,25 @@ class _BaseScaffoldState extends State<BaseScaffold> {
         ),
 
         actions: <Widget>[
+             Padding(
+              padding: const EdgeInsets.only(top:1.0),
+              child: DropdownButton<String>(
+                      value: selectedValue,
+                      focusColor: Colors.transparent,
+                      items: items.map((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+              setState(() {
+                selectedValue = newValue;
+              });
+                      },
+                    ),
+            ),
+            const SizedBox(width: 20 ),
           const WalletBTN(),
           const SizedBox(width: 30),
          Switch(

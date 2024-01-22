@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:trustless/screens/landing.dart';
 import 'package:trustless/screens/poll.dart';
 import 'package:trustless/screens/prelaunch.dart';
+import 'package:trustless/screens/profile.dart';
 import 'package:trustless/screens/projects.dart';
 import 'package:trustless/screens/users.dart';
 import 'package:trustless/utils/reusable.dart';
@@ -16,13 +17,20 @@ import 'entities/project.dart';
 import 'firebase_options.dart';
 import 'screens/disputes.dart';
 
-
+double switchAspect=1.2;
 List<Project> projects=[];
 List<Voter> voters=[];
 int valueInContracts=0;
+int usdtStored=0;
+int xtzStored=0;
+int totalXTZpaid=0;
+int totalUSDTpaid=0;
+String selectedNetwork='Etherlink Testnet';
+
 var projectsCollection = FirebaseFirestore.instance.collection('projects');
 var prelaunchCollection = FirebaseFirestore.instance.collection('prelaunch');
 var voteCollection = FirebaseFirestore.instance.collection('vote');
+var statsCollection = FirebaseFirestore.instance.collection('stats');
     void main() async  {
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -54,8 +62,8 @@ var voteCollection = FirebaseFirestore.instance.collection('vote');
     projects.add(p);
     p.contributions.forEach((key, value) { valueInContracts+=value;});
   }
-
   
+
 
   // var vquerySnapshot = await voteCollection.get();
   // for (var doc in vquerySnapshot.docs) {
@@ -91,14 +99,13 @@ class MyApp extends StatelessWidget {
           initialRoute: '/',
     onGenerateRoute: (settings) {
   WidgetBuilder builder;
-
   if (settings.name == '/') {
     builder = (_) => 
     // ProjectDetails(project: projects[0])
     // Prelaunch()
     // Poll();
-    //  BaseScaffold(selectedItem: 0, body: Landing(), title: "Stats");
-      BaseScaffold(selectedItem: 1,body: Projects(), title: "Projects");
+    //  BaseScaffold(selectedItem: 0, body: Profile(), title: "Profile");
+    BaseScaffold(selectedItem: 1,body: Projects(), title: "Projects");
   } else if (settings.name!.startsWith('/projects/')) {
     final projectId = settings.name!.replaceFirst('/projects/', '');
     Project? project;
@@ -193,12 +200,15 @@ class _BaseScaffoldState extends State<BaseScaffold> {
 
   @override
   Widget build(BuildContext context) {
-      final List<String> items = ['Etherlink', 'Eth Mainnet','Goerli', 'Tezos Mainnet', 'Tezos Ghostnet'];
+      final List<String> items = ['Etherlink Mainnet','Etherlink Testnet', 'Goerli', 'Tezos Mainnet', 'Tezos Ghostnet'];
 
   // The current selected value of the dropdown
-  String? selectedValue = 'Goerli';
+  // String? selectedValue = 'Etherlink Testnet';
      Widget logo=Image.network('https://i.ibb.co/Tvkq0Mz/trlogomic.png',
    height: widget.isTrustless?27:26,
+  );
+     Widget logotall=Image.network('https://i.ibb.co/Tvkq0Mz/trlogomic.png',
+   height:12,
   );
     print("height ${MediaQuery.of(context).size.height}");
     Color indicatorColor = Theme.of(context).indicatorColor;
@@ -207,6 +217,71 @@ class _BaseScaffoldState extends State<BaseScaffold> {
     final TextStyle? selectedMenuItem=TextStyle(fontSize: 19, color: blendedColor);
     final TextStyle? nonSelectedMenuItem=TextStyle(fontSize: 16, color: textThemeColor);
     final themeNotifier = Provider.of<ThemeNotifier>(context);
+
+    List<Widget>buttall=[
+  Padding(
+    padding: const EdgeInsets.all(18.0),
+    child: SizedBox(
+                width:150,
+                child: Center(
+                  child: Opacity(
+                    opacity: widget.isProjects?1:0.6,
+                    child: Row(children: [
+                      SizedBox(width: 5),
+                      Icon(Icons.local_activity,size:30, color:widget.isProjects?Theme.of(context).indicatorColor:Theme.of(context).textTheme.bodyLarge!.color!),
+                      const SizedBox(width: 8),
+                      TextButton(
+                        onPressed: () {
+                          changeButton(1);
+                          Navigator.of(context).pushNamed("/");
+                        },
+                        child: Text("PROJECTS", style: widget.isProjects?selectedMenuItem:nonSelectedMenuItem))
+                    ],),
+                  ),
+                ),
+              ),
+  ),
+    Padding(
+      padding: const EdgeInsets.all(18.0),
+      child: SizedBox( width:145,
+                  child: Center(
+                    child: Opacity(
+                      opacity: widget.isDisputes?1:0.6,
+                      child: TextButton(onPressed: (){
+                        changeButton(2);
+                        Navigator.of(context).pushNamed("/trials");
+                      }, child: 
+                                Row(children:  [
+                                 Image.asset('assets/scale2.png', height:30, color:widget.isDisputes?Theme.of(context).indicatorColor:Theme.of(context).textTheme.bodyLarge!.color!),
+                      SizedBox(width: 8),
+                      Text("DISPUTES", style: widget.isDisputes?selectedMenuItem:nonSelectedMenuItem,)
+                                ],)
+                                ),
+                    ),
+                  ),
+                ),
+    ),  
+   Padding(
+     padding: const EdgeInsets.all(18.0),
+     child: SizedBox( width:145,
+                    child: TextButton(onPressed: (){
+                    changeButton(3);
+                     Navigator.of(context).pushNamed("/users");
+                    }, child: 
+                              Opacity(
+                    opacity: widget.isUsers?1:0.6,
+                    child: Row(children: [
+                      Icon(Icons.gavel_sharp,size:33,color:widget.isUsers?Theme.of(context).indicatorColor:Theme.of(context).textTheme.bodyLarge!.color!),
+                      SizedBox(width: 8),
+                      Text("ARBITERS", style: widget.isUsers?selectedMenuItem:nonSelectedMenuItem)
+                    ],),
+                              )
+                              ),
+                  ),
+   ),
+
+    ];
+
     List<Widget> botoane=[
             Opacity(
               opacity: widget.isTrustless?1:0.6,
@@ -229,7 +304,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
             ):logo
                 ),
               ),
-            ),SizedBox(width: MediaQuery.of(context).size.width/13),
+            ),SizedBox(width: 35),
             TextButton(onPressed: (){ 
              changeButton(1);
               Navigator.of(context).pushNamed("/");
@@ -248,7 +323,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
               ),
             )
             ),
-            const SizedBox(width: 30),
+            const SizedBox(width: 10),
               SizedBox( width:145,
                 child: Center(
                   child: Opacity(
@@ -266,7 +341,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                   ),
                 ),
               ),  
-             const SizedBox(width: 33),
+             const SizedBox(width: 19),
               Center(
                 child: SizedBox( width:148,
                   child: TextButton(onPressed: (){
@@ -286,19 +361,22 @@ class _BaseScaffoldState extends State<BaseScaffold> {
               )
           ];
     return Scaffold(
-      appBar: AppBar(
+     appBar: AppBar(
         toolbarHeight: 42,
         elevation: 1.8,
-        automaticallyImplyLeading: false,
-        title: Row(
-          children: botoane
-        ),
+        automaticallyImplyLeading: MediaQuery.of(context).size.aspectRatio < switchAspect,
+        title: 
+        MediaQuery.of(context).size.aspectRatio >= switchAspect?
+        Row(
+          children: botoane,
+        ):  null,
 
         actions: <Widget>[
+          MediaQuery.of(context).size.aspectRatio > switchAspect?
              Padding(
-              padding: const EdgeInsets.only(top:1.0),
+              padding: const EdgeInsets.only(top:3.0),
               child: DropdownButton<String>(
-                      value: selectedValue,
+                      value: selectedNetwork,
                       focusColor: Colors.transparent,
                       items: items.map((String value) {
               return DropdownMenuItem<String>(
@@ -308,11 +386,12 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                       }).toList(),
                       onChanged: (String? newValue) {
               setState(() {
-                selectedValue = newValue;
+                selectedNetwork = newValue!;
               });
                       },
                     ),
-            ),
+            ):Text(""),
+            
             const SizedBox(width: 20 ),
           const WalletBTN(),
           const SizedBox(width: 30),
@@ -324,8 +403,59 @@ class _BaseScaffoldState extends State<BaseScaffold> {
           ),
           const SizedBox(width: 20)
         ],
+        
       ),
       body: widget.body,
+    drawer: 
+    MediaQuery.of(context).size.aspectRatio <= switchAspect?
+    Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              child: Theme.of(context).brightness==Brightness.light?
+        SizedBox(
+          width: 50,
+          child: ColorFiltered(
+                  colorFilter: ColorFilter.matrix([
+                    -1.0, 0.0, 0.0, 0.0, 255.0, // red
+                    0.0, -1.0, 0.0, 0.0, 255.0, // green
+                    0.0, 0.0, -1.0, 0.0, 255.0, // blue
+                    0.0, 0.0, 0.0, 1.0, 0.0, // alpha
+                  ]),
+                  child:logotall,
+                ),
+      )
+      :
+      SizedBox(
+        width: 50,
+        child: logotall),
+            ),
+           ...buttall, 
+            Padding(
+              padding: const EdgeInsets.all(61.0),
+              child: SizedBox(
+                width: 60,
+                child: DropdownButton<String>(
+                        value: selectedNetwork,
+                        focusColor: Colors.transparent,
+                        items: items.map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                setState(() {
+                  selectedNetwork = newValue!;
+                  });
+                  },
+                ),
+                ),
+              ),
+            ],
+          ),
+        ):null,
     );
   }
 }
@@ -348,7 +478,7 @@ class _WalletBTNState extends State<WalletBTN> {
   Widget build(BuildContext context) {
     if (_isConnecting) {
           return const SizedBox(
-            width: 180,
+            width: 150,
             height: 7,
             child: Center(
               child: LinearProgressIndicator(
@@ -382,9 +512,14 @@ class _WalletBTNState extends State<WalletBTN> {
             
 
    }, child: 
-   Text(
-    Human().address==null?
-    "Connect Wallet":Human().address!))
+   SizedBox(
+    width: 150,
+     child: Center(
+       child: Text(
+        Human().address==null?
+        "Connect Wallet":Human().address!),
+     ),
+   ))
     :
    SizedBox(
       width: 150,
@@ -397,15 +532,26 @@ class _WalletBTNState extends State<WalletBTN> {
           hint: Text(shortenString(Human().address!.toString())),
           onChanged: (value) {
             // Implement actions based on dropdown selection
+            if (value == 'Profile') {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: ((context) =>
+            BaseScaffold(selectedItem: 0, body: Profile(), title: "Profile")
+          )
+        )
+      );
+    }
           },
           items: [
             DropdownMenuItem(
               value: getShortAddress(Human().address!.toString()),
               child: Text(shortenString(Human().address!.toString())),
             ),
-            const DropdownMenuItem(
+            DropdownMenuItem(
               value: 'Profile',
-              child: Text('Profile'),
+              child: const Text('Profile'),
+              
+            
             ),
             const DropdownMenuItem(
               value: 'Switch Address',

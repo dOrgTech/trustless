@@ -48,26 +48,8 @@ class ProjectsState extends State<Projects> {
         )))));
     }
     // return Text("something");
-   return  Container(
-          alignment: Alignment.topCenter,
-          child: ListView( // Start of ListView
-            shrinkWrap: true, // Set this property to true
-            children: [
-              Column( // Start of Column
-                crossAxisAlignment: CrossAxisAlignment.center, // Set this property to center the items horizontally
-                mainAxisSize: MainAxisSize.min, // Set this property to make the column fit its children's size vertically
-                children: [
-            const  SizedBox(height: 16),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 9),
-                       height: 46, 
-                       width: double.infinity,
-                        constraints: BoxConstraints(maxWidth: 1200),
-                       child:  MediaQuery(
-            data: MediaQuery.of(context).copyWith(textScaleFactor: 0.8),child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                Padding(
+    List<Widget> projectsMenu=[
+     Padding(
                   padding: const EdgeInsets.only(left:5.0),
                   child: SizedBox(
                     width: 
@@ -75,12 +57,14 @@ class ProjectsState extends State<Projects> {
                     500:
                     MediaQuery.of(context).size.width * 0.5,
                     child: TextField(
+                      style: TextStyle(fontSize: 20),
                       onChanged: (value){
                           setState(() {
                           widget.query = value;
                         });
                       },
                       decoration: InputDecoration(
+
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                               borderSide: BorderSide(width: 0.1),
@@ -92,6 +76,7 @@ class ProjectsState extends State<Projects> {
                   ),
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text("Show "),
                             const SizedBox(width: 10),
@@ -159,9 +144,47 @@ class ProjectsState extends State<Projects> {
                                 ),
                               ],
                             )
-                            ],
+    ];
+   return  Container(
+          alignment: Alignment.topCenter,
+          child: ListView( // Start of ListView
+            shrinkWrap: true, // Set this property to true
+            children: [
+              Column( // Start of Column
+                crossAxisAlignment: CrossAxisAlignment.center, // Set this property to center the items horizontally
+                mainAxisSize: MainAxisSize.min, // Set this property to make the column fit its children's size vertically
+                children: [
+            const  SizedBox(height: 16),
+              MediaQuery.of(context).size.aspectRatio > switchAspect?
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 9),
+                       height: 46, 
+                       width: double.infinity,
+                        constraints: BoxConstraints(maxWidth: 1200),
+                       child:  MediaQuery(
+            data: MediaQuery.of(context).copyWith(textScaleFactor: 0.8),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: projectsMenu
                            ),
-                      )),
+                      )):
+                      Center(
+                        child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 9),
+                         height: 126, 
+                         width: double.infinity,
+                         
+                         child:  MediaQuery(
+                                  data: MediaQuery.of(context).copyWith(textScaleFactor: 0.8),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: projectsMenu
+                             ),
+                        )),
+                      ) 
+                      
+                      ,
                     SizedBox(height: 24,),
                     // NewGenericProject(projectsState: this),
                    Container(

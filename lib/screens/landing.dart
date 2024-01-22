@@ -163,7 +163,14 @@ Widget dreapta(){
                     duration: const Duration(milliseconds: 800),
                     child: Center(
                       child:
-                 Text("Hello somethi"), 
+                 Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                   children: [
+                     Text(ce),
+                     Text(ad),
+                     Text(trei),
+                   ],
+                 ), 
                       
                      ),
                   )
@@ -210,13 +217,14 @@ Widget dreapta(){
                                     alignment: WrapAlignment.center,
                                     runAlignment: WrapAlignment.center,
                                       children: [
-                                        treiranduri("Treasury Balance","3023", "1 tokens"),
-                                        douaranduri("Value in Contracts", valueInContracts.toString()+" USD"),
+                                        // treiranduri("Treasury Balance","3023", "1 tokens"),
+                                        douaranduri("XTZ Stored", valueInContracts.toString()),
+                                        douaranduri("USDT Stored", valueInContracts.toString()),
                                         douaranduri("Active Projects", 
                                         projects.length.toString()),
                                         // activeProjects.toString()),
-                                        douaranduri("TBT Tokenholders", 23.toString()),
-                                        douaranduri("TBT Tokens Issued", 3323.toString()),
+                                        douaranduri("Total XTZ Paid", 0.toString()),
+                                        douaranduri("Total USDT Paid", 3323.toString()),
                                         ]),
                                 ),
                                 dreapta()

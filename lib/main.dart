@@ -59,6 +59,7 @@ var statsCollection = FirebaseFirestore.instance.collection('stats');
     p.contractAddress=doc.id.toString();
     p.termsHash=doc.data()['termsHash']??"";
     p.hashedFileName=doc.data()['hashedFileName']??"";
+    p.arbiterAwardingContractor=doc.data()['arbiterAwardingContractor'];
     projects.add(p);
     p.contributions.forEach((key, value) { valueInContracts+=value;});
   }
@@ -101,7 +102,7 @@ class MyApp extends StatelessWidget {
   WidgetBuilder builder;
   if (settings.name == '/') {
     builder = (_) => 
-    // ProjectDetails(project: projects[0])
+    // ProjectDetails(project: projects[0]);
     // Prelaunch()
     // Poll();
     //  BaseScaffold(selectedItem: 0, body: Profile(), title: "Profile");
@@ -200,7 +201,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
 
   @override
   Widget build(BuildContext context) {
-      final List<String> items = ['Etherlink Mainnet','Etherlink Testnet', 'Goerli', 'Tezos Mainnet', 'Tezos Ghostnet'];
+      final List<String> items = ['Etherlink Testnet'];
 
   // The current selected value of the dropdown
   // String? selectedValue = 'Etherlink Testnet';
@@ -251,8 +252,8 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                         changeButton(2);
                         Navigator.of(context).pushNamed("/trials");
                       }, child: 
-                                Row(children:  [
-                                 Image.asset('assets/scale2.png', height:30, color:widget.isDisputes?Theme.of(context).indicatorColor:Theme.of(context).textTheme.bodyLarge!.color!),
+                            Row(children:  [
+                              Image.asset('assets/scale2.png', height:30, color:widget.isDisputes?Theme.of(context).indicatorColor:Theme.of(context).textTheme.bodyLarge!.color!),
                       SizedBox(width: 8),
                       Text("DISPUTES", style: widget.isDisputes?selectedMenuItem:nonSelectedMenuItem,)
                                 ],)
@@ -374,7 +375,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
         actions: <Widget>[
           MediaQuery.of(context).size.aspectRatio > switchAspect?
              Padding(
-              padding: const EdgeInsets.only(top:3.0),
+              padding: const EdgeInsets.only(top:0.0),
               child: DropdownButton<String>(
                       value: selectedNetwork,
                       focusColor: Colors.transparent,
@@ -478,7 +479,7 @@ class _WalletBTNState extends State<WalletBTN> {
   Widget build(BuildContext context) {
     if (_isConnecting) {
           return const SizedBox(
-            width: 150,
+            width: 160,
             height: 7,
             child: Center(
               child: LinearProgressIndicator(
@@ -513,7 +514,7 @@ class _WalletBTNState extends State<WalletBTN> {
 
    }, child: 
    SizedBox(
-    width: 150,
+    width: 160,
      child: Center(
        child: Text(
         Human().address==null?
@@ -522,7 +523,7 @@ class _WalletBTNState extends State<WalletBTN> {
    ))
     :
    SizedBox(
-      width: 150,
+      width: 160,
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           focusColor: Colors.transparent,
@@ -550,7 +551,6 @@ class _WalletBTNState extends State<WalletBTN> {
             DropdownMenuItem(
               value: 'Profile',
               child: const Text('Profile'),
-              
             
             ),
             const DropdownMenuItem(

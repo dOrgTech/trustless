@@ -341,7 +341,7 @@ Widget overview(lumina){
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: const [
                                 SizedBox(height: 7),
-                                Text('Total earnings (dividends + mining):', style: TextStyle( fontSize: 17),),
+                                Text('Total earnings :', style: TextStyle( fontSize: 17),),
                                 SizedBox(height: 3),
                                 Text('Customer credits spent:',style: TextStyle(fontSize: 17)),
                               ],

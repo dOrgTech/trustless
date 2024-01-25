@@ -53,24 +53,24 @@ class _ProjectDetailsState extends State<ProjectDetails> {
       functionItem("Withdraw", "Anyone", Withdraw(project: widget.project)),
     ];
     List<Widget> ongoingProjectFunctions = [
-      functionItem("Initiate Dispute", "Parties", Dispute()),
+      functionItem("Dispute Project", "Contractor or Backers", Dispute(project: widget.project)),
       functionItem("Release Funds to Contractor", "Backers", Release(project: widget.project)),
       functionItem("Reinburse Backers", "Contractor", Release(project: widget.project)),
     ];
     List<Widget> disputedProjectFunctions = [
-      const Text("Implementing... ", style: TextStyle(fontSize: 25),),
-      // functionItem("Arbitrate", "Arbiter", Arbitrate(project: widget.project)),
+      // const Text("Implementing... ", style: TextStyle(fontSize: 25),),
+      functionItem("Arbitrate", "Arbiter", Arbitrate(project: widget.project)),
     ];
     List<Widget> closedProjectFunctions = [
-        const Text("Implementing... ", style: TextStyle(fontSize: 25),),
-      // functionItem("Withdraw", "Anyone", Withdraw(project: widget.project)),
+        // const Text("Implementing... ", style: TextStyle(fontSize: 25),),
+      functionItem("Withdraw", "Anyone", Withdraw(project: widget.project)),
     ];
 
     List<Widget> pendingProjectFunctions = [
       functionItem("Send Funds to Project", "Anyone", SendFunds(project: widget.project)),
       functionItem("Withdraw", "Anyone", Withdraw(project: widget.project)),
       functionItem("Sign Contract", "Contractor", Sign(project: widget.project)),
-      functionItem("Set Parties", "Author", SetParty(project: widget.project)),
+      // functionItem("Set Parties", "Author", SetParty(project: widget.project)),
     ];
     return BaseScaffold(
       selectedItem: 1,
@@ -329,11 +329,13 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                         padding:
                                           const EdgeInsets.only(left: 28.0),
                                         child: Text(
-                                          widget.project.status == "Pending" ||
-                                                  widget.project.status ==
-                                                      "pending"
-                                              ? "Funds in Contract"
-                                              : "Funds in Escrow",
+                                          widget.project.status == "open" ||
+                                          widget.project.status == "pending" ||
+                                          widget.project.status == "closed"
+                                              ? 
+                                              "Funds in Contract"
+                                              :
+                                              "Funds in Escrow",
                                           style: TextStyle(
                                               fontSize: 17,
                                               color: Theme.of(context)
@@ -369,217 +371,219 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                 Padding(
                                   padding: const EdgeInsets.only(left: 18.0),
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      TextButton(
-                                        onPressed: () {
-                                          showDialog(context: context, builder: ((context) => 
-                                          AlertDialog(content: BackersList(project: widget.project),)));
-                                        },
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                              Text(
-                                              widget.project.contributions.length.toString(),
-                                              style: const TextStyle(
-                                                  fontSize: 27,
-                                                  fontWeight:
-                                                      FontWeight.normal),
-                                            ),
-                                            const SizedBox(
-                                              width: 10,
-                                            ),
-                                            Text(
-                                              "Backers",
-                                              style: TextStyle(
-                                                  color: Theme.of(context)
-                                                      .indicatorColor),
-                                            ),
-                                          ],
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  TextButton(
+                                    onPressed: () {
+                                      showDialog(context: context, builder: ((context) => 
+                                      AlertDialog(content: BackersList(project: widget.project),)));
+                                    },
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                          Text(
+                                          widget.project.contributions.length.toString(),
+                                          style: const TextStyle(
+                                              fontSize: 27,
+                                              fontWeight:
+                                                  FontWeight.normal),
                                         ),
-                                      ),
-                                     
-                                      
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(
+                                          "Backers",
+                                          style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .indicatorColor),
+                                        ),
                                       ],
                                     ),
                                   ),
-                                  widget.project.status == "ongoing"?
-                                    Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding:
-                                          const EdgeInsets.only(left: 0),
-                                        child: Text(
-                                          "Voting to release",
-                                          style: TextStyle(
-                                              fontSize: 17,
-                                              color: Theme.of(context)
-                                                  .indicatorColor,
-                                              fontWeight: FontWeight.normal),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 8,
-                                      ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 28.0),
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              "${
-                                                widget.project.contributorsReleasing.values.fold(0, (a, b) => a + b)
-                                              } ",
-                                              style: const TextStyle(
-                                                  fontSize: 21,
-                                                  fontWeight: FontWeight.normal),
-                                            ),
-                                            Text(
-                                              widget.project.isUSDT?"USDT":"XTZ",
-                                              style: const TextStyle(
-                                                  fontSize: 21,
-                                                  fontWeight: FontWeight.normal),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ):Text("")
-                                  ,
-                                    widget.project.status == "ongoing"?
-                                    Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding:
-                                          const EdgeInsets.only(left: 0),
-                                        child: Text(
-                                          "Voting to dispute",
-                                          style: TextStyle(
-                                              fontSize: 17,
-                                              color: Theme.of(context)
-                                                  .indicatorColor,
-                                              fontWeight: FontWeight.normal),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 8,
-                                      ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 28.0),
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              "${
-                                                widget.project.contributorsDisputing.values.fold(0, (a, b) => a + b)
-                                              } ",
-                                              style: const TextStyle(
-                                                  fontSize: 21,
-                                                  fontWeight: FontWeight.normal),
-                                            ),
-                                            Text(
-                                              widget.project.isUSDT?"USDT":"XTZ",
-                                              style: const TextStyle(
-                                                  fontSize: 21,
-                                                  fontWeight: FontWeight.normal),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ):Text("")
-                                ],
-                              ),
-                            ),
-
-                            const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 28.0),
-                              child: Opacity(
-                                  opacity: 0.1,
-                                  child: Divider(
-                                    thickness: 6,
-                                    height: 18,
-                                  )),
-                            ),
-                            const SizedBox(
-                              height: 37,
-                            ),
-                            Wrap(
-                                runAlignment: WrapAlignment.center,
-                                spacing: 40,
-                                runSpacing: 40,
-                                children: widget.project.status == "ongoing"
-                                    ? ongoingProjectFunctions
-                                    : widget.project.status == "open"
-                                        ? openProjectFunctions
-                                        : widget.project.status == "closed"
-                                            ? closedProjectFunctions
-                                            : widget.project.status ==
-                                                    "pending"
-                                                ? pendingProjectFunctions
-                                                : disputedProjectFunctions),
-                            const SizedBox(height: 40),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 40),
-                    
-
-                     Container(
-                      decoration: BoxDecoration(
-                        
-                        color:Theme.of(context).brightness==Brightness.light?const Color.fromARGB(255, 223, 223, 223):Colors.black,
-                        border: Border.all(width: 0.5)
-                      ),
-                            padding: const EdgeInsets.all(50),
-                            child: 
-                            
-                            FutureBuilder(
-                              future: http.get(
-                                Uri.https(
-                                 'raw.githubusercontent.com',
-                                  '${widget.project.repo?.split('github.com/')[1]}/master/README.md',
+                                  ],
                                 ),
                               ),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState !=
-                                    ConnectionState.done) {
-                                  return const Align( 
-                                    alignment: Alignment.topCenter,
-                                    child: Padding(
-                                      padding: EdgeInsets.only(top: 20),
-                                      child: SizedBox(
-                                        width: 120,
-                                        height: 120,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 13,
+                              ! (widget.project.status == "open")    &&
+                              ! (widget.project.status == "pending")
+                              ?
+                                Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding:
+                                      const EdgeInsets.only(left: 0),
+                                    child: Text(
+                                      "Voting to release",
+                                      style: TextStyle(
+                                          fontSize: 17,
+                                          color: Theme.of(context)
+                                              .indicatorColor,
+                                          fontWeight: FontWeight.normal),
+                                    ),
+                                  ),  
+                                  const SizedBox(
+                                    height: 8,
+                                  ),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.only(left: 28.0),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          "${
+                                            widget.project.contributorsReleasing.values.fold(0, (a, b) => a + b)
+                                          } ",
+                                          style: const TextStyle(
+                                              fontSize: 21,
+                                              fontWeight: FontWeight.normal),
                                         ),
-                                      ),
+                                        Text(
+                                          widget.project.isUSDT?"USDT":"XTZ",
+                                          style: const TextStyle(
+                                              fontSize: 21,
+                                              fontWeight: FontWeight.normal),
+                                        ),
+                                      ],
                                     ),
-                                  );
-                                } else {
-                                  return SizedBox(
-                                    height: 700,
-                                    width: 1100,
-                                    child: Markdown(
-                                      styleSheet:
-                                          getMarkdownStyleSheet(context),
-                                      data: (snapshot.data as http.Response)
-                                          .body
-                                          .toString(),
+                                  ),
+                                ],
+                              ):Text("")
+                              ,
+                              ! (widget.project.status == "open")     &&
+                              ! (widget.project.status == "pending")
+                              ?
+                                Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding:
+                                      const EdgeInsets.only(left: 0),
+                                    child: Text(
+                                      "Voting to dispute",
+                                      style: TextStyle(
+                                          fontSize: 17,
+                                          color: Theme.of(context)
+                                              .indicatorColor,
+                                          fontWeight: FontWeight.normal),
                                     ),
-                                  );
-                                }
-                              },
+                                  ),
+                                  const SizedBox(
+                                    height: 8,
+                                  ),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.only(left: 28.0),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          "${
+                                            widget.project.contributorsDisputing.values.fold(0, (a, b) => a + b)
+                                          } ",
+                                          style: const TextStyle(
+                                              fontSize: 21,
+                                              fontWeight: FontWeight.normal),
+                                        ),
+                                        Text(
+                                          widget.project.isUSDT?"USDT":"XTZ",
+                                          style: const TextStyle(
+                                              fontSize: 21,
+                                              fontWeight: FontWeight.normal),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ):Text("")
+                            ],
+                          ),
+                        ),
+
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 28.0),
+                          child: Opacity(
+                              opacity: 0.1,
+                              child: Divider(
+                                thickness: 6,
+                                height: 18,
+                              )),
+                        ),
+                        const SizedBox(
+                          height: 37,
+                        ),
+                        Wrap(
+                            runAlignment: WrapAlignment.center,
+                            spacing: 40,
+                            runSpacing: 40,
+                            children: widget.project.status == "ongoing"
+                                ? ongoingProjectFunctions
+                                : widget.project.status == "open"
+                                    ? openProjectFunctions
+                                    : widget.project.status == "closed"
+                                        ? closedProjectFunctions
+                                        : widget.project.status ==
+                                                "pending"
+                                            ? pendingProjectFunctions
+                                            : disputedProjectFunctions),
+                        const SizedBox(height: 40),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 40),
+                
+
+                  Container(
+                  decoration: BoxDecoration(
+                    
+                    color:Theme.of(context).brightness==Brightness.light?const Color.fromARGB(255, 223, 223, 223):Colors.black,
+                    border: Border.all(width: 0.5)
+                  ),
+                        padding: const EdgeInsets.all(50),
+                        child: 
+                        
+                        FutureBuilder(
+                          future: http.get(
+                            Uri.https(
+                              'raw.githubusercontent.com',
+                              '${widget.project.repo?.split('github.com/')[1]}/master/README.md',
                             ),
                           ),
-                   const SizedBox(height: 30),
-                   Footer()
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState !=
+                                ConnectionState.done) {
+                              return const Align( 
+                                alignment: Alignment.topCenter,
+                                child: Padding(
+                                  padding: EdgeInsets.only(top: 20),
+                                  child: SizedBox(
+                                    width: 120,
+                                    height: 120,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 13,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            } else {
+                              return SizedBox(
+                                height: 700,
+                                width: 1100,
+                                child: Markdown(
+                                  styleSheet:
+                                      getMarkdownStyleSheet(context),
+                                  data: (snapshot.data as http.Response)
+                                      .body
+                                      .toString(),
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                const SizedBox(height: 30),
+                Footer()
                   ]),
             ],
           )),
@@ -679,11 +683,13 @@ class BackersList extends StatelessWidget {
           Row(
             children: [
               SizedBox(width:60, child:
-         project.contributorsReleasing.containsKey(key)?
+         project.contributorsReleasing.containsKey(key) && project.contributorsReleasing[key]! > 0  ?
+          Icon(Icons.lock_open, color: Colors.green)
+          :
+          project.contributorsDisputing.containsKey(key) && project.contributorsDisputing[key]! > 0 ?
           
-          Icon(Icons.lock_open, color: Colors.green):project.contributorsDisputing.containsKey(key)?
-          
-          Icon(Icons.safety_divider):
+          Image.asset('assets/scale2.png', height:25, color:Colors.red) 
+         :
 
           Text("")),
               SizedBox(

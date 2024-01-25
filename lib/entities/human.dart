@@ -71,7 +71,7 @@ class Human {
   //  }
   // address=ethereum?.selectedAddress.toString();
   await Future.delayed(const Duration(seconds: 1)).then((value) {
-  address="0x03fAdCE719cA1cFE4F114E18c862Be25e40fbF3c";
+  address="qodjn09djqwod9ijqnw9jdowijndpoqijwnp";
 
 
   print("HJumna"+Human().address!);

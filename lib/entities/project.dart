@@ -8,7 +8,6 @@ class Project{
   bool isUSDT=false;
   String? contractAddress;
   String? name;
-  
   DateTime? creationDate;
   DateTime? expiresAt;
   String? description;
@@ -23,6 +22,7 @@ class Project{
   double releasing=0;
   double disputing=0;
   String? status;
+  double? arbiterAwardingContractor;
   Map<String,int>contributions={};
   Map<String,int>contributorsReleasing={};
   Map<String,int>contributorsDisputing={};
@@ -53,7 +53,8 @@ fromJson(Map<String, dynamic> json) {
   termsHash = json['termsHash'];
   status = json['status'];
   author = json['author'];
-  contributions=json['contributions'];
+  contributions = json['contributions'];
+  arbiterAwardingContractor = json['arbiterAwardingContractor'];
 }
 
   @override
@@ -92,7 +93,8 @@ fromJson(Map<String, dynamic> json) {
       'author':author,
       'contributions':contributions,
       'contributorsReleasing':contributorsReleasing,
-      'contributorsDisputing':contributorsDisputing
+      'contributorsDisputing':contributorsDisputing,
+      'arbiterAwardingContractor':arbiterAwardingContractor
     };
   }
     

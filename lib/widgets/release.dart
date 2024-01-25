@@ -4,8 +4,7 @@ import 'dart:isolate';
 import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/services.dart';  // Import this for TextInputFormatter
-
+import 'package:flutter/services.dart';  
 import '../entities/human.dart';
 import '../entities/project.dart';
 import '../entities/token.dart';
@@ -17,10 +16,8 @@ bool loading=false;
 bool done=false;
 bool error=false;
 Project project;
-
 // ignore: use_key_in_widget_constructors
 Release({required this.project}) ;
-
   @override
   ReleaseState createState() => ReleaseState();
 }
@@ -32,10 +29,10 @@ class ReleaseState extends State<Release> {
   String amount="";
   @override
   Widget build(BuildContext context) {
-    
     List<String> paymentTokens=[];
     for (Token t in widget.project.acceptedTokens!){
-      paymentTokens.add(t.symbol +" ("+t.name+")");}
+      paymentTokens.add("${t.symbol} (${t.name})");
+      }
     return
     Container(
       width: 650,
@@ -86,19 +83,17 @@ class ReleaseState extends State<Release> {
                         foundit=true;
                         print("found it");
                         widget.project.contributorsReleasing[key] = widget.project.contributions[key]!; // Update the value to 0
-                        widget.project.contributorsDisputing[key] = 0; // Update the value to 0
-                        
+                        widget.project.contributorsDisputing[key] = 0; 
                         if (widget.project.contributorsReleasing.values.fold(0, (a, b) => a + b) / widget.project.contributions.values.fold(0, (a, b) => a + b) >= 0.6)
                         {
                           widget.project.status="closed";
                         }
-                        projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
+                        await projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
                         break; // Exit the loop
                       }
                       print("the loop was  not broken");
                     }
                     if (foundit==false){print("Still not finding it");}
-
                     Navigator.of(context).pushNamed("/projects/${widget.project.contractAddress}");
                      
                   },
@@ -107,12 +102,8 @@ class ReleaseState extends State<Release> {
                 )),
               ),
             ),
-            
             ],
           )
-    );
-
+       );
   }
-
- 
 }

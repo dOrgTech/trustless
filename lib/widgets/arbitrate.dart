@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../entities/human.dart';
 import '../entities/project.dart';
+import '../main.dart';
 
 const String escape = '\uE00C';
 
@@ -31,7 +33,16 @@ class _ArbitrateState extends State<Arbitrate> {
     double awardToBackers = _useSlider ? widget.project.holding! - _sliderValue : widget.project.holding! - (double.tryParse(_awardToContractorController.text) ?? 0);
     double awardToContractor = _useSlider ? _sliderValue : (double.tryParse(_awardToContractorController.text) ?? 0);
     bool isNegative = awardToBackers < 0 || awardToContractor < 0;
-    return Container(
+    return 
+    
+    ! (Human().address==widget.project.arbiter) ? 
+   const SizedBox(
+      child: Text("You are not signed in as the designated Arbiter.")
+    ) 
+    
+    :
+    
+    Container(
       width: 650,
       padding: const EdgeInsets.symmetric(horizontal: 60),
       decoration: BoxDecoration(
@@ -45,22 +56,18 @@ class _ArbitrateState extends State<Arbitrate> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Text(
-            "Arbitrate",
-            style: Theme.of(context).textTheme.headline5!,
+          Text("Arbitrate",  style: Theme.of(context).textTheme.headline5!,),
+          const SizedBox(height: 20),
+          Text("Amount in Escrow: ${widget.project.holding!}",
+               style: Theme.of(context).textTheme.subtitle1!,
           ),
-          SizedBox(height: 20),
-          Text(
-            "Amount in Escrow: ${widget.project.holding!}",
-            style: Theme.of(context).textTheme.subtitle1!,
-          ),
-          SizedBox(height: 20),
+         const SizedBox(height: 20),
           Column(
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text("Input Field"),
+                 const Text("Input Field"),
                   Switch(
                     value: _useSlider,
                     onChanged: (value) {
@@ -73,10 +80,10 @@ class _ArbitrateState extends State<Arbitrate> {
                     inactiveTrackColor: Theme.of(context).disabledColor,
                     inactiveThumbColor: Colors.grey[300],
                   ),
-                  Text("Slider"),
+                  const Text("Slider"),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               _useSlider
                   ? Slider(
                       value: _sliderValue,
@@ -93,7 +100,7 @@ class _ArbitrateState extends State<Arbitrate> {
                       controller: _awardToContractorController,
                       keyboardType: TextInputType.number,
                       inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}'))],
-                      decoration: InputDecoration(
+                      decoration:const  InputDecoration(
                         labelText: "Award to Contractor",
                         border: OutlineInputBorder(),
                       ),
@@ -105,7 +112,7 @@ class _ArbitrateState extends State<Arbitrate> {
                     ),
             ],
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -115,7 +122,7 @@ class _ArbitrateState extends State<Arbitrate> {
                     "Award to Backers",
                     style: Theme.of(context).textTheme.subtitle1!,
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Text(
                     "${awardToBackers.toStringAsFixed(2)}",
                     style: Theme.of(context).textTheme.subtitle1!.copyWith(color: isNegative ? Colors.red : null),
@@ -128,7 +135,7 @@ class _ArbitrateState extends State<Arbitrate> {
                     "Award to Contractor",
                     style: Theme.of(context).textTheme.subtitle1!,
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Text(
                     "${awardToContractor.toStringAsFixed(2)}",
                     style: Theme.of(context).textTheme.subtitle1!.copyWith(color: isNegative ? Colors.red : null),
@@ -137,11 +144,14 @@ class _ArbitrateState extends State<Arbitrate> {
               ),
             ],
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           ElevatedButton(
             onPressed: _canSubmit
-                ? () {
-                    // Add your code here
+                ? () async{
+                    widget.project.arbiterAwardingContractor=double.parse( _awardToContractorController.text.toString());
+                    await projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
+                    widget.project.status='closed';
+                    Navigator.of(context).pushNamed("/projects/${widget.project.contractAddress}");
                   }
                 : null,
             style: ElevatedButton.styleFrom(
@@ -154,7 +164,7 @@ class _ArbitrateState extends State<Arbitrate> {
                 vertical: 20,
               ),
             ),
-            child: Text(
+            child: const Text(
               "Submit",
               style: TextStyle(
                 fontSize: 18,

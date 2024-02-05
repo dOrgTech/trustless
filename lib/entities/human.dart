@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'dart:js_util';
 import 'package:flutter_web3_provider/ethereum.dart';
+import 'package:flutter_web3_provider/ethers.dart';
 import 'package:http/http.dart';
 import 'package:web3dart/web3dart.dart';
 
@@ -19,37 +20,17 @@ class Voter{
 
 
 var orgs=[];
-var abi=
-'''
- [ {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "_owner",
-        "type": "address"
-      }
-    ],
-    "name": "balanceOf",
-    "outputs": [
-      {
-        "name": "balance",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  }]'''
-;
+
 
 
 
 class Human {  
   String? address;
   bool metamask=true;
-    bool allowed=false;
-    bool voting=false;
-    bool voted=false;
+  bool allowed=false;
+  Web3Provider? web3user;
+  bool voting=false;
+  bool voted=false;
   Human._internal();
   // Singleton instance
   static final Human _instance = Human._internal();
@@ -58,38 +39,20 @@ class Human {
     return _instance;
   }
   signIn()async{    
-  //   try{
-  //      var cevine= await promiseToFuture(
-  //     ethereum!.request(
-  //         RequestParams(method: 'eth_requestAccounts'),
-  //       ),
-  //     );
-  //  }
-  //  catch(e){
-  //     print(e);
-  //     return "nogo";
-  //  }
-  // address=ethereum?.selectedAddress.toString();
-  await Future.delayed(const Duration(seconds: 1)).then((value) {
-  address="qodjn09djqwod9ijqnw9jdowijndpoqijwnp";
+    try{
+       var cevine= await promiseToFuture(
+      ethereum!.request(
+          RequestParams(method: 'eth_requestAccounts'),
+        ),
+      );
+   }
+   catch(e){
+      print(e);
+      return "nogo";
+   }
+  address=ethereum?.selectedAddress.toString();
+  web3user= Web3Provider(ethereum!);
 
-
-  print("HJumna"+Human().address!);
-  for (Voter v in voters){
-    print("voted "+v.address);
-
-    if (v.address.toLowerCase()==address!.toLowerCase() &&v.voted==false ){
-      print("found adddress");
-    allowed=true;
-    voteCollection.doc(v.address).set({
-      "name":v.name,
-      "voted":true});
-       break;
-    }
-   
-    }
-
-  });
   
   }
 

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_web3_provider/ethereum.dart';
 import 'package:provider/provider.dart';
+import 'package:trustless/entities/contractFunctions.dart';
 import 'package:trustless/screens/landing.dart';
 import 'package:trustless/screens/poll.dart';
 import 'package:trustless/screens/prelaunch.dart';
@@ -12,6 +13,7 @@ import 'package:trustless/screens/projects.dart';
 import 'package:trustless/screens/users.dart';
 import 'package:trustless/utils/reusable.dart';
 import 'package:trustless/widgets/projectDetails.dart';
+import 'package:web3dart/web3dart.dart';
 import 'entities/human.dart';
 import 'entities/project.dart';
 import 'firebase_options.dart';
@@ -20,20 +22,29 @@ import 'screens/disputes.dart';
 double switchAspect=1.2;
 List<Project> projects=[];
 List<Voter> voters=[];
+String sourceAddress="";
 int valueInContracts=0;
 int usdtStored=0;
 int xtzStored=0;
 int totalXTZpaid=0;
 int totalUSDTpaid=0;
 String selectedNetwork='Etherlink Testnet';
-
+ContractFunctions cf=ContractFunctions();
 var projectsCollection = FirebaseFirestore.instance.collection('projects');
 var prelaunchCollection = FirebaseFirestore.instance.collection('prelaunch');
 var voteCollection = FirebaseFirestore.instance.collection('vote');
 var statsCollection = FirebaseFirestore.instance.collection('stats');
+
     void main() async  {
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+      var statsSnapshot = await statsCollection.doc("Etherlink Testnet").get();
+      if (statsSnapshot.exists) {
+          sourceAddress=statsSnapshot.data()!['sourceAddress'];
+      } else {
+        sourceAddress="source_address_not_available_at_the_moment";
+      }
+      print("source address:" +sourceAddress);
       var querySnapshot = await projectsCollection.get();
   // Iterate through the documents and print their data
   for (var doc in querySnapshot.docs) {
@@ -63,9 +74,10 @@ var statsCollection = FirebaseFirestore.instance.collection('stats');
     projects.add(p);
     p.contributions.forEach((key, value) { valueInContracts+=value;});
   }
+
   
-
-
+  await cf.getProjectsCounter();
+  print("we have this many projects: "+numberOfProjects.toString());
   // var vquerySnapshot = await voteCollection.get();
   // for (var doc in vquerySnapshot.docs) {
   //     Voter v =Voter(

@@ -72,7 +72,7 @@ class _LandingState extends State<Landing> {
           SizedBox(
             child: Text(what, textAlign: TextAlign.end, style: const TextStyle( fontWeight: FontWeight.w600),)),
           const SizedBox(width: 10,),
-          Text(getShortAddress(address) , style: TextStyle()),
+          Text(address , style: TextStyle()),
          const SizedBox(width: 10,),
           TextButton(
             child: const Icon(Icons.copy),
@@ -200,9 +200,9 @@ Widget dreapta(){
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
-                                    addresses("Source: ","p9d8jqp9e8jfupqn9238rjp2398rjnpq3",context),
-                                    addresses("Rep Token:", "p9d8jqp9e8jfupqn9238rjp2398rjnpq3",context),
-                                    addresses("USDC (test)", "p9d8jqp9e8jfupqn9238rjp2398rjnpq3",context)
+                                    addresses("Source: ",sourceAddress,context),
+                                    // addresses("Rep Token:", "p9d8jqp9e8jfupqn9238rjp2398rjnpq3",context),
+                                    // addresses("USDC (test)", "p9d8jqp9e8jfupqn9238rjp2398rjnpq3",context)
                                      ],),),
                           const  SizedBox(height: 8),     
                             Row(

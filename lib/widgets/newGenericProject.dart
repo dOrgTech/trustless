@@ -277,14 +277,17 @@ class _NewGenericProjectState extends State<NewGenericProject> {
     shadowColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor), // Optional: Use for shadow
   ),
                   onPressed: () async {
-                      widget.project.author = Human().address ?? generateWalletAddress();
-                      widget.project.contractAddress=generateContractAddress();
+                      widget.project.author = Human().address;
                       
+                      // widget.project.contractAddress=generateContractAddress();
+                      var address= await cf.createProject(widget.project, widget.projectsState);
+                      print("deployed contract with address "+address);
+                      widget.project.contractAddress=address;
                       await projectsCollection.doc(widget.project.contractAddress)
                       .set(widget.project.toJson());
                       await Future.delayed(const Duration(milliseconds: 100));
                       setState(() {
-                        widget.projectsState.setState(() {    
+                        widget.projectsState.setState(() {
                           projects.add(widget.project);
                         });
                       });

@@ -1,5 +1,10 @@
 List<String> sourceAbiString=[
-  'function createProject(string,address,address,string,string)',
+  'function createProject (string,address,address,string,string) payable',
+];
+
+
+List<String> nativeProjectAbiString=[
+  'function setParties (address, address, string) payable'
 ];
 
 

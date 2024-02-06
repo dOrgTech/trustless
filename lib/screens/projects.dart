@@ -1,6 +1,10 @@
 import "package:flutter/material.dart";
+import "package:lottie/lottie.dart";
+import "package:provider/provider.dart";
 import "package:trustless/widgets/newGenericProject.dart";
 import "package:trustless/widgets/sendfunds.dart";
+import "package:trustless/widgets/waiting.dart";
+import "package:webviewx/webviewx.dart";
 import "../entities/human.dart";
 import "../entities/project.dart";
 import "../main.dart";
@@ -9,7 +13,7 @@ import "../widgets/hovermenu.dart";
 import "../widgets/projectCard.dart";
 
 String? selectedNewProject="Open to proposals";
-  final List<String> statuses = ['All', 'Open', 'Ongoing','Dispute',"Pending","Closed"];
+  final List<String> statuses = ['All', 'Open', "Pending",'Ongoing','Dispute',"Closed"];
   final List<String> projectTypes = ['Open to proposals', 'Set parties','Import project'];
 
 // ignore: must_be_immutable
@@ -103,39 +107,47 @@ class ProjectsState extends State<Projects> {
                           Text("projects"),
                           SizedBox(width: 60),
             // HoverExpandWidget(projectsState: this),
-            ElevatedButton(onPressed: (){
-                    Human().address==null?
-         showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  content: SizedBox(height:100, width: 400,child:Center(child: 
-                  Text("Connect your wallet first.")
-                  )),
-                ))
-        : 
-              showDialog(
-                context: context, 
+            Consumer<AppState>(
+  builder: (context, provider, child) {
+
+                return ElevatedButton(onPressed: (){
+                        Human().address==null?
+                     showDialog(
+                context: context,
                 builder: (context) => AlertDialog(
-                  content: Container(
-                    width: 900,
-                    // height: 500,
-                    child: NewGenericProject(projectsState:this)
-                  )
-                )
-              );
-                        }
-                        , child: SizedBox(
-                          width:110,
-                          height:35,
-                          child: Center(
-                            child: Text("Add Project",
-                            style: TextStyle(
-                              fontSize: 19,
-                              color:Theme.of(context).brightness==Brightness.dark?Color.fromARGB(255, 0, 0, 0):Color.fromARGB(255, 255, 255, 255)),
-                            
-                            ),
-                          ),
-                        )),
+            
+                      content: SizedBox(height:100, width: 400,child:Center(child: 
+                      Text("Connect your wallet firrst.")
+                      )),
+                    ))
+                    : 
+                  showDialog(
+                    barrierDismissible:  false,
+                    context: context, 
+                    builder: (context) => AlertDialog(
+                      
+                      content: Container(
+                        width: 900,
+                        // height: 500,
+                        child: NewGenericProject(projectsState:this)
+                      )
+                    )
+                  );
+                            }
+                            , child: SizedBox(
+                              width:110,
+                              height:35,
+                              child: Center(
+                                child: Text("Add Project",
+                                style: TextStyle(
+                                  fontSize: 19,
+                                  color:Theme.of(context).brightness==Brightness.dark?Color.fromARGB(255, 0, 0, 0):Color.fromARGB(255, 255, 255, 255)),
+                                
+                                ),
+                              ),
+                            ));
+              }
+            ),
                       SizedBox(
                         width: 10,
                       ),
@@ -183,7 +195,6 @@ class ProjectsState extends State<Projects> {
                              ),
                         )),
                       ) 
-                      
                       ,
                     SizedBox(height: 24,),
                     // NewGenericProject(projectsState: this),
@@ -195,7 +206,12 @@ class ProjectsState extends State<Projects> {
                       spacing: 14,
                       runSpacing: 14,
                       alignment: WrapAlignment.start,
-                      children: [...projectCards],
+                      children: [...projectCards,
+                  
+             
+                      
+                      ],
+                      
                      ),
                    ), 
                   SizedBox(
@@ -210,3 +226,4 @@ class ProjectsState extends State<Projects> {
         );
   }
 }
+

@@ -43,6 +43,19 @@ class _ProjectDetailsState extends State<ProjectDetails> {
     ),
   );
 }
+String extractGitHubPath(String? repoUrl) {
+  if (repoUrl == null) {
+    return 'default/fallback/path'; // Provide a default path or handle as needed
+  }
+  // Check if the URL contains "github.com/"
+  int startIndex = repoUrl.indexOf('github.com/');
+  if (startIndex == -1) {
+    return 'default/fallback/path'; // Provide a default path or handle as needed
+  }
+  // Extract the part after "github.com/"
+  String path = repoUrl.substring(startIndex + 'github.com/'.length);
+  return path.isEmpty ? 'default/fallback/path' : path; // Ensure the path is not empty
+}
   @override
   Widget build(BuildContext context) {
     widget.project.holding= widget.project.contributions.values.fold(0, (a, b) => a! + b);
@@ -547,7 +560,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                           future: http.get(
                             Uri.https(
                               'raw.githubusercontent.com',
-                              '${widget.project.repo?.split('github.com/')[1]}/master/README.md',
+                              '${extractGitHubPath(widget.project.repo)}/master/README.md',
                             ),
                           ),
                           builder: (context, snapshot) {

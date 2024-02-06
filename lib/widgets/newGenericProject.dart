@@ -5,10 +5,12 @@ import 'dart:html' as html;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:trustless/entities/human.dart';
 import 'package:trustless/main.dart';
 import 'package:trustless/utils/reusable.dart';
 import 'package:trustless/utils/transitions.dart';
+import 'package:trustless/widgets/waiting.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../entities/project.dart';
 import '../screens/projects.dart';
@@ -91,6 +93,8 @@ class _NewGenericProjectState extends State<NewGenericProject> {
             return stage14();
           case 5:
             return stage2();
+          case 6:
+            return WaitingOnChain();
           default:
             return stage0();
         }
@@ -278,14 +282,15 @@ class _NewGenericProjectState extends State<NewGenericProject> {
   ),
                   onPressed: () async {
                       widget.project.author = Human().address;
-                      
-                      // widget.project.contractAddress=generateContractAddress();
+                      setState(() {
+                        widget.stage=6;
+                      });
                       var address= await cf.createProject(widget.project, widget.projectsState);
                       print("deployed contract with address "+address);
                       widget.project.contractAddress=address;
                       await projectsCollection.doc(widget.project.contractAddress)
                       .set(widget.project.toJson());
-                      await Future.delayed(const Duration(milliseconds: 100));
+                      // await Future.delayed(const Duration(seconds: 13));
                       setState(() {
                         widget.projectsState.setState(() {
                           projects.add(widget.project);
@@ -959,7 +964,30 @@ SizedBox(
                Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                  children: [
-                 SizedBox(width: 160),
+                  SizedBox(height: 30,width: 150,
+                    child: Opacity(
+                      opacity: 0.6,
+                      child: TextButton(
+                                style: ButtonStyle(
+                                  // overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
+                                  // backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
+                                  elevation: MaterialStateProperty.all(0.0),
+                                  shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(1.0),
+                                    ),
+                                  ),
+                                ),
+                                 onPressed:
+                                (){
+                                Navigator.of(context).pop();
+                                },
+                                 child: const Center(
+                                child: Text("Cancel", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,),),
+                              )),
+                    ),
+                  ),
+                //  SizedBox(width: 20),
                   StepProgressIndicator(currentStep: 0),
                    SizedBox(
                           height: 40,

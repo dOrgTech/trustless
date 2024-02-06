@@ -28,17 +28,19 @@ int usdtStored=0;
 int xtzStored=0;
 int totalXTZpaid=0;
 int totalUSDTpaid=0;
-String selectedNetwork='Etherlink Testnet';
+// String selectedNetwork='Etherlink Testnet';
 ContractFunctions cf=ContractFunctions();
-var projectsCollection = FirebaseFirestore.instance.collection('projects');
+var projectsGoerli = FirebaseFirestore.instance.collection('projectsGoerli');
 var prelaunchCollection = FirebaseFirestore.instance.collection('prelaunch');
 var voteCollection = FirebaseFirestore.instance.collection('vote');
 var statsCollection = FirebaseFirestore.instance.collection('stats');
+var projectsCollection;
 
     void main() async  {
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-      var statsSnapshot = await statsCollection.doc("Etherlink Testnet").get();
+      projectsCollection=FirebaseFirestore.instance.collection("projects${Human().chain.name}");
+      var statsSnapshot = await statsCollection.doc(Human().chain.name).get();
       if (statsSnapshot.exists) {
           sourceAddress=statsSnapshot.data()!['sourceAddress'];
       } else {
@@ -47,7 +49,7 @@ var statsCollection = FirebaseFirestore.instance.collection('stats');
       print("source address:" +sourceAddress);
       var querySnapshot = await projectsCollection.get();
   // Iterate through the documents and print their data
-  for (var doc in querySnapshot.docs) {
+    for(var doc in querySnapshot.docs) {
       Project p =Project(
        isUSDT: doc.data()["isUSDT"],
        name: doc.data()["name"],
@@ -78,99 +80,110 @@ var statsCollection = FirebaseFirestore.instance.collection('stats');
   
   await cf.getProjectsCounter();
   print("we have this many projects: "+numberOfProjects.toString());
-  // var vquerySnapshot = await voteCollection.get();
-  // for (var doc in vquerySnapshot.docs) {
-  //     Voter v =Voter(
-  //      address: doc.id.toString(),
-  //      name: doc.data()["name"],
-  //      voted: doc.data()["voted"], 
-  //     );
-  //     voters.add(v);
-  // }
- 
-  // print("primex creation date ${projects[0].creationDate.toString()}");
-    runApp( MyApp());
+      runApp(
+    ChangeNotifierProvider(
+      create: (context) => AppState(),
+      child: MyApp(),
+    ));
     }
 
 class MyApp extends StatelessWidget {
+  // Create a global variable for the overlay entry
+  OverlayEntry? _overlayEntry;
   @override
   Widget build(BuildContext context) {
-    //   if (ethereum==null){
-    //    print("n-are metamask");
-    //     Human().metamask=false;
-    // }else{
-    //   print("are metamask");
-    //     Human().metamask=true;
-    // }
+      if (ethereum==null){
+       print("n-are metamask");
+        Human().metamask=false;
+    }else{
+      print("are metamask");
+        Human().metamask=true;
+    }
     return ChangeNotifierProvider<ThemeNotifier>(
       create: (_) => ThemeNotifier(),
       child: Consumer<ThemeNotifier>(
         builder: (context, theme, _) => MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Trustless Business',
-          theme: theme.getTheme(),
-          initialRoute: '/',
-    onGenerateRoute: (settings) {
-  WidgetBuilder builder;
-  if (settings.name == '/') {
-    builder = (_) => 
-    // ProjectDetails(project: projects[0]);
-    // Prelaunch()
-    // Poll();
-    //  BaseScaffold(selectedItem: 0, body: Profile(), title: "Profile");
-    BaseScaffold(selectedItem: 1,body: Projects(), title: "Projects");
-  } else if (settings.name!.startsWith('/projects/')) {
-    final projectId = settings.name!.replaceFirst('/projects/', '');
-    Project? project;
-    try {
-      project = projects.firstWhere(
-        (proj)=>proj.contractAddress == projectId
-      );
-      
-    } catch (e) {
-      project = null;
-    }
-    if (project != null) {
-      builder = (context) => ProjectDetails(project: project!);
-    } else {
-      builder = (context) => const Text("Project not found");
-    }
-  } 
-  else if (settings.name == '/trials') {
-    builder = (_) => BaseScaffold(selectedItem: 2, body: Trials(), title: "Trials");
-    } else if (settings.name == '/stats') {
-    builder = (_) => BaseScaffold(selectedItem: 0, body: Landing(), title: "Stats");
-  } else if (settings.name == '/users') {
-    builder = (_) => BaseScaffold(selectedItem: 3,body: Users(), title: "Users");
-  } else {
-    // Handle other routes or unknown routes
-    builder = (_) =>  BaseScaffold(
-      selectedItem: 0,
-      title: "Not a valid URL",
-      body: Center(child:Text("This is nothing.", style: TextStyle(fontSize: 40),)),);
-  }
-
-  // Implementing the crossfade transition
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => builder(context),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      return FadeTransition(
-        opacity: animation,
-        child: child,
-      );
-    },
-    transitionDuration: const Duration(milliseconds: 300), // Adjust duration as needed
-  );
-}
-
-
-          // Remove the 'routes' map if all routes are handled in 'onGenerateRoute'
-        ),
+              debugShowCheckedModeBanner: false,
+              title: 'Trustless Business',
+              theme: theme.getTheme(),
+              initialRoute: '/',
+            onGenerateRoute: (settings) {
+          WidgetBuilder builder;
+          if (settings.name == '/') {
+            builder = (_) => 
+            // ProjectDetails(project: projects[0]);
+            Prelaunch();
+            // Poll();
+            //  BaseScaffold(selectedItem: 0, body: Profile(), title: "Profile");
+            // BaseScaffold(selectedItem: 1,body: Projects(), title: "Projects");
+          } else if (settings.name!.startsWith('/projects/')) {
+            final projectId = settings.name!.replaceFirst('/projects/', '');
+            Project? project;
+            try {
+              project = projects.firstWhere(
+            (proj)=>proj.contractAddress == projectId
+              );
+              
+            } catch (e) {
+              project = null;
+            }
+            if (project != null) {
+              builder = (context) => ProjectDetails(project: project!);
+            } else {
+              builder = (context) => const Text("Project not found");
+            }
+          } 
+          else if (settings.name == '/trials') {
+            builder = (_) => BaseScaffold(selectedItem: 2, body: Trials(), title: "Trials");
+            } else if (settings.name == '/stats') {
+            builder = (_) => BaseScaffold(selectedItem: 0, body: Landing(), title: "Stats");
+          } else if (settings.name == '/users') {
+            builder = (_) => BaseScaffold(selectedItem: 3,body: Users(), title: "Users");
+          } else {
+            // Handle other routes or unknown routes
+            builder = (_) =>  BaseScaffold(
+              selectedItem: 0,
+              title: "Not a valid URL",
+              body: Center(child:Text("This is nothing.", style: TextStyle(fontSize: 40),)),);
+          }
+        
+          // Implementing the crossfade transition
+          return PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => builder(context),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(
+            opacity: animation,
+            child: child,
+              );
+            },
+            transitionDuration: const Duration(milliseconds: 300), // Adjust duration as needed
+          );
+        }
+        
+        
+              // Remove the 'routes' map if all routes are handled in 'onGenerateRoute'
+            ),
       ),
     );
   }
 }
+class AppState extends ChangeNotifier {
+  bool _ignoreInput = false;
+  bool _showDialog = false; // Add this line
 
+  bool get ignoreInput => _ignoreInput;
+  bool get showDialog => _showDialog; // Add this getter
+
+  void setIgnoreInput(bool ignore) {
+    _ignoreInput = ignore;
+    notifyListeners();
+  }
+
+  void setShowDialog(bool show) { // Add this method
+    _showDialog = show;
+    notifyListeners();
+  }
+}
 
 class BaseScaffold extends StatefulWidget {
  
@@ -181,7 +194,7 @@ class BaseScaffold extends StatefulWidget {
   late bool isDisputes;
   late bool isUsers;
   int selectedItem;
-
+  
   BaseScaffold({required this.body, required this.title,
   required this.selectedItem} ) {
     isTrustless = selectedItem == 0;
@@ -213,7 +226,9 @@ class _BaseScaffoldState extends State<BaseScaffold> {
 
   @override
   Widget build(BuildContext context) {
-      final List<String> items = ['Etherlink Testnet'];
+    // final chainNames = chains.map((chain) => chain.name).toList();
+
+      final List<String> chainNames = ['Goerli','Etherlink-Testnet'];
 
   // The current selected value of the dropdown
   // String? selectedValue = 'Etherlink Testnet';
@@ -373,103 +388,111 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                 ),
               )
           ];
-    return Scaffold(
-     appBar: AppBar(
-        toolbarHeight: 42,
-        elevation: 1.8,
-        automaticallyImplyLeading: MediaQuery.of(context).size.aspectRatio < switchAspect,
-        title: 
-        MediaQuery.of(context).size.aspectRatio >= switchAspect?
-        Row(
-          children: botoane,
-        ):  null,
-
-        actions: <Widget>[
-          MediaQuery.of(context).size.aspectRatio > switchAspect?
+    return   Scaffold(
+           appBar: AppBar(
+         toolbarHeight: 42,
+         elevation: 1.8,
+         automaticallyImplyLeading: MediaQuery.of(context).size.aspectRatio < switchAspect,
+         title: 
+         MediaQuery.of(context).size.aspectRatio >= switchAspect?
+         Row(
+           children:
+         [ 
+            ...botoane,]
+         ):  null,
+          
+         actions: <Widget>[
+           
+           MediaQuery.of(context).size.aspectRatio > switchAspect?
+              Padding(
+               padding: const EdgeInsets.only(top:0.0),
+               child: DropdownButton<String>(
+                       value: Human().chain.name,
+                       focusColor: Colors.transparent,
+                       items: chainNames.map((String value) {
+               return DropdownMenuItem<String>(
+                 value: value,
+                 child: Text(value),
+               );
+                       }).toList(),
+                       onChanged: (String? newValue) {
+              // var foundChain = chains.firstWhere((chain) => chain.name ==newValue);
+               setState(() {
+                 Human().chain=chains[0];
+               });
+                       },
+                     ),
+             ):Text(""),
+             
+             const SizedBox(width: 20 ),
+           const WalletBTN(),
+           const SizedBox(width: 30),
+          
+          Switch(
+             value: themeNotifier.isDarkMode,
+             onChanged: (value) {
+               themeNotifier.toggleTheme();
+             },
+           ),
+           const SizedBox(width: 20)
+         ],
+         
+       ),
+       body: widget.body,
+          drawer: 
+          MediaQuery.of(context).size.aspectRatio <= switchAspect?
+          Drawer(
+         child: ListView(
+           padding: EdgeInsets.zero,
+           children: <Widget>[
+             DrawerHeader(
+               child: Theme.of(context).brightness==Brightness.light?
+         SizedBox(
+           width: 50,
+           child: ColorFiltered(
+                   colorFilter: ColorFilter.matrix([
+                     -1.0, 0.0, 0.0, 0.0, 255.0, // red
+                     0.0, -1.0, 0.0, 0.0, 255.0, // green
+                     0.0, 0.0, -1.0, 0.0, 255.0, // blue
+                     0.0, 0.0, 0.0, 1.0, 0.0, // alpha
+                   ]),
+                   child:logotall,
+                 ),
+       )
+       :
+       SizedBox(
+         width: 50,
+         child: logotall),
+             ),
+            ...buttall, 
              Padding(
-              padding: const EdgeInsets.only(top:0.0),
-              child: DropdownButton<String>(
-                      value: selectedNetwork,
-                      focusColor: Colors.transparent,
-                      items: items.map((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-              setState(() {
-                selectedNetwork = newValue!;
-              });
-                      },
-                    ),
-            ):Text(""),
-            
-            const SizedBox(width: 20 ),
-          const WalletBTN(),
-          const SizedBox(width: 30),
-         Switch(
-            value: themeNotifier.isDarkMode,
-            onChanged: (value) {
-              themeNotifier.toggleTheme();
-            },
-          ),
-          const SizedBox(width: 20)
-        ],
-        
-      ),
-      body: widget.body,
-    drawer: 
-    MediaQuery.of(context).size.aspectRatio <= switchAspect?
-    Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              child: Theme.of(context).brightness==Brightness.light?
-        SizedBox(
-          width: 50,
-          child: ColorFiltered(
-                  colorFilter: ColorFilter.matrix([
-                    -1.0, 0.0, 0.0, 0.0, 255.0, // red
-                    0.0, -1.0, 0.0, 0.0, 255.0, // green
-                    0.0, 0.0, -1.0, 0.0, 255.0, // blue
-                    0.0, 0.0, 0.0, 1.0, 0.0, // alpha
-                  ]),
-                  child:logotall,
-                ),
-      )
-      :
-      SizedBox(
-        width: 50,
-        child: logotall),
-            ),
-           ...buttall, 
-            Padding(
-              padding: const EdgeInsets.all(61.0),
-              child: SizedBox(
-                width: 60,
-                child: DropdownButton<String>(
-                        value: selectedNetwork,
-                        focusColor: Colors.transparent,
-                        items: items.map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                setState(() {
-                  selectedNetwork = newValue!;
-                  });
-                  },
-                ),
-                ),
-              ),
-            ],
-          ),
-        ):null,
-    );
+               padding: const EdgeInsets.all(61.0),
+               child: SizedBox(
+                 width: 60,
+                 child: DropdownButton<String>(
+                         value: Human().chain.name,
+                         focusColor: Colors.transparent,
+                         items: chainNames.map((String value) {
+                 return DropdownMenuItem<String>(
+                   value: value,
+                   child: Text(value),
+                 );
+                         }).toList(),
+                         onChanged: (String? newValue) {
+
+                  var foundChain = chains.firstWhere((chain) => chain.name ==newValue);
+               setState(() {
+                 Human().chain=foundChain;
+               });
+                   },
+                 ),
+                 ),
+               ),
+             ],
+           ),
+         ):null,
+          );
+     
   }
 }
 
@@ -506,14 +529,14 @@ class _WalletBTNState extends State<WalletBTN> {
    Human().address==null?
    
    TextButton(onPressed: ()async{
-    if (Human().metamask==false){
+    // if (Human().metamask==false){
       
-      showDialog(context: context, builder: (context){return 
-      const AlertDialog(
-        content: Text("Metamask not detected.")
-      );
-      });
-    }
+    //   showDialog(context: context, builder: (context){return 
+    //   const AlertDialog(
+    //     content: Text("Metamask not detected.")
+    //   );
+    //   });
+    // }
     setState((){
       _isConnecting=true;
     });

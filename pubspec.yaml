@@ -19,6 +19,7 @@ dependencies:
   image: ^4.1.3
   intl: ^0.18.1
   metamask: ^0.0.2
+  lottie:
   walletconnect_dart: 
   flutter_web3: ^2.1.6
   flutter_web3_provider: ^1.0.6

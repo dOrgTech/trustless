@@ -7,6 +7,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:trustless/widgets/waiting.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../entities/human.dart';
 import '../entities/project.dart';
@@ -18,7 +19,7 @@ bool loading=false;
 bool done=false;
 bool error=false;
 Project project;
-
+bool waiting=false;
 // ignore: use_key_in_widget_constructors
 SetParty({required this.project}) ;
 TextEditingController arbiterControlla = TextEditingController();
@@ -31,14 +32,13 @@ class SetPartytate extends State<SetParty> {
   
   @override
   Widget build(BuildContext context) {
-    
+ 
     return
     Container(
-      margin: EdgeInsets.all(10),
-      padding: EdgeInsets.all(40),
+      margin: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(40),
       decoration: BoxDecoration(border: Border.all(width: 0.5)),
-    child: stage1()
-    );
+    child: widget.waiting?WaitingOnChain():stage1());
   }
 
   bool pressedName = false;
@@ -60,8 +60,11 @@ class SetPartytate extends State<SetParty> {
     }
   }
  stage1(){
+     bool isButtonActive = widget.project.contractor!.length > 2 &&
+                      widget.project.arbiter!.length > 2 &&
+                      widget.project.termsHash!.length > 4;
     return Container(
-      key: ValueKey(1),
+      key: const ValueKey(1),
       constraints: const BoxConstraints(minHeight: 500,maxWidth: 1200),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -74,19 +77,19 @@ class SetPartytate extends State<SetParty> {
   text: TextSpan(
     style: DefaultTextStyle.of(context).style, // Set default text style from the theme
     children: <TextSpan>[
-      TextSpan(
+      const TextSpan(
         text: "If you already have already reached an arrangement with someone for the work specified in this Project, add their wallet or contract address in the field below. Their participation will be formalized once they sign this Project contract and stake half of the arbitration fee. You also need to specify the Arbiter at this point. Please refer to ",
       ),
       TextSpan(
         text: 'the docs',
-        style: TextStyle(color: Colors.blue),
+        style: const TextStyle(color: Colors.blue),
         recognizer: TapGestureRecognizer()
           ..onTap = () {
             // Link handling code
             launch("https://your-link-to-the-docs.com");
           },
       ),
-      TextSpan(
+      const TextSpan(
         text: " to learn more about the role of the arbiter.",
       ),
     ],
@@ -95,8 +98,8 @@ class SetPartytate extends State<SetParty> {
 ,
 
           const SizedBox(height: 60),
-          SizedBox(
-                    // width:630,
+          Container(
+                    constraints: const BoxConstraints(maxHeight: 400),
                     child:  TextField(
                       controller: widget.contractorControlla,
                       onChanged: (value){setState(() {
@@ -108,8 +111,8 @@ class SetPartytate extends State<SetParty> {
                         ),),
                   ),
           const SizedBox(height: 40),
-          SizedBox(
-                    // width:630,
+         Container(
+                    constraints: const BoxConstraints(maxHeight: 400),
                     child: TextField(
                       controller: widget.arbiterControlla,
                        onChanged: (value){setState(() {
@@ -121,35 +124,35 @@ class SetPartytate extends State<SetParty> {
                         ),),
                   ), 
                 const SizedBox(height: 39),
- SizedBox(
+              SizedBox(
                   // width:600,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                      ElevatedButton(
-  onPressed: _pickFile,
-  child: const Text('Select File', textAlign: TextAlign.center,),
-  style: ElevatedButton.styleFrom(
-    primary: Colors.transparent, // Transparent background
-   // White text color
-    shadowColor: Colors.transparent, // No shadow
-    side: const BorderSide(color: Color.fromARGB(255, 102, 102, 102), width: 2.0), // Visible border
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(0), // Square shape
-    ),
-    fixedSize: const Size(100, 100), // Square size
-  ),
-),    
-const SizedBox(width: 38),
-const SizedBox(      
-   child: SizedBox(
-                          width: 500,
-                          child: Text("Select the TERMS.md file. This should not be modified throughout the life cycle of the project. A hash of its content will be immutably stored in the contract."
-                          ,textAlign: TextAlign.justify,
-                          ),
-                        )),
-                    ],
-                  ),
+            onPressed: _pickFile,
+            child: const Text('Select File', textAlign: TextAlign.center,),
+            style: ElevatedButton.styleFrom(
+              primary: Colors.transparent, // Transparent background
+            // White text color
+              shadowColor: Colors.transparent, // No shadow
+              side: const BorderSide(color: Color.fromARGB(255, 102, 102, 102), width: 2.0), // Visible border
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(0), // Square shape
+              ),
+              fixedSize: const Size(100, 100), // Square size
+            ),
+          ),    
+          const SizedBox(width: 38),
+          const SizedBox(      
+            child: SizedBox(
+                    width: 500,
+                    child: Text("Select the TERMS.md file. This should not be modified throughout the life cycle of the project. A hash of its content will be immutably stored in the contract."
+                    ,textAlign: TextAlign.justify,
+                    ),
+                  )),
+                ],
+                ),
                 ),
               const SizedBox(height: 24),
                   Align(
@@ -162,63 +165,98 @@ const SizedBox(
                   opacity: 0.7,
                   child: Text(_fileName.isNotEmpty ? 'File hash: ':"",)
                   ),
-                Text('$_hash', style:  TextStyle(fontWeight: FontWeight.w100, color:Color.fromRGBO(253, 251, 231, 1), backgroundColor: Colors.black),),
+                Text('$_hash', style:  const TextStyle(fontWeight: FontWeight.w100, color:Color.fromRGBO(253, 251, 231, 1), backgroundColor: Colors.black),),
               ],
             ),
           )),
           const SizedBox(height: 60),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal:80.0),
-            child: const Text("The Contractor will need to sign this Project contract before the funds are locked in Escrow. Make sure they agree with the terms as well as the designated Arbiter."),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal:80.0),
+            child: Text("The Contractor will need to sign this Project contract before the funds are locked in Escrow. Make sure they agree with the terms as well as the designated Arbiter."),
           ),
-          
-                        Spacer(),
-                        Center(
-                          child: SizedBox(
-                            child: SizedBox(
-                                          height: 40,
-                                          width: 170,
-                                          child: TextButton(
-                                          style: ButtonStyle(
-                                            overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
-                                            backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
-                                            elevation: MaterialStateProperty.all(1.0),
-                                            shape: MaterialStateProperty.all(
-                                              RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(7.0),
-                                              ),
-                                            ),
-                                          ),
-                                          onPressed: 
-                                            widget.project.contractor!.length > 2
-                                            && widget.project.arbiter!.length > 2
-                                            && widget.project.termsHash!.length> 4?
-                                          ()async{
-                                          !(Human().address?.toString() == widget.project.author?.toString())?
-                                      showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                        content: SizedBox(height:100, width: 400,child:Center(child: 
-                                          Text("You are not signed in as the Author of this Project.", textAlign: TextAlign.center,)
-                                          )),
-                                        ))
-                                             :
-                                            widget.project.status="pending";
-                                           await projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
-                                            Navigator.of(context).pushNamed("/projects/${widget.project.contractAddress}");
-                                          }:null,
-                                           child: const Center(
-                                          child: Text("SUBMIT", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color:Colors.black),),
-                                        ))
-                                        ),
+              const Spacer(),
+                Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                       SizedBox(height: 30,width: 150,
+                    child: Opacity(
+                      opacity: 0.6,
+                      child: TextButton(
+                        style: ButtonStyle(
+                          // overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
+                          // backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
+                          elevation: MaterialStateProperty.all(0.0),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(1.0),
+                            ),
                           ),
+                        ),
+                          onPressed:
+                        (){
+                        Navigator.of(context).pop();
+                        },
+                          child: const Center(
+                        child: Text("Cancel", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,),),
+                      )),
+                    ),
+                  ),
+                      SizedBox(
+                        child: SizedBox(
+                        height: 40,
+                        width: 170,
+                        child: TextButton(
+                        style: ButtonStyle(
+                          overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
+                          backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
+                          elevation: MaterialStateProperty.all(1.0),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(7.0),
+                            ),
+                          ),
+                        ),
+                        onPressed: isButtonActive ? () async {
+                        if (Human().address?.toString() != widget.project.author?.toString()) {
+                          showDialog(
+                            context: context,
+                            builder: (context) => const AlertDialog(
+                              content: SizedBox(height: 100, width: 400, child: Center(child: Text("You are not signed in as the Author of this Project.", textAlign: TextAlign.center,))),
+                            ),
+                          );
+                        } else {
+                          // Proceed with the transaction if the user is the author
+                             setState(() {
+                                widget.waiting=true;
+                              });
+                          String cevine = await cf.setNativeParties(widget.project, this);
+                          if (cevine.contains("nu merge")){
+                            print("nu merge din setParty");
+                            return;
+                          }
+                          widget.project.status = "pending";
+                          await projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
+                          Navigator.of(context).pushNamed("/projects/${widget.project.contractAddress}");
+                        }
+                      } : null,
+                          
+                          child: const Center(
+                        child: Text("SUBMIT", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color:Colors.black),),
+                      ))
+                      ),
+                              ),
+                    ],
+                  ),
                         ) 
-        ],
-      ),
-    );
-  }
+                    ],
+                  ),
+                );
+              }
 
- 
-}
+
+
+            
+            }
 
 

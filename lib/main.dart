@@ -19,9 +19,9 @@ import 'entities/project.dart';
 import 'firebase_options.dart';
 import 'screens/disputes.dart';
 
+String metamask="https://i.ibb.co/HpmDHg0/metamask.png";
 double switchAspect=1.2;
 List<Project> projects=[];
-List<Voter> voters=[];
 String sourceAddress="";
 int valueInContracts=0;
 int usdtStored=0;
@@ -76,7 +76,6 @@ var projectsCollection;
     projects.add(p);
     p.contributions.forEach((key, value) { valueInContracts+=value;});
   }
-
   
   await cf.getProjectsCounter();
   print("we have this many projects: "+numberOfProjects.toString());
@@ -112,10 +111,10 @@ class MyApp extends StatelessWidget {
           if (settings.name == '/') {
             builder = (_) => 
             // ProjectDetails(project: projects[0]);
-            Prelaunch();
+            // Prelaunch();
             // Poll();
             //  BaseScaffold(selectedItem: 0, body: Profile(), title: "Profile");
-            // BaseScaffold(selectedItem: 1,body: Projects(), title: "Projects");
+            BaseScaffold(selectedItem: 1,body: Projects(), title: "Projects");
           } else if (settings.name!.startsWith('/projects/')) {
             final projectId = settings.name!.replaceFirst('/projects/', '');
             Project? project;
@@ -389,7 +388,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
               )
           ];
     return   Scaffold(
-           appBar: AppBar(
+          appBar: AppBar(
          toolbarHeight: 42,
          elevation: 1.8,
          automaticallyImplyLeading: MediaQuery.of(context).size.aspectRatio < switchAspect,
@@ -397,7 +396,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
          MediaQuery.of(context).size.aspectRatio >= switchAspect?
          Row(
            children:
-         [ 
+         [ TextButton(onPressed: (){Human().busy=true;Human().notifyListeners();}, child: Text("Set it ")),
             ...botoane,]
          ):  null,
           
@@ -419,15 +418,13 @@ class _BaseScaffoldState extends State<BaseScaffold> {
               // var foundChain = chains.firstWhere((chain) => chain.name ==newValue);
                setState(() {
                  Human().chain=chains[0];
-               });
-                       },
-                     ),
+                });
+                },
+              ),
              ):Text(""),
-             
-             const SizedBox(width: 20 ),
+             const SizedBox(width: 35 ),
            const WalletBTN(),
            const SizedBox(width: 30),
-          
           Switch(
              value: themeNotifier.isDarkMode,
              onChanged: (value) {
@@ -438,9 +435,25 @@ class _BaseScaffoldState extends State<BaseScaffold> {
          ],
          
        ),
-       body: widget.body,
+       body: Consumer(
+        
+         builder: (context, watch, snapshot) {
+           return ListView(
+             children: [
+             Human().busy?SizedBox(
+                height: 2,
+                child: LinearProgressIndicator(
+                  backgroundColor: Theme.of(context).canvasColor,
+                  color: Theme.of(context).indicatorColor,
+                )):Text(""),
+               widget.body,
+             ],
+           );
+         }
+       ),
           drawer: 
-          MediaQuery.of(context).size.aspectRatio <= switchAspect?
+          MediaQuery.of(context).size.aspectRatio <= switchAspect 
+          ?
           Drawer(
          child: ListView(
            padding: EdgeInsets.zero,
@@ -479,7 +492,6 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                  );
                          }).toList(),
                          onChanged: (String? newValue) {
-
                   var foundChain = chains.firstWhere((chain) => chain.name ==newValue);
                setState(() {
                  Human().chain=foundChain;
@@ -527,16 +539,16 @@ class _WalletBTNState extends State<WalletBTN> {
    return 
 
    Human().address==null?
-   
+
    TextButton(onPressed: ()async{
-    // if (Human().metamask==false){
+    if (Human().metamask==false){
       
-    //   showDialog(context: context, builder: (context){return 
-    //   const AlertDialog(
-    //     content: Text("Metamask not detected.")
-    //   );
-    //   });
-    // }
+      showDialog(context: context, builder: (context){return 
+      const AlertDialog(
+        content: Text("Metamask not detected.")
+      );
+      });
+    }
     setState((){
       _isConnecting=true;
     });
@@ -545,15 +557,21 @@ class _WalletBTNState extends State<WalletBTN> {
     setState((){
       _isConnecting=false;
     });
-            
 
    }, child: 
    SizedBox(
     width: 160,
      child: Center(
-       child: Text(
+       child:
         Human().address==null?
-        "Connect Wallet":Human().address!),
+        Row(
+          children: [
+            SizedBox(width: 4),
+            Image.network(metamask,height:27),
+            SizedBox(width: 9),
+            Text("Connect Wallet"),
+          ],
+        ):  Text(Human().address!),
      ),
    ))
     :

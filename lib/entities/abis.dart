@@ -4,7 +4,17 @@ List<String> sourceAbiString=[
 
 
 List<String> nativeProjectAbiString=[
-  'function setParties (address, address, string) payable'
+  'function setParties (address, address, string) payable',
+  'function sendFunds () payable',
+  'function signContract () payable',
+  'function reimburse ()',
+  'function voteToReleasePayment ()',
+  'function voteToDispute ()',
+  'function disputeAsContractor ()',
+  'function arbitrate(uint256, string)',
+  'function withdrawAsContributor ()',
+  'function reclaimArbitrationFee ()',
+  'function withdrawAsContractor ()'
 ];
 
 
@@ -19,7 +29,6 @@ List<String> projectAbiString=[
   'function approveMilestone(uint256)',
   'function batchPayout()',
 ];
-
 
 var economyAbi=
 r'''

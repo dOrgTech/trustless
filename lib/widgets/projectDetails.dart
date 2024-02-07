@@ -371,7 +371,7 @@ String extractGitHubPath(String? repoUrl) {
                                                   fontWeight: FontWeight.normal),
                                             ),
                                             Text(
-                                              widget.project.isUSDT?"USDT":"XTZ",
+                                              widget.project.isUSDT?"USDT":Human().chain.nativeSymbol,
                                               style: const TextStyle(
                                                   fontSize: 25,
                                                   fontWeight: FontWeight.normal),
@@ -453,7 +453,7 @@ String extractGitHubPath(String? repoUrl) {
                                               fontWeight: FontWeight.normal),
                                         ),
                                         Text(
-                                          widget.project.isUSDT?"USDT":"XTZ",
+                                          widget.project.isUSDT?"USDT":Human().chain.nativeSymbol,
                                           style: const TextStyle(
                                               fontSize: 21,
                                               fontWeight: FontWeight.normal),
@@ -499,7 +499,7 @@ String extractGitHubPath(String? repoUrl) {
                                               fontWeight: FontWeight.normal),
                                         ),
                                         Text(
-                                          widget.project.isUSDT?"USDT":"XTZ",
+                                          widget.project.isUSDT?"USDT":Human().chain.nativeSymbol,
                                           style: const TextStyle(
                                               fontSize: 21,
                                               fontWeight: FontWeight.normal),
@@ -617,16 +617,18 @@ String extractGitHubPath(String? repoUrl) {
       customBorder: Border.all(),
       hoverColor: Color.fromARGB(37, 182, 182, 182),
       onTap: () {
-        Human().address==null?
-         showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  content: SizedBox(height:100, width: 400,child:Center(child: 
-                  Text("Connect your wallet to call functions.")
-                  )),
-                ))
-        : 
+        // Human().address==null?
+        //  showDialog(
+         
+        //     context: context,
+        //     builder: (context) => AlertDialog(
+        //           content: SizedBox(height:100, width: 400,child:Center(child: 
+        //           Text("Connect your wallet to call functions.")
+        //           )),
+        //         ))
+        // : 
         showDialog(
+           barrierDismissible: false,
             context: context,
             builder: (context) => AlertDialog(
                   content: target,

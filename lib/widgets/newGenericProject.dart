@@ -268,18 +268,18 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                   width: 170,
                   child: 
                   TextButton(
-  style: ButtonStyle(
-    overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
-    backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent), // Set background color to black
-    elevation: MaterialStateProperty.all(1.0),
-    shape: MaterialStateProperty.all(
-      RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(1.0),
-        side: BorderSide(color: Theme.of(context).indicatorColor, width: 1.0), // Use current indicatorColor for outline
-      ),                                                                                                                                                                                
-    ),
-    shadowColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor), // Optional: Use for shadow
-  ),
+            style: ButtonStyle(
+              overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent), // Set background color to black
+              elevation: MaterialStateProperty.all(1.0),
+              shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(1.0),
+                  side: BorderSide(color: Theme.of(context).indicatorColor, width: 1.0), // Use current indicatorColor for outline
+                ),                                                                                                                                                                                
+              ),
+              shadowColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor), // Optional: Use for shadow
+            ),
                   onPressed: () async {
                       widget.project.author = Human().address;
                       setState(() {

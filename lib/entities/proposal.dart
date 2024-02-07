@@ -39,7 +39,7 @@ var newProposalWidgets={
   "DAO Configuration": NotImplemented(),
   "Change Guardian": NotImplemented(),
   "Change DAO Delegate":NotImplemented(),
-   "Fund Project": FundProject(org:orgs[0]),
+  //  "Fund Project": FundProject(org:orgs[0]),
 };
 
 class NotImplemented extends StatelessWidget {

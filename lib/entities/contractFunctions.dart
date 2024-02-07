@@ -29,7 +29,6 @@ class ContractFunctions{
       return rezultat;
     }
     
-
     createProject(Project project,state)async{
     final BigInt valueInWei = BigInt.from(100);
     final txOptions = project.status == "open" ? {} : jsify({'value': BigInt.from(100).toString()});
@@ -56,7 +55,6 @@ class ContractFunctions{
           callMethod(Human().web3user!, 'waitForTransaction', [hash]));
       if (json.decode(stringify(result))["status"] == 0) {
       print("nu merge eroare de greseala");
-      //  om.setNotBusy();
         return "not ok";
       } else {
         var rezultat=(json.decode(stringify(result)));
@@ -71,65 +69,167 @@ class ContractFunctions{
                 print("added project");
                 print("suntem inainte de pop");
             }
-            
-    //  om.setNotBusy();
-     return projectAddress;
+        return projectAddress;
+        }
+      } catch (e) {    
+          print("nu s-a putut" +e.toString());
+          state.setState(() {
+                              state.widget.done=true;
+                              state.widget.error=true;
+                            });
+        return "still not ok" ;
+
+        }
     }
-  } catch (e) {    
-      print("nu s-a putut" +e.toString());
-      state.setState(() {
-                          state.widget.done=true;
-                          state.widget.error=true;
-                        });
-      // om.setNotBusy();
-     return "still not ok" ;
 
-    }
-}
+      setNativeParties(Project project,state)async{
+      final BigInt valueInWei = BigInt.from(100);
+      final txOptions = jsify({'value': BigInt.from(100).toString()});
+      var sourceContract = Contract(project.contractAddress!, nativeProjectAbiString, Human().web3user);
+        try {
+          sourceContract = sourceContract.connect(Human().web3user!.getSigner());
+          print("signed ok");
+          final transaction =
+            await promiseToFuture(callMethod(sourceContract, "setParties", [
+            project.contractor,
+            project.arbiter,
+            project.termsHash,
+            txOptions
+            ],
+            ));
+              print("facuram tranzactia");
+        final hash = json.decode(stringify(transaction))["hash"];
+        print("hash " + hash.toString());
+        final result = await promiseToFuture(
+            callMethod(Human().web3user!, 'waitForTransaction', [hash]));
+        if (json.decode(stringify(result))["status"] == 0) {
+        print("nu merge eroare de greseala");
+        //  om.setNotBusy();
+          return "nu merge";
+        } else {
+          var rezultat=(json.decode(stringify(result)));
+          print("a venit si "+rezultat.toString());
+          print("e de tipul "+rezultat.runtimeType.toString());
+          return hash.toString();
+        }
+      } catch (e) {
+        print("nu merge c nu s-a putut" +e.toString());
+        // om.setNotBusy();
+      return "nu merge final" ;
+      }
+  }
 
+    sendFunds(Project project, amount)async{
+      print("sending funds");
+      Human().busy=true;
+      final BigInt valueInWei = BigInt.from(int.parse(amount.toString()));
+      final txOptions = jsify({'value': valueInWei.toString()});
+      var sourceContract = Contract(project.contractAddress!, nativeProjectAbiString, Human().web3user);
+        try {
+          sourceContract = sourceContract.connect(Human().web3user!.getSigner());
+          print("signed ok");
+          final transaction = await promiseToFuture(callMethod(
+              sourceContract, 
+              "sendFunds", 
+              [txOptions], // No other arguments to sendFunds method
+               // Pass txOptions correctly
+            ));
+              print("facuram tranzactia");
+        final hash = json.decode(stringify(transaction))["hash"];
+        print("hash " + hash.toString());
+        final result = await promiseToFuture(
+            callMethod(Human().web3user!, 'waitForTransaction', [hash]));
+        if (json.decode(stringify(result))["status"] == 0) {
+        print("nu merge eroare de greseala");
+          Human().busy=false;
+          return "nu merge";
+        } else {
+          var rezultat=(json.decode(stringify(result)));
+          print("a venit si "+rezultat.toString());
+          print("e de tipul "+rezultat.runtimeType.toString());
+          Human().busy=false;
+          return hash.toString();
+        }
+      } catch (e) {    
+          print("nu merge c nu s-a putut" +e.toString());
+        return "nu merge final" ;
+      }
+  }
 
-    setNativeParties(Project project,state)async{
-    final BigInt valueInWei = BigInt.from(100);
-    final txOptions = jsify({'value': BigInt.from(100).toString()});
-    var sourceContract = Contract(project.contractAddress!, nativeProjectAbiString, Human().web3user);
-      try {
-        sourceContract = sourceContract.connect(Human().web3user!.getSigner());
-        print("signed ok");
-        final transaction =
-          await promiseToFuture(callMethod(sourceContract, "createProject", [
-          project.contractor,
-          project.arbiter,
-          txOptions
-          ],
-          ));
-            print("facuram tranzactia");
+  sign(Project project)async{
+      print("signing...");
+      Human().busy=true;
+       final BigInt valueInWei = BigInt.from(100);
+      final txOptions = jsify({'value': BigInt.from(100).toString()});
+      var sourceContract = Contract(project.contractAddress!, nativeProjectAbiString, Human().web3user);
+        try {
+          sourceContract = sourceContract.connect(Human().web3user!.getSigner());
+          print("signed ok");
+          final transaction = await promiseToFuture(callMethod(
+              sourceContract, 
+              "signContract",
+              [txOptions], // No other arguments to sendFunds method
+               // Pass txOptions correctly
+            ));
+              print("facuram tranzactia");
+        final hash = json.decode(stringify(transaction))["hash"];
+        print("hash " + hash.toString());
+        final result = await promiseToFuture(
+            callMethod(Human().web3user!, 'waitForTransaction', [hash]));
+        if (json.decode(stringify(result))["status"] == 0) {
+        print("nu merge eroare de greseala");
+          Human().busy=false;
+          return "nu merge";
+        } else {
+          var rezultat=(json.decode(stringify(result)));
+          print("a venit si "+rezultat.toString());
+          print("e de tipul "+rezultat.runtimeType.toString());
+          Human().busy=false;
+          return hash.toString();
+        }
+      } catch (e) {    
+          print("nu merge c nu s-a putut" +e.toString());
+        return "nu merge final" ;
+      }
+  }
 
-      final hash = json.decode(stringify(transaction))["hash"];
-      print("hash " + hash.toString());
-      final result = await promiseToFuture(
-          callMethod(Human().web3user!, 'waitForTransaction', [hash]));
-      if (json.decode(stringify(result))["status"] == 0) {
-      print("nu merge eroare de greseala");
-      //  om.setNotBusy();
-        return "not ok";
-      } else {
-        var rezultat=(json.decode(stringify(result)));
-        print("a venit si "+rezultat.toString());
-        print("e de tipul "+rezultat.runtimeType.toString());
-        
-        return hash.toString();
-    }
-  } catch (e) {    
-      print("nu s-a putut" +e.toString());
-      state.setState(() {
-                          state.widget.done=true;
-                          state.widget.error=true;
-                        });
-      // om.setNotBusy();
-     return "still not ok" ;
+   reimburse(Project project)async{
+      print("signing...");
+      Human().busy=true;
+      Human().notifyListeners();
+      var sourceContract = Contract(project.contractAddress!, nativeProjectAbiString, Human().web3user);
+        try {
+          sourceContract = sourceContract.connect(Human().web3user!.getSigner());
+          print("signed ok");
+          final transaction = await promiseToFuture(callMethod(
+              sourceContract, 
+              "reimburse",
+              [],
+            ));
+              print("facuram tranzactia");
+        final hash = json.decode(stringify(transaction))["hash"];
+        print("hash $hash");
+        final result = await promiseToFuture(
+            callMethod(Human().web3user!, 'waitForTransaction', [hash]));
+        if (json.decode(stringify(result))["status"] == 0) {
+        print("nu merge eroare de greseala");
+          Human().busy=false;
+          Human().notifyListeners();
+          return "nu merge";
+        } else {
+          var rezultat=(json.decode(stringify(result)));
+          print("a venit si "+rezultat.toString());
+          print("e de tipul "+rezultat.runtimeType.toString());
+          Human().busy=false;
+          Human().notifyListeners();
+          return hash.toString();
+        }
+      } catch (e) {    
+          print("nu merge c nu s-a putut" +e.toString());
+        return "nu merge final" ;
+      }
+  }
 
-    }
-}
 
 getProjectAddress(counter)async{
   var httpClient = Client(); 

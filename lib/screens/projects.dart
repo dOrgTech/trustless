@@ -108,10 +108,7 @@ class ProjectsState extends State<Projects> {
                           Text("projects"),
                           SizedBox(width: 60),
             // HoverExpandWidget(projectsState: this),
-            Consumer<AppState>(
-  builder: (context, provider, child) {
-
-                return ElevatedButton(onPressed: (){
+            ElevatedButton(onPressed: (){
                         Human().address==null?
                      showDialog(
                 context: context,
@@ -146,9 +143,8 @@ class ProjectsState extends State<Projects> {
                                 
                                 ),
                               ),
-                            ));
-              }
-            ),
+                            )),
+              
                       SizedBox(
                         width: 10,
                       ),

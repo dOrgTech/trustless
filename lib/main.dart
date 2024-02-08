@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_web3_provider/ethereum.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:trustless/entities/contractFunctions.dart';
 import 'package:trustless/screens/landing.dart';
@@ -18,7 +19,7 @@ import 'entities/human.dart';
 import 'entities/project.dart';
 import 'firebase_options.dart';
 import 'screens/disputes.dart';
-
+import 'package:provider/provider.dart';
 String metamask="https://i.ibb.co/HpmDHg0/metamask.png";
 double switchAspect=1.2;
 List<Project> projects=[];
@@ -80,9 +81,9 @@ var projectsCollection;
   
   await cf.getProjectsCounter();
   print("we have this many projects: "+numberOfProjects.toString());
-      runApp(
-    ChangeNotifierProvider(
-      create: (context) => AppState(),
+  runApp(
+   ChangeNotifierProvider<Human>(
+      create: (context) => Human(),
       child: MyApp(),
     ));
     }
@@ -159,31 +160,29 @@ class MyApp extends StatelessWidget {
             transitionDuration: const Duration(milliseconds: 300), // Adjust duration as needed
           );
         }
-        
-        
               // Remove the 'routes' map if all routes are handled in 'onGenerateRoute'
             ),
       ),
     );
   }
 }
-class AppState extends ChangeNotifier {
-  bool _ignoreInput = false;
-  bool _showDialog = false; // Add this line
+// class AppState extends ChangeNotifier {
+//   bool _ignoreInput = false;
+//   bool _showDialog = false; // Add this line
 
-  bool get ignoreInput => _ignoreInput;
-  bool get showDialog => _showDialog; // Add this getter
+//   bool get ignoreInput => _ignoreInput;
+//   bool get showDialog => _showDialog; // Add this getter
 
-  void setIgnoreInput(bool ignore) {
-    _ignoreInput = ignore;
-    notifyListeners();
-  }
+//   void setIgnoreInput(bool ignore) {
+//     _ignoreInput = ignore;
+//     notifyListeners();
+//   }
 
-  void setShowDialog(bool show) { // Add this method
-    _showDialog = show;
-    notifyListeners();
-  }
-}
+//   void setShowDialog(bool show) { // Add this method
+//     _showDialog = show;
+//     notifyListeners();
+//   }
+// }
 
 class BaseScaffold extends StatefulWidget {
  
@@ -226,9 +225,9 @@ class _BaseScaffoldState extends State<BaseScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    // final chainNames = chains.map((chain) => chain.name).toList();
-
-      final List<String> chainNames = ['Goerli','Etherlink-Testnet'];
+  
+  final List<String> chainNames =[];
+   chains.forEach((key, value) {chainNames.add(value.name); });
 
   // The current selected value of the dropdown
   // String? selectedValue = 'Etherlink Testnet';
@@ -388,6 +387,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                 ),
               )
           ];
+          var human = Provider.of<Human>(context);
     return   Scaffold(
           appBar: AppBar(
          toolbarHeight: 42,
@@ -404,24 +404,26 @@ class _BaseScaffoldState extends State<BaseScaffold> {
          actions: <Widget>[
            
            MediaQuery.of(context).size.aspectRatio > switchAspect?
-              Padding(
-               padding: const EdgeInsets.only(top:0.0),
-               child: DropdownButton<String>(
-                       value: Human().chain.name,
-                       focusColor: Colors.transparent,
-                       items: chainNames.map((String value) {
-               return DropdownMenuItem<String>(
-                 value: value,
-                 child: Text(value),
-               );
-                       }).toList(),
-                       onChanged: (String? newValue) {
-              // var foundChain = chains.firstWhere((chain) => chain.name ==newValue);
-               setState(() {
-                 Human().chain=chains[0];
-                });
-                },
-              ),
+              Container(
+                height: 9,
+                padding: EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                                border: Border.all(width: 0.1 , color: Theme.of(context).textTheme.bodyLarge!.color! ),
+                                color: Theme.of(context).indicatorColor.withOpacity(0.1)
+                              ),
+              child: Row(
+                children: [
+                  Icon(Icons.connect_without_contact_sharp, size: 29,
+                  color: Theme.of(context).indicatorColor,
+                  ),
+                  SizedBox(width: 12),
+                  Text( human.chain.name
+                  ,style: GoogleFonts.orbitron(
+                    color: Theme.of(context).indicatorColor,
+                    fontSize: 17),
+                  )
+                ],
+              )
              ):Text(""),
              const SizedBox(width: 35 ),
            const WalletBTN(),
@@ -436,10 +438,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
          ],
          
        ),
-       body: Consumer(
-        
-         builder: (context, watch, snapshot) {
-           return ListView(
+       body: ListView(
              children: [
              Human().busy?SizedBox(
                 height: 2,
@@ -447,11 +446,11 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                   backgroundColor: Theme.of(context).canvasColor,
                   color: Theme.of(context).indicatorColor,
                 )):Text(""),
+               human.wrongChain?Container(child: Center(child: Text("Wrong chain, mate.")),):
                widget.body,
              ],
-           );
-         }
-       ),
+           )
+         ,
           drawer: 
           MediaQuery.of(context).size.aspectRatio <= switchAspect 
           ?
@@ -484,7 +483,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                child: SizedBox(
                  width: 60,
                  child: DropdownButton<String>(
-                         value: Human().chain.name,
+                         value: human.chain.name,
                          focusColor: Colors.transparent,
                          items: chainNames.map((String value) {
                  return DropdownMenuItem<String>(
@@ -493,9 +492,16 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                  );
                          }).toList(),
                          onChanged: (String? newValue) {
-                  var foundChain = chains.firstWhere((chain) => chain.name ==newValue);
+                  Chain? foundChain;
+                  for (Chain cgn in chains.values){
+                    if (newValue==cgn.name){
+                    foundChain=cgn;
+                  }}
+              
+              foundChain ??= Chain(id: 0, name: 'N/A', nativeSymbol: '', decimals: 0, rpcNode: '');
+            
                setState(() {
-                 Human().chain=foundChain;
+                 human.chain=foundChain!;
                });
                    },
                  ),
@@ -523,104 +529,198 @@ class _WalletBTNState extends State<WalletBTN> {
     // Load existing address
    
   }
+
+
+
   @override
   Widget build(BuildContext context) {
-    if (_isConnecting) {
-          return const SizedBox(
-            width: 160,
-            height: 7,
-            child: Center(
-              child: LinearProgressIndicator(
-                  minHeight: 2,
-                // backgroundColor: Colors.black54,
-              ),
-            ),
-          );
-        }
-   return 
+    // Access Human instance using Provider
+    var human = Provider.of<Human>(context);
 
-   Human().address==null?
-
-   TextButton(onPressed: ()async{
-    if (Human().metamask==false){
-      
-      showDialog(context: context, builder: (context){return 
-      const AlertDialog(
-        content: Text("Metamask not detected.")
+    if (human.busy) {
+      return const SizedBox(
+        width: 160,
+        height: 7,
+        child: Center(
+          child: LinearProgressIndicator(
+            minHeight: 2,
+          ),
+        ),
       );
-      });
     }
-    setState((){
-      _isConnecting=true;
-    });
 
-      await Human().signIn();
-    setState((){
-      _isConnecting=false;
-    });
-
-   }, child: 
-   SizedBox(
-    width: 160,
-     child: Center(
-       child:
-        Human().address==null?
-        Row(
-          children: [
-            SizedBox(width: 4),
-            Image.network(metamask,height:27),
-            SizedBox(width: 9),
-            Text("Connect Wallet"),
-          ],
-        ):  Text(Human().address!),
-     ),
-   ))
-    :
-   SizedBox(
-      width: 160,
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<String>(
-          focusColor: Colors.transparent,
-          isExpanded: true,
-          value: getShortAddress(Human().address!.toString()),
-          icon: const Icon(Icons.arrow_drop_down),
-          hint: Text(shortenString(Human().address!.toString())),
-          onChanged: (value) {
-            // Implement actions based on dropdown selection
-            if (value == 'Profile') {
-      Navigator.of(context).push(
+    return TextButton(
+      
+      onPressed: () async {
+        if (!human.metamask) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return const AlertDialog(
+                content: Text("Metamask not detected."),
+              );
+            },
+          );
+        } else {
+          // Since we're in a StatelessWidget, no need to call setState
+        if ( human.address == null)
+        {
+        setState(() {  
+        human.busy=true;
+        });
+         await human.signIn(); 
+        setState(() {
+          human.busy=false;
+        });
+        }
+        else{
+           Navigator.of(context).push(
         MaterialPageRoute(
           builder: ((context) =>
             BaseScaffold(selectedItem: 0, body: Profile(), title: "Profile")
           )
         )
       );
-    }
-          },
-          items: [
-            DropdownMenuItem(
-              value: getShortAddress(Human().address!.toString()),
-              child: Text(shortenString(Human().address!.toString())),
-            ),
-            DropdownMenuItem(
-              value: 'Profile',
-              child: const Text('Profile'),
-            
-            ),
-            const DropdownMenuItem(
-              value: 'Switch Address',
-              child: Text('Switch Address'),
-            ),
-            const DropdownMenuItem(
-              value: 'Disconnect',
-              child: Text('Disconnect'),
-            ),
-          ],
+        }
+        }
+      },
+      child: SizedBox(
+        width: 160,
+        child: Center(
+          child: human.address == null
+              ? Row(
+                  children: [
+                    const SizedBox(width: 4),
+                    Image.network(metamask, height: 27), // Adjust the URL
+                    const SizedBox(width: 9),
+                    const Text("Connect Wallet"),
+                  ],
+                )
+              : Row(
+                children: [
+                  Icon(Icons.person),
+                  Text(getShortAddress(human.address!)),
+                ],
+              ),
         ),
       ),
     );
-   }
- }
+  }
+}
+
+
+// class WalletBTN extends StatefulWidget {
+//   const WalletBTN({super.key});
+
+//   @override
+//   State<WalletBTN> createState() => _WalletBTNState();
+// }
+
+// class _WalletBTNState extends State<WalletBTN> {
+//  bool _isConnecting=false;
+//   void initState() {
+//     super.initState();
+//     // Load existing address
+   
+//   }
+//   @override
+//   Widget build(BuildContext context) {
+//     if (_isConnecting) {
+//           return const SizedBox(
+//             width: 160,
+//             height: 7,
+//             child: Center(
+//               child: LinearProgressIndicator(
+//                   minHeight: 2,
+//                 // backgroundColor: Colors.black54,
+//               ),
+//             ),
+//           );
+//         }
+//    return 
+
+//    Human().address==null?
+
+//    TextButton(onPressed: ()async{
+//     if (Human().metamask==false){
+      
+//       showDialog(context: context, builder: (context){return 
+//       const AlertDialog(
+//         content: Text("Metamask not detected.")
+//       );
+//       });
+//     }
+//     setState((){
+//       _isConnecting=true;
+//     });
+
+//       await Human().signIn();
+//     setState((){
+//       _isConnecting=false;
+//     });
+
+//    }, child: 
+//    SizedBox(
+//     width: 160,
+//      child: Center(
+//        child:
+//         Human().address==null?
+//         Row(
+//           children: [
+//             SizedBox(width: 4),
+//             Image.network(metamask,height:27),
+//             SizedBox(width: 9),
+//             Text("Connect Wallet"),
+//           ],
+//         ):  Text(Human().address!),
+//      ),
+//    ))
+//     :
+//    SizedBox(
+//       width: 160,
+//       child: DropdownButtonHideUnderline(
+//         child: DropdownButton<String>(
+//           focusColor: Colors.transparent,
+//           isExpanded: true,
+//           value: getShortAddress(Human().address!.toString()),
+//           icon: const Icon(Icons.arrow_drop_down),
+//           hint: Text(shortenString(Human().address!.toString())),
+//           onChanged: (value) {
+//             // Implement actions based on dropdown selection
+//             if (value == 'Profile') {
+//       Navigator.of(context).push(
+//         MaterialPageRoute(
+//           builder: ((context) =>
+//             BaseScaffold(selectedItem: 0, body: Profile(), title: "Profile")
+//           )
+//         )
+//       );
+//     }
+//           },
+//           items: [
+//             DropdownMenuItem(
+//               value: getShortAddress(Human().address!.toString()),
+//               child: Text(shortenString(Human().address!.toString())),
+//             ),
+//             DropdownMenuItem(
+//               value: 'Profile',
+//               child: const Text('Profile'),
+            
+//             ),
+//             const DropdownMenuItem(
+//               value: 'Switch Address',
+//               child: Text('Switch Address'),
+//             ),
+//             const DropdownMenuItem(
+//               value: 'Disconnect',
+//               child: Text('Disconnect'),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//    }
+//  }
 
 // import 'package:flutter/material.dart';
 

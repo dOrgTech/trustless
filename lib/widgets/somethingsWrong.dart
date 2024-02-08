@@ -4,21 +4,39 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 
+import '../entities/project.dart';
+
 class SomethingWentWrong extends StatelessWidget {
+  Project project;
    List <String> memes=[
-    "https://lh3.googleusercontent.com/proxy/fL5LN9RijNtoXik5kkrjSmQEI996WSbUwBq_qm11l9CE3Rm_WXRWxxB7Pzla5_xmDe4-1CDJoHjfLP_d0KFlBLjUU6o7hGZ6XVu_5TxNEfFdHjRPsK3r8hhjfS5Y-RRO_CEvmxihgLx9qN2K2WSJgdTlyG4BTdKVqWQ",
+     "https://i.ibb.co/wCq1MZq/image.png",
       "https://i.imgflip.com/3811ub.jpg?a473712",
       "https://media.makeameme.org/created/oops-something-went-5d2365e3cb.jpg",
       "https://media.makeameme.org/created/oops-something-went-bbf91c282f.jpg"
    ];
-  SomethingWentWrong({super.key});
+  SomethingWentWrong({super.key, required this.project});
 
   @override
   Widget build(BuildContext context) {
      Random random = Random();
     return  Container(
-      height: 300,
-      child: Image.network(memes[random.nextInt(memes.length)])
+      height: 590,
+      width: 400,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.network(memes[random.nextInt(memes.length) ], height: 400,),
+            const SizedBox(height:25),
+            const Text("The transaction failed. Debug info can be found in the app's dev console or in the block explorer."),
+            const SizedBox(height:35),
+            ElevatedButton(onPressed: (){
+              Navigator.of(context).pushNamed("/projects/${project.contractAddress}");
+            }, child: Text("OK"))
+           
+          ],
+        ),
+      )
     );
   }
 }

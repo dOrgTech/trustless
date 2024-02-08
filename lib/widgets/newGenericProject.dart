@@ -148,7 +148,7 @@ class _NewGenericProjectState extends State<NewGenericProject> {
   bool pressedDesc = false;
   stage2(){
          return Container(
-          key: ValueKey(2),
+          key: const ValueKey(2),
        constraints: const BoxConstraints(
        ),
       child: Column(
@@ -178,47 +178,47 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                  ),
                   SizedBox(
                     width: 470,
-                    child: Text(widget.project.description!, style: TextStyle(  backgroundColor: Colors.black,
+                    child: Text(widget.project.description!, style: const TextStyle(  backgroundColor: Colors.black,
                               color: Colors.white,),),
                   ),
             ],)
           ],),
-          SizedBox(height: 30),
+          const SizedBox(height: 30),
              Row(children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text("Currency:"),
-                SizedBox(height: 8),
-                Text("author (you):"),
-                SizedBox(height: 8),
-                Text("Project Repository:"),
-                SizedBox(height: 8),
-                Text("Terms File:"),
-                SizedBox(height: 8),
-                Text("Terms Hash:"),
-                SizedBox(height: 8),
-                Text("Contractor:"),
-                SizedBox(height: 8),
-                Text("Arbiter:"),
+                const Text("Currency:"),
+                const SizedBox(height: 8),
+                const Text("author (you):"),
+                const SizedBox(height: 8),
+                const Text("Project Repository:"),
+                const SizedBox(height: 8),
+                const Text("Terms File:"),
+                const SizedBox(height: 8),
+                const Text("Terms Hash:"),
+                const SizedBox(height: 8),
+                const Text("Contractor:"),
+                const SizedBox(height: 8),
+                const Text("Arbiter:"),
             ],),
          const SizedBox(width: 20),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(widget.project.isUSDT?"USDT":"XTZ", style: TextStyle( backgroundColor: Colors.black,color: Colors.white),),
-                SizedBox(height: 8),
-                Text(Human().address??"3dp317hdqo8we7dhoq873hod827dh" ,style: TextStyle( backgroundColor: Colors.black,color: Colors.white), ),
-                SizedBox(height: 10),
-                Text(widget.project.repo!,style: TextStyle( backgroundColor: Colors.black,color: Colors.white),),
-                SizedBox(height: 8),
-                Text(widget.project.hashedFileName!.length<3?"N/A":widget.project.hashedFileName!,style: TextStyle( backgroundColor: Colors.black,color: Colors.white),),
-                SizedBox(height: 10),
-                Text(widget.project.termsHash!.length<3?"N/A":widget.project.termsHash!,style: TextStyle(fontSize: 11, backgroundColor: Colors.black,color: Colors.white),),
-                SizedBox(height: 8),
-                Text(widget.project.contractor!.length<3?"N/A":widget.project.contractor!, style: TextStyle( backgroundColor: Colors.black,color: Colors.white),),
-                SizedBox(height: 8),
-                Text(widget.project.arbiter!.length<3?"N/A":widget.project.arbiter!, style: TextStyle( backgroundColor: Colors.black,color: Colors.white),),
+                Text(widget.project.isUSDT?"USDT":Human().chain.nativeSymbol, style: const TextStyle( backgroundColor: Colors.black,color: Colors.white),),
+                const SizedBox(height: 8),
+                Text(Human().address??"3dp317hdqo8we7dhoq873hod827dh" ,style: const TextStyle( backgroundColor: Colors.black,color: Colors.white), ),
+                const SizedBox(height: 10),
+                Text(widget.project.repo!,style: const TextStyle( backgroundColor: Colors.black,color: Colors.white),),
+                const SizedBox(height: 8),
+                Text(widget.project.hashedFileName!.length<3?"N/A":widget.project.hashedFileName!,style: const TextStyle( backgroundColor: Colors.black,color: Colors.white),),
+                const SizedBox(height: 10),
+                Text(widget.project.termsHash!.length<3?"N/A":widget.project.termsHash!,style: const TextStyle(fontSize: 11, backgroundColor: Colors.black,color: Colors.white),),
+                const SizedBox(height: 8),
+                Text(widget.project.contractor!.length<3?"N/A":widget.project.contractor!, style: const TextStyle( backgroundColor: Colors.black,color: Colors.white),),
+                const SizedBox(height: 8),
+                Text(widget.project.arbiter!.length<3?"N/A":widget.project.arbiter!, style: const TextStyle( backgroundColor: Colors.black,color: Colors.white),),
             ],)
           ],),
           const SizedBox(height: 45), 
@@ -228,13 +228,13 @@ class _NewGenericProjectState extends State<NewGenericProject> {
             :
             "You may deploy this open project without staking half of the arbitration fee, but will need to to so later when you set the parties and terms. While the project is open and/or pending, people can send and withdraw funds from it at will. One can only withdraw what they previously put in."
             ),
-          SizedBox(height: 25),
+          const SizedBox(height: 25),
             Row(children: [
             Padding(
               padding: const EdgeInsets.only(left:178.0),
               child: Column(  
                 crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
+                children: const [
                   Text("Arbitration fee: "),
                   SizedBox(height: 8),
                   Text("Due now: "),
@@ -244,14 +244,14 @@ class _NewGenericProjectState extends State<NewGenericProject> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(widget.project.isUSDT?"160.0 USDT":"214.00 XTZ"),
+                Text(widget.project.isUSDT?"160.0 USDT":"200.00 ${Human().chain.nativeSymbol}"),
                 const SizedBox(height: 8),
                 Text(
                   widget.project.status=="pending"
                          ?
-                  widget.project.isUSDT?"80.0 USDT":"107.00 XTZ"
+                  widget.project.isUSDT?"80.0 USDT":"100.00 ${Human().chain.nativeSymbol}"
                          :
-                 widget.project.isUSDT?"0.00 USDT":"0.00 XTZ"
+                 widget.project.isUSDT?"0.00 USDT":"0.00 ${Human().chain.nativeSymbol}"
                 ),
             ],),
           ],),
@@ -298,7 +298,7 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                       });
                       Navigator.of(context).pushNamed("/");
                   },
-                  child:  Center(
+                  child:  const Center(
                     child: Text(
                       "DEPLOY PROJECT",
                       style: TextStyle(
@@ -316,18 +316,18 @@ class _NewGenericProjectState extends State<NewGenericProject> {
   }
   stage14(){
       return Container(
-        key: ValueKey(4),
+        key: const ValueKey(4),
       width:800,
        constraints: const BoxConstraints(minHeight: 500),
       child: Column(
         children: [
            
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           const Opacity(
             opacity: 0.9,
             child: Text("Set an Arbiter",style: TextStyle(fontSize: 22),)),
           const SizedBox(height: 40),
-           Text("This is a third party with authority to allocate the funds held in escrow in the event of a dispute. Both you and the Contractor hold the prerogative to initiate a dispute. The address must be of a Smart Contract, not of a User Wallet."),
+           const Text("This is a third party with authority to allocate the funds held in escrow in the event of a dispute. Both you and the Contractor hold the prerogative to initiate a dispute. The address must be of a Smart Contract, not of a User Wallet."),
           const SizedBox(height: 50),
           SizedBox(
                     // width:630,
@@ -374,9 +374,9 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                           },
                            child:  Center(
                          child:  widget.project.arbiter!.length<3||widget.project.contractor!.length<3||widget.project.termsHash!.length < 3 ?
-                          Text("   Skip   ", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, ),)
+                          const Text("   Skip   ", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, ),)
                           :
-                          Text("CONTINUE", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, ),),
+                          const Text("CONTINUE", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, ),),
                                                  )),
                       ),
                     ],
@@ -387,13 +387,13 @@ class _NewGenericProjectState extends State<NewGenericProject> {
   }
   stage13(){
     return Container(
-      key: ValueKey(3),
+      key: const ValueKey(3),
       width:800,
        constraints: const BoxConstraints(minHeight: 500),
       child: Column(
         children: [
            
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           const Opacity(
             opacity: 0.9,
             child: Text("Set a Contractor",style: TextStyle(fontSize: 22),)),
@@ -448,9 +448,9 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                            child: Center(
                           child: 
                           widget.project.contractor!.length<3?
-                          Text("   Skip   ", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,),)
+                          const Text("   Skip   ", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,),)
                           :
-                          Text("CONTINUE", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, ),),
+                          const Text("CONTINUE", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, ),),
                         )),
                       ),
                     ],
@@ -462,7 +462,7 @@ class _NewGenericProjectState extends State<NewGenericProject> {
   stage12(){
     
     return Container(
-      key: ValueKey(2),
+      key: const ValueKey(2),
        constraints: const BoxConstraints(minHeight: 500),
       child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -480,10 +480,10 @@ class _NewGenericProjectState extends State<NewGenericProject> {
       text: TextSpan(
         style: DefaultTextStyle.of(context).style,
         children: <TextSpan>[
-          TextSpan(text: "For a smooth arbitration, it's recommended to clone and customize "),
+          const TextSpan(text: "For a smooth arbitration, it's recommended to clone and customize "),
           TextSpan(
             text: 'this template',
-            style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+            style: const TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
             recognizer: TapGestureRecognizer()
               ..onTap = () {
                 launch('https://github.com/dOrgTech/template-project');
@@ -605,7 +605,7 @@ const SizedBox(
   }
   stage1(){
     return Container(
-      key: ValueKey(1),
+      key: const ValueKey(1),
       constraints: const BoxConstraints(minHeight: 500),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -618,19 +618,19 @@ const SizedBox(
   text: TextSpan(
     style: DefaultTextStyle.of(context).style, // Set default text style from the theme
     children: <TextSpan>[
-      TextSpan(
+      const TextSpan(
         text: "If you already have already reached an arrangement with someone for the work specified in this Project, add their wallet or contract address in the field below. Their participation will be formalized once they sign this Project contract and stake half of the arbitration fee. You also need to specify the Arbiter at this point. Please refer to ",
       ),
       TextSpan(
         text: 'the docs',
-        style: TextStyle(color: Colors.blue),
+        style: const TextStyle(color: Colors.blue),
         recognizer: TapGestureRecognizer()
           ..onTap = () {
             // Link handling code
             launch("https://your-link-to-the-docs.com");
           },
       ),
-      TextSpan(
+      const TextSpan(
         text: " to learn more about the role of the arbiter.",
       ),
     ],
@@ -707,7 +707,7 @@ const SizedBox(
                   opacity: 0.7,
                   child: Text(_fileName.isNotEmpty ? 'File hash: ':"",)
                   ),
-                Text('$_hash', style:  TextStyle(fontWeight: FontWeight.w100, color:Color.fromRGBO(253, 251, 231, 1), backgroundColor: Colors.black),),
+                Text('$_hash', style:  const TextStyle(fontWeight: FontWeight.w100, color:Color.fromRGBO(253, 251, 231, 1), backgroundColor: Colors.black),),
               ],
             ),
           )),
@@ -771,7 +771,7 @@ const SizedBox(
                           ? 
                       "CONTINUE":"Skip"
                     
-                    , style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, ),),
+                    , style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, ),),
                   )),
                 )
                             ],
@@ -783,7 +783,7 @@ const SizedBox(
   }
   stage0(){
     return  Container(
-      key: ValueKey(0),
+      key: const ValueKey(0),
       // constraints: const BoxConstraints(minHeight: 500),
       child: Center(
         child: Column(
@@ -805,8 +805,8 @@ const SizedBox(
                           border: Border.all(width: .5,
                           color: 
                              widget.project.isUSDT?
-                              Color.fromARGB(255, 122, 133, 126):
-                              Color.fromARGB(255, 122, 127, 133)
+                              const Color.fromARGB(255, 122, 133, 126):
+                              const Color.fromARGB(255, 122, 127, 133)
                           )
                         ),
                         child: Column(
@@ -817,11 +817,11 @@ const SizedBox(
                               width:550,
                               color:
                               widget.project.isUSDT?
-                              Color.fromARGB(255, 122, 133, 126):
-                              Color.fromARGB(255, 122, 127, 133)
+                              const Color.fromARGB(255, 122, 133, 126):
+                              const Color.fromARGB(255, 122, 127, 133)
                               ,
                               
-                              height: 30,child:Center(child: Text("Select Currency", style:TextStyle(color:Colors.white)))),
+                              height: 30,child:const Center(child: Text("Select Currency", style:TextStyle(color:Colors.white)))),
                             SizedBox(
                               width: 550,
                               child: Padding(
@@ -839,7 +839,7 @@ const SizedBox(
                                               .transparent, // Prevent color change on hover
                                         ),
                                         child: Text(
-                                          "Native (XTZ)",
+                                          "Native (${Human().chain.nativeSymbol})",
                                           style: TextStyle(
                                             color: !widget.project.isUSDT
                                                 ? const Color.fromARGB(255, 110, 152, 206)
@@ -898,7 +898,7 @@ const SizedBox(
                                     ),
                                     TextSpan(
                                       text: " Learn more",
-                                      style: TextStyle(color: Colors.blue),
+                                      style: const TextStyle(color: Colors.blue),
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
                                         launch(widget.project.isUSDT
@@ -914,7 +914,7 @@ const SizedBox(
                           ],
                         ),
                       ),
-                      SizedBox(height: 15),
+                      const SizedBox(height: 15),
       // const Text("Link the project repository. The README.md file should contain a detailed description of the good or service you wish to acquire, to set expectations for your potential contractor.", textAlign: TextAlign.left, style: TextStyle(fontSize: 17.5),),
 SizedBox(
   width:560,
@@ -923,11 +923,11 @@ SizedBox(
           style: DefaultTextStyle.of(context).style.copyWith(fontSize: 14),
           
           children: <TextSpan>[
-            TextSpan(text: "Link the project repository. The README.md file should contain a detailed description of the good or service you wish to acquire, to set expectations for your potential contractor. "),
-            TextSpan(text: "For a smooth arbitration, it's recommended to clone and customize "),
+            const TextSpan(text: "Link the project repository. The README.md file should contain a detailed description of the good or service you wish to acquire, to set expectations for your potential contractor. "),
+            const TextSpan(text: "For a smooth arbitration, it's recommended to clone and customize "),
             TextSpan(
               text: 'this template.',
-              style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+              style: const TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
                   launch('https://github.com/dOrgTech/template-project');
@@ -956,7 +956,7 @@ SizedBox(
                         labelText: "Link to your project reposiory",
                         ),),
                   ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
                   SizedBox(
         height: 70,
         child: Center(

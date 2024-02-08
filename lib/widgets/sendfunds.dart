@@ -41,9 +41,9 @@ class SendFundsState extends State<SendFunds> {
           case 0:
             return stage0();
           case 1:
-            return WaitingOnChain();
+            return SizedBox( height:500, child: WaitingOnChain());
           case 2:
-            return SomethingWentWrong();
+            return SomethingWentWrong(project:widget.project);
           default:       
             return stage0();
         }

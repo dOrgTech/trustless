@@ -38,7 +38,7 @@ class SetPartytate extends State<SetParty> {
       margin: const EdgeInsets.all(10),
       padding: const EdgeInsets.all(40),
       decoration: BoxDecoration(border: Border.all(width: 0.5)),
-    child: widget.waiting?WaitingOnChain():stage1());
+    child: widget.waiting?SizedBox(height:450,child: WaitingOnChain()):stage1());
   }
 
   bool pressedName = false;

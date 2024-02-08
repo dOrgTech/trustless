@@ -1,14 +1,20 @@
+import 'package:crypto/crypto.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:trustless/widgets/fundProject.dart';
+import 'package:trustless/widgets/somethingsWrong.dart';
+import 'package:trustless/widgets/waiting.dart';
 import '../entities/human.dart';
 import '../entities/project.dart';
 import '../main.dart';
+
 
 const String escape = '\uE00C';
 
 class Arbitrate extends StatefulWidget {
   final Project project;
-
+  String stage="main";
   // ignore: use_key_in_widget_constructors
   Arbitrate({required this.project});
 
@@ -27,31 +33,72 @@ class _ArbitrateState extends State<Arbitrate> {
     _awardToContractorController.dispose();
     super.dispose();
   }
+  int percentage=0;
+   String _hash = '';
+  String _fileName = '';
+    Future<void> _pickFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    if (result != null) {
+      Uint8List fileBytes = result.files.first.bytes!;
+      _fileName = result.files.first.name; // Store the file name
+      
+      var digest = sha256.convert(fileBytes);
+      setState(() {
+        widget.project.hashedFileName=_fileName;
+        _hash = digest.toString();
+        widget.project.termsHash=_hash;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    double awardToBackers = _useSlider ? widget.project.holding! - _sliderValue : widget.project.holding! - (double.tryParse(_awardToContractorController.text) ?? 0);
-    double awardToContractor = _useSlider ? _sliderValue : (double.tryParse(_awardToContractorController.text) ?? 0);
+return main();
+  }
+
+ Widget main(){
+      switch (widget.stage) {
+          case "main":
+            return stage0();
+          case "waiting":
+            return SizedBox(height:450,child: WaitingOnChain());
+          case "error":
+            return SomethingWentWrong(project:widget.project);
+          default:       
+            return stage0();
+      }
+  }
+
+Widget stage0(){
+    double onePercent = (widget.project.holding! /100) ;
+    double awardToBackers = _useSlider ? 
+    widget.project.holding! - _sliderValue * onePercent
+    : 
+    widget.project.holding! - (double.tryParse(_awardToContractorController.text) ?? 0);
+    
+    double awardToContractor = _useSlider ?
+     _sliderValue  * onePercent
+    :
+     (double.tryParse(_awardToContractorController.text) ?? 0);
     bool isNegative = awardToBackers < 0 || awardToContractor < 0;
     return 
+  //   ! (Human().address==widget.project.arbiter) ? 
+  //  const SizedBox(
+  //     child: Text("You are not signed in as the designated Arbiter.")
+  //   ) 
     
-    ! (Human().address==widget.project.arbiter) ? 
-   const SizedBox(
-      child: Text("You are not signed in as the designated Arbiter.")
-    ) 
-    
-    :
+  //   :
     
     Container(
-      width: 650,
-      padding: const EdgeInsets.symmetric(horizontal: 60),
+      width: 750,
+      padding: const EdgeInsets.all( 60),
       decoration: BoxDecoration(
         border: Border.all(
           color: Theme.of(context).highlightColor,
           width: 0.3,
         ),
       ),
-      height: 650,
+      
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -70,12 +117,13 @@ class _ArbitrateState extends State<Arbitrate> {
                  const Text("Input Field"),
                   Switch(
                     value: _useSlider,
-                    onChanged: (value) {
-                      setState(() {
-                        _useSlider = value;
-                        _canSubmit = false;
-                      });
-                    },
+                    onChanged: null,
+                    // (value) {
+                    //   setState(() {
+                    //     _useSlider = value;
+                    //     _canSubmit = false;
+                    //   });
+                    // }, 
                     activeColor: Colors.grey[300],
                     inactiveTrackColor: Theme.of(context).disabledColor,
                     inactiveThumbColor: Colors.grey[300],
@@ -86,12 +134,17 @@ class _ArbitrateState extends State<Arbitrate> {
               const SizedBox(height: 20),
               _useSlider
                   ? Slider(
+                    divisions: 100,
                       value: _sliderValue,
                       min: 0,
-                      max: widget.project.holding!,
+                      max:100,
+                      // max: widget.project.holding!,
                       onChanged: (value) {
                         setState(() {
                           _sliderValue = value;
+                          print("converting to int");
+                          percentage = ((value /100!) * 100).round();
+                          print("converted to percentage ${percentage}");
                           _canSubmit = true;
                         });
                       },
@@ -99,14 +152,14 @@ class _ArbitrateState extends State<Arbitrate> {
                   : TextFormField(
                       controller: _awardToContractorController,
                       keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}'))],
+                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^(100|[1-9]?\d)$'))],
                       decoration:const  InputDecoration(
                         labelText: "Award to Contractor",
                         border: OutlineInputBorder(),
                       ),
                       onChanged: (value) {
                         setState(() {
-                          _canSubmit = double.tryParse(value) != null && double.parse(value) <= widget.project.holding!;
+                          _canSubmit = _hash.length>8 && double.tryParse(value) != null && double.parse(value) <= widget.project.holding!;
                         });
                       },
                     ),
@@ -119,12 +172,12 @@ class _ArbitrateState extends State<Arbitrate> {
               Column(
                 children: [
                   Text(
-                    "Award to Backers",
+                    "Reimburse Backers",
                     style: Theme.of(context).textTheme.subtitle1!,
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    "${awardToBackers.toStringAsFixed(2)}",
+                    "${awardToBackers.toStringAsFixed(2)} (${(100-_sliderValue).toStringAsFixed(0)}%)",
                     style: Theme.of(context).textTheme.subtitle1!.copyWith(color: isNegative ? Colors.red : null),
                   ),
                 ],
@@ -136,8 +189,8 @@ class _ArbitrateState extends State<Arbitrate> {
                     style: Theme.of(context).textTheme.subtitle1!,
                   ),
                   const SizedBox(height: 10),
-                  Text(
-                    "${awardToContractor.toStringAsFixed(2)}",
+                  Text( 
+                    "${awardToContractor.toStringAsFixed(2)} (${_sliderValue.toStringAsFixed(0)}%)",
                     style: Theme.of(context).textTheme.subtitle1!.copyWith(color: isNegative ? Colors.red : null),
                   ),
                 ],
@@ -145,35 +198,128 @@ class _ArbitrateState extends State<Arbitrate> {
             ],
           ),
           const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: _canSubmit
-                ? () async{
-                    widget.project.arbiterAwardingContractor=double.parse( _awardToContractorController.text.toString());
-                    await projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
-                    widget.project.status='closed';
-                    Navigator.of(context).pushNamed("/projects/${widget.project.contractAddress}");
-                  }
-                : null,
-            style: ElevatedButton.styleFrom(
-              primary: Theme.of(context).accentColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5),
+             SizedBox(
+                  // width:600,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                     ElevatedButton(
+              onPressed: _pickFile,
+              child: const Text('Select File', textAlign: TextAlign.center,),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.transparent, // Transparent background
+              // White text color
+                shadowColor: Colors.transparent, // No shadow
+                side: const BorderSide(color: Color.fromARGB(255, 102, 102, 102), width: 2.0), // Visible border
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(0), // Square shape
+                ),
+                fixedSize: const Size(100, 100), // Square size
               ),
-              padding: const EdgeInsets.symmetric(
-                horizontal: 40,
-                vertical: 20,
-              ),
+            ),    
+            const SizedBox(width: 48),
+            const SizedBox(
+                  width: 460,
+                  child: Text("Select the RULING.md file. This should explain the reasoning you applied in your decision as well as the facts and resources you considered. A hash of this file will be stored on-chain for future reference."
+                  ,textAlign: TextAlign.justify,
+                  )),
+                ],
+                ),
+                ),
+                Column(
+      children: <Widget>[
+        const SizedBox(height: 20),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.only(left:38.0),
+            child: Row(
+              children: [
+                Opacity(
+                  opacity: 0.7,
+                  child: Text(_fileName.isNotEmpty ? 'File hash: ':"")
+                  ),
+                Text('$_hash', style: const TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w100),),
+              ],
             ),
-            child: const Text(
-              "Submit",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+          )),
+      ],
+    ),
+          Padding(
+            padding: const EdgeInsets.only(top:28.0),
+            child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                       SizedBox(height: 30,width: 150,
+                    child: Opacity(
+                      opacity: 0.6,
+                      child: TextButton(
+                        style: ButtonStyle(
+                          // overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
+                          // backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
+                          elevation: MaterialStateProperty.all(0.0),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(1.0),
+                            ),
+                          ),
+                        ),
+                          onPressed:
+                        (){
+                        Navigator.of(context).pop();
+                        },
+                          child: const Center(
+                        child: Text("Cancel", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,),),
+                      )),
+                    ),
+                  ),
+                ElevatedButton(
+                  onPressed: _canSubmit
+                      ? () async{
+                          setState(() {widget.stage="waiting";});
+                        print("Signing contract");
+                        String cevine = await cf.arbitrate(widget.project, percentage, _hash);
+                          print("dupa cevine");
+                            if (cevine.contains("nu merge")){
+                            print("nu merge din setParty");
+                            setState(() { widget.stage="error";});
+                            return;
+                          }
+                          // next line failing with Uncaught (in promise) Error: FormatException: Invalid double
+                          // widget.project.arbiterAwardingContractor=double.parse( _awardToContractorController.text.toString());
+                          // widget.project.arbiterAwardingContractor=double.parse( _awardToContractorController.text.toString());
+                          widget.project.arbiterAwardingContractor=percentage*onePercent;
+                          widget.project.status='closed';
+                          await projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
+                          Navigator.of(context).pushNamed("/projects/${widget.project.contractAddress}");
+                        }
+                      : null,
+                  style: ElevatedButton.styleFrom(
+                    primary: Theme.of(context).accentColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 40,
+                      vertical: 20,
+                    ),
+                  ),
+                  child: const Text(
+                    "Submit",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
       ),
     );
-  }
+}
+
 }

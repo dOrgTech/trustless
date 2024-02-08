@@ -5,51 +5,70 @@ import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/services.dart';  // Import this for TextInputFormatter
+import 'package:trustless/entities/human.dart';
+import 'package:trustless/main.dart';
 import 'package:trustless/widgets/somethingsWrong.dart';
 import 'package:trustless/widgets/waiting.dart';
-import '../entities/human.dart';
+
 import '../entities/project.dart';
 import '../entities/token.dart';
-import '../main.dart';
 const String escape = '\uE00C';
 
-class Dispute extends StatefulWidget {
+class Reimburse extends StatefulWidget {
 bool loading=false;
 bool done=false;
 bool error=false;
 Project project;
 String stage="main";
 // ignore: use_key_in_widget_constructors
-Dispute({required this.project}) ;
+Reimburse({required this.project}) ;
+
   @override
-  DisputeState createState() => DisputeState();
+  ReimburseState createState() => ReimburseState();
 }
 int pmttoken=0;
-class DisputeState extends State<Dispute> {
-  String? selectedToken;
-  String? selectedAddress;
-  TextEditingController amountController = TextEditingController();
-  String amount="";
-  @override
-  Widget build(BuildContext context) {
-      return main();
-  }
+class ReimburseState extends State<Reimburse> {
 
   Widget main(){
       switch (widget.stage) {
           case "main":
             return stage0();
           case "waiting":
-            return SizedBox(height:450,child: WaitingOnChain());
+            return WaitingOnChain();
           case "error":
             return SomethingWentWrong(project:widget.project);
           default:       
             return stage0();
-      }
+        }
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    
+ 
+    return main();
+
+
   }
 
  Widget stage0(){
-     return
+ return 
+    ! (Human().address!.toLowerCase()==widget.project.contractor!.toLowerCase()) ? 
+    Container(
+      height: 190,
+      child:Column(
+        children: [
+          SizedBox(height: 40),
+          Text("You are not signed in as the designated Contractor."),
+          SizedBox(height: 40),
+          ElevatedButton(onPressed: ()=> Navigator.of(context).pop(), child: Text("Got it.",style: TextStyle(color:Theme.of(context).canvasColor),))
+        ],
+      )
+    ) 
+    
+    :
+    
     Container(
       width: 650,
           padding: const EdgeInsets.symmetric(horizontal: 60),
@@ -65,18 +84,18 @@ class DisputeState extends State<Dispute> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-          const  Text("Dispute Project",
+          const  Text("Reimburse Backers",
             textAlign: TextAlign.center,
              style: TextStyle(fontSize: 19), 
               ),
             SizedBox(width: 380,
-            child:Text("If either the Contractor or 70% of the Backers (weighted by contribution) will opt to dispute, the Arbiter becomes the sole party able to distribute the funds in escrow.\n\nIf the Arbiter does not rule within 60 days after the dispute is triggered, the funds will be accessible to the backers through the withdraw function."
+            child:Text("Call this function if you are unable to deliver the object of this Project. \n\nFunds will be unlocked and the backers may claim them back."
             ,style: TextStyle(color: Theme.of(context).indicatorColor),
             )
             ),
             Padding(
               padding: const EdgeInsets.only(top:58),
-              child: Row(
+              child:  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                        SizedBox(height: 30,width: 150,
@@ -117,40 +136,24 @@ class DisputeState extends State<Dispute> {
                         ),
                       ),
                       onPressed: ()async{
-                      setState(() {widget.stage="waiting";});
-                        print("Signing contract");
-                        String cevine = await cf.voteToDispute(widget.project);
-                          print("dupa cevine");
-                            if (cevine.contains("nu merge")){
-                            print("nu merge din setParty");
-                            setState(() { widget.stage="error";});
-                            return;
-                          }
-                         bool foundit=false;
-                          for (var entry in widget.project.contributions.entries) {
-                          var key = entry.key;
-                          if (key == Human().address) {
-                            foundit=true;
-                            print("found it");
-                            widget.project.contributorsReleasing[key] =0; // Update the value to 0
-                            widget.project.contributorsDisputing[key] =  widget.project.contributions[key]!; // Update the value to 0
-                            
-                            if (widget.project.contributorsDisputing.values.fold(0, (a, b) => a + b) / widget.project.contributions.values.fold(0, (a, b) => a + b) >= 0.7)
-                            {
-                              widget.project.status="dispute";
+                        setState(() {widget.stage="waiting";});
+                          print("Signing contract");
+                            String cevine = await cf.reimburse(widget.project);
+                           print("dupa cevine");
+                             if (cevine.contains("nu merge")){
+                              print("nu merge din setParty");
+                              setState(() { widget.stage="error";});
+                              return;
                             }
-                            projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
-                            break; // Exit the loop
-                          }
-                          print("the loop was  not broken");
-                        }
-                        if (foundit==false){print("Still not finding it");}
-
+                          widget.project.status="closed";
+                          projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
                         Navigator.of(context).pushNamed("/projects/${widget.project.contractAddress}");
                       },
-                       child: const Center(
-                      child: Text("SUBMIT", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color:Colors.black),),
-                    )),
+                       child:  Center(
+                      child: Text("SUBMIT", style: TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold, 
+                        color:Theme.of(context).brightness==Brightness.dark?Color.fromARGB(255, 0, 0, 0):Color.fromARGB(255, 255, 255, 255)),
+                    ))),
                   ),
                 ],
               ),

@@ -8,6 +8,7 @@ import 'package:trustless/widgets/dispute.dart';
 import 'package:trustless/widgets/footer.dart';
 import 'package:trustless/widgets/projectCard.dart';
 import 'package:trustless/widgets/proposalDetails.dart';
+import 'package:trustless/widgets/reimburse.dart';
 import 'package:trustless/widgets/release.dart';
 import 'package:trustless/widgets/sendfunds.dart';
 import 'package:trustless/widgets/setParty.dart';
@@ -68,7 +69,7 @@ String extractGitHubPath(String? repoUrl) {
     List<Widget> ongoingProjectFunctions = [
       functionItem("Dispute Project", "Contractor or Backers", Dispute(project: widget.project)),
       functionItem("Release Funds to Contractor", "Backers", Release(project: widget.project)),
-      functionItem("Reinburse Backers", "Contractor", Release(project: widget.project)),
+      functionItem("Reinburse Backers", "Contractor", Reimburse(project: widget.project)),
     ];
     List<Widget> disputedProjectFunctions = [
       // const Text("Implementing... ", style: TextStyle(fontSize: 25),),
@@ -289,7 +290,8 @@ String extractGitHubPath(String? repoUrl) {
                               ],
                             ),
                            const SizedBox(height: 25),
-                            !(widget.project.status=="open")? 
+                            !(widget.project.status=="open")
+                            ? 
                             Container(
                               constraints: const BoxConstraints(
                                 maxWidth: 850,
@@ -311,13 +313,47 @@ String extractGitHubPath(String? repoUrl) {
                                       child: const Icon(Icons.copy)),
                                 ],
                               )
-                            ):SizedBox(),
+                            ): SizedBox(),
+                            SizedBox(height: 15),
+                             (widget.project.status=="closed") &&
+                             widget.project.rulingHash.length>3
+                            // true
+                            ? Container(
+                               constraints: const BoxConstraints(
+                                maxWidth: 850,
+                              ),
+                              height: 83,
+                              decoration: BoxDecoration(
+                                border: Border.all(width: 0.1 , color: Theme.of(context).indicatorColor ),
+                                color: Theme.of(context).dividerColor.withOpacity(0.1)
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Text("Dispute resolved with ${widget.project.arbiterAwardingContractor } ${widget.project.isUSDT? "USDC": Human().chain.nativeSymbol} awarded to Contractor",style: TextStyle(fontSize: 20),),
+                                 Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Opacity(opacity: 0.8, child: Text("Hash of the Aribter's ruling:")),
+                                  const SizedBox(width: 10),
+                                  Text(widget.project.rulingHash??"" , style: const TextStyle(fontSize:12 , backgroundColor: Colors.black54, color: Colors.white70), ),
+                                  const SizedBox(width: 10),
+                                  TextButton(
+                                      onPressed: () {copied(context, widget.project.rulingHash??"");},
+                                      child: const Icon(Icons.copy)),
+                                ],
+                              )
+                                ],
+                              ),
+                            ):
+                            SizedBox(),
                           ],
                         ),
                       ),
                     ),
                     const SizedBox(height:  20),
                     Container(
+                      
                       alignment: Alignment.topCenter,
                       width: double.infinity,
                       constraints: const BoxConstraints(
@@ -631,7 +667,7 @@ String extractGitHubPath(String? repoUrl) {
            barrierDismissible: false,
             context: context,
             builder: (context) => AlertDialog(
-                  content: target,
+                  content:target,
                 ));
       },
       child: Container(

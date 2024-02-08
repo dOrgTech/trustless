@@ -34,12 +34,12 @@ class SignState extends State<Sign> {
           case "main":
             return stage0();
           case "waiting":
-            return WaitingOnChain();
+            return SizedBox(height:450,child: WaitingOnChain());
           case "error":
-            return SomethingWentWrong();
+            return SomethingWentWrong(project:widget.project);
           default:       
             return stage0();
-        }
+      }
   }
 
 
@@ -138,7 +138,7 @@ class SignState extends State<Sign> {
                       onPressed: ()async{
                         setState(() {widget.stage="waiting";});
                           print("Signing contract");
-                            String cevine = await cf.sign(widget.project);
+                          String cevine = await cf.sign(widget.project);
                            print("dupa cevine");
                              if (cevine.contains("nu merge")){
                               print("nu merge din setParty");

@@ -10,7 +10,7 @@ class WaitingOnChain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: SizedBox(
+      child: Container(
         width: 500,
         height: 500,
         child: Column(

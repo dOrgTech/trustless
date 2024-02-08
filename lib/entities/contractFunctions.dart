@@ -29,7 +29,7 @@ class ContractFunctions{
       return rezultat;
     }
     
-    createProject(Project project,state)async{
+  createProject(Project project,state)async{
     final BigInt valueInWei = BigInt.from(100);
     final txOptions = project.status == "open" ? {} : jsify({'value': BigInt.from(100).toString()});
     var sourceContract = Contract(sourceAddress, sourceAbiString, Human().web3user);
@@ -82,7 +82,7 @@ class ContractFunctions{
         }
     }
 
-      setNativeParties(Project project,state)async{
+  setNativeParties(Project project,state)async{
       final BigInt valueInWei = BigInt.from(100);
       final txOptions = jsify({'value': BigInt.from(100).toString()});
       var sourceContract = Contract(project.contractAddress!, nativeProjectAbiString, Human().web3user);
@@ -119,7 +119,7 @@ class ContractFunctions{
       }
   }
 
-    sendFunds(Project project, amount)async{
+  sendFunds(Project project, amount)async{
       print("sending funds");
       Human().busy=true;
       final BigInt valueInWei = BigInt.from(int.parse(amount.toString()));
@@ -150,7 +150,8 @@ class ContractFunctions{
           Human().busy=false;
           return hash.toString();
         }
-      } catch (e) {    
+      } catch (e) {   
+         Human().busy=false;
           print("nu merge c nu s-a putut" +e.toString());
         return "nu merge final" ;
       }
@@ -158,7 +159,7 @@ class ContractFunctions{
 
   sign(Project project)async{
       print("signing...");
-      Human().busy=true;
+      
        final BigInt valueInWei = BigInt.from(100);
       final txOptions = jsify({'value': BigInt.from(100).toString()});
       var sourceContract = Contract(project.contractAddress!, nativeProjectAbiString, Human().web3user);
@@ -168,9 +169,9 @@ class ContractFunctions{
           final transaction = await promiseToFuture(callMethod(
               sourceContract, 
               "signContract",
-              [txOptions], // No other arguments to sendFunds method
-               // Pass txOptions correctly
+              [txOptions], 
             ));
+            Human().busy=true;
               print("facuram tranzactia");
         final hash = json.decode(stringify(transaction))["hash"];
         print("hash " + hash.toString());
@@ -193,7 +194,7 @@ class ContractFunctions{
       }
   }
 
-   reimburse(Project project)async{
+  reimburse(Project project)async{
       print("signing...");
       Human().busy=true;
       Human().notifyListeners();
@@ -230,8 +231,146 @@ class ContractFunctions{
       }
   }
 
+  withdrawAsContributor(Project project)async{
+      print("signing...");
+      Human().busy=true;
+      var sourceContract = Contract(project.contractAddress!, nativeProjectAbiString, Human().web3user);
+        try {
+          sourceContract = sourceContract.connect(Human().web3user!.getSigner());
+          print("signed ok");
+          final transaction = await promiseToFuture(callMethod(
+              sourceContract, 
+              "withdrawAsContributor",
+              [],
+            ));
+              print("facuram tranzactia");
+        final hash = json.decode(stringify(transaction))["hash"];
+        print("hash $hash");
+        final result = await promiseToFuture(
+            callMethod(Human().web3user!, 'waitForTransaction', [hash]));
+        if (json.decode(stringify(result))["status"] == 0) {
+        print("nu merge eroare de greseala");
+          Human().busy=false;
+          return "nu merge";
+        } else {
+          var rezultat=(json.decode(stringify(result)));
+          print("a venit si "+rezultat.toString());
+          print("e de tipul "+rezultat.runtimeType.toString());
+          Human().busy=false;
+          return hash.toString();
+        }
+      } catch (e) {    
+          print("nu merge c nu s-a putut" +e.toString());
+          Human().busy=false;
+        return "nu merge final" ;
+      }
+  }
 
-getProjectAddress(counter)async{
+  voteToReleasePayment(Project project)async{
+      print("signing...");
+      Human().busy=true;
+      var sourceContract = Contract(project.contractAddress!, nativeProjectAbiString, Human().web3user);
+        try {
+          sourceContract = sourceContract.connect(Human().web3user!.getSigner());
+          print("signed ok");
+          final transaction = await promiseToFuture(callMethod(
+              sourceContract, 
+              "voteToReleasePayment",
+              [],
+            ));
+              print("facuram tranzactia");
+        final hash = json.decode(stringify(transaction))["hash"];
+        print("hash $hash");
+        final result = await promiseToFuture(
+            callMethod(Human().web3user!, 'waitForTransaction', [hash]));
+        if (json.decode(stringify(result))["status"] == 0) {
+        print("nu merge eroare de greseala");
+          Human().busy=false;
+          return "nu merge";
+        } else {
+          var rezultat=(json.decode(stringify(result)));
+          print("a venit si "+rezultat.toString());
+          print("e de tipul "+rezultat.runtimeType.toString());
+          Human().busy=false;
+          return hash.toString();
+        }
+      } catch (e) {    
+          print("nu merge c nu s-a putut" +e.toString());
+          Human().busy=false;
+        return "nu merge final" ;
+      }
+  }
+
+  voteToDispute(Project project)async{
+      print("signing...");
+      Human().busy=true;
+      var sourceContract = Contract(project.contractAddress!, nativeProjectAbiString, Human().web3user);
+        try {
+          sourceContract = sourceContract.connect(Human().web3user!.getSigner());
+          print("signed ok");
+          final transaction = await promiseToFuture(callMethod(
+              sourceContract, 
+              "voteToDispute",
+              [],
+            ));
+              print("facuram tranzactia");
+        final hash = json.decode(stringify(transaction))["hash"];
+        print("hash $hash");
+        final result = await promiseToFuture(
+            callMethod(Human().web3user!, 'waitForTransaction', [hash]));
+        if (json.decode(stringify(result))["status"] == 0) {
+        print("nu merge eroare de greseala");
+          Human().busy=false;
+          return "nu merge";
+        } else {
+          var rezultat=(json.decode(stringify(result)));
+          print("a venit si "+rezultat.toString());
+          print("e de tipul "+rezultat.runtimeType.toString());
+          Human().busy=false;
+          return hash.toString();
+        }
+      } catch (e) {    
+          print("nu merge c nu s-a putut" +e.toString());
+          Human().busy=false;
+        return "nu merge final" ;
+      }
+  }
+
+  arbitrate(Project project, percentage, rulingHash)async{
+      
+      var sourceContract = Contract(project.contractAddress!, nativeProjectAbiString, Human().web3user);
+        try {
+          sourceContract = sourceContract.connect(Human().web3user!.getSigner());
+          print("signed ok");
+          final transaction =
+            await promiseToFuture(callMethod(sourceContract, "arbitrate", [
+            percentage,
+            rulingHash,
+            ],
+            ));
+              print("facuram tranzactia");
+        final hash = json.decode(stringify(transaction))["hash"];
+        print("hash " + hash.toString());
+        final result = await promiseToFuture(
+            callMethod(Human().web3user!, 'waitForTransaction', [hash]));
+        if (json.decode(stringify(result))["status"] == 0) {
+        print("nu merge eroare de greseala");
+        //  om.setNotBusy();
+          return "nu merge";
+        } else {
+          var rezultat=(json.decode(stringify(result)));
+          print("a venit si "+rezultat.toString());
+          print("e de tipul "+rezultat.runtimeType.toString());
+          return hash.toString();
+        }
+      } catch (e) {
+        print("nu merge c nu s-a putut" +e.toString());
+        // om.setNotBusy();
+      return "nu merge final" ;
+      }
+  }
+
+  getProjectAddress(counter)async{
   var httpClient = Client(); 
   var ethClient = Web3Client(Human().chain.rpcNode, httpClient);
   final contractSursa =
@@ -245,6 +384,5 @@ getProjectAddress(counter)async{
     print(rezultat.toString()+" "+rezultat.runtimeType.toString());
     return rezultat;
 }
-
 
 }

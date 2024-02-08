@@ -7,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter/services.dart';  // Import this for TextInputFormatter
 import 'package:trustless/entities/human.dart';
 import 'package:trustless/main.dart';
+import 'package:trustless/widgets/somethingsWrong.dart';
+import 'package:trustless/widgets/waiting.dart';
 
 import '../entities/project.dart';
 import '../entities/token.dart';
@@ -17,7 +19,7 @@ bool loading=false;
 bool done=false;
 bool error=false;
 Project project;
-
+String stage="main";
 // ignore: use_key_in_widget_constructors
 Withdraw({required this.project}) ;
 
@@ -30,15 +32,28 @@ class WithdrawState extends State<Withdraw> {
   String? selectedAddress;
   TextEditingController amountController = TextEditingController();
   String amount="";
+    Widget main(){
+      switch (widget.stage) {
+          case "main":
+            return stage0();
+          case "waiting":
+            return SizedBox(height:500, child: WaitingOnChain());
+          case "error":
+            return SomethingWentWrong(project:widget.project);
+          default:       
+            return stage0();
+        }
+  }
   @override
   Widget build(BuildContext context) {
-    
-    List<String> paymentTokens=[];
-    for (Token t in widget.project.acceptedTokens!){
-      paymentTokens.add(t.symbol +" ("+t.name+")");}
-    return
-    Container(
+   
+    return main();
+  }
+
+ Widget stage0(){
+  return   Container(
       width: 650,
+      height:650,
           padding: const EdgeInsets.symmetric(horizontal: 60),
           decoration: BoxDecoration(
             border: Border.all(
@@ -47,59 +62,92 @@ class WithdrawState extends State<Withdraw> {
             ),
           ),
           // width: MediaQuery.of(context).size.width*0.7,
-          height:650,
+          
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-          const  Text("Withdraw from project",
+          const  Text("Withdraw from Project",
             textAlign: TextAlign.center,
              style: TextStyle(fontSize: 19), 
               ),
             SizedBox(width: 380,
-            child:Text("Claim to your wallet funds along with any economy tokens that might have been awarded. This can be called by backers or/and the contractor, depending on the project stage."
+            child:Text("Claim your contribution to this Project back to your wallet.\n\nPost-dispute, if the Arbiter allocates funds to the Contractor, you'll retrieve only a portion of your contribution, proportional to your share of the total project funding."
             ,style: TextStyle(color: Theme.of(context).indicatorColor),
             )
             ),
             Padding(
               padding: const EdgeInsets.only(top:58),
-              child: SizedBox(
-                height: 40,
-                width: 130,
-                child: TextButton(
-                  style: ButtonStyle(
-                    overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
-                    backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
-                    elevation: MaterialStateProperty.all(1.0),
-                    shape: MaterialStateProperty.all(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(7.0),
-                      ),
+              child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                       SizedBox(height: 30,width: 150,
+                    child: Opacity(
+                      opacity: 0.6,
+                      child: TextButton(
+                        style: ButtonStyle(
+                          // overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
+                          // backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
+                          elevation: MaterialStateProperty.all(0.0),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(1.0),
+                            ),
+                          ),
+                        ),
+                          onPressed:
+                        (){
+                        Navigator.of(context).pop();
+                        },
+                          child: const Center(
+                        child: Text("Cancel", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,),),
+                      )),
                     ),
                   ),
-                  onPressed: ()async{
-                  print("pressed");
-                    for (var entry in widget.project.contributions.entries) {
-                      var key = entry.key;
-                      if (key == Human().address) {
-                        print("found it");
-                        widget.project.contributions[key] = 0; // Update the value to 0
-                        projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
-                        break; // Exit the loop
-                      }
-                    }
-                    Navigator.of(context).pushNamed("/projects/${widget.project.contractAddress}");
-                  },
-                   child: const Center(
-                  child: Text("SUBMIT", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color:Colors.black),),
-                )),
+                  SizedBox(
+                    height: 40,
+                    width: 130,
+                    child: TextButton(
+                      style: ButtonStyle(
+                        overlayColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
+                        backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor),
+                        elevation: MaterialStateProperty.all(1.0),
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(7.0),
+                          ),
+                        ),
+                      ),
+                      onPressed: ()async{
+                      setState(() {widget.stage="waiting";});
+                           print("Signing contract");
+                            String cevine = await cf.withdrawAsContributor(widget.project);
+                           print("dupa cevine");
+                          if (cevine.contains("nu merge")){
+                              print("nu merge din setParty");
+                              setState(() { widget.stage="error";});
+                              return;
+                          }
+                        for (var entry in widget.project.contributions.entries) {
+                          var key = entry.key;
+                          if (key == Human().address) {
+                            print("found it");
+                            widget.project.contributions[key] = 0; // Update the value to 0
+                            projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
+                            break; // Exit the loop
+                          }
+                        }
+                        Navigator.of(context).pushNamed("/projects/${widget.project.contractAddress}");
+                      },
+                       child: const Center(
+                      child: Text("SUBMIT", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color:Colors.black),),
+                    )),
+                  ),
+                ],
               ),
             ),
             ],
           )
     );
-
-  }
-
- 
+ }
 }

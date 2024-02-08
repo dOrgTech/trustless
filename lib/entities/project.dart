@@ -15,6 +15,7 @@ class Project{
   String? arbiter="";
   String? contractor="";
   String? hashedFileName="";
+  String rulingHash="";
   String? termsHash="";
   String? repo="";
   String? requirements;
@@ -55,6 +56,7 @@ fromJson(Map<String, dynamic> json) {
   author = json['author'];
   contributions = json['contributions'];
   arbiterAwardingContractor = json['arbiterAwardingContractor'];
+  rulingHash = json['rulingHash'];
 }
 
   @override
@@ -92,6 +94,7 @@ fromJson(Map<String, dynamic> json) {
       'arbiter':arbiter,
       'author':author,
       'contributions':contributions,
+      'rulingHash':rulingHash,
       'contributorsReleasing':contributorsReleasing,
       'contributorsDisputing':contributorsDisputing,
       'arbiterAwardingContractor':arbiterAwardingContractor

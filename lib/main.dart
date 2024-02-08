@@ -75,6 +75,7 @@ var projectsCollection;
     p.arbiterAwardingContractor=doc.data()['arbiterAwardingContractor'];
     projects.add(p);
     p.contributions.forEach((key, value) { valueInContracts+=value;});
+    p.rulingHash=doc.data()['rulingHash'];
   }
   
   await cf.getProjectsCounter();
@@ -110,7 +111,7 @@ class MyApp extends StatelessWidget {
           WidgetBuilder builder;
           if (settings.name == '/') {
             builder = (_) => 
-            // ProjectDetails(project: projects[0]);
+            // ProjectDetails(project: projects[1]);
             // Prelaunch();
             // Poll();
             //  BaseScaffold(selectedItem: 0, body: Profile(), title: "Profile");
@@ -396,7 +397,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
          MediaQuery.of(context).size.aspectRatio >= switchAspect?
          Row(
            children:
-         [ TextButton(onPressed: (){Human().busy=true;Human().notifyListeners();}, child: Text("Set it ")),
+         [ 
             ...botoane,]
          ):  null,
           

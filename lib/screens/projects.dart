@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:lottie/lottie.dart";
 import "package:provider/provider.dart";
+import "package:trustless/widgets/arbitrate.dart";
 import "package:trustless/widgets/newGenericProject.dart";
 import "package:trustless/widgets/sendfunds.dart";
 import "package:trustless/widgets/waiting.dart";
@@ -207,7 +208,7 @@ class ProjectsState extends State<Projects> {
                       runSpacing: 14,
                       alignment: WrapAlignment.start,
                       children: [...projectCards,
-                  
+                   
              
                       
                       ],

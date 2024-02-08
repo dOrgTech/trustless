@@ -22,7 +22,7 @@ var chains=[
 
 
 class Human extends ChangeNotifier{
-  bool busy=true;
+  bool busy=false;
   String? address;
   Chain chain=chains[0];
   bool metamask=true;

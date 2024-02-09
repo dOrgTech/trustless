@@ -14,29 +14,33 @@ class GameOfLife extends StatefulWidget {
 }
 
 class _GameOfLifeState extends State<GameOfLife> {
-  late List<List<int>> grid;
+  // late List<List<int>> grid; 
+  List<List<int>> grid = [];
   Timer? timer;
-  int rows = 0;
-  int cols = 0;
+  int rows = 10;
+  int cols = 10;
   final double resolution = 60;
- final double initialProbability = 0.3; // 30% chance for each cell to be alive initially
+  final double initialProbability = 0.3; // 30% chance for each cell to be alive initially
 
   @override
   void initState() {
     super.initState();
-    // Set up the grid in the didChangeDependencies to have access to MediaQuery
+    // Initialize grid in initState to avoid late initialization error
+    _initGrid();
+  }
+
+  void _initGrid() {
+    // Setup grid moved from didChangeDependencies to ensure grid is initialized before build
     WidgetsBinding.instance.addPostFrameCallback((_) => setupGrid());
   }
 
   void setupGrid() {
-    // Use MediaQuery to get the screen size
     final screenSize = MediaQuery.of(context).size;
     cols = (screenSize.width / resolution).floor();
     rows = (screenSize.height / resolution).floor();
     
-    grid = List.generate(cols, (_) => List.generate(rows, (_) => Random().nextInt(2)));
-    // In your initState or setupGrid method
-  grid = List.generate(cols, (_) => List.generate(rows, (_) => Random().nextInt(2) < initialProbability ? 1 : 0));
+    // Adjusted to initialize grid with initial probability correctly
+    grid = List.generate(cols, (_) => List.generate(rows, (_) => Random().nextDouble() < initialProbability ? 1 : 0));
 
     timer = Timer.periodic(Duration(milliseconds: 120), (Timer t) => _updateGrid());
   }
@@ -90,9 +94,13 @@ class _GameOfLifeState extends State<GameOfLife> {
 
   @override
   Widget build(BuildContext context) {
+    // Ensure grid is initialized before building the widget
+    if (grid == null) {
+      return Center(child: CircularProgressIndicator());
+    }
+    
     return Scaffold(
       body: CustomPaint(
-
         painter: GameOfLifePainter(grid, resolution),
         child: Container(
           color: Colors.transparent,

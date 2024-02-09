@@ -1,29 +1,21 @@
-
-
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-import 'package:trustless/entities/human.dart';
-import 'package:trustless/main.dart';
-import 'package:trustless/utils/reusable.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:trustless/widgets/projectDetails.dart';
 
-import 'package:web3dart/web3dart.dart';
+import '../main.dart';
+import '../utils/reusable.dart';
 
-class BuyATN extends StatefulWidget {
- BuyATN();
- 
-
- 
-  bool? isUser;
-  
+class PopRight extends StatefulWidget {
+ PopRight({super.key});
+   bool? isUser;
   @override
-  _BuyATNState createState() => _BuyATNState();
+  State<PopRight> createState() => _PopRightState();
 }
 
-class _BuyATNState extends State<BuyATN> with TickerProviderStateMixin {
-  double left = 0.0;
+class _PopRightState extends State<PopRight>with TickerProviderStateMixin {
+    double left = 0.0;
   double opa = 0;
   double spread = 0.0;
   double down = 0.0;
@@ -54,43 +46,17 @@ class _BuyATNState extends State<BuyATN> with TickerProviderStateMixin {
     });
     super.initState();
   }
-
   @override
   Widget build(BuildContext context) {
-    List<Color> colors = [
+     List<Color> colors = [
       Theme.of(context).canvasColor.withOpacity(0.99),
       Theme.of(context).canvasColor.withOpacity(0.89)
     ];
     List<double> stops = [0.03, 5.8];
-    return Consumer(
-      
-      builder: (context,ref,child) {
-        
-        return Opacity(
-          opacity: 0.8,
-          child: AnimatedContainer(
-              duration: Duration(milliseconds: 400),
-              width: sime,
-              height: height,
-              decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Theme.of(context).indicatorColor.withOpacity(0.3),
-                      blurRadius: 7.0, // soften the shadow
-                      spreadRadius: spread, //extend the shadow
-                      offset: Offset(
-                        left,
-                        down,
-                      ),
-                    )
-                  ],
-                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(150)),
-                  gradient: RadialGradient(colors: colors, stops: stops)),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(height: 24),
-                  AnimatedContainer(
+    return SizedBox(width: 900,height: 800,child: Column(
+      children: [
+        Spacer(),
+        AnimatedContainer(
                     duration: Duration(milliseconds: 700),
                     padding: EdgeInsets.symmetric(vertical: 4),
                     // width: sime-MediaQuery.of(context).size.width/10,
@@ -135,6 +101,7 @@ class _BuyATNState extends State<BuyATN> with TickerProviderStateMixin {
                     ]),
                   ),
                   SizedBox(height: 25),
+          SizedBox(height: 25),
                   AnimatedOpacity(
                     duration: Duration(milliseconds: 1600),
                     opacity: opa,
@@ -167,7 +134,7 @@ class _BuyATNState extends State<BuyATN> with TickerProviderStateMixin {
                       ),
                     ),
                   ),
-                  SizedBox(height: 39),
+                   Spacer(),
                   AnimatedOpacity(
                       duration: Duration(milliseconds: 1300),
                       opacity: opa,
@@ -207,11 +174,9 @@ class _BuyATNState extends State<BuyATN> with TickerProviderStateMixin {
                               ],
                             ),
                           ))),
-                  SizedBox(height: 30)
-                ],
-              )),
-        );
-      }
-    );
+               Spacer()
+      ],
+    ),);
+    
   }
 }

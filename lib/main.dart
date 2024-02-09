@@ -121,8 +121,8 @@ class MyApp extends StatelessWidget {
             // Prelaunch();
             // Poll();
             //  BaseScaffold(selectedItem: 0, body: Users(), title: "Users");
-             BaseScaffold(selectedItem: 0, body: Landing(), title: "Trustless Business");
-            // BaseScaffold(selectedItem: 1,body: Projects(), title: "Projects");
+            //  BaseScaffold(selectedItem: 0, body: Landing(), title: "Trustless Business");
+            BaseScaffold(selectedItem: 1,body: Projects(), title: "Projects");
           } else if (settings.name!.startsWith('/projects/')) {
             final projectId = settings.name!.replaceFirst('/projects/', '');
             Project? project;
@@ -452,7 +452,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                 child: LinearProgressIndicator(
                   backgroundColor: Theme.of(context).canvasColor,
                   color: Theme.of(context).indicatorColor,
-                )):Text(""),
+                )):SizedBox(height: 0),
                human.wrongChain?WrongChain():
                widget.body,
              ],

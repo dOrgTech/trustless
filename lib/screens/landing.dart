@@ -7,6 +7,7 @@ import 'package:trustless/widgets/governance.dart';
 
 import '../main.dart';
 import '../utils/reusable.dart';
+import '../widgets/awe.dart';
 import '../widgets/footer.dart';
 import '../widgets/gameoflife.dart';
 
@@ -202,15 +203,17 @@ Widget dreapta(){
            Opacity(
                 opacity: 0.05,
                 child: GameOfLife()),
-                Positioned(
+                // child: Container()), 
+              
+
+          CoolAnimationWidget(),
+            Positioned(
                   bottom: 0,
                   child: SizedBox(
                           width: MediaQuery.of(context).size.width,
                           height:150 ,
                           child: Footer()),
                 ),
-
-
           // SizedBox(
           //         height: MediaQuery.of(context).size.height,
           //         width:  MediaQuery.of(context).size.width,

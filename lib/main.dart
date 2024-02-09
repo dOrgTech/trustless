@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,7 +15,9 @@ import 'package:trustless/screens/profile.dart';
 import 'package:trustless/screens/projects.dart';
 import 'package:trustless/screens/users.dart';
 import 'package:trustless/utils/reusable.dart';
+import 'package:trustless/utils/scripts.dart';
 import 'package:trustless/widgets/projectDetails.dart';
+import 'package:trustless/widgets/wrongChain.dart';
 import 'package:web3dart/web3dart.dart';
 import 'entities/human.dart';
 import 'entities/project.dart';
@@ -38,6 +42,7 @@ var statsCollection = FirebaseFirestore.instance.collection('stats');
 var projectsCollection;
 
     void main() async  {
+      createUsers();
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
       projectsCollection=FirebaseFirestore.instance.collection("projects${Human().chain.name}");
@@ -115,7 +120,7 @@ class MyApp extends StatelessWidget {
             // ProjectDetails(project: projects[1]);
             // Prelaunch();
             // Poll();
-            //  BaseScaffold(selectedItem: 0, body: Profile(), title: "Profile");
+            //  BaseScaffold(selectedItem: 0, body: Users(), title: "Profile");
             BaseScaffold(selectedItem: 1,body: Projects(), title: "Projects");
           } else if (settings.name!.startsWith('/projects/')) {
             final projectId = settings.name!.replaceFirst('/projects/', '');
@@ -298,9 +303,9 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                               Opacity(
                     opacity: widget.isUsers?1:0.6,
                     child: Row(children: [
-                      Icon(Icons.gavel_sharp,size:33,color:widget.isUsers?Theme.of(context).indicatorColor:Theme.of(context).textTheme.bodyLarge!.color!),
+                      Icon(Icons.people_alt_outlined,size:33,color:widget.isUsers?Theme.of(context).indicatorColor:Theme.of(context).textTheme.bodyLarge!.color!),
                       SizedBox(width: 8),
-                      Text("ARBITERS", style: widget.isUsers?selectedMenuItem:nonSelectedMenuItem)
+                      Text("USERS", style: widget.isUsers?selectedMenuItem:nonSelectedMenuItem)
                     ],),
                               )
                               ),
@@ -351,25 +356,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
             )
             ),
             const SizedBox(width: 10),
-              SizedBox( width:145,
-                child: Center(
-                  child: Opacity(
-                    opacity: widget.isDisputes?1:0.6,
-                    child: TextButton(onPressed: (){
-                      changeButton(2);
-                      Navigator.of(context).pushNamed("/trials");
-                    }, child: 
-                              Row(children:  [
-                               Image.asset('assets/scale2.png', height:30, color:widget.isDisputes?Theme.of(context).indicatorColor:Theme.of(context).textTheme.bodyLarge!.color!),
-                    SizedBox(width: 8),
-                    Text("DISPUTES", style: widget.isDisputes?selectedMenuItem:nonSelectedMenuItem,)
-                              ],)
-                              ),
-                  ),
-                ),
-              ),  
-             const SizedBox(width: 19),
-              Center(
+               Center(
                 child: SizedBox( width:148,
                   child: TextButton(onPressed: (){
                   changeButton(3);
@@ -378,14 +365,33 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                             Opacity(
                   opacity: widget.isUsers?1:0.6,
                   child: Row(children: [
-                    Icon(Icons.gavel_sharp,size:33,color:widget.isUsers?Theme.of(context).indicatorColor:Theme.of(context).textTheme.bodyLarge!.color!),
+                    Icon(Icons.people_alt_outlined,size:33,color:widget.isUsers?Theme.of(context).indicatorColor:Theme.of(context).textTheme.bodyLarge!.color!),
                     SizedBox(width: 8),
-                    Text("ARBITERS", style: widget.isUsers?selectedMenuItem:nonSelectedMenuItem)
+                    Text("USERS", style: widget.isUsers?selectedMenuItem:nonSelectedMenuItem)
                   ],),
                             )
                             ),
                 ),
-              )
+              ),
+            //   SizedBox( width:145,
+            //     child: Center(
+            //       child: Opacity(
+            //         opacity: widget.isDisputes?1:0.6,
+            //         child: TextButton(onPressed: (){
+            //           changeButton(2);
+            //           Navigator.of(context).pushNamed("/trials");
+            //         }, child: 
+            //                   Row(children:  [
+            //                    Image.asset('assets/scale2.png', height:30, color:widget.isDisputes?Theme.of(context).indicatorColor:Theme.of(context).textTheme.bodyLarge!.color!),
+            //         SizedBox(width: 8),
+            //         Text("DISPUTES", style: widget.isDisputes?selectedMenuItem:nonSelectedMenuItem,)
+            //                   ],)
+            //                   ),
+            //       ),
+            //     ),
+            //   ),  
+            //  const SizedBox(width: 19),
+           
           ];
           var human = Provider.of<Human>(context);
     return   Scaffold(
@@ -418,9 +424,9 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                   ),
                   SizedBox(width: 12),
                   Text( human.chain.name
-                  ,style: GoogleFonts.orbitron(
+                  ,style: GoogleFonts.changa(
                     color: Theme.of(context).indicatorColor,
-                    fontSize: 17),
+                    fontSize: 19),
                   )
                 ],
               )
@@ -446,7 +452,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                   backgroundColor: Theme.of(context).canvasColor,
                   color: Theme.of(context).indicatorColor,
                 )):Text(""),
-               human.wrongChain?Container(child: Center(child: Text("Wrong chain, mate.")),):
+               human.wrongChain?WrongChain():
                widget.body,
              ],
            )
@@ -598,7 +604,28 @@ class _WalletBTNState extends State<WalletBTN> {
                 )
               : Row(
                 children: [
-                  Icon(Icons.person),
+                   FutureBuilder<Uint8List>(
+                              future: generateAvatarAsync(hashString(human.address!)),  // Make your generateAvatar function return Future<Uint8List>
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return Container(
+                                    width: 40.0,
+                                    height: 40.0,
+                                    color: Colors.grey,
+                                  );
+                                } else if (snapshot.hasData) {
+                                  print("generating");
+                                  return Image.memory(snapshot.data!);
+                                } else {
+                                  return Container(
+                                    width: 40.0,
+                                    height: 40.0,
+                                    color: Colors.red,  // Error color
+                                  );
+                                }
+                              },
+                            ),
+                            SizedBox(width: 8),
                   Text(getShortAddress(human.address!)),
                 ],
               ),

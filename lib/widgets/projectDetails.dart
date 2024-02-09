@@ -212,19 +212,19 @@ String extractGitHubPath(String? repoUrl) {
                                               ],
                                             ),
                                           ),
-                                          ),
+                                          ),widget.project.contractor!.length>3?
                                            SizedBox(
                                       height: 35,
                                       child: Center(
-                                        child: Row(
+                                        child:  Row(
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             const Text("Contractor: "),
-                                              widget.project.contractor!.length>3?
+                                             
                                              Text(
                                              widget.project.contractor!,
                                               style: const TextStyle(fontSize: 11),
-                                            ):const SizedBox(width:235,child: Text("N/A")),
+                                            ),
                                             const SizedBox(
                                               width: 2,
                                             ),
@@ -235,9 +235,10 @@ String extractGitHubPath(String? repoUrl) {
                                                 },
                                                 child: const Icon(Icons.copy)),
                                               ],
-                                            ),
+                                            )
                                           ),
-                                          ),
+                                          ):Text(""),
+                                          widget.project.arbiter!.length>3?
                                             SizedBox(
                                       height: 35,
                                       child: Center(
@@ -245,11 +246,11 @@ String extractGitHubPath(String? repoUrl) {
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             const Text("Arbiter: "),
-                                             widget.project.arbiter!.length>3?
+                                             
                                              Text(
                                              widget.project.arbiter!,
                                               style: const TextStyle(fontSize: 11),
-                                            ):const SizedBox(width:235,child: Text("N/A")),
+                                            ),
                                             const SizedBox(
                                               width: 2,
                                             ), widget.project.contractor!.length<3?const SizedBox(width:54):
@@ -261,7 +262,7 @@ String extractGitHubPath(String? repoUrl) {
                                               ],
                                             ),
                                           ),
-                                          ),
+                                          ):Text(""),
                                       SizedBox(
                                       height: 35,
                                       child: Center(
@@ -318,15 +319,12 @@ String extractGitHubPath(String? repoUrl) {
                              (widget.project.status=="closed") &&
                              widget.project.rulingHash.length>3
                             // true
-                            ? Container(
+                            ? Container( 
                                constraints: const BoxConstraints(
                                 maxWidth: 850,
                               ),
                               height: 83,
-                              decoration: BoxDecoration(
-                                border: Border.all(width: 0.1 , color: Theme.of(context).indicatorColor ),
-                                color: Theme.of(context).dividerColor.withOpacity(0.1)
-                              ),
+                              
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [

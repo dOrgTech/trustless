@@ -3,9 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:trustless/widgets/governance.dart';
 
 import '../main.dart';
 import '../utils/reusable.dart';
+import '../widgets/footer.dart';
 import '../widgets/gameoflife.dart';
 
 class Landing extends StatefulWidget {
@@ -96,7 +98,19 @@ class _LandingState extends State<Landing> {
 }
 
 Widget dreapta(){
-  return Text("Dreapta");
+  return  Positioned(
+          right: 0,
+          top: 0,
+          child: Container(
+              decoration: BoxDecoration(
+                  // color: Theme.of(context).cardColor,
+                  borderRadius:
+                      BorderRadius.only(bottomLeft: Radius.circular(170))),
+              child: Center(
+                child:BuyATN(),
+              
+              )))
+   ;
 }
  Widget douaranduri(ce, cat){
               return   AnimatedContainer(
@@ -181,13 +195,20 @@ Widget dreapta(){
   Widget build(BuildContext context) {
     
     return  Container(
-      height: MediaQuery.of(context).size.height,
+      height: MediaQuery.of(context).size.height+100,
       width: MediaQuery.of(context).size.width,
       child: Stack(
         children: [
            Opacity(
                 opacity: 0.05,
                 child: GameOfLife()),
+                Positioned(
+                  bottom: 0,
+                  child: SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          height:150 ,
+                          child: Footer()),
+                ),
           SizedBox(
                   height: MediaQuery.of(context).size.height,
                   width:  MediaQuery.of(context).size.width,
@@ -195,16 +216,7 @@ Widget dreapta(){
                   child:  SingleChildScrollView(
                       child: Column(
                         children: [
-                           Container(
-                              color: Theme.of(context).primaryColor,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                    addresses("Source: ",sourceAddress,context),
-                                    // addresses("Rep Token:", "p9d8jqp9e8jfupqn9238rjp2398rjnpq3",context),
-                                    // addresses("USDC (test)", "p9d8jqp9e8jfupqn9238rjp2398rjnpq3",context)
-                                     ],),),
-                          const  SizedBox(height: 8),     
+                          
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [

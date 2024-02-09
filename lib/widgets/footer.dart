@@ -9,10 +9,11 @@ class Footer extends StatelessWidget {
   children: [
         Container(
           width: MediaQuery.of(context).size.width,
-          color: Color.fromARGB(255, 25, 25, 25),
+          color: Color.fromARGB(62, 0, 0, 0),
           padding: EdgeInsets.symmetric(vertical: 26, horizontal: 32),
           child: Center(
             child: Container(
+              height: 120,
               // width: 1200,
               constraints: BoxConstraints(maxWidth: 1050),
               child: Row(
@@ -62,7 +63,7 @@ class Footer extends StatelessWidget {
                         children: [
                     Image.asset(
                                    'trustless_dark.png',
-                                  height: 60,
+                                  height: 44,
                                    // color: Colors.red,
                              ),
                           SizedBox(width: 8),

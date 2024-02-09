@@ -120,8 +120,9 @@ class MyApp extends StatelessWidget {
             // ProjectDetails(project: projects[1]);
             // Prelaunch();
             // Poll();
-            //  BaseScaffold(selectedItem: 0, body: Users(), title: "Profile");
-            BaseScaffold(selectedItem: 1,body: Projects(), title: "Projects");
+            //  BaseScaffold(selectedItem: 0, body: Users(), title: "Users");
+             BaseScaffold(selectedItem: 0, body: Landing(), title: "Trustless Business");
+            // BaseScaffold(selectedItem: 1,body: Projects(), title: "Projects");
           } else if (settings.name!.startsWith('/projects/')) {
             final projectId = settings.name!.replaceFirst('/projects/', '');
             Project? project;

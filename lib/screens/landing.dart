@@ -209,46 +209,48 @@ Widget dreapta(){
                           height:150 ,
                           child: Footer()),
                 ),
-          SizedBox(
-                  height: MediaQuery.of(context).size.height,
-                  width:  MediaQuery.of(context).size.width,
-                  child:  Scrollbar(
-                  child:  SingleChildScrollView(
-                      child: Column(
-                        children: [
+
+
+          // SizedBox(
+          //         height: MediaQuery.of(context).size.height,
+          //         width:  MediaQuery.of(context).size.width,
+          //         child:  Scrollbar(
+          //         child:  SingleChildScrollView(
+          //             child: Column(
+          //               children: [
                           
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  width: MediaQuery.of(context).size.width/2,
-                                  margin: const EdgeInsets.all(40),
-                                  child: Wrap(
-                                    spacing: 20,
-                                    runSpacing: 20,
-                                    alignment: WrapAlignment.center,
-                                    runAlignment: WrapAlignment.center,
-                                      children: [
-                                        // treiranduri("Treasury Balance","3023", "1 tokens"),
-                                        douaranduri("XTZ Stored", valueInContracts.toString()),
-                                        douaranduri("USDT Stored", valueInContracts.toString()),
-                                        douaranduri("Active Projects", 
-                                        projects.length.toString()),
-                                        // activeProjects.toString()),
-                                        douaranduri("Total XTZ Paid", 0.toString()),
-                                        douaranduri("Total USDT Paid", 3323.toString()),
-                                        ]),
-                                ),
-                                dreapta()
-                              ],
-                            ),
-                            const  SizedBox(height: 88),
-                          // Poll(proposalAddress: "0xdsuiqhsudh")
-                        ],
-                      ),
-                    )
-                    ),
-                  ),
+          //                   Row(
+          //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //                     children: [
+          //                       Container(
+          //                         width: MediaQuery.of(context).size.width/2,
+          //                         margin: const EdgeInsets.all(40),
+          //                         child: Wrap(
+          //                           spacing: 20,
+          //                           runSpacing: 20,
+          //                           alignment: WrapAlignment.center,
+          //                           runAlignment: WrapAlignment.center,
+          //                             children: [
+          //                               // treiranduri("Treasury Balance","3023", "1 tokens"),
+          //                               douaranduri("XTZ Stored", valueInContracts.toString()),
+          //                               douaranduri("USDT Stored", valueInContracts.toString()),
+          //                               douaranduri("Active Projects", 
+          //                               projects.length.toString()),
+          //                               // activeProjects.toString()),
+          //                               douaranduri("Total XTZ Paid", 0.toString()),
+          //                               douaranduri("Total USDT Paid", 3323.toString()),
+          //                               ]),
+          //                       ),
+          //                       dreapta()
+          //                     ],
+          //                   ),
+          //                   const  SizedBox(height: 88),
+          //                 // Poll(proposalAddress: "0xdsuiqhsudh")
+          //               ],
+          //             ),
+          //           )
+          //           ),
+          //         ),
         ],
       ),
     );

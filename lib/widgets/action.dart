@@ -50,7 +50,7 @@ class ActionItem extends StatelessWidget {
     // Blend the base color with the theme's canvasColor
     Color blendedColor = Color.alphaBlend(baseColor.withOpacity(0.2), Theme.of(context).textTheme.bodySmall!.color!);
     Color blendedColor1 = Color.alphaBlend(baseColor.withOpacity(0.08), Theme.of(context).textTheme.bodySmall!.color!);
-
+    // return Text(action.name);
     return Container(
       margin: EdgeInsets.symmetric(vertical: 4),
       color: Color.fromARGB(12, 0, 0, 0),
@@ -77,13 +77,16 @@ class ActionItem extends StatelessWidget {
         ],
       ),
     ),
-            Expanded(
+            SizedBox(
+              width: 200,
               child: Text(action.contract,),
             ),
-            Expanded(
+            SizedBox(
+              width: 200,
               child: Text(action.params,), 
             ),
-            Expanded(
+            SizedBox(
+              width: 200,
               child: Text(action.hash,),
             ),
           ],
@@ -130,7 +133,7 @@ class _ActivityFeedState extends State<ActivityFeed> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return Container(
       child: Padding(
         padding: const EdgeInsets.all(18.0),
         child: ListView.builder(

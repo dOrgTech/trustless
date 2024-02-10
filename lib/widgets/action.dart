@@ -114,7 +114,7 @@ class _ActivityFeedState extends State<ActivityFeed> {
   @override
   void initState() {
     super.initState();
-    timer = Timer.periodic(Duration(milliseconds: 30), (timer) {
+    timer = Timer.periodic(Duration(milliseconds: 60), (timer) {
       if (displayedUsers.length < widget.users.length) {
         setState(() {
           displayedUsers.add(widget.users[displayedUsers.length]);

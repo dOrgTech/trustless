@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:trustless/widgets/action.dart';
 import 'package:trustless/widgets/governance.dart';
 import 'dart:ui' as ui;
 
 import 'package:trustless/widgets/popTopLeft.dart';
 import 'package:trustless/widgets/popTopRight.dart';
+
+import '../utils/scripts.dart';
 
 class CoolAnimationWidget extends StatefulWidget {
   @override
@@ -44,7 +47,7 @@ late Animation<double> textOpacityAnimation;
     _controller.forward();WidgetsBinding.instance.addPostFrameCallback((_) => _updateAnimation());
     topLeftHeightAnimation = Tween<double>(begin: 0, end:180).animate(topLeftController);
     topRightHeightAnimation = Tween<double>(begin: 0, end: 700).animate(topRightController);
-    bottomLeftHeightAnimation = Tween<double>(begin: 0, end: 400).animate(bottomLeftController);
+    bottomLeftHeightAnimation = Tween<double>(begin: 0, end: 800).animate(bottomLeftController);
 
     // Shadow animation controller
     shadowAnimationController = AnimationController(vsync: this, duration: Duration(seconds: 3))..repeat(reverse: true);
@@ -130,13 +133,17 @@ void _updateAnimation() {
             isRight: true,
           ),
           buildAnimatedContainer(
-            MediaQuery.of(context).size.height*0.9, 
-            Text("Ceva"),
-            screenWidth * 0.4, // 20% of screen width
+            MediaQuery.of(context).size.aspectRatio>1.4?
+            MediaQuery.of(context).size.width/MediaQuery.of(context).size.aspectRatio/1.6:
+             MediaQuery.of(context).size.width/(MediaQuery.of(context).size.aspectRatio*3.6)
+            
+            , 
+            ActivityFeed(users: users),
+            screenWidth * 0.6, // 20% of screen width
             bottomLeftHeightAnimation,
             containerColors,
             stops,
-            BorderRadius.only(topRight: Radius.circular(150)),
+            BorderRadius.only(topRight: Radius.circular(120)),
             isBottom: true,
             additionalBottomOffset: 150, // Start higher by 150px
           ),

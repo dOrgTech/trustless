@@ -780,12 +780,12 @@ class _PatternState extends State<Pattern> with TickerProviderStateMixin {
     super.initState();
 
     _controller1 = AnimationController(
-      duration: const Duration(seconds: 3),
+      duration: const Duration(seconds: 5),
       vsync: this,
     )..repeat(reverse: true);
 
     _controller2 = AnimationController(
-      duration: const Duration(seconds: 2),
+      duration: const Duration(seconds: 7),
       vsync: this,
     )..repeat(reverse: true);
 
@@ -794,11 +794,11 @@ class _PatternState extends State<Pattern> with TickerProviderStateMixin {
       vsync: this,
     )..repeat(reverse: true);
 
-    _opacity1 = Tween<double>(begin: 0.1, end: 0.4).animate(_controller1);
-    _blur1 = Tween<double>(begin: 0.0, end: 6.5).animate(_controller1);
+    _opacity1 = Tween<double>(begin: 0.6, end: 0.9).animate(_controller1);
+    _blur1 = Tween<double>(begin: 0.0, end: 2.5).animate(_controller1);
 
-    _opacity2 = Tween<double>(begin: 0.6, end: 0.7).animate(_controller2);
-    _blur2 = Tween<double>(begin: 0.0, end: 4.0).animate(_controller2); // More subtle effect
+    _opacity2 = Tween<double>(begin: 0.5, end: 0.6).animate(_controller2);
+    _blur2 = Tween<double>(begin: 0.0, end: 3.0).animate(_controller2); // More subtle effect
 
     _size = Tween<double>(begin: 0.99, end: 1.001).animate(_sizeController); // Subtle size change
   }

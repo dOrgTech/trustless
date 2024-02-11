@@ -105,13 +105,12 @@ class MyApp extends StatelessWidget {
       print("are metamask");
         Human().metamask=true;
     }
-    return ChangeNotifierProvider<ThemeNotifier>(
-      create: (_) => ThemeNotifier(),
-      child: Consumer<ThemeNotifier>(
-        builder: (context, theme, _) => MaterialApp(
+    return  MaterialApp(
+              themeMode: ThemeMode.system,
               debugShowCheckedModeBanner: false,
               title: 'Trustless Business',
-              theme: theme.getTheme(),
+               theme: lightTheme,
+               darkTheme: darkTheme, 
               initialRoute: '/',
             onGenerateRoute: (settings) {
           WidgetBuilder builder;
@@ -167,9 +166,8 @@ class MyApp extends StatelessWidget {
           );
         }
               // Remove the 'routes' map if all routes are handled in 'onGenerateRoute'
-            ),
-      ),
-    );
+            );
+      
   }
 }
 // class AppState extends ChangeNotifier {
@@ -249,7 +247,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
     Color blendedColor = blendColors(indicatorColor, textThemeColor, 0.5);
     final TextStyle? selectedMenuItem=TextStyle(fontSize: 19, color: blendedColor);
     final TextStyle? nonSelectedMenuItem=TextStyle(fontSize: 16, color: textThemeColor);
-    final themeNotifier = Provider.of<ThemeNotifier>(context);
+    // final themeNotifier = Provider.of<ThemeNotifier>(context);
 
     List<Widget>buttall=[
   Padding(
@@ -395,141 +393,128 @@ class _BaseScaffoldState extends State<BaseScaffold> {
            
           ];
           var human = Provider.of<Human>(context);
-    return  
-       
-           MediaQuery(
-            data: MediaQuery.of(context).copyWith(
-              
-              textScaleFactor: 
-              MediaQuery.of(context).size.height*MediaQuery.of(context).size.width<1400000?
-              0.8
-              :
-              1.0
-              ),
-            child:  Scaffold(
-            appBar: AppBar(
+          final double scaleFactor = MediaQuery.of(context).size.width * MediaQuery.of(context).size.height < 1600000 ? 0.8 : 1.0;
+         
+        // final double scaleFactor = MediaQuery.of(context).size.width * MediaQuery.of(context).size.height < 1400000 ? 0.8 : 1.0;
+
+          // Apply scale factor to the entire Scaffold
+          return Scaffold(
+          appBar: AppBar(
            toolbarHeight: 42,
            elevation: 1.8,
            automaticallyImplyLeading: MediaQuery.of(context).size.aspectRatio < switchAspect,
            title: 
            MediaQuery.of(context).size.aspectRatio >= switchAspect?
            Row(
-             children:
-           [ 
-              ...botoane,]
+           children:
+           [...botoane,]
            ):  null,
-            
+          
            actions: <Widget>[
-             
-             MediaQuery.of(context).size.aspectRatio > switchAspect?
-                Container(
-                  height: 9,
-                  padding: EdgeInsets.symmetric(horizontal: 12),
-                  decoration: BoxDecoration(
-                                  border: Border.all(width: 0.1 , color: Theme.of(context).textTheme.bodyLarge!.color! ),
-                                  color: Theme.of(context).indicatorColor.withOpacity(0.1)
-                                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.connect_without_contact_sharp, size: 29,
+           
+           MediaQuery.of(context).size.aspectRatio > switchAspect?
+              Container(
+                height: 9,
+                padding: EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                                border: Border.all(width: 0.1 , color: Theme.of(context).textTheme.bodyLarge!.color! ),
+                                color: Theme.of(context).indicatorColor.withOpacity(0.1)
+                              ),
+              child: Row(
+                children: [
+                  Icon(Icons.connect_without_contact_sharp, size: 29,
+                  color: Theme.of(context).indicatorColor,
+                  ),
+                  SizedBox(width: 12),
+                  Text( human.chain.name
+                  ,style: GoogleFonts.changa(
                     color: Theme.of(context).indicatorColor,
-                    ),
-                    SizedBox(width: 12),
-                    Text( human.chain.name
-                    ,style: GoogleFonts.changa(
-                      color: Theme.of(context).indicatorColor,
-                      fontSize: 19),
-                    )
-                  ],
-                )
-               ):Text(""),
-               const SizedBox(width: 35 ),
-             const WalletBTN(),
-             const SizedBox(width: 30),
-            Switch(
-               value: themeNotifier.isDarkMode,
-               onChanged: (value) {
-                 themeNotifier.toggleTheme();
-               },
-             ),
-             const SizedBox(width: 20)
+                    fontSize: 19),
+                  )
+                ],
+              )
+             ):Text(""),
+             const SizedBox(width: 35 ),
+           const WalletBTN(),
+           const SizedBox(width: 30),
+          
+           
            ],
            
-         ),
-         body: ListView(
-               children: [
-               Human().busy?SizedBox(
-                  height: 2,
-                  child: LinearProgressIndicator(
-                    backgroundColor: Theme.of(context).canvasColor,
-                    color: Theme.of(context).indicatorColor,
-                  )):SizedBox(height: 0),
-                 human.wrongChain?WrongChain():
-                 widget.body,
-               ],
-             )
+                 ),
+                 body: ListView(
+             children: [
+             Human().busy?SizedBox(
+                height: 2,
+                child: LinearProgressIndicator(
+                  backgroundColor: Theme.of(context).canvasColor,
+                  color: Theme.of(context).indicatorColor,
+                )):SizedBox(height: 0),
+               human.wrongChain?WrongChain():
+               widget.body,
+             ],
+           )
            ,
-            drawer: 
-            MediaQuery.of(context).size.aspectRatio <= switchAspect 
-            ?
-            Drawer(
+          drawer: 
+          MediaQuery.of(context).size.aspectRatio <= switchAspect 
+          ?
+          Drawer(
            child: ListView(
-             padding: EdgeInsets.zero,
-             children: <Widget>[
-               DrawerHeader(
-                 child: Theme.of(context).brightness==Brightness.light?
+           padding: EdgeInsets.zero,
+           children: <Widget>[
+             DrawerHeader(
+               child: Theme.of(context).brightness==Brightness.light?
            SizedBox(
-             width: 50,
-             child: ColorFiltered(
-                     colorFilter: ColorFilter.matrix([
-                       -1.0, 0.0, 0.0, 0.0, 255.0, // red
-                       0.0, -1.0, 0.0, 0.0, 255.0, // green
-                       0.0, 0.0, -1.0, 0.0, 255.0, // blue
-                       0.0, 0.0, 0.0, 1.0, 0.0, // alpha
-                     ]),
-                     child:logotall,
-                   ),
-         )
-         :
-         SizedBox(
+           width: 50,
+           child: ColorFiltered(
+                   colorFilter: ColorFilter.matrix([
+                     -1.0, 0.0, 0.0, 0.0, 255.0, // red
+                     0.0, -1.0, 0.0, 0.0, 255.0, // green
+                     0.0, 0.0, -1.0, 0.0, 255.0, // blue
+                     0.0, 0.0, 0.0, 1.0, 0.0, // alpha
+                   ]),
+                   child:logotall,
+                 ),
+                 )
+                 :
+                 SizedBox(
            width: 50,
            child: logotall),
-               ),
-              ...buttall, 
-               Padding(
-                 padding: const EdgeInsets.all(61.0),
-                 child: SizedBox(
-                   width: 60,
-                   child: DropdownButton<String>(
-                           value: human.chain.name,
-                           focusColor: Colors.transparent,
-                           items: chainNames.map((String value) {
-                   return DropdownMenuItem<String>(
-                     value: value,
-                     child: Text(value),
-                   );
-                           }).toList(),
-                           onChanged: (String? newValue) {
-                    Chain? foundChain;
-                    for (Chain cgn in chains.values){
-                      if (newValue==cgn.name){
-                      foundChain=cgn;
-                    }}
-                
-                foundChain ??= Chain(id: 0, name: 'N/A', nativeSymbol: '', decimals: 0, rpcNode: '');
-              
-                 setState(() {
-                   human.chain=foundChain!;
-                 });
-                     },
-                   ),
-                   ),
-                 ),
-               ],
              ),
+            ...buttall, 
+             Padding(
+               padding: const EdgeInsets.all(61.0),
+               child: SizedBox(
+                 width: 60,
+                 child: DropdownButton<String>(
+                         value: human.chain.name,
+                         focusColor: Colors.transparent,
+                         items: chainNames.map((String value) {
+                 return DropdownMenuItem<String>(
+                   value: value,
+                   child: Text(value),
+                 );
+                         }).toList(),
+                         onChanged: (String? newValue) {
+                  Chain? foundChain;
+                  for (Chain cgn in chains.values){
+                    if (newValue==cgn.name){
+                    foundChain=cgn;
+                  }}
+              
+              foundChain ??= Chain(id: 0, name: 'N/A', nativeSymbol: '', decimals: 0, rpcNode: '');
+            
+               setState(() {
+                 human.chain=foundChain!;
+               });
+                   },
+                 ),
+                 ),
+               ),
+             ],
+           ),
            ):null,
-            ),
-    );
+          );
      
   }
 }
@@ -767,14 +752,13 @@ class _WalletBTNState extends State<WalletBTN> {
 
 
 
-class ThemeNotifier with ChangeNotifier {
-  late ThemeData _themeData;
 
-  static const Color _lightThemeHighlightColor = Color.fromARGB(255, 124, 112, 93); // For light theme
-  static const Color _darkThemeHighlightColor = Color.fromARGB(255, 212, 195, 140); // For dark theme
+
+  const Color _lightThemeHighlightColor = Color.fromARGB(255, 124, 112, 93); // For light theme
+  const Color _darkThemeHighlightColor = Color.fromARGB(255, 212, 195, 140); // For dark theme
 
   // Light Theme
-  final ThemeData _lightTheme = ThemeData(
+  final ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
     canvasColor:Color.fromARGB(255, 235, 235, 235),
     primaryColor: Color.fromARGB(255, 155, 155, 155), // Main background color
@@ -817,7 +801,7 @@ class ThemeNotifier with ChangeNotifier {
   );
 
   // Dark Theme
-  final ThemeData _darkTheme = ThemeData(
+  final ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
     primaryColor: Colors.grey[850], // Main background color
     accentColor: _darkThemeHighlightColor, // Primary accent/highlight color
@@ -854,20 +838,7 @@ class ThemeNotifier with ChangeNotifier {
     fontFamily: 'CascadiaCode',
   );
 
-  ThemeNotifier({bool isDarkMode = true}) {
-    _themeData = isDarkMode ? _darkTheme: _lightTheme;
-  }
-
-  ThemeData getTheme() => _themeData;
-
-  void toggleTheme() {
-    _themeData = _themeData.brightness == Brightness.dark ? _lightTheme : _darkTheme;
-    notifyListeners();
-  }
-
-  bool get isDarkMode => _themeData.brightness == Brightness.dark;
-}
-
+ 
 
 
 

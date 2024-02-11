@@ -7,6 +7,7 @@ import 'package:trustless/widgets/popTopLeft.dart';
 import 'package:trustless/widgets/popTopRight.dart';
 
 import '../utils/scripts.dart';
+          // final double scaleFactor = MediaQuery.of(context).size.width * MediaQuery.of(context).size.height < 1600000 ? 0.8 : 1.0;
 
 class CoolAnimationWidget extends StatefulWidget {
   @override
@@ -45,7 +46,7 @@ late Animation<double> textOpacityAnimation;
     bottomLeftController = AnimationController(vsync: this, duration: Duration(milliseconds: 700));
     _heightAnimation = Tween<double>(begin: 0, end: 100).animate(_controller); // Placeholder end value
     _controller.forward();WidgetsBinding.instance.addPostFrameCallback((_) => _updateAnimation());
-    topLeftHeightAnimation = Tween<double>(begin: 0, end:100).animate(topLeftController);
+    topLeftHeightAnimation = Tween<double>(begin: 0, end:120).animate(topLeftController);
     topRightHeightAnimation = Tween<double>(begin: 0, end: 700).animate(topRightController);
     bottomLeftHeightAnimation = Tween<double>(begin: 0, end: 800).animate(bottomLeftController);
 
@@ -102,6 +103,8 @@ void _updateAnimation() {
 
   @override
   Widget build(BuildContext context) {
+    final double scaleFactor = MediaQuery.of(context).size.width * MediaQuery.of(context).size.height < 1600000 ? 0.8 : 1.0;
+
     final screenWidth = MediaQuery.of(context).size.width;
     List<Color> containerColors = [
       Theme.of(context).canvasColor.withOpacity(1),
@@ -112,102 +115,197 @@ void _updateAnimation() {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Stack(
-        children: [
-          buildACwithParentSize(
-            AnimatedStatsDisplay(),
-            MediaQuery.of(context).size.width*0.69 , // 40% of screen width
-            topLeftHeightAnimation,
-            containerColors,
-            stops,
-            BorderRadius.only(bottomRight: Radius.circular(120)),
-          ),
-          
-          buildAnimatedContainer(
-            MediaQuery.of(context).size.width*0.95, 
-            BuyATN(),
-            screenWidth * 0.30, // 30% of screen width
-            topRightHeightAnimation,
-            containerColors,
-            stops,
-            BorderRadius.only(bottomLeft: Radius.circular(120)),
-            isRight: true,
-          ),
-          buildAnimatedContainer(
-            MediaQuery.of(context).size.aspectRatio>1.4?
-            MediaQuery.of(context).size.width/MediaQuery.of(context).size.aspectRatio/1.6:
-             MediaQuery.of(context).size.width/(MediaQuery.of(context).size.aspectRatio*3.6)
-            
-            , 
-            ActivityFeed(users: users),
-            screenWidth * 0.6, // 20% of screen width
-            bottomLeftHeightAnimation,
-            containerColors,
-            stops,
-            BorderRadius.only(topRight: Radius.circular(120)),
-            isBottom: true,
-            additionalBottomOffset: 150, // Start higher by 150px
-          ),
-        ],
+          children: [
+      // buildAnimatedContainer(
+      //     scaleFactor,
+      //      MediaQuery.of(context).size.width/MediaQuery.of(context).size.width/1.6,
+      //     AnimatedStatsDisplay(),
+      //     MediaQuery.of(context).size.width*0.69 , // 40% of screen width
+      //     topLeftHeightAnimation,
+      //     containerColors,
+      //     stops,
+      //     BorderRadius.only(bottomRight: Radius.circular(120)),
+      //   ),
+  buildTopLeft(
+              context,
+              scaleFactor,
+              AnimatedStatsDisplay(),
+              300, // maxwidth
+              screenWidth * 0.6,
+              topLeftHeightAnimation,
+              containerColors,
+              stops,
+              BorderRadius.only(bottomRight: Radius.circular(150)),
+            ),
+      
+     buildAnimatedContainer(
+          scaleFactor,
+          MediaQuery.of(context).size.width*0.95, 
+          BuyATN(),
+          screenWidth * 0.30, // 30% of screen width
+          topRightHeightAnimation,
+          containerColors,
+          stops,
+          BorderRadius.only(bottomLeft: Radius.circular(120)),
+          isRight: true,
+        ),
+      buildAnimatedContainer(
+        scaleFactor,
+        MediaQuery.of(context).size.aspectRatio>1.4?
+        MediaQuery.of(context).size.width/MediaQuery.of(context).size.aspectRatio/1.6:
+         MediaQuery.of(context).size.width/(MediaQuery.of(context).size.aspectRatio*3.6)
+        
+        , 
+        ActivityFeed(users: users),
+        screenWidth * 0.6, // 20% of screen width
+        bottomLeftHeightAnimation,
+        containerColors,
+        stops,
+        BorderRadius.only(topRight: Radius.circular(120)),
+        isBottom: true,
+        additionalBottomOffset: 150, // Start higher by 150px
       ),
+          ],
+        ),
     );
   }
 
-Widget buildACwithParentSize(
-    Widget child,
-   double maxWidth,
+ Widget buildTopLeft(
+  context,
+  double scaleFactor,
+  Widget ceBagam,
 
-    Animation<double> animation,
-    List<Color> colors,
-    List<double> stops,
-    BorderRadius borderRadius, {
-    bool isRight = false,
-    bool isBottom = false,
-    double additionalBottomOffset = 0.0,
-}) {
+  var maxHeight,
+  double width, Animation<double> heightAnimation, List<Color> colors, List<double> stops, BorderRadius borderRadius, {bool isRight = false, bool isBottom = false, double additionalBottomOffset = 0.0}) {
+      
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    double scale = screenWidth < 1900 ? 1 - (((1900 - screenWidth).ceil() / 190) * 0.1) : 1.0;
+    
+    Widget childWidget;
+    
     return AnimatedBuilder(
-        animation: Listenable.merge([animation, shadowAnimationController, textOpacityAnimation]),
-        builder: (_, widgetChild) {
-            return Positioned(
-                top: isBottom ? null : 0,
-                bottom: isBottom ? additionalBottomOffset : null,
-                left: isRight ? null : 0,
-                right: isRight ? 0 : null,
-                child: AnimatedSize(
-                    duration: Duration(milliseconds: 100),
-                    curve: Curves.easeOut,
-                    child: Container(
-                        constraints: BoxConstraints(
-                          maxWidth: maxWidth,
-                          
-                          minHeight: animation.value,
-                        ),
-                        decoration: BoxDecoration(
-                            borderRadius: borderRadius,
-                            boxShadow: [
-                                BoxShadow(
-                                  color: Theme.of(context).indicatorColor.withOpacity(0.2),
-                                  blurRadius: blurRadiusAnimation.value,
-                                  spreadRadius: spreadRadiusAnimation.value,
-                                  offset: shadowOffsetAnimation.value,
-                                ),
-                                BoxShadow(
-                                  color: Theme.of(context).canvasColor.withOpacity(0.8),
-                                  blurRadius: 0,
-                                  spreadRadius: 0,
-                                ),
-                            ],
-                        ),
-                        child: ClipRRect(
-                            borderRadius: borderRadius,
-                            child: child,
-                        ),
+      animation: Listenable.merge([heightAnimation, shadowAnimationController, textOpacityAnimation]),
+      builder: (_, child) {
+        return Positioned(
+          top: isBottom ? null : 0,
+          bottom: isBottom ? additionalBottomOffset : null,
+          left: isRight ? null : 0,
+          right: isRight ? 0 : null,
+          child: 
+          isRight?ceBagam:
+          Transform.scale(
+            alignment: Alignment.topLeft,
+            scale:  scale,
+            child: MediaQuery(
+              data: MediaQueryData().copyWith(textScaleFactor: 1),
+              child: Container(
+                constraints: BoxConstraints(maxHeight: maxHeight),
+                width: width,
+                height: heightAnimation.value,
+                decoration: BoxDecoration(
+                  
+                  borderRadius: borderRadius,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context).indicatorColor.withOpacity(0.2),
+                      blurRadius: blurRadiusAnimation.value,
+                      spreadRadius: spreadRadiusAnimation.value,
+                      offset: shadowOffsetAnimation.value,
                     ),
+                    BoxShadow(
+                      color: Theme.of(context).canvasColor.withOpacity(0.96),
+                      blurRadius: 0,
+                      spreadRadius: 0,
+                    ),
+                  ],
                 ),
-            );
-        },
-    );
-}
+                child: ClipRRect(
+                  borderRadius: borderRadius,
+                  child: Container(
+                    color: Color.fromARGB(0, 0, 0, 0), // Assuming you want a transparent inner container
+                    child: Center(
+                      child: AnimatedBuilder(
+                        
+                        animation: textOpacityAnimation,
+                        builder: (context, child) {
+                          return Opacity(
+                            opacity: textOpacityAnimation.value,
+                            child: child,
+                          );
+                        },
+                        child:ceBagam
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+   } );
+  }
+ 
+
+// Widget buildACwithParentSize(
+//     Widget child,
+//    double maxWidth,
+
+//     Animation<double> animation,
+//     List<Color> colors,
+//     List<double> stops,
+//     BorderRadius borderRadius, {
+//     bool isRight = false,
+//     bool isBottom = false,
+//     double additionalBottomOffset = 0.0,
+// }) {
+//     return AnimatedBuilder(
+//         animation: Listenable.merge([animation, shadowAnimationController, textOpacityAnimation]),
+//         builder: (_, widgetChild) {
+//             return Positioned(
+//                 top: isBottom ? null : 0,
+//                 bottom: isBottom ? additionalBottomOffset : null,
+//                 left: isRight ? null : 0,
+//                 right: isRight ? 0 : null,
+//                 child: AnimatedSize(
+//                     duration: Duration(milliseconds: 100),
+//                     curve: Curves.easeOut,
+//                     child: Container(
+//                         constraints: BoxConstraints(
+//                           maxWidth: maxWidth,
+                          
+//                           minHeight: animation.value,
+//                         ),
+//                         decoration: BoxDecoration(
+//                             borderRadius: borderRadius,
+//                             boxShadow: [
+//                                 BoxShadow(
+//                                   color: Theme.of(context).indicatorColor.withOpacity(0.2),
+//                                   blurRadius: blurRadiusAnimation.value,
+//                                   spreadRadius: spreadRadiusAnimation.value,
+//                                   offset: shadowOffsetAnimation.value,
+//                                 ),
+//                                 BoxShadow(
+//                                   color: Theme.of(context).canvasColor.withOpacity(0.8),
+//                                   blurRadius: 0,
+//                                   spreadRadius: 0,
+//                                 ),
+//                             ],
+//                         ),
+//                         child: ClipRRect(
+//                             borderRadius: borderRadius,
+//                             child: child,
+//                         ),
+//                     ),
+//                 ),
+//             );
+//         },
+//     );
+// }
+
+
 Widget buildAnimatedContainer(
+    double scaleFactor,
     double maxHeight,
     Widget ceBagam,
     double width,

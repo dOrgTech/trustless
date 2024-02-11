@@ -3,17 +3,18 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:trustless/entities/human.dart';
 import 'package:trustless/main.dart';
 import 'package:trustless/utils/reusable.dart';
 import 'package:trustless/widgets/projectDetails.dart';
-
+import 'package:trustless/screens/prelaunch.dart';
 import 'package:web3dart/web3dart.dart';
 
 class BuyATN extends StatefulWidget {
  BuyATN();
- 
+ double opa_aur = 0;
 
  
   bool? isUser;
@@ -25,11 +26,12 @@ class BuyATN extends StatefulWidget {
 class _BuyATNState extends State<BuyATN> with TickerProviderStateMixin {
   double left = 0.0;
   double opa = 0;
+  
   double spread = 0.0;
   double down = 0.0;
   double sime = 3;
   double gro = 0;
-  double height = 330;
+  double height = 0;
   AnimationController? controller;
   @override
   void initState() {
@@ -45,7 +47,7 @@ class _BuyATNState extends State<BuyATN> with TickerProviderStateMixin {
         spread = 0.3;
         sime = MediaQuery.of(context).size.width/3.1;
         gro = 0;
-        height = MediaQuery.of(context).size.height/2;
+        height = MediaQuery.of(context).size.height/1.2;
       });
     });
     Future.delayed(Duration(milliseconds: 500), () {
@@ -53,10 +55,16 @@ class _BuyATNState extends State<BuyATN> with TickerProviderStateMixin {
       gro = 500.0;
     });
     super.initState();
+   
   }
 
   @override
   Widget build(BuildContext context) {
+     Future.delayed(Duration(milliseconds: 500), () {
+      setState(() {
+      widget.opa_aur = 0.7;
+      });
+    });
     List<Color> colors = [
       Theme.of(context).canvasColor.withOpacity(0.99),
       Theme.of(context).canvasColor.withOpacity(0.89)
@@ -87,37 +95,63 @@ class _BuyATNState extends State<BuyATN> with TickerProviderStateMixin {
                   borderRadius: BorderRadius.only(bottomLeft: Radius.circular(150)),
                   gradient: RadialGradient(colors: colors, stops: stops)),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  SizedBox(height: 24),
+                 
+                  Padding(
+                    padding: const EdgeInsets.only(top:18.0),
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height/4,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // 
+                          // Placeholder(),
+                          // Pattern(),
+                          Padding(
+                            padding: const EdgeInsets.all(29.0),
+                            child: Stack(
+                              children: [
+                                Image.asset("assets/tgri.png"),
+                                AnimatedOpacity(
+                                  duration: Duration(milliseconds: 1500),
+                                  opacity: widget.opa_aur,
+                                  child: 
+                                Image.asset("assets/taur.png")
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                                padding: const EdgeInsets.only(right: 18.0),
+                                child: Center(
+                                  child: TyperAnimatedTextKit(
+                    isRepeatingAnimation: false,
+                    pause: const Duration(seconds: 4),
+                    textAlign: TextAlign.left,
+                    speed: const Duration(milliseconds: 31),
+                    text: const ["Self-Sufficient\nDecentralized\nBusiness\nEnvironment"],
+                    textStyle:TextStyle(
+                        height: 1.5,
+                       
+                        fontSize: 23),
+                                  ),
+                                ),
+                              ),
+                        ],
+                      )),
+                  ),
                   AnimatedContainer(
                     duration: Duration(milliseconds: 700),
                     padding: EdgeInsets.symmetric(vertical: 4),
                     // width: sime-MediaQuery.of(context).size.width/10,
                     color: Theme.of(context).cardColor,
                     child: Center(
-                        child: TyperAnimatedTextKit(
-                      isRepeatingAnimation: false,
-                      speed: Duration(milliseconds: 75),
-                      text: [
-                        "TRUSTLESS BUSINESS ENVIRONMENT",
-                      ],
-                      textStyle: TextStyle(fontSize: 22, fontWeight: FontWeight.bold
-                          // fontFamily: "OCR-A",
-                          ),
-                    )),
-                  ),
-                  SizedBox(height: 20),
-                  AnimatedOpacity(
-                    duration: Duration(seconds: 1),
-                    opacity: opa,
-                    child:
-                        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          SizedBox(height: 4),
-                          Row(
+                        child: 
+                        
+                         Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text("Economy Contract address: ",
                                   style: TextStyle(fontFamily: "Roboto Mono")),
@@ -130,84 +164,138 @@ class _BuyATNState extends State<BuyATN> with TickerProviderStateMixin {
         
                             ],
                           ),
-                          SizedBox(height: 5),
-                        ])
-                    ]),
+                        ),
                   ),
-                  SizedBox(height: 25),
+                  // SizedBox(height: 20),
+                  // AnimatedOpacity(
+                  //   duration: Duration(seconds: 1),
+                  //   opacity: opa,
+                  //   child:
+                  //       Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  //     Column(
+                  //       crossAxisAlignment: CrossAxisAlignment.end,
+                  //       children: [
+                  //         SizedBox(height: 4),
+                         
+                  //         SizedBox(height: 5),
+                  //       ])
+                  //   ]),
+                  // ),
+                  
                   AnimatedOpacity(
                     duration: Duration(milliseconds: 1600),
                     opacity: opa,
                     child: Container(
-                      width: 420,
-                      decoration: BoxDecoration(color: Theme.of(context).cardColor),
-                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      padding:EdgeInsets.all(20),
+                      // decoration: BoxDecoration(color: Theme.of(context).cardColor.withOpacity(0.9)),
+                      // padding: EdgeInsets.symmetric(horizontal: 20),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           SizedBox(height: 9),
                           Text(
-                            "This is a self-contained architecture of incentives designed to facilitate value emergence. ",
+                            "An architecture of incentives to help with value emergence. It comes with the stability of traditional legal contracts and none of the drawbacks.",
+                            textAlign: TextAlign.justify,
                             style:
                                 TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(height: 9),
-                          Text(
-                            "Engage in fully-trustless business arrangements. ",
-                            style:
-                                TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-                          ),
+                             Container(
+                              width: 183,
+                              height: 36,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).cardColor.withOpacity(0.1), // Button background color
+                                border: Border.all(
+                                  color:Theme.of(context).indicatorColor, // Color of the contour
+                                  width: 0.2, // Thickness of the contour
+                                ),
+                                borderRadius: BorderRadius.circular(4.0), // Match this with your button's border radius if any
+                              ),
+                              child: TextButton(
+                                style: ButtonStyle(
+                                  overlayColor: MaterialStateProperty.all(Theme.of(context).indicatorColor.withOpacity(0.1)), // Handle overlay color for ripple effect if needed
+                                ),
+                                onPressed: () {},
+                                child: Center(child: 
+                              
+                                    Text("Read Docs"),
+                                  ),
+                              ),
+                            )
+                           
+                        
                           // SizedBox(height: 6),
                           // Text(
                           //     "This is a self-contained architecture of incentives designed to facilitate value emergence"),
                           // Text(
                           //     "* Each of the following 500K tokens sold triggers a 0.00025 ETH increase in price."),
-                          SizedBox(height: 9)
+                          
                         ],
                       ),
                     ),
                   ),
-                  SizedBox(height: 39),
+                 
                   AnimatedOpacity(
                       duration: Duration(milliseconds: 1300),
                       opacity: opa,
-                      child:  TextButton(
-                          style: TextButton.styleFrom(
-                              backgroundColor: Theme.of(context).indicatorColor,
-                              elevation: 1),
-                          onPressed: () async{
-                              showDialog(
-                          context: context,
-                          builder: (context) =>  AlertDialog(
-                            content: SizedBox(
-                              height: 500,
-                              width: 500,
-                              child:
-                             
-                              Container(),
-                            ),
+                      child:  Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            
+                              padding: const EdgeInsets.symmetric(horizontal:34.0),
+                              child: Center(
+                                child: Text(
+                                "Engage in fully-trustless business arrangements. ",
+                                style:
+                                    TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                                                        ),
+                              ),
+                            ),SizedBox(height: 14),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom:30.0),
+                            child: TextButton(
+                                style: TextButton.styleFrom(
+                                    backgroundColor: Theme.of(context).indicatorColor,
+                                    elevation: 1),
+                                onPressed: () async{
+                                    showDialog(
+                                context: context,
+                                builder: (context) =>  AlertDialog(
+                                  content: SizedBox(
+                                    height: 500,
+                                    width: 500,
+                                    child:
+                                   
+                                    Container(),
+                                  ),
+                                ),
+                              );
+                                },
+                                child: Container(
+                                  width: 168,
+                                  height: 36,
+                                  padding: EdgeInsets.only(bottom:0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.edit, color:  Theme.of(context).canvasColor,),
+                                      SizedBox(width: 7),
+                                      Text(
+                                        "Create a Project",
+                                        style: TextStyle(
+                                          color:  Theme.of(context).canvasColor,
+                                            ),
+                                      )
+                                    ],
+                                  ),
+                                )),
                           ),
-                        );
-                          },
-                          child: Container(
-                            width: 168,
-                            height: 36,
-                            padding: EdgeInsets.all(0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.edit, color:  Theme.of(context).canvasColor,),
-                                SizedBox(width: 7),
-                                Text(
-                                  "Create a Project",
-                                  style: TextStyle(
-                                    color:  Theme.of(context).canvasColor,
-                                      ),
-                                )
-                              ],
-                            ),
-                          ))),
-                  SizedBox(height: 30)
+                        ],
+                      )),
+                  
                 ],
               )),
         );

@@ -74,7 +74,7 @@ class _AnimatedStatsDisplayState extends State<AnimatedStatsDisplay> with Ticker
       child: FadeTransition(
         opacity: _opacityControllers[index].drive(CurveTween(curve: Curves.easeOut)),
         child: Padding(
-          padding: const EdgeInsets.only(top:38.0,left:20,right:20,bottom:0),
+          padding: const EdgeInsets.only(top:18.0,left:4,right:20,bottom:16),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,12 +109,12 @@ class _AnimatedStatsDisplayState extends State<AnimatedStatsDisplay> with Ticker
       builder: (context, constraints) {
         // bool useVerticalLayout = constraints.maxWidth < 600;
         return  Padding(
-          padding: const EdgeInsets.symmetric(horizontal:80.0, vertical: 23),
-          child: Wrap(
-            alignment: WrapAlignment.spaceEvenly,
-            runAlignment: WrapAlignment.center,
-            spacing:20, // Horizontal space between items
-            runSpacing: 20, // Vertical space between lines
+          padding: const EdgeInsets.only(left:30.0, right:10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            // runAlignment: WrapAlignment.center,
+            // spacing:20, // Horizontal space between items
+            // runSpacing: 20, // Vertical space between lines
             children: statWidgets,
           ),
         );

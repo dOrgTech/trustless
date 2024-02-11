@@ -11,8 +11,8 @@ class _AnimatedStatsDisplayState extends State<AnimatedStatsDisplay> with Ticker
     'Ongoing Disputes': 0,
     'Open Projects': 14,
     'Active Projects': 5,
-    'Total XTZ Earned': 44301929,
-    'Total USDT Earned': 94124,
+    'Total XTZ Earned': 44301,
+    'Total USDT Earned': 55000,
   };
 
   List<AnimationController> _numberControllers = [];
@@ -27,7 +27,7 @@ class _AnimatedStatsDisplayState extends State<AnimatedStatsDisplay> with Ticker
     int delay = 0;
     data.forEach((key, value) {
       final numberController = AnimationController(
-        duration: Duration(seconds: 2),
+        duration: Duration(seconds: 1),
         vsync: this,
       );
       final opacityController = AnimationController(
@@ -70,7 +70,7 @@ class _AnimatedStatsDisplayState extends State<AnimatedStatsDisplay> with Ticker
 
   Widget _buildStatItem(String label, int index) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 24.0), // More space between the stat items
+      padding: const EdgeInsets.only(bottom: 14.0), // More space between the stat items
       child: FadeTransition(
         opacity: _opacityControllers[index].drive(CurveTween(curve: Curves.easeOut)),
         child: Padding(
@@ -109,7 +109,7 @@ class _AnimatedStatsDisplayState extends State<AnimatedStatsDisplay> with Ticker
       builder: (context, constraints) {
         // bool useVerticalLayout = constraints.maxWidth < 600;
         return  Padding(
-          padding: const EdgeInsets.symmetric(horizontal:100.0, vertical: 23),
+          padding: const EdgeInsets.symmetric(horizontal:80.0, vertical: 23),
           child: Wrap(
             alignment: WrapAlignment.spaceEvenly,
             runAlignment: WrapAlignment.center,

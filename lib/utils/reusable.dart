@@ -29,7 +29,23 @@ Future<Uint8List> generateAvatarAsync(String hash, {int size = 40, int pixelSize
   return Future.value(pngBytes as FutureOr<Uint8List>?);
 }
 
+ String getTimeAgo(DateTime dateTime) {
+    final Duration diff = DateTime.now().difference(dateTime);
 
+    if (diff.inMinutes < 1) {
+      return 'less than a min ago';
+    } else if (diff.inHours < 1) {
+      return '${diff.inMinutes} minutes ago';
+    } else if (diff.inDays < 1) {
+      final int hours = diff.inHours;
+      final int minutes = diff.inMinutes % 60;
+      return '$hours hours ago';
+    } else {
+      final int days = diff.inDays;
+      final int hours = diff.inHours % 24;
+      return '$days days ago';
+    }
+  }
 
 String hashString(String input) {
   final bytes = utf8.encode(input);

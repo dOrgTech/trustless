@@ -51,8 +51,8 @@ late Animation<double> textOpacityAnimation;
 
     // Shadow animation controller
     shadowAnimationController = AnimationController(vsync: this, duration: Duration(seconds: 3))..repeat(reverse: true);
-    blurRadiusAnimation = Tween<double>(begin: 5.0, end: 15.0).animate(CurvedAnimation(parent: shadowAnimationController, curve: Curves.easeInOut));
-    spreadRadiusAnimation = Tween<double>(begin: 1.0, end: 3.0).animate(CurvedAnimation(parent: shadowAnimationController, curve: Curves.easeInOut));
+    blurRadiusAnimation = Tween<double>(begin: 4.0, end: 8.0).animate(CurvedAnimation(parent: shadowAnimationController, curve: Curves.easeInOut));
+    spreadRadiusAnimation = Tween<double>(begin: 3.0, end: 5.0).animate(CurvedAnimation(parent: shadowAnimationController, curve: Curves.easeInOut));
     shadowOffsetAnimation = Tween<Offset>(begin: Offset(0, 0), end: Offset(2, 2)).animate(CurvedAnimation(parent: shadowAnimationController, curve: Curves.easeInOut));
 
     // Start the expansion animations
@@ -119,7 +119,7 @@ void _updateAnimation() {
             topLeftHeightAnimation,
             containerColors,
             stops,
-            BorderRadius.only(bottomRight: Radius.circular(150)),
+            BorderRadius.only(bottomRight: Radius.circular(120)),
           ),
           
           buildAnimatedContainer(
@@ -129,7 +129,7 @@ void _updateAnimation() {
             topRightHeightAnimation,
             containerColors,
             stops,
-            BorderRadius.only(bottomLeft: Radius.circular(150)),
+            BorderRadius.only(bottomLeft: Radius.circular(120)),
             isRight: true,
           ),
           buildAnimatedContainer(

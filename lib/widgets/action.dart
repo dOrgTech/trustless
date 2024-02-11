@@ -287,8 +287,8 @@ class _ActivityFeedState extends State<ActivityFeed> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(milliseconds: 300)).then((value) => {
-      timer = Timer.periodic(Duration(milliseconds: 20), (timer) {
+    Future.delayed(Duration(milliseconds: 400)).then((value) => {
+      timer = Timer.periodic(Duration(milliseconds: 24), (timer) {
       if (displayedUsers.length < 15) {
         setState(() {
           displayedUsers.add(widget.users[displayedUsers.length]);
@@ -320,59 +320,63 @@ class _ActivityFeedState extends State<ActivityFeed> {
       Column(
         children: [
             // ________________________________________BEGIN_HEADER_________________________________
-         Container(
-        margin: EdgeInsets.symmetric(vertical: 4),
-        color: Color.fromARGB(12, 0, 0, 0),
-        // decoration: BoxDecoration(),
-        padding: EdgeInsets.all(0.0),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal:45.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-             Container(
-                  width: 160,height: 40,
-                  color: Color.fromARGB(0, 76, 175, 79),
-                  child:  Padding(
-                    padding: const EdgeInsets.only(top:8.0,left:0,bottom:8),
-                    child: Text(
-                            "User or Org",
-                            style: GoogleFonts.dmMono(fontSize: 14,))
-                  ),
+    //      Container(
+    //     margin: EdgeInsets.symmetric(vertical: 4),
+    //     color: Color.fromARGB(12, 0, 0, 0),
+    //     // decoration: BoxDecoration(),
+    //     padding: EdgeInsets.all(0.0),
+    //     child: Padding(
+    //       padding: const EdgeInsets.symmetric(horizontal:45.0),
+    //       child: Row(
+    //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    //         children: [
+    //          Container(
+    //               width: 156,height: 40,
+    //               color: Color.fromARGB(0, 76, 175, 79),
+    //               child:  Padding(
+    //                 padding: const EdgeInsets.only(top:8.0,left:0,bottom:8),
+    //                 child: Text(
+    //                         "User or Org",
+    //                         style: GoogleFonts.jetBrainsMono(fontSize: 13,
+                            
+    //                         ))
+    //               ),
 
-                ),
-      Spacer(),
+    //             ),
+    //  SizedBox(width: MediaQuery.of(context).size.width/16) ,
+
                      
-    Container(
-                width: 190,
-                padding: EdgeInsets.all(8.0),
-                color: Colors.transparent, // Use the blended color as the background
-                child: Text(
-                            "Executed",
-                            style: GoogleFonts.dmMono(fontSize: 14,))
-      ), 
-      Spacer(),
-
-   
-     Container(
-                 height: 40,
-                  color: Color.fromARGB(0, 76, 119, 175),
-                  child:  Padding(
-                    padding: const EdgeInsets.only(top:8.0,left:0,bottom:8),
-                    child: Text(
-                            "on Contract",
-                            style: GoogleFonts.dmMono(fontSize: 14,))
-                  ),
-                ),
-                 Spacer(),
-         Spacer(),
-            SizedBox(width: 100,child: Text("  "),),
-            
-            ],
-          ),
-        ),
+    // Container(
+    //             width:MediaQuery.of(context).size.width>1000? 190:155,
+    //             padding: EdgeInsets.all(8.0),
+    //             color: Colors.transparent, // Use the blended color as the background
+    //             child: Text(
+    //                         "Executed Tramsaction",
+    //                         style: GoogleFonts.jetBrainsMono(fontSize: 13,))
+    //   ), 
      
-    ),
+
+    //   SizedBox(width: MediaQuery.of(context).size.width/19) ,
+     
+   
+    //  Container(
+    //              height: 40,
+    //               color: Color.fromARGB(0, 76, 119, 175),
+    //               child:  Padding(
+    //                 padding: const EdgeInsets.only(top:8.0,left:0,bottom:8),
+    //                 child: Text(
+    //                         "On Contract",
+    //                         style: GoogleFonts.jetBrainsMono(fontSize: 13,))
+    //               ),
+    //             ),
+    //            Spacer() ,
+    //         SizedBox(child: Text(""),)
+            
+    //         ],
+    //       ),
+    //     ),
+     
+    // ),
 
 
 

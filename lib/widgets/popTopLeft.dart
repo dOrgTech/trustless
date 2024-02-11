@@ -79,7 +79,7 @@ class _AnimatedStatsDisplayState extends State<AnimatedStatsDisplay> with Ticker
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
+              Opacity(opacity: 0.8, child: Text(label, style: TextStyle(fontWeight: FontWeight.bold))),
               SizedBox(height: 8), // More space between label and value
               AnimatedBuilder(
                 animation: _numberAnimations[index],

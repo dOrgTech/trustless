@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:math';
-
 import 'package:flutter/material.dart';
-
 import 'dart:math';
 import 'dart:convert';
 import 'package:image/image.dart' as img;

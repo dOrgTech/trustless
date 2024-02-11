@@ -238,7 +238,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
   // The current selected value of the dropdown
   // String? selectedValue = 'Etherlink Testnet';
      Widget logo=Image.network('https://i.ibb.co/Tvkq0Mz/trlogomic.png',
-   height: widget.isTrustless?27:26,
+   height: widget.isTrustless?23:22,
   );
      Widget logotall=Image.network('https://i.ibb.co/Tvkq0Mz/trlogomic.png',
    height:12,
@@ -319,7 +319,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
             Opacity(
               opacity: widget.isTrustless?1:0.6,
               child: SizedBox(
-                width:200,
+                width:170,
                 child: TextButton(onPressed: 
                 (){
                    Navigator.pushNamed(context, '/stats');
@@ -395,129 +395,141 @@ class _BaseScaffoldState extends State<BaseScaffold> {
            
           ];
           var human = Provider.of<Human>(context);
-    return   Scaffold(
-          appBar: AppBar(
-         toolbarHeight: 42,
-         elevation: 1.8,
-         automaticallyImplyLeading: MediaQuery.of(context).size.aspectRatio < switchAspect,
-         title: 
-         MediaQuery.of(context).size.aspectRatio >= switchAspect?
-         Row(
-           children:
-         [ 
-            ...botoane,]
-         ):  null,
-          
-         actions: <Widget>[
-           
-           MediaQuery.of(context).size.aspectRatio > switchAspect?
-              Container(
-                height: 9,
-                padding: EdgeInsets.symmetric(horizontal: 12),
-                decoration: BoxDecoration(
-                                border: Border.all(width: 0.1 , color: Theme.of(context).textTheme.bodyLarge!.color! ),
-                                color: Theme.of(context).indicatorColor.withOpacity(0.1)
-                              ),
-              child: Row(
-                children: [
-                  Icon(Icons.connect_without_contact_sharp, size: 29,
-                  color: Theme.of(context).indicatorColor,
-                  ),
-                  SizedBox(width: 12),
-                  Text( human.chain.name
-                  ,style: GoogleFonts.changa(
+    return  
+       
+           MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              
+              textScaleFactor: 
+              MediaQuery.of(context).size.height*MediaQuery.of(context).size.width<1400000?
+              0.8
+              :
+              1.0
+              ),
+            child:  Scaffold(
+            appBar: AppBar(
+           toolbarHeight: 42,
+           elevation: 1.8,
+           automaticallyImplyLeading: MediaQuery.of(context).size.aspectRatio < switchAspect,
+           title: 
+           MediaQuery.of(context).size.aspectRatio >= switchAspect?
+           Row(
+             children:
+           [ 
+              ...botoane,]
+           ):  null,
+            
+           actions: <Widget>[
+             
+             MediaQuery.of(context).size.aspectRatio > switchAspect?
+                Container(
+                  height: 9,
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  decoration: BoxDecoration(
+                                  border: Border.all(width: 0.1 , color: Theme.of(context).textTheme.bodyLarge!.color! ),
+                                  color: Theme.of(context).indicatorColor.withOpacity(0.1)
+                                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.connect_without_contact_sharp, size: 29,
                     color: Theme.of(context).indicatorColor,
-                    fontSize: 19),
-                  )
-                ],
-              )
-             ):Text(""),
-             const SizedBox(width: 35 ),
-           const WalletBTN(),
-           const SizedBox(width: 30),
-          Switch(
-             value: themeNotifier.isDarkMode,
-             onChanged: (value) {
-               themeNotifier.toggleTheme();
-             },
-           ),
-           const SizedBox(width: 20)
-         ],
-         
-       ),
-       body: ListView(
-             children: [
-             Human().busy?SizedBox(
-                height: 2,
-                child: LinearProgressIndicator(
-                  backgroundColor: Theme.of(context).canvasColor,
-                  color: Theme.of(context).indicatorColor,
-                )):SizedBox(height: 0),
-               human.wrongChain?WrongChain():
-               widget.body,
-             ],
-           )
-         ,
-          drawer: 
-          MediaQuery.of(context).size.aspectRatio <= switchAspect 
-          ?
-          Drawer(
-         child: ListView(
-           padding: EdgeInsets.zero,
-           children: <Widget>[
-             DrawerHeader(
-               child: Theme.of(context).brightness==Brightness.light?
+                    ),
+                    SizedBox(width: 12),
+                    Text( human.chain.name
+                    ,style: GoogleFonts.changa(
+                      color: Theme.of(context).indicatorColor,
+                      fontSize: 19),
+                    )
+                  ],
+                )
+               ):Text(""),
+               const SizedBox(width: 35 ),
+             const WalletBTN(),
+             const SizedBox(width: 30),
+            Switch(
+               value: themeNotifier.isDarkMode,
+               onChanged: (value) {
+                 themeNotifier.toggleTheme();
+               },
+             ),
+             const SizedBox(width: 20)
+           ],
+           
+         ),
+         body: ListView(
+               children: [
+               Human().busy?SizedBox(
+                  height: 2,
+                  child: LinearProgressIndicator(
+                    backgroundColor: Theme.of(context).canvasColor,
+                    color: Theme.of(context).indicatorColor,
+                  )):SizedBox(height: 0),
+                 human.wrongChain?WrongChain():
+                 widget.body,
+               ],
+             )
+           ,
+            drawer: 
+            MediaQuery.of(context).size.aspectRatio <= switchAspect 
+            ?
+            Drawer(
+           child: ListView(
+             padding: EdgeInsets.zero,
+             children: <Widget>[
+               DrawerHeader(
+                 child: Theme.of(context).brightness==Brightness.light?
+           SizedBox(
+             width: 50,
+             child: ColorFiltered(
+                     colorFilter: ColorFilter.matrix([
+                       -1.0, 0.0, 0.0, 0.0, 255.0, // red
+                       0.0, -1.0, 0.0, 0.0, 255.0, // green
+                       0.0, 0.0, -1.0, 0.0, 255.0, // blue
+                       0.0, 0.0, 0.0, 1.0, 0.0, // alpha
+                     ]),
+                     child:logotall,
+                   ),
+         )
+         :
          SizedBox(
            width: 50,
-           child: ColorFiltered(
-                   colorFilter: ColorFilter.matrix([
-                     -1.0, 0.0, 0.0, 0.0, 255.0, // red
-                     0.0, -1.0, 0.0, 0.0, 255.0, // green
-                     0.0, 0.0, -1.0, 0.0, 255.0, // blue
-                     0.0, 0.0, 0.0, 1.0, 0.0, // alpha
-                   ]),
-                   child:logotall,
-                 ),
-       )
-       :
-       SizedBox(
-         width: 50,
-         child: logotall),
-             ),
-            ...buttall, 
-             Padding(
-               padding: const EdgeInsets.all(61.0),
-               child: SizedBox(
-                 width: 60,
-                 child: DropdownButton<String>(
-                         value: human.chain.name,
-                         focusColor: Colors.transparent,
-                         items: chainNames.map((String value) {
-                 return DropdownMenuItem<String>(
-                   value: value,
-                   child: Text(value),
-                 );
-                         }).toList(),
-                         onChanged: (String? newValue) {
-                  Chain? foundChain;
-                  for (Chain cgn in chains.values){
-                    if (newValue==cgn.name){
-                    foundChain=cgn;
-                  }}
-              
-              foundChain ??= Chain(id: 0, name: 'N/A', nativeSymbol: '', decimals: 0, rpcNode: '');
-            
-               setState(() {
-                 human.chain=foundChain!;
-               });
-                   },
-                 ),
-                 ),
+           child: logotall),
                ),
-             ],
-           ),
-         ):null,
-          );
+              ...buttall, 
+               Padding(
+                 padding: const EdgeInsets.all(61.0),
+                 child: SizedBox(
+                   width: 60,
+                   child: DropdownButton<String>(
+                           value: human.chain.name,
+                           focusColor: Colors.transparent,
+                           items: chainNames.map((String value) {
+                   return DropdownMenuItem<String>(
+                     value: value,
+                     child: Text(value),
+                   );
+                           }).toList(),
+                           onChanged: (String? newValue) {
+                    Chain? foundChain;
+                    for (Chain cgn in chains.values){
+                      if (newValue==cgn.name){
+                      foundChain=cgn;
+                    }}
+                
+                foundChain ??= Chain(id: 0, name: 'N/A', nativeSymbol: '', decimals: 0, rpcNode: '');
+              
+                 setState(() {
+                   human.chain=foundChain!;
+                 });
+                     },
+                   ),
+                   ),
+                 ),
+               ],
+             ),
+           ):null,
+            ),
+    );
      
   }
 }

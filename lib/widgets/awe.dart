@@ -45,7 +45,7 @@ late Animation<double> textOpacityAnimation;
     bottomLeftController = AnimationController(vsync: this, duration: Duration(milliseconds: 700));
     _heightAnimation = Tween<double>(begin: 0, end: 100).animate(_controller); // Placeholder end value
     _controller.forward();WidgetsBinding.instance.addPostFrameCallback((_) => _updateAnimation());
-    topLeftHeightAnimation = Tween<double>(begin: 0, end:180).animate(topLeftController);
+    topLeftHeightAnimation = Tween<double>(begin: 0, end:100).animate(topLeftController);
     topRightHeightAnimation = Tween<double>(begin: 0, end: 700).animate(topRightController);
     bottomLeftHeightAnimation = Tween<double>(begin: 0, end: 800).animate(bottomLeftController);
 

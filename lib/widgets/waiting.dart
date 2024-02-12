@@ -25,7 +25,7 @@ class WaitingOnChain extends StatelessWidget {
                   height:250,
                   width: 250,
                   
-                  child: Lottie.asset("d4.json"),
+                  child: Lottie.asset("assets/d4.json"),
                   )
           ],
         ),

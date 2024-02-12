@@ -62,7 +62,7 @@ class Footer extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                     Image.asset(
-                                   'trustless_dark.png',
+                                   'assets/trustless_dark.png',
                                   height: 44,
                                    // color: Colors.red,
                              ),

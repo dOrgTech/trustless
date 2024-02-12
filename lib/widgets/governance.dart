@@ -193,11 +193,14 @@ class _BuyATNState extends State<BuyATN> with TickerProviderStateMixin {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           SizedBox(height: 9),
-                          Text(
-                            "An architecture of incentives to help with value emergence. It comes with the stability of traditional legal contracts and none of the drawbacks.",
-                            textAlign: TextAlign.justify,
-                            style:
-                                TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: Text(
+                              "An architecture of incentives to help with value emergence. It comes with the stability of traditional legal contracts and none of the drawbacks.",
+                              textAlign: TextAlign.justify,
+                              style:
+                                  TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                            ),
                           ),
                           SizedBox(height: 9),
                              Container(

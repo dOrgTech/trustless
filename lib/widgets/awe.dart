@@ -53,7 +53,7 @@ late Animation<double> textOpacityAnimation;
     // Shadow animation controller
     shadowAnimationController = AnimationController(vsync: this, duration: Duration(seconds: 3))..repeat(reverse: true);
     blurRadiusAnimation = Tween<double>(begin: 4.0, end: 8.0).animate(CurvedAnimation(parent: shadowAnimationController, curve: Curves.easeInOut));
-    spreadRadiusAnimation = Tween<double>(begin: 3.0, end: 5.0).animate(CurvedAnimation(parent: shadowAnimationController, curve: Curves.easeInOut));
+    spreadRadiusAnimation = Tween<double>(begin: 3.0, end: 7.0).animate(CurvedAnimation(parent: shadowAnimationController, curve: Curves.easeInOut));
     shadowOffsetAnimation = Tween<Offset>(begin: Offset(0, 0), end: Offset(2, 2)).animate(CurvedAnimation(parent: shadowAnimationController, curve: Curves.easeInOut));
 
     // Start the expansion animations
@@ -130,7 +130,7 @@ void _updateAnimation() {
               context,
               scaleFactor,
               AnimatedStatsDisplay(),
-              300, // maxwidth
+              700, // maxwidth
               screenWidth * 0.6,
               topLeftHeightAnimation,
               containerColors,
@@ -176,11 +176,13 @@ void _updateAnimation() {
   Widget ceBagam,
 
   var maxHeight,
-  double width, Animation<double> heightAnimation, List<Color> colors, List<double> stops, BorderRadius borderRadius, {bool isRight = false, bool isBottom = false, double additionalBottomOffset = 0.0}) {
+  double width,
+   Animation<double> heightAnimation,
+    List<Color> colors, List<double> stops, BorderRadius borderRadius, {bool isRight = false, bool isBottom = false, double additionalBottomOffset = 0.0}) {
       
     double screenWidth = MediaQuery.of(context).size.width;
 
-    double scale = screenWidth < 1900 ? 1 - (((1900 - screenWidth).ceil() / 190) * 0.1) : 1.0;
+    double scale = screenWidth < 2000 ? 1 - (((2000 - screenWidth).ceil() / 190) * 0.1) : 1.0;
     
     Widget childWidget;
     
@@ -197,11 +199,15 @@ void _updateAnimation() {
           Transform.scale(
             alignment: Alignment.topLeft,
             scale:  scale,
-            child: MediaQuery(
-              data: MediaQueryData().copyWith(textScaleFactor: 1),
-              child: Container(
+            child: 
+             Container(
                 constraints: BoxConstraints(maxHeight: maxHeight),
-                width: width,
+                width: 
+                scale<0.8?
+                MediaQuery.of(context).size.width/(2-scale):
+                // (MediaQuery.of(context).size.width* scale)/1.65:
+                // (MediaQuery.of(context).size.width* scale)/1.65:
+                MediaQuery.of(context).size.width/2,
                 height: heightAnimation.value,
                 decoration: BoxDecoration(
                   
@@ -240,7 +246,7 @@ void _updateAnimation() {
                   ),
                 ),
               ),
-            ),
+           
           ),
         );
    } );
@@ -329,6 +335,15 @@ Widget buildAnimatedContainer(
         }
       }
     });
+          // Screen dimensions
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    // Calculate total pixels
+    double totalPixels = screenWidth * screenHeight;
+
+    // Determine scale factor
+    double scaleFactor = totalPixels < 1400000 ? totalPixels / 1400000 : 1.0;
 
     return AnimatedBuilder(
       animation: Listenable.merge([heightAnimation, shadowAnimationController, textOpacityAnimation]),
@@ -339,43 +354,54 @@ Widget buildAnimatedContainer(
           left: isRight ? null : 0,
           right: isRight ? 0 : null,
           child: 
-          isRight?ceBagam:
-          Container(
-            constraints: BoxConstraints(maxHeight: maxHeight),
-            width: width,
-            height: heightAnimation.value,
-            decoration: BoxDecoration(
+          isRight?Transform.scale(
+            alignment: Alignment.topRight,
+        scale: scaleFactor,
+        child: ceBagam):
+         Transform.scale(
+            alignment: Alignment.bottomLeft,
+        scale: scaleFactor,
+        child: Container(
+              constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height*0.70,
+              maxWidth: 1300.0,
               
-              borderRadius: borderRadius,
-              boxShadow: [
-                BoxShadow(
-                  color: Theme.of(context).indicatorColor.withOpacity(0.2),
-                  blurRadius: blurRadiusAnimation.value,
-                  spreadRadius: spreadRadiusAnimation.value,
-                  offset: shadowOffsetAnimation.value,
-                ),
-                BoxShadow(
-                  color: Theme.of(context).canvasColor.withOpacity(0.8),
-                  blurRadius: 0,
-                  spreadRadius: 0,
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: borderRadius,
-              child: Container(
-                color: Color.fromARGB(0, 0, 0, 0), // Assuming you want a transparent inner container
-                child: Center(
-                  child: AnimatedBuilder(
-                    
-                    animation: textOpacityAnimation,
-                    builder: (context, child) {
-                      return Opacity(
-                        opacity: textOpacityAnimation.value,
-                        child: child,
-                      );
-                    },
-                    child:ceBagam
+              ),
+              width: width,
+              height: heightAnimation.value,
+              decoration: BoxDecoration(
+                
+                borderRadius: borderRadius,
+                boxShadow: [
+                  BoxShadow(
+                    color: Theme.of(context).indicatorColor.withOpacity(0.2),
+                    blurRadius: blurRadiusAnimation.value,
+                    spreadRadius: spreadRadiusAnimation.value,
+                    offset: shadowOffsetAnimation.value,
+                  ),
+                  BoxShadow(
+                    color: Theme.of(context).canvasColor.withOpacity(0.8),
+                    blurRadius: 0,
+                    spreadRadius: 0,
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: borderRadius,
+                child: Container(
+                  color: Color.fromARGB(0, 0, 0, 0), // Assuming you want a transparent inner container
+                  child: Center(
+                    child: AnimatedBuilder(
+                      
+                      animation: textOpacityAnimation,
+                      builder: (context, child) {
+                        return Opacity(
+                          opacity: textOpacityAnimation.value,
+                          child: child,
+                        );
+                      },
+                      child:ceBagam
+                    ),
                   ),
                 ),
               ),

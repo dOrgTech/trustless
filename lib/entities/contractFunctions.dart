@@ -9,7 +9,6 @@ import 'package:trustless/entities/abis.dart';
 import 'package:trustless/entities/project.dart';
 import 'package:trustless/main.dart';
 import 'package:web3dart/web3dart.dart';
-
 import 'human.dart';
 int numberOfProjects=0;
 const String etherlink_testnet = 'https://node.ghostnet.etherlink.com';
@@ -231,8 +230,12 @@ class ContractFunctions{
       }
   }
 
+  withdrawAsContractor(Project project)async {
+    print("signing... on withdraw as contractor");
+  }
+
   withdrawAsContributor(Project project)async{
-      print("signing...");
+      print("signing... on withdraw as contributor");
       Human().busy=true;
       var sourceContract = Contract(project.contractAddress!, nativeProjectAbiString, Human().web3user);
         try {
@@ -240,7 +243,7 @@ class ContractFunctions{
           print("signed ok");
           final transaction = await promiseToFuture(callMethod(
               sourceContract, 
-              "withdrawAsContributor",
+              "withdrawAsContractor",
               [],
             ));
               print("facuram tranzactia");

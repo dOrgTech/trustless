@@ -320,70 +320,70 @@ class _ActivityFeedState extends State<ActivityFeed> {
       Column(
         children: [
             // ________________________________________BEGIN_HEADER_________________________________
-    //      Container(
-    //     margin: EdgeInsets.symmetric(vertical: 4),
-    //     color: Color.fromARGB(12, 0, 0, 0),
-    //     // decoration: BoxDecoration(),
-    //     padding: EdgeInsets.all(0.0),
-    //     child: Padding(
-    //       padding: const EdgeInsets.symmetric(horizontal:45.0),
-    //       child: Row(
-    //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    //         children: [
-    //          Container(
-    //               width: 156,height: 40,
-    //               color: Color.fromARGB(0, 76, 175, 79),
-    //               child:  Padding(
-    //                 padding: const EdgeInsets.only(top:8.0,left:0,bottom:8),
-    //                 child: Text(
-    //                         "User or Org",
-    //                         style: GoogleFonts.jetBrainsMono(fontSize: 13,
-                            
-    //                         ))
-    //               ),
+                //      Container(
+                //     margin: EdgeInsets.symmetric(vertical: 4),
+                //     color: Color.fromARGB(12, 0, 0, 0),
+                //     // decoration: BoxDecoration(),
+                //     padding: EdgeInsets.all(0.0),
+                //     child: Padding(
+                //       padding: const EdgeInsets.symmetric(horizontal:45.0),
+                //       child: Row(
+                //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //         children: [
+                //          Container(
+                //               width: 156,height: 40,
+                //               color: Color.fromARGB(0, 76, 175, 79),
+                //               child:  Padding(
+                //                 padding: const EdgeInsets.only(top:8.0,left:0,bottom:8),
+                //                 child: Text(
+                //                         "User or Org",
+                //                         style: GoogleFonts.jetBrainsMono(fontSize: 13,
+                                        
+                //                         ))
+                //               ),
 
-    //             ),
-    //  SizedBox(width: MediaQuery.of(context).size.width/16) ,
+                //             ),
+                //  SizedBox(width: MediaQuery.of(context).size.width/16) ,
 
-                     
-    // Container(
-    //             width:MediaQuery.of(context).size.width>1000? 190:155,
-    //             padding: EdgeInsets.all(8.0),
-    //             color: Colors.transparent, // Use the blended color as the background
-    //             child: Text(
-    //                         "Executed Tramsaction",
-    //                         style: GoogleFonts.jetBrainsMono(fontSize: 13,))
-    //   ), 
-     
+                                
+                // Container(
+                //             width:MediaQuery.of(context).size.width>1000? 190:155,
+                //             padding: EdgeInsets.all(8.0),
+                //             color: Colors.transparent, // Use the blended color as the background
+                //             child: Text(
+                //                         "Executed Tramsaction",
+                //                         style: GoogleFonts.jetBrainsMono(fontSize: 13,))
+                //   ), 
+                
 
-    //   SizedBox(width: MediaQuery.of(context).size.width/19) ,
+                //   SizedBox(width: MediaQuery.of(context).size.width/19) ,
+                
+              
+                //  Container(
+                //              height: 40,
+                //               color: Color.fromARGB(0, 76, 119, 175),
+                //               child:  Padding(
+                //                 padding: const EdgeInsets.only(top:8.0,left:0,bottom:8),
+                //                 child: Text(
+                //                         "On Contract",
+                //                         style: GoogleFonts.jetBrainsMono(fontSize: 13,))
+                //               ),
+                //             ),
+                //            Spacer() ,
+                //         SizedBox(child: Text(""),)
+                        
+                //         ],
+                //       ),
+                //     ),
      
-   
-    //  Container(
-    //              height: 40,
-    //               color: Color.fromARGB(0, 76, 119, 175),
-    //               child:  Padding(
-    //                 padding: const EdgeInsets.only(top:8.0,left:0,bottom:8),
-    //                 child: Text(
-    //                         "On Contract",
-    //                         style: GoogleFonts.jetBrainsMono(fontSize: 13,))
-    //               ),
-    //             ),
-    //            Spacer() ,
-    //         SizedBox(child: Text(""),)
-            
-    //         ],
-    //       ),
-    //     ),
-     
-    // ),
+                  // ),
 
 
 
             // ________________________________________END_HEADER_________________________________
             
           
-          Expanded(
+      Expanded(
             child: ListView.builder(
               itemCount: displayedUsers.length,
               itemBuilder: (context, index) {

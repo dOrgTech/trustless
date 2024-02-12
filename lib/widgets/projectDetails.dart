@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:trustless/entities/human.dart';
 import 'package:trustless/utils/reusable.dart';
 import 'package:trustless/widgets/arbitrate.dart';
@@ -66,26 +67,31 @@ String extractGitHubPath(String? repoUrl) {
       functionItem("Set Parties", "Author", SetParty(project: widget.project)),
       functionItem("Withdraw", "Anyone", Withdraw(project: widget.project)),
     ];
+    
     List<Widget> ongoingProjectFunctions = [
       functionItem("Dispute Project", "Contractor or Backers", Dispute(project: widget.project)),
       functionItem("Release Funds to Contractor", "Backers", Release(project: widget.project)),
       functionItem("Reinburse Backers", "Contractor", Reimburse(project: widget.project)),
     ];
+
     List<Widget> disputedProjectFunctions = [
       // const Text("Implementing... ", style: TextStyle(fontSize: 25),),
       functionItem("Arbitrate", "Arbiter", Arbitrate(project: widget.project)),
     ];
+
     List<Widget> closedProjectFunctions = [
-        // const Text("Implementing... ", style: TextStyle(fontSize: 25),),
-      functionItem("Withdraw", "Anyone", Withdraw(project: widget.project)),
+      functionItem("Withdraw as Backer", "Anyone", Withdraw(project: widget.project)),
+      functionItem("Withdraw as Contractor", "Contractor", Withdraw(project: widget.project)),
     ];
 
     List<Widget> pendingProjectFunctions = [
       functionItem("Send Funds to Project", "Anyone", SendFunds(project: widget.project)),
-      functionItem("Withdraw", "Anyone", Withdraw(project: widget.project)),
+      functionItem("Withdraw", "Backers", Withdraw(project: widget.project)),
+
       functionItem("Sign Contract", "Contractor", Sign(project: widget.project)),
       // functionItem("Set Parties", "Author", SetParty(project: widget.project)),
     ];
+     var human = Provider.of<Human>(context);
     return BaseScaffold(
       selectedItem: 1,
       title: "Project",
@@ -121,15 +127,53 @@ String extractGitHubPath(String? repoUrl) {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     // SizedBox(height: 40),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                         FutureBuilder<Uint8List>(
+                                future: generateAvatarAsync(hashString(widget.project.contractAddress!)),  // Make your generateAvatar function return Future<Uint8List>
+                                builder: (context, snapshot) {
+                                  // Future.delayed(Duration(milliseconds: 500));
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    
+                                    
+                                    return Container(
+                                     
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(25.0)
+                                      ),
+                                      width: 50.0,
+                                      height:50.0,
+                                      color: Theme.of(context).canvasColor,
+                                    );
+                                  } else if (snapshot.hasData) {
+                                    
+                                    return Container(width: 50,height: 50,  
+                                     decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(25.0)
+                                      ),
+                                    child: Image.memory(snapshot.data!));
+                                    
+                                  } else {
+                                    return Container(
+                                      width: 50.0,
+                                      height: 50.0,
+                                      color: Theme.of(context).canvasColor,  // Error color
+                                    );
+                                  }
+                                },
+                              ),
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        widget.project!.name!.toString(),
-                                        style: const TextStyle(
-                                            fontSize: 24,
-                                            fontWeight: FontWeight.bold),
+                                        child: Text(
+                                          widget.project!.name!.toString(),
+                                          style: const TextStyle(
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.bold),
+                                        ),
                                       ),
-                                    ),
+                                    ],
+                                  ),
                                     SizedBox(
                                       height: 35,
                                       width: 500,
@@ -174,9 +218,12 @@ String extractGitHubPath(String? repoUrl) {
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             const Text("Contract Address: "),
-                                            Text(
-                                             widget.project.contractAddress!,
-                                              style: const TextStyle(fontSize: 11),
+                                           Padding(
+                                               padding: const EdgeInsets.only(top:4.0),
+                                              child: Text(
+                                               widget.project.contractAddress!,
+                                                style:  TextStyle(fontSize: 11,color:Theme.of(context).textTheme.displayMedium!.color),
+                                              ),
                                             ),
                                             const SizedBox(
                                               width: 2,
@@ -196,11 +243,20 @@ String extractGitHubPath(String? repoUrl) {
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
-                                            const Text("Author: "),
-                                             Text(
-                                             widget.project.author!,
-                                              style: const TextStyle(fontSize: 11),
-                                            ),
+                                             Text("Author: ", style:  TextStyle(
+                                                    color: !(human.address == null) &&  human.address!.toLowerCase()==widget.project.author!.toLowerCase()?
+                                                      Theme.of(context).indicatorColor:Theme.of(context).textTheme.displayMedium!.color,)),
+                                           Padding(
+                                               padding: const EdgeInsets.only(top:4.0),
+                                               child: Text(
+                                               widget.project.author!,
+                                                style:  TextStyle(
+                                                  fontSize: 11,
+                                                  color: !(human.address == null) && human.address!.toLowerCase()==widget.project.author!.toLowerCase()?
+                                                      Theme.of(context).indicatorColor:Theme.of(context).textTheme.displayMedium!.color
+                                                  ),
+                                                                                         ),
+                                             ),
                                             const SizedBox(
                                               width: 2,
                                             ),
@@ -219,15 +275,24 @@ String extractGitHubPath(String? repoUrl) {
                                         child:  Row(
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
-                                            const Text("Contractor: "),
+                                             Text("Contractor: ", style:  TextStyle(
+                                                    color: !(human.address == null) &&  human.address!.toLowerCase()==widget.project.contractor!.toLowerCase()?
+                                                      Theme.of(context).indicatorColor:Theme.of(context).textTheme.displayMedium!.color,)),
                                              
-                                             Text(
-                                             widget.project.contractor!,
-                                              style: const TextStyle(fontSize: 11),
-                                            ),
+                                             Padding(
+                                               padding: const EdgeInsets.only(top:4.0),
+                                               child: Text(
+                                               widget.project.contractor!,
+                                                style:  TextStyle(
+                                                    color: !(human.address == null) &&  human.address!.toLowerCase()==widget.project.contractor!.toLowerCase()?
+                                                      Theme.of(context).indicatorColor:Theme.of(context).textTheme.displayMedium!.color,
+                                                  fontSize: 11),
+                                                                                         ),
+                                             ),
                                             const SizedBox(
                                               width: 2,
                                             ),
+                                            
                                             widget.project.contractor!.length<3?const SizedBox(width:54):
                                             TextButton(
                                                 onPressed: () {
@@ -245,12 +310,20 @@ String extractGitHubPath(String? repoUrl) {
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
-                                            const Text("Arbiter: "),
+                                             Text("Arbiter: ", style:  TextStyle(
+                                                    color: !(human.address == null) &&  human.address!.toLowerCase()==widget.project.arbiter!.toLowerCase()?
+                                                      Theme.of(context).indicatorColor:Theme.of(context).textTheme.displayMedium!.color,)),
                                              
-                                             Text(
-                                             widget.project.arbiter!,
-                                              style: const TextStyle(fontSize: 11),
-                                            ),
+                                            Padding(
+                                               padding: const EdgeInsets.only(top:4.0),
+                                               child: Text(
+                                               widget.project.arbiter!,
+                                                style:  TextStyle(
+                                                    color: !(human.address == null) &&  human.address!.toLowerCase()==widget.project.arbiter!.toLowerCase()?
+                                                      Theme.of(context).indicatorColor:Theme.of(context).textTheme.displayMedium!.color,
+                                                  fontSize: 11),
+                                                                                         ),
+                                             ),
                                             const SizedBox(
                                               width: 2,
                                             ), widget.project.contractor!.length<3?const SizedBox(width:54):
@@ -270,10 +343,13 @@ String extractGitHubPath(String? repoUrl) {
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                              const Text("Repository: "),
-                                             Text(
-                                             fit(widget.project.repo!),
-                                              style: const TextStyle(fontSize: 11),
-                                            ),
+                                            Padding(
+                                               padding: const EdgeInsets.only(top:4.0),
+                                               child: Text(
+                                               fit(widget.project.repo!),
+                                                style:  TextStyle(fontSize: 11,color:Theme.of(context).textTheme.displayMedium!.color),
+                                                                                         ),
+                                             ),
                                              const SizedBox(
                                               width: 2,
                                             ),

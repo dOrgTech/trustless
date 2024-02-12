@@ -110,7 +110,7 @@ class _BuyATNState extends State<BuyATN> with TickerProviderStateMixin {
                           // Placeholder(),
                           // Pattern(),
                           Padding(
-                            padding: const EdgeInsets.all(29.0),
+                            padding: const EdgeInsets.all(9.0),
                             child: Stack(
                               children: [
                                 Image.asset("assets/tgri.png"),
@@ -202,7 +202,7 @@ class _BuyATNState extends State<BuyATN> with TickerProviderStateMixin {
                                   TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                             ),
                           ),
-                          SizedBox(height: 9),
+                          SizedBox(height: 20),
                              Container(
                               width: 183,
                               height: 36,
@@ -256,7 +256,7 @@ class _BuyATNState extends State<BuyATN> with TickerProviderStateMixin {
                                     TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                                                         ),
                               ),
-                            ),SizedBox(height: 14),
+                            ),SizedBox(height: 22),
                           Padding(
                             padding: const EdgeInsets.only(bottom:30.0),
                             child: TextButton(

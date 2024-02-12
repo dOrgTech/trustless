@@ -116,7 +116,7 @@ class MyApp extends StatelessWidget {
           WidgetBuilder builder;
           if (settings.name == '/') {
             builder = (_) => 
-            // ProjectDetails(project: projects[1]);
+            // ProjectDetails(project: projects[0]);
             // Prelaunch();
             // Poll();
             //  BaseScaffold(selectedItem: 0, body: Users(), title: "Users");
@@ -139,12 +139,12 @@ class MyApp extends StatelessWidget {
               builder = (context) => const Text("Project not found");
             }
           } 
-          else if (settings.name == '/trials') {
-            builder = (_) => BaseScaffold(selectedItem: 2, body: Trials(), title: "Trials");
-            } else if (settings.name == '/stats') {
+          else if (settings.name == '/users') {
+            builder = (_) => BaseScaffold(selectedItem: 2, body: Users(), title: "Users");
+            } else if (settings.name == '/') {
             builder = (_) => BaseScaffold(selectedItem: 0, body: Landing(), title: "Stats");
-          } else if (settings.name == '/users') {
-            builder = (_) => BaseScaffold(selectedItem: 3,body: Users(), title: "Users");
+          } else if (settings.name == '/projects') {
+            builder = (_) => BaseScaffold(selectedItem: 3,body: Projects(), title: "Projects");
           } else {
             // Handle other routes or unknown routes
             builder = (_) =>  BaseScaffold(
@@ -320,7 +320,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                 width:170,
                 child: TextButton(onPressed: 
                 (){
-                   Navigator.pushNamed(context, '/stats');
+                   Navigator.pushNamed(context, '/');
                  changeButton(0);
                 }, child: 
       Theme.of(context).brightness==Brightness.light?
@@ -338,7 +338,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
             ),SizedBox(width: 35),
             TextButton(onPressed: (){ 
              changeButton(1);
-              Navigator.of(context).pushNamed("/");
+              Navigator.of(context).pushNamed("/projects");
               }, child: 
             SizedBox(
               width:140,

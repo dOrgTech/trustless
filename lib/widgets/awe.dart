@@ -156,7 +156,7 @@ void _updateAnimation() {
          MediaQuery.of(context).size.width/(MediaQuery.of(context).size.aspectRatio*3.6)
         
         , 
-        ActivityFeed(users: users),
+        ActivityFeed(),
         screenWidth * 0.6, // 20% of screen width
         bottomLeftHeightAnimation,
         containerColors,

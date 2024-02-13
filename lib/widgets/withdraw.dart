@@ -256,15 +256,9 @@ class _WidthdrawAsContractorState extends State<WidthdrawAsContractor>{
                               setState(() { widget.stage="error";});
                               return;
                           }
-                        for (var entry in widget.project.contributions.entries) {
-                          var key = entry.key;
-                          if (key == Human().address) {
-                            print("found it");
-                            widget.project.contributions[key] = 0; // Update the value to 0
-                            projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
-                            break; // Exit the loop
-                          }
-                        }
+                        projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
+                        
+                        // ignore: use_build_context_synchronously
                         Navigator.of(context).pushNamed("/projects/${widget.project.contractAddress}");
                       },
                        child: const Center(

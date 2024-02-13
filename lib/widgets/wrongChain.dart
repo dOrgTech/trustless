@@ -38,9 +38,9 @@ class WrongChain extends StatelessWidget {
     return Container(
       height: 35,
       decoration: BoxDecoration(
-          border: Border.all(width: 0.1 , color: Theme.of(context).indicatorColor ),
-                                color: Theme.of(context).dividerColor.withOpacity(0.1)
-      ),
+        border: Border.all(width: 0.1 , color: Theme.of(context).indicatorColor ),
+            color: Theme.of(context).dividerColor.withOpacity(0.1)
+        ),
       padding: EdgeInsets.only(left: MediaQuery.of(context).size.width/2),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,

@@ -5,7 +5,7 @@ class Footer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
             mainAxisAlignment: MainAxisAlignment.center,
-  mainAxisSize: MainAxisSize.min,
+            mainAxisSize: MainAxisSize.min,
   children: [
         Container(
           width: MediaQuery.of(context).size.width,
@@ -82,6 +82,7 @@ class Footer extends StatelessWidget {
                   ),
                   Column(
                     children: [
+                      SizedBox(height: 20),
                       Row(
                         children: [
                           GestureDetector(
@@ -111,7 +112,7 @@ class Footer extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        'Developed by ',
+                        'Developed by EightRice of ',
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.white,

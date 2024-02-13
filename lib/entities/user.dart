@@ -1,4 +1,9 @@
+import 'package:trustless/entities/project.dart';
 import 'package:trustless/widgets/usercard.dart';
+
+import 'human.dart';
+
+String workingHash ="0x71436760615bde646197979c0be8a86c1c6179cd17ae7492355e76ff79949bbc";
 
 class User{
   User({required this.address,required this.earned,
@@ -11,24 +16,58 @@ class User{
   List<String>projectsContracted;
   List<String>projectsArbitrated;
   List<String>projectsBacked;
-
-   UserCard getCard() {
+  
+  UserCard getCard() {
     return UserCard(user: this);
   } 
-
 }
 
-List<String>possibleActions=["createProject", "setParties","fundProject","withdraw","voteToRelease","voteToDispute","arbitrate","reimburse"];
-
+List<String>possibleActions=["createProject", "setParties","sendFunds","sign","withdraw","voteToRelease","voteToDispute","arbitrate","reimburse"];
 
 class TTransaction{
-  TTransaction({required this.user,required this.name,required this.contract,required this.params, required this.hash});
-  User user;
-  String name;
-  String contract;
+  TTransaction({
+    required this.time,
+    required this.sender,
+    required this.functionName,
+    required this.contractAddress,
+    required this.params,
+    required this.hash
+  })
+  {
+    blockExplorerUrl= "https://${Human().chain.name}.etherscan.io/tx/${hash}";
+  }
+  String sender;
+  String functionName;
+  String contractAddress;
   String params;
   String hash;
-  DateTime time=DateTime.now().subtract(const Duration(seconds:23));
+  late String blockExplorerUrl;
+  DateTime time;
+
+  // Convert a TTransaction instance into a Map.
+  Map<String, dynamic> toJson() {
+    return {
+      'sender': sender,
+      'functionName': functionName,
+      'contractAddress': contractAddress,
+      'params': params,
+      'time': time,
+    };
+  }
+
+  // Create a TTransaction instance from a map (JSON).
+  factory TTransaction.fromJson(Map<String, dynamic> json) {
+    TTransaction transaction = TTransaction(
+      time: DateTime.parse(json['time']),
+      sender: json['sender'],
+      functionName: json['functionName'],
+      contractAddress: json['contractAddress'],
+      params: json['params'],
+      hash: json['hash'],
+    );
+    return transaction;
+  }
+
 }
 
 

@@ -9,14 +9,16 @@ import 'package:flutter/material.dart';
 import 'package:trustless/screens/prelaunch.dart';
 import 'package:trustless/widgets/projectDetails.dart';
 import 'package:trustless/widgets/usercard.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../entities/project.dart';
 import '../entities/user.dart';
 import '../main.dart';
 import '../utils/reusable.dart';
 Map<String, TextStyle> actionStyles = {
   "createProject": GoogleFonts.spaceMono(fontSize: 14, ),
+  "sign": GoogleFonts.spaceMono(fontSize: 14, ),
   "setParties": GoogleFonts.spaceMono(fontSize: 14,fontWeight:FontWeight.w500),
-  "fundProject": GoogleFonts.robotoMono(fontWeight: FontWeight.w500),
+  "sendFunds": GoogleFonts.robotoMono(fontWeight: FontWeight.w500),
   "withdraw": GoogleFonts.ubuntuMono(fontWeight: FontWeight.w200),
   "voteToRelease": GoogleFonts.b612Mono(fontWeight: FontWeight.w600),
   "voteToDispute": GoogleFonts.b612Mono(fontWeight: FontWeight.w700),
@@ -25,8 +27,9 @@ Map<String, TextStyle> actionStyles = {
 };
 Map<String, Icon> actionIcons = {
   "createProject": Icon(Icons.create_new_folder,size: 13,),
+  "sign": Icon(Icons.edit_document,size: 13,),
   "setParties": Icon(Icons.group_add,size: 13),
-  "fundProject": Icon(Icons.account_balance_wallet,size: 13),
+  "sendFunds": Icon(Icons.account_balance_wallet,size: 13),
   "withdraw": Icon(Icons.money_off,size: 13),
   "voteToRelease": Icon(Icons.how_to_vote,size: 13),
   "voteToDispute": Icon(Icons.gavel,size: 13),
@@ -37,8 +40,9 @@ Map<String, Icon> actionIcons = {
 
 Map<String, Color> actionColors = {
   "createProject": Colors.blue,
+  "sign": Colors.blue,
   "setParties": Colors.green,
-  "fundProject": Colors.orange,
+  "sendFunds": Colors.orange,
   "withdraw": Colors.red,
   "voteToRelease": Color.fromARGB(255, 167, 176, 39),
   "voteToDispute": Colors.amber,
@@ -59,7 +63,7 @@ class ActionItem extends StatefulWidget {
 class _ActionItemState extends State<ActionItem> {
   @override
   void initState() {
-  
+   actions.sort((a, b) => b.time.compareTo(a.time));
     super.initState();
   }
 
@@ -73,19 +77,19 @@ class _ActionItemState extends State<ActionItem> {
     //   });
     // });
     }
-     Project p= projects.firstWhere(
-                              (element) => element.contractAddress==widget.action.contract,
-                              orElse: () => projects[0]);
-     // Retrieve the action's base color from the mapping
-    Color baseColor = actionColors[widget.action.name] ?? Colors.grey; // Default color if action not found
-    // Blend the base color with the theme's canvasColor
-    Color blendedColor = Color.alphaBlend(baseColor.withOpacity(0.2), Theme.of(context).textTheme.bodySmall!.color!);
-    Color blendedColor1 = Color.alphaBlend(baseColor.withOpacity(0.08), Theme.of(context).textTheme.bodySmall!.color!);
-    // return Text(action.name);
-      List<Color> containerColors = [
-      Theme.of(context).indicatorColor.withOpacity(1),
-      Theme.of(context).indicatorColor.withOpacity(0.5),
-    ];
+      Project p= projects.firstWhere(
+                                (element) => element.contractAddress==widget.action.contractAddress,
+                                orElse: () => projects[0]);
+      // Retrieve the action's base color from the mapping
+      Color baseColor = actionColors[widget.action.functionName] ?? Colors.grey; // Default color if action not found
+      // Blend the base color with the theme's canvasColor
+      Color blendedColor = Color.alphaBlend(baseColor.withOpacity(0.2), Theme.of(context).textTheme.bodySmall!.color!);
+      Color blendedColor1 = Color.alphaBlend(baseColor.withOpacity(0.08), Theme.of(context).textTheme.bodySmall!.color!);
+      // return Text(action.name);
+        List<Color> containerColors = [
+        Theme.of(context).indicatorColor.withOpacity(1),
+        Theme.of(context).indicatorColor.withOpacity(0.5),
+      ];
     List<double> stops = [0.01, 0.59]; 
     return  Container(
         margin: EdgeInsets.symmetric(vertical: 4),
@@ -105,39 +109,36 @@ class _ActionItemState extends State<ActionItem> {
                     child: Row(
                       children: [
                         FutureBuilder<Uint8List>(
-                                future: generateAvatarAsync(hashString(widget.action.user.address!)),  // Make your generateAvatar function return Future<Uint8List>
-                                builder: (context, snapshot) {
-                                  // Future.delayed(Duration(milliseconds: 500));
-                                  if (snapshot.connectionState == ConnectionState.waiting) {
-                                    
-                                    
-                                    return Container(
-                                      width: 20.0,
-                                      height:20.0,
-                                      color: Theme.of(context).canvasColor,
-                                    );
-                                  } else if (snapshot.hasData) {
-                                    
-                                    return SizedBox(width: 20,height: 20,  child: Image.memory(snapshot.data!));
-                                    
-                                  } else {
-                                    return Container(
-                                      width: 20.0,
-                                      height: 20.0,
-                                      color: Theme.of(context).canvasColor,  // Error color
-                                    );
-                                  }
-                                },
-                              ),
+                            future: generateAvatarAsync(hashString(widget.action.sender!)),  // Make your generateAvatar function return Future<Uint8List>
+                            builder: (context, snapshot) {
+                              // Future.delayed(Duration(milliseconds: 500));
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return Container(
+                                  width: 20.0,
+                                  height:20.0,
+                                  color: Theme.of(context).canvasColor,
+                                );
+                              } else if (snapshot.hasData) {
+                                return SizedBox(width: 20,height: 20,  child: Image.memory(snapshot.data!));
+                                
+                              } else {
+                                return Container(
+                                  width: 20.0,
+                                  height: 20.0,
+                                  color: Theme.of(context).canvasColor,  // Error color
+                                );
+                              }
+                            },
+                          ),
                         const SizedBox(width: 5),
                         Text(
-                          shortenString(widget.action.user.address!),
+                          shortenString(widget.action.sender),
                           style:const TextStyle(fontSize: 12)),
                         const SizedBox(width: 3),
                         SizedBox(
                           width: 25,
                           child: TextButton(onPressed: (){
-                            copied(context, widget.action.user.address);
+                            copied(context, widget.action.sender);
                           }, child: Icon(Icons.copy, size: 17)),
                         )
                       ],
@@ -147,27 +148,35 @@ class _ActionItemState extends State<ActionItem> {
                 ),
       Spacer(),
                      
-    Container(
-                width: 160,
-                padding: EdgeInsets.all(8.0),
-                color: Colors.transparent, // Use the blended color as the background
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Icon(actionIcons[widget.action.name]?.icon, color: blendedColor), // Use the base color for the icon
-                    SizedBox(width: 12),
-                    Text(
-                      widget.action.name,
-                      style: TextStyle(color: blendedColor1), // Use the base color for text as well
-                    ),
-                    // Add more widgets as needed
-                  ],
+    TextButton(
+      onPressed: (){
+        launch(widget.action.blockExplorerUrl);
+      },
+      child: Container(
+            width: 160,
+            padding: EdgeInsets.all(8.0),
+            color: Colors.transparent, // Use the blended color as the background
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(actionIcons[widget.action.functionName]?.icon, color: blendedColor), // Use the base color for the icon
+                SizedBox(width: 12),
+                
+                Text(
+                  widget.action.functionName
+                  ,
+                  style: TextStyle(color: blendedColor1), // Use the base color for text as well
+                ),
+                // Add more widgets as needed
+              ],
+          ),
         ),
-      ), 
+    ), 
       Spacer(),
-    ["setParties","createProject"].contains(widget.action.name)?
+    ["createProject"].contains(widget.action.functionName)?
     Container(
-      width: 120,
+     
+     width: 210,
       height: 40,
       child: Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -187,9 +196,12 @@ class _ActionItemState extends State<ActionItem> {
             ),
           ),
           const SizedBox(width: 10),
-          Text("Economy", style: GoogleFonts.changa(
-            color:Theme.of(context).indicatorColor.withOpacity(0.85),
-            fontWeight: FontWeight.bold),),
+          SizedBox(
+            width: 150,
+            child: Text("Economy", style: GoogleFonts.changa(
+              color:Theme.of(context).indicatorColor.withOpacity(0.85),
+              fontWeight: FontWeight.bold),),
+          ),
         ],
       ),
     ):
@@ -198,7 +210,7 @@ class _ActionItemState extends State<ActionItem> {
                  height: 40,
                   color: Color.fromARGB(0, 76, 119, 175),
                   child:  Padding(
-                    padding: const EdgeInsets.only(top:8.0,left:0,bottom:8),
+                    padding: const EdgeInsets.only(top:0,left:0,bottom:0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -238,9 +250,15 @@ class _ActionItemState extends State<ActionItem> {
                             Navigator.of(context).pushNamed("/projects/${p.contractAddress}");
                           },
                           
-                          child: Text(
-                              p.name!,
-                            style: GoogleFonts.dmMono(fontSize: 14,)),
+                          child: SizedBox(
+                            width:150,
+                            child: Text(
+                             p.name!.length<14?
+                                              p.name!:
+                                              p.name!.substring(0,14)+".."
+                                ,
+                              style: GoogleFonts.dmMono(fontSize: 14,)),
+                          ),
                         ),
                         const SizedBox(width: 30),
                       ],
@@ -250,7 +268,7 @@ class _ActionItemState extends State<ActionItem> {
                  Spacer(),
          
               SizedBox(
-                
+                width:200,
                 child: Text(
                   getTimeAgo( widget.action.time)+"    ",
                   style: GoogleFonts.dmMono(fontSize: 13),
@@ -272,36 +290,40 @@ class _ActionItemState extends State<ActionItem> {
 
 
 class ActivityFeed extends StatefulWidget {
-  final List<User> users;
+  
 
-  ActivityFeed({required this.users});
+  ActivityFeed();
 
   @override
   _ActivityFeedState createState() => _ActivityFeedState();
 }
 
 class _ActivityFeedState extends State<ActivityFeed> {
-  List<User> displayedUsers = [];
+  List<TTransaction> displayedActions = [];
   Timer? timer;
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(milliseconds: 400)).then((value) => {
-      timer = Timer.periodic(Duration(milliseconds: 24), (timer) {
-      if (displayedUsers.length < 15) {
-        setState(() {
-          displayedUsers.add(widget.users[displayedUsers.length]);
-        });
-      } else {
-         setState(() {
-        displayedUsers.addAll(widget.users.sublist(15));
-          });
+if (projects.length>0){
+
+Future.delayed(Duration(milliseconds: 400)).then((value) {
+  timer = Timer.periodic(Duration(milliseconds: 24), (timer) {
+    if (displayedActions.length >= actions.length) {
+      timer.cancel();
+    } else if (displayedActions.length < 15) {
+      setState(() {
+        displayedActions.add(actions[displayedActions.length]);
+      });
+    } else {
+      setState(() {
+        displayedActions.addAll(actions.sublist(displayedActions.length));
         timer.cancel();
-      }
-    })
-    });
-   
+      });
+    }
+  });
+});
+}
   }
 
   @override
@@ -312,8 +334,8 @@ class _ActivityFeedState extends State<ActivityFeed> {
 
   @override
   Widget build(BuildContext context) {
-     
-    return Container(
+    return projects.length<0?Center(child: Text("No projects deployed on this network")):
+    Container(
       child: Padding(
         padding: const EdgeInsets.only(left:30, top:15),
         child: 
@@ -385,9 +407,9 @@ class _ActivityFeedState extends State<ActivityFeed> {
           
       Expanded(
             child: ListView.builder(
-              itemCount: displayedUsers.length,
+              itemCount: displayedActions.length,
               itemBuilder: (context, index) {
-                return Opacity(opacity: 0.85, child: ActionItem(action: displayedUsers[index].actions.first)); // Your list item
+                return Opacity(opacity: 0.85, child: ActionItem(action: displayedActions[index])); // Your list item
               },
             ),
           ),
@@ -396,9 +418,9 @@ class _ActivityFeedState extends State<ActivityFeed> {
 
     
         // ListView.builder(
-        //   itemCount: displayedUsers.length,
+        //   itemCount: displayedActions.length,
         //   itemBuilder: (context, index) {
-        //     return ActionItem(action: displayedUsers[index].actions.first); 
+        //     return ActionItem(action: displayedActions[index].actions.first); 
           // },
         // ),
       ),
@@ -407,9 +429,9 @@ class _ActivityFeedState extends State<ActivityFeed> {
 }
 
 class FixedHeaderWithScrollableList extends StatelessWidget {
-  final List<User> displayedUsers; // Assuming you have a User class
+  final List<User> displayedActions; // Assuming you have a User class
 
-  FixedHeaderWithScrollableList({Key? key, required this.displayedUsers}) : super(key: key);
+  FixedHeaderWithScrollableList({Key? key, required this.displayedActions}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -423,9 +445,9 @@ class FixedHeaderWithScrollableList extends StatelessWidget {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: displayedUsers.length,
+              itemCount: displayedActions.length,
               itemBuilder: (context, index) {
-                return ActionItem(action: displayedUsers[index].actions.first); // Your list item
+                return ActionItem(action: displayedActions[index].actions.first); // Your list item
               },
             ),
           ),

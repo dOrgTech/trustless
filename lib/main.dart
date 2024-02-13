@@ -18,15 +18,18 @@ import 'package:trustless/utils/reusable.dart';
 import 'package:trustless/utils/scripts.dart';
 import 'package:trustless/widgets/projectDetails.dart';
 import 'package:trustless/widgets/wrongChain.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:web3dart/web3dart.dart';
 import 'entities/human.dart';
 import 'entities/project.dart';
+import 'entities/user.dart';
 import 'firebase_options.dart';
 import 'screens/disputes.dart';
 import 'package:provider/provider.dart';
 String metamask="https://i.ibb.co/HpmDHg0/metamask.png";
 double switchAspect=1.2;
 List<Project> projects=[];
+List<TTransaction> actions=[];
 String sourceAddress="";
 int valueInContracts=0;
 int usdtStored=0;
@@ -36,16 +39,19 @@ int totalUSDTpaid=0;
 // String selectedNetwork='Etherlink Testnet';
 ContractFunctions cf=ContractFunctions();
 var projectsGoerli = FirebaseFirestore.instance.collection('projectsGoerli');
-var prelaunchCollection = FirebaseFirestore.instance.collection('prelaunch');
-var voteCollection = FirebaseFirestore.instance.collection('vote');
+var transactionsGoerli = FirebaseFirestore.instance.collection('transactionsGoerli');
+// var prelaunchCollection = FirebaseFirestore.instance.collection('prelaunch');
+// var voteCollection = FirebaseFirestore.instance.collection('vote');
 var statsCollection = FirebaseFirestore.instance.collection('stats');
 var projectsCollection;
+var transactionsCollection;
 
     void main() async  {
-      createUsers();
+      
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
       projectsCollection=FirebaseFirestore.instance.collection("projects${Human().chain.name}");
+      transactionsCollection=FirebaseFirestore.instance.collection("transactions${Human().chain.name}");
       var statsSnapshot = await statsCollection.doc(Human().chain.name).get();
       if (statsSnapshot.exists) {
           sourceAddress=statsSnapshot.data()!['sourceAddress'];
@@ -54,7 +60,27 @@ var projectsCollection;
       }
       print("source address:" +sourceAddress);
       var querySnapshot = await projectsCollection.get();
+      var transactionsSnapshot = await transactionsCollection.get();
   // Iterate through the documents and print their data
+      for(var doc in transactionsSnapshot.docs){ 
+        // print(" hash ${doc.id.toString()}");
+        // print(" functionName ${doc.data()["functionName"]}");
+        // print(" params ${doc.data()["params"]}");
+        // print(" sender ${doc.data()["sender"]}");
+        // print(" contractAddress ${doc.data()["contractAddress"]}");
+        // print(" time ${(doc.data()['time'] as Timestamp).toDate()}");
+        actions.add(TTransaction(
+          hash:doc.id.toString(),
+          functionName: doc.data()["functionName"],
+          params:  doc.data()["params"],
+          sender:   doc.data()["sender"],
+          contractAddress:doc.data()["contractAddress"],
+          time: (doc.data()['time'] as Timestamp).toDate(),
+           ));
+        }
+
+
+
     for(var doc in querySnapshot.docs) {
       Project p =Project(
        isUSDT: doc.data()["isUSDT"],
@@ -84,6 +110,18 @@ var projectsCollection;
     p.rulingHash=doc.data()['rulingHash'];
   }
   
+  if (projects.length>0) {await createUsers();}
+  print("greater than zero adding MockTransactions");
+  var punem= actions.length;
+  if (punem < mockTansactions.length){
+    for (int i=0; i< mockTansactions.length - punem; i++){
+      actions.add(mockTansactions[i]);
+    }
+  }
+
+  // actions.sort((a, b) => b.time.compareTo(a.time));
+
+
   await cf.getProjectsCounter();
   print("we have this many projects: "+numberOfProjects.toString());
   runApp(
@@ -140,11 +178,11 @@ class MyApp extends StatelessWidget {
             }
           } 
           else if (settings.name == '/users') {
-            builder = (_) => BaseScaffold(selectedItem: 2, body: Users(), title: "Users");
+            builder = (_) => BaseScaffold(selectedItem: 3, body: Users(), title: "Users");
             } else if (settings.name == '/') {
-            builder = (_) => BaseScaffold(selectedItem: 0, body: Landing(), title: "Stats");
+            builder = (_) => BaseScaffold(selectedItem: 0, body: Landing(), title: "Trustless Business");
           } else if (settings.name == '/projects') {
-            builder = (_) => BaseScaffold(selectedItem: 3,body: Projects(), title: "Projects");
+            builder = (_) => BaseScaffold(selectedItem: 1,body: Projects(), title: "Projects");
           } else {
             // Handle other routes or unknown routes
             builder = (_) =>  BaseScaffold(
@@ -220,8 +258,8 @@ class _BaseScaffoldState extends State<BaseScaffold> {
 
   void changeButton(int position) {
     setState(() {
-        widget.isTrustless = position == 0;
-        widget.isProjects = position == 1;
+        widget.isTrustless = position == 1;
+        widget.isProjects = position == 0;
         widget.isDisputes = position == 2;
         widget.isUsers = position == 3;
     });
@@ -245,8 +283,8 @@ class _BaseScaffoldState extends State<BaseScaffold> {
     Color indicatorColor = Theme.of(context).indicatorColor;
     Color textThemeColor = Theme.of(context).textTheme.bodyLarge!.color!;
     Color blendedColor = blendColors(indicatorColor, textThemeColor, 0.5);
-    final TextStyle? selectedMenuItem=TextStyle(fontSize: 19, color: blendedColor);
-    final TextStyle? nonSelectedMenuItem=TextStyle(fontSize: 16, color: textThemeColor);
+    final TextStyle selectedMenuItem=TextStyle(fontSize: 19, color: blendedColor);
+    final TextStyle nonSelectedMenuItem=TextStyle(fontSize: 16, color: textThemeColor);
     // final themeNotifier = Provider.of<ThemeNotifier>(context);
 
     List<Widget>buttall=[
@@ -266,7 +304,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                           changeButton(1);
                           Navigator.of(context).pushNamed("/");
                         },
-                        child: Text("PROJECTS", style: widget.isProjects?selectedMenuItem:nonSelectedMenuItem))
+                        child: Text("PROJECTS", style: widget.isTrustless?selectedMenuItem:nonSelectedMenuItem))
                     ],),
                   ),
                 ),
@@ -313,7 +351,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
 
     ];
 
-    List<Widget> botoane=[
+    List<Widget>botoane=[
             Opacity(
               opacity: widget.isTrustless?1:0.6,
               child: SizedBox(
@@ -322,9 +360,9 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                 (){
                    Navigator.pushNamed(context, '/');
                  changeButton(0);
-                }, child: 
-      Theme.of(context).brightness==Brightness.light?
-      ColorFiltered(
+                            }, child: 
+                  Theme.of(context).brightness==Brightness.light?
+                  ColorFiltered(
               colorFilter: ColorFilter.matrix([
                 -1.0, 0.0, 0.0, 0.0, 255.0, // red
                 0.0, -1.0, 0.0, 0.0, 255.0, // green
@@ -372,24 +410,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                             ),
                 ),
               ),
-            //   SizedBox( width:145,
-            //     child: Center(
-            //       child: Opacity(
-            //         opacity: widget.isDisputes?1:0.6,
-            //         child: TextButton(onPressed: (){
-            //           changeButton(2);
-            //           Navigator.of(context).pushNamed("/trials");
-            //         }, child: 
-            //                   Row(children:  [
-            //                    Image.asset('assets/scale2.png', height:30, color:widget.isDisputes?Theme.of(context).indicatorColor:Theme.of(context).textTheme.bodyLarge!.color!),
-            //         SizedBox(width: 8),
-            //         Text("DISPUTES", style: widget.isDisputes?selectedMenuItem:nonSelectedMenuItem,)
-            //                   ],)
-            //                   ),
-            //       ),
-            //     ),
-            //   ),  
-            //  const SizedBox(width: 19),
+          
            
           ];
           var human = Provider.of<Human>(context);
@@ -560,8 +581,40 @@ class _WalletBTNState extends State<WalletBTN> {
           showDialog(
             context: context,
             builder: (context) {
-              return const AlertDialog(
-                content: Text("Metamask not detected."),
+              return  AlertDialog(
+                content: Container(
+                  height:260,
+                  padding: EdgeInsets.all(30),
+                  child: Column(
+                    children: [
+                      Text("You need the Metamask wallet to sign into the app.",style: TextStyle(fontFamily: "Roboto Mono", fontSize: 16),),
+                      SizedBox(height: 10,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.network(metamask,height: 100,),
+                          Icon(Icons.arrow_right_alt, size: 40,),
+                          SizedBox(width: 14,),
+                           Image.network(
+                              "https://i.ibb.co/sFqQxYP/Icon-maskable-192.png",
+                              height: 70),
+                            SizedBox(width: 13,),
+                        ],
+                      ),
+                      SizedBox(height: 10,),
+                      Text("Download it from",style: TextStyle(fontFamily: "Roboto Mono", fontSize: 16),),
+                      SizedBox(height: 10,),
+                      TextButton(
+                        onPressed: (){
+                          launch("https://metamask.io/");
+                        },
+                        child: Text("https://metamask.io/",style: TextStyle(fontFamily: "Roboto Mono", fontSize: 16),)),
+                        
+                    ],
+                  ),
+                
+                ),
+
               );
             },
           );
@@ -603,27 +656,27 @@ class _WalletBTNState extends State<WalletBTN> {
               : Row(
                 children: [
                    FutureBuilder<Uint8List>(
-                              future: generateAvatarAsync(hashString(human.address!)),  // Make your generateAvatar function return Future<Uint8List>
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState == ConnectionState.waiting) {
-                                  return Container(
-                                    width: 40.0,
-                                    height: 40.0,
-                                    color: Colors.grey,
-                                  );
-                                } else if (snapshot.hasData) {
-                                  print("generating");
-                                  return Image.memory(snapshot.data!);
-                                } else {
-                                  return Container(
-                                    width: 40.0,
-                                    height: 40.0,
-                                    color: Colors.red,  // Error color
-                                  );
-                                }
-                              },
-                            ),
-                            SizedBox(width: 8),
+                        future: generateAvatarAsync(hashString(human.address!)),  // Make your generateAvatar function return Future<Uint8List>
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return Container(
+                              width: 40.0,
+                              height: 40.0,
+                              color: Colors.grey,
+                            );
+                          } else if (snapshot.hasData) {
+                            print("generating");
+                            return Image.memory(snapshot.data!);
+                          } else {
+                            return Container(
+                              width: 40.0,
+                              height: 40.0,
+                              color: Color.fromARGB(255, 116, 116, 116),  // Error color
+                            );
+                          }
+                        },
+                      ),
+                      SizedBox(width: 8),
                   Text(getShortAddress(human.address!)),
                 ],
               ),

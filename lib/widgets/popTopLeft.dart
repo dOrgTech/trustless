@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
+import '../entities/project.dart';
+import '../main.dart';
+
 class AnimatedStatsDisplay extends StatefulWidget {
   @override
   _AnimatedStatsDisplayState createState() => _AnimatedStatsDisplayState();
 }
 
 class _AnimatedStatsDisplayState extends State<AnimatedStatsDisplay> with TickerProviderStateMixin {
+
   final Map<String, int> data = {
-    'Ongoing Disputes': 0,
-    'Open Projects': 14,
-    'Active Projects': 5,
-    'Total XTZ Earned': 44301,
-    'Total USDT Earned': 55000,
+    'Ongoing Disputes': 1,
+    'Open Projects': 2,
+    'Active Projects': 4,
+    'Total XTZ Earned': 44390,
+    'Total USDT Earned': 0,
   };
 
   List<AnimationController> _numberControllers = [];
@@ -22,6 +26,12 @@ class _AnimatedStatsDisplayState extends State<AnimatedStatsDisplay> with Ticker
 
   @override
   void initState() {
+    for (Project p in projects){
+      if (p.status=="dispute"){data["Ongoing Disputes"]!=data["Ongoing Disputes"]!+1;}
+      if (p.status=="ongoing"){data["Active Projects"]!=data["Active Projects"]!+1;}
+      if (p.status=="open"){data["Open Projects"]!=1;}
+    }
+
     super.initState();
 
     int delay = 0;

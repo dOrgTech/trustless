@@ -3,14 +3,18 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'dart:math' as math;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:trustless/entities/human.dart';
 import 'package:trustless/main.dart';
 import 'package:trustless/utils/reusable.dart';
+import 'package:trustless/widgets/newGenericProject.dart';
 import 'package:trustless/widgets/projectDetails.dart';
 import 'package:trustless/screens/prelaunch.dart';
 import 'package:web3dart/web3dart.dart';
+
+import '../screens/projects.dart';
 
 class BuyATN extends StatefulWidget {
  BuyATN();
@@ -97,7 +101,6 @@ class _BuyATNState extends State<BuyATN> with TickerProviderStateMixin {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                 
                   Padding(
                     padding: const EdgeInsets.only(top:18.0),
                     child: SizedBox(
@@ -109,27 +112,13 @@ class _BuyATNState extends State<BuyATN> with TickerProviderStateMixin {
                           // 
                           // Placeholder(),
                           // Pattern(),
-                          Padding(
-                            padding: const EdgeInsets.all(9.0),
-                            child: Stack(
-                              children: [
-                                Image.asset("assets/tgri.png"),
-                                AnimatedOpacity(
-                                  duration: Duration(milliseconds: 1500),
-                                  opacity: widget.opa_aur,
-                                  child: 
-                                Image.asset("assets/taur.png")
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
+                           Padding(
                                 padding: const EdgeInsets.only(right: 18.0),
                                 child: Center(
                                   child: TyperAnimatedTextKit(
                     isRepeatingAnimation: false,
                     pause: const Duration(seconds: 4),
-                    textAlign: TextAlign.left,
+                    textAlign: TextAlign.center,
                     speed: const Duration(milliseconds: 31),
                     text: const ["Self-Sufficient\nDecentralized\nBusiness\nEnvironment"],
                     textStyle:TextStyle(
@@ -139,7 +128,24 @@ class _BuyATNState extends State<BuyATN> with TickerProviderStateMixin {
                                   ),
                                 ),
                               ),
-                        ],
+                         Transform(
+                              alignment: Alignment.center,
+                              transform: Matrix4.rotationY(math.pi), child: Padding(
+                              padding: const EdgeInsets.all(9.0),
+                              child: Stack(
+                                children: [
+                                  Image.asset("assets/tgri.png"),
+                                  AnimatedOpacity(
+                                    duration: Duration(milliseconds: 1500),
+                                    opacity: widget.opa_aur,
+                                    child: 
+                                  Image.asset("assets/taur.png")
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                             ],
                       )),
                   ),
                   AnimatedContainer(
@@ -218,7 +224,9 @@ class _BuyATNState extends State<BuyATN> with TickerProviderStateMixin {
                                 style: ButtonStyle(
                                   overlayColor: MaterialStateProperty.all(Theme.of(context).indicatorColor.withOpacity(0.1)), // Handle overlay color for ripple effect if needed
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  
+                                },
                                 child: Center(child: 
                               
                                     Text("Read Docs"),
@@ -264,18 +272,8 @@ class _BuyATNState extends State<BuyATN> with TickerProviderStateMixin {
                                     backgroundColor: Theme.of(context).indicatorColor,
                                     elevation: 1),
                                 onPressed: () async{
-                                    showDialog(
-                                context: context,
-                                builder: (context) =>  AlertDialog(
-                                  content: SizedBox(
-                                    height: 500,
-                                    width: 500,
-                                    child:
-                                   
-                                    Container(),
-                                  ),
-                                ),
-                              );
+                                  Navigator.of(context).pushNamed("/projects");
+                              
                                 },
                                 child: Container(
                                   width: 168,

@@ -30,11 +30,13 @@ class _UsersState extends State<Users> {
   }
     int _selectedCardIndex = -1;
 
+  
+
 
   @override
   Widget build(BuildContext context) {
 
-
+    
 
     return 
      Container(
@@ -105,7 +107,7 @@ class _UsersState extends State<Users> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: const [
                                   Text("Addressss"),
-                                  Text("            Memberships"),
+                                  Text("            Involvements"),
                                   Text("   Last Active"),
                                 ],
                               ),
@@ -212,21 +214,21 @@ class _UsersState extends State<Users> {
          const SizedBox(height: 39),
          const Padding(
             padding:  EdgeInsets.only(left:38.0),
-            child: Text("Memberships:",style: TextStyle(fontSize: 19),),
+            child: Text("Involvements:",style: TextStyle(fontSize: 19),),
           ),
           SizedBox(height: 19),
           Padding(
             padding:  EdgeInsets.only(left:38.0),
             child: Row(
               children: [
-                Text("DAO Name"),
+                Text("Project Name"),
                 SizedBox(width: 170),
-                Text("Voting weight")
+                Text("Stakeholder Type")
               ],
             ),
           ),
           Divider(),
-          Text("orice frate, orice")
+          // Text("orice frate, orice")
               ],)
            
     );

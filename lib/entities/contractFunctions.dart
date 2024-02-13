@@ -1,17 +1,19 @@
 
 import 'dart:convert';
 import 'dart:js_util';
-
 import 'package:flutter_web3_provider/ethereum.dart';
 import 'package:flutter_web3_provider/ethers.dart';
 import 'package:http/http.dart';
 import 'package:trustless/entities/abis.dart';
 import 'package:trustless/entities/project.dart';
+import 'package:trustless/entities/user.dart';
 import 'package:trustless/main.dart';
 import 'package:web3dart/web3dart.dart';
 import 'human.dart';
 int numberOfProjects=0;
+
 const String etherlink_testnet = 'https://node.ghostnet.etherlink.com';
+
 class ContractFunctions{
   getProjectsCounter()async{
   print("we are getting the counter baby");
@@ -67,8 +69,20 @@ class ContractFunctions{
                 project.creationDate=DateTime.now();
                 print("added project");
                 print("suntem inainte de pop");
+
+        TTransaction t= TTransaction(
+              contractAddress:projectAddress,
+              functionName: 'createProject',
+              params: 'params',
+              sender: Human().address!,
+              hash: hash,
+              time: DateTime.now()
+              );
+              await transactionsCollection.doc(hash).set(t.toJson());
+          actions.add(t);
             }
         return projectAddress;
+        
         }
       } catch (e) {    
           print("nu s-a putut" +e.toString());
@@ -77,7 +91,6 @@ class ContractFunctions{
                               state.widget.error=true;
                             });
         return "still not ok" ;
-
         }
     }
 
@@ -109,6 +122,16 @@ class ContractFunctions{
           var rezultat=(json.decode(stringify(result)));
           print("a venit si "+rezultat.toString());
           print("e de tipul "+rezultat.runtimeType.toString());
+          TTransaction t= TTransaction(
+              contractAddress:project.contractAddress!,
+              functionName: 'setParties',
+              params: 'params',
+              sender: Human().address!,
+              hash: hash,
+              time: DateTime.now()
+              );
+              await transactionsCollection.doc(hash).set(t.toJson());
+            actions.add(t);
           return hash.toString();
         }
       } catch (e) {
@@ -147,6 +170,16 @@ class ContractFunctions{
           print("a venit si "+rezultat.toString());
           print("e de tipul "+rezultat.runtimeType.toString());
           Human().busy=false;
+          TTransaction t= TTransaction(
+              contractAddress:project.contractAddress!,
+              functionName: 'sendFunds',
+              params: 'params',
+              sender: Human().address!,
+              hash: hash,
+              time: DateTime.now()
+              );
+              await transactionsCollection.doc(hash).set(t.toJson());
+            actions.add(t);
           return hash.toString();
         }
       } catch (e) {   
@@ -158,8 +191,7 @@ class ContractFunctions{
 
   sign(Project project)async{
       print("signing...");
-      
-       final BigInt valueInWei = BigInt.from(100);
+      final BigInt valueInWei = BigInt.from(100);
       final txOptions = jsify({'value': BigInt.from(100).toString()});
       var sourceContract = Contract(project.contractAddress!, nativeProjectAbiString, Human().web3user);
         try {
@@ -185,6 +217,15 @@ class ContractFunctions{
           print("a venit si "+rezultat.toString());
           print("e de tipul "+rezultat.runtimeType.toString());
           Human().busy=false;
+          TTransaction t= TTransaction(
+              contractAddress:project.contractAddress!,
+              functionName: 'sign',
+              params: 'params',
+              sender: Human().address!,
+              hash: hash,time: DateTime.now()
+              );
+              await transactionsCollection.doc(hash).set(t.toJson());
+            actions.add(t);
           return hash.toString();
         }
       } catch (e) {    
@@ -222,6 +263,15 @@ class ContractFunctions{
           print("e de tipul "+rezultat.runtimeType.toString());
           Human().busy=false;
           Human().notifyListeners();
+          TTransaction t= TTransaction(
+              contractAddress:project.contractAddress!,
+              functionName: 'reimburse',
+              params: 'params',
+              sender: Human().address!,
+              hash: hash,time: DateTime.now()
+              );
+              await transactionsCollection.doc(hash).set(t.toJson());
+            actions.add(t);
           return hash.toString();
         }
       } catch (e) {    
@@ -230,11 +280,53 @@ class ContractFunctions{
       }
   }
 
-  withdrawAsContractor(Project project)async {
-    print("signing... on withdraw as contractor");
-  }
+ 
 
   withdrawAsContributor(Project project)async{
+      print("signing... on withdraw as contributor");
+      Human().busy=true;
+      var sourceContract = Contract(project.contractAddress!, nativeProjectAbiString, Human().web3user);
+        try {
+          sourceContract = sourceContract.connect(Human().web3user!.getSigner());
+          print("signed ok");
+          final transaction = await promiseToFuture(callMethod(
+              sourceContract, 
+              "withdrawAsContributor",
+              [],
+            ));
+              print("facuram tranzactia");
+        final hash = json.decode(stringify(transaction))["hash"];
+        print("hash $hash");
+        final result = await promiseToFuture(
+            callMethod(Human().web3user!, 'waitForTransaction', [hash]));
+        if (json.decode(stringify(result))["status"] == 0) {
+        print("nu merge eroare de greseala");
+          Human().busy=false;
+          return "nu merge";
+        } else {
+          var rezultat=(json.decode(stringify(result)));
+          print("a venit si "+rezultat.toString());
+          print("e de tipul "+rezultat.runtimeType.toString());
+          Human().busy=false;
+          TTransaction t= TTransaction(
+              contractAddress:project.contractAddress!,
+              functionName: 'withdraw',
+              params: 'params',
+              sender: Human().address!,
+              hash: hash,time: DateTime.now()
+              );
+              await transactionsCollection.doc(hash).set(t.toJson());
+            actions.add(t);
+          return hash.toString();
+        }
+      } catch (e) {    
+          print("nu merge c nu s-a putut" +e.toString());
+          Human().busy=false;
+        return "nu merge final" ;
+      }
+  }
+
+  withdrawAsContractor(Project project)async{
       print("signing... on withdraw as contributor");
       Human().busy=true;
       var sourceContract = Contract(project.contractAddress!, nativeProjectAbiString, Human().web3user);
@@ -260,6 +352,15 @@ class ContractFunctions{
           print("a venit si "+rezultat.toString());
           print("e de tipul "+rezultat.runtimeType.toString());
           Human().busy=false;
+          TTransaction t= TTransaction(
+              contractAddress:project.contractAddress!,
+              functionName: 'withdraw',
+              params: 'params',
+              sender: Human().address!,
+              hash: hash,time: DateTime.now()
+              );
+              await transactionsCollection.doc(hash).set(t.toJson());
+            actions.add(t);
           return hash.toString();
         }
       } catch (e) {    
@@ -268,6 +369,7 @@ class ContractFunctions{
         return "nu merge final" ;
       }
   }
+
 
   voteToReleasePayment(Project project)async{
       print("signing...");
@@ -295,6 +397,15 @@ class ContractFunctions{
           print("a venit si "+rezultat.toString());
           print("e de tipul "+rezultat.runtimeType.toString());
           Human().busy=false;
+          TTransaction t= TTransaction(
+              contractAddress:project.contractAddress!,
+              functionName: 'voteToRelease',
+              params: 'params',
+              sender: Human().address!,
+              hash: hash,time: DateTime.now()
+              );
+              await transactionsCollection.doc(hash).set(t.toJson());
+            actions.add(t);
           return hash.toString();
         }
       } catch (e) {    
@@ -330,6 +441,15 @@ class ContractFunctions{
           print("a venit si "+rezultat.toString());
           print("e de tipul "+rezultat.runtimeType.toString());
           Human().busy=false;
+          TTransaction t= TTransaction(
+              contractAddress:project.contractAddress!,
+              functionName: 'voteToDispute',
+              params: 'params',
+              sender: Human().address!,
+              hash: hash,time: DateTime.now()
+              );
+              await transactionsCollection.doc(hash).set(t.toJson());
+            actions.add(t);
           return hash.toString();
         }
       } catch (e) {    
@@ -339,8 +459,8 @@ class ContractFunctions{
       }
   }
 
+
   arbitrate(Project project, percentage, rulingHash)async{
-      
       var sourceContract = Contract(project.contractAddress!, nativeProjectAbiString, Human().web3user);
         try {
           sourceContract = sourceContract.connect(Human().web3user!.getSigner());
@@ -364,6 +484,15 @@ class ContractFunctions{
           var rezultat=(json.decode(stringify(result)));
           print("a venit si "+rezultat.toString());
           print("e de tipul "+rezultat.runtimeType.toString());
+          TTransaction t= TTransaction(
+              contractAddress:project.contractAddress!,
+              functionName: 'arbitrate',
+              params: 'params',
+              sender: Human().address!,
+              hash: hash,time: DateTime.now()
+              );
+              await transactionsCollection.doc(hash).set(t.toJson());
+          actions.add(t);
           return hash.toString();
         }
       } catch (e) {

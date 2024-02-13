@@ -278,7 +278,7 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                   side: BorderSide(color: Theme.of(context).indicatorColor, width: 1.0), // Use current indicatorColor for outline
                 ),                                                                                                                                                                                
               ),
-              shadowColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor), // Optional: Use for shadow
+                shadowColor: MaterialStateProperty.all<Color>(Theme.of(context).indicatorColor), // Optional: Use for shadow
             ),
                   onPressed: () async {
                       widget.project.author = Human().address;
@@ -296,7 +296,7 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                           projects.add(widget.project);
                         });
                       });
-                      Navigator.of(context).pushNamed("/");
+                      Navigator.of(context).pushNamed("/projects/$address");
                   },
                   child:  const Center(
                     child: Text(

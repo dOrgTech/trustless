@@ -32,7 +32,12 @@ class ContractFunctions{
     
   createProject(Project project,state)async{
     final BigInt valueInWei = BigInt.from(100);
-    final txOptions = project.status == "open" ? {} : jsify({'value': BigInt.from(100).toString()});
+    // final txOptions = project.status == "open" ? {} : jsify({'value': BigInt.from(100).toString()});
+
+    Map<String, dynamic> txOptions = project.status == "open" 
+        ? {} 
+        : {'value': BigInt.from(100).toString()};
+
     var sourceContract = Contract(sourceAddress, sourceAbiString, Human().web3user);
       try {
         print("web3 is of type "+Human().web3user.toString());

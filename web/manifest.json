@@ -1,11 +1,11 @@
 {
-    "name": "trustless",
-    "short_name": "trustless",
+    "name": "Trustless.Biz",
+    "short_name": "Trustless.Biz",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Decentralized Business Environment",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

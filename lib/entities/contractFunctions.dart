@@ -50,7 +50,7 @@ class ContractFunctions{
           project.status=="open"?"0x0000000000000000000000000000000000000000":project.arbiter,
           project.termsHash,
           project.repo,
-          txOptions
+          jsify(txOptions)
           ],
           ));
             print("facuram tranzactia");

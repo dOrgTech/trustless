@@ -12,6 +12,7 @@ import 'package:trustless/utils/reusable.dart';
 import 'package:trustless/widgets/newGenericProject.dart';
 import 'package:trustless/widgets/projectDetails.dart';
 import 'package:trustless/screens/prelaunch.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:web3dart/web3dart.dart';
 
 import '../screens/projects.dart';
@@ -19,8 +20,6 @@ import '../screens/projects.dart';
 class BuyATN extends StatefulWidget {
  BuyATN();
  double opa_aur = 0;
-
- 
   bool? isUser;
   
   @override
@@ -59,7 +58,6 @@ class _BuyATNState extends State<BuyATN> with TickerProviderStateMixin {
       gro = 500.0;
     });
     super.initState();
-   
   }
 
   @override
@@ -225,7 +223,7 @@ class _BuyATNState extends State<BuyATN> with TickerProviderStateMixin {
                                   overlayColor: MaterialStateProperty.all(Theme.of(context).indicatorColor.withOpacity(0.1)), // Handle overlay color for ripple effect if needed
                                 ),
                                 onPressed: () {
-                                  
+                                  launch("https://github.com/dOrgTech/homebase-projects/blob/master/README.md");
                                 },
                                 child: Center(child: 
                               

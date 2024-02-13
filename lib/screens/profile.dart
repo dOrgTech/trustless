@@ -1,6 +1,8 @@
 import "package:flutter/material.dart";
 import "package:trustless/utils/reusable.dart";
 
+import "../entities/human.dart";
+
 
 class Profile extends StatefulWidget {
    Profile({super.key});
@@ -325,7 +327,7 @@ Widget overview(lumina){
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           SizedBox(height: 20,
-                          child:Text("Earnings vs Expenditure",style: TextStyle(fontWeight: FontWeight.bold),)),
+                          child:Text("A graph showing earnings and expenditure",style: TextStyle(fontWeight: FontWeight.bold),)),
                        
                         ],
                       ),
@@ -343,7 +345,7 @@ Widget overview(lumina){
                                 SizedBox(height: 7),
                                 Text('Total earnings :', style: TextStyle( fontSize: 17),),
                                 SizedBox(height: 3),
-                                Text('Customer credits spent:',style: TextStyle(fontSize: 17)),
+                                Text('Total spent:',style: TextStyle(fontSize: 17)),
                               ],
                             ),
                             const SizedBox(width: 15),
@@ -351,9 +353,9 @@ Widget overview(lumina){
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 SizedBox(height: 5),
-                                Text("0 ATN", style: TextStyle(fontFamily: 'Roboto Mono', fontSize: 17)),
+                                Text("0 ${Human().chain.nativeSymbol}" , style: TextStyle(fontFamily: 'Roboto Mono', fontSize: 17)),
                                 SizedBox(height: 2),
-                                Text("0 ATN", style: TextStyle(fontFamily: 'Roboto Mono', fontSize: 17)),
+                                Text("0 ${Human().chain.nativeSymbol}", style: TextStyle(fontFamily: 'Roboto Mono', fontSize: 17)),
                               ]),
               
                             ]),

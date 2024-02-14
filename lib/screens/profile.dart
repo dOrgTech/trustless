@@ -172,12 +172,12 @@ var sc=ScrollController();
                     Center(
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width*0.7,
-                  child:Text("secondscredits "))),
+                  child:Text("Coming soon..."))),
                     
                     Center(
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width*0.7,
-                  child:Text("stan md powd "))),
+                  child:Text("Working on it..."))),
                    
                     ]),
                 
@@ -223,7 +223,7 @@ Widget overview(lumina){
                           duration: Duration(milliseconds: 800),
                           child: Center(
                               child: balance(
-                                  "XTZ Earned",
+                                  "${Human().chain.nativeSymbol} Earned",
                                  0.toString()
                                   )),
                         )),  
@@ -266,7 +266,7 @@ Widget overview(lumina){
                           duration: Duration(milliseconds: 800),
                           child: Center(
                             child: unclaimed(
-                              "Unclaimed XTZ", "0.00")),
+                              "Unclaimed ${Human().chain.nativeSymbol}", "0.00")),
                         )),
                          AnimatedContainer(
                         duration: Duration(milliseconds: 400),
@@ -364,58 +364,61 @@ Widget overview(lumina){
             ),
               
           SizedBox(height: 20,),
-            Center(
-              child: Wrap(
-                spacing: 20,
-                children: [
-            SizedBox(
-          width:500,
-          child: Column(
-            children: [
-                Column(
-                    children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text("Dividends from  ", style: TextStyle(fontSize: 17,),),
-                            DropdownButton(
-                      value: 1,
-                      onChanged: (value) {
-                            int numar=value as int;
-                            setState(() {});
-                              },
-                      items: [
-                      DropdownMenuItem(child: Text("All projects"),value: 1),
-                      ]),
-                          ],
-                        ),
+//             Center(
+//               child: Wrap(
+//                 spacing: 20,
+//                 children: [
+//             SizedBox(
+//           width:500,
+//           child: Column(
+//             children: [
+//                 Column(
+//                     children: [
+//                         Row(
+//                           mainAxisAlignment: MainAxisAlignment.center,
+//                           children: [
+//                             Text("Dividends from  ", style: TextStyle(fontSize: 17,),),
+//                             DropdownButton(
+//                       value: 1,
+//                       onChanged: (value) {
+//                             int numar=value as int;
+//                             setState(() {});
+//                               },
+//                       items: [
+//                       DropdownMenuItem(child: Text("All projects"),value: 1),
+//                       ]),
+//                           ],
+//                         ),
                      
                       
-             ] ),
-                        ],
-                      ),
-                    ),
-                     SizedBox(
-          width:500,
-          child: Column(
-              children: [
-                Column(
-                    children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text("Mining rewards from  ", style: TextStyle(fontSize: 17,),),
-                            DropdownButton(
-                      value: 1,
-                      onChanged: (value) {
-                            int numar=value as int;
-                            setState(() {});
-                              },
-                      items: [
-                      DropdownMenuItem(child: Text("All nodes"),value: 1),
-                      ]),
-                          ],
-)])]))]))]));
+//              ] ),
+//                         ],
+//                       ),
+//                     ),
+//                      SizedBox(
+//           width:500,
+//           child: Column(
+//               children: [
+//                 Column(
+//                     children: [
+//                         Row(
+//                           mainAxisAlignment: MainAxisAlignment.center,
+//                           children: [
+//                             Text("Mining rewards from  ", style: TextStyle(fontSize: 17,),),
+//                             DropdownButton(
+//                       value: 1,
+//                       onChanged: (value) {
+//                             int numar=value as int;
+//                             setState(() {});
+//                               },
+//                       items: [
+//                       DropdownMenuItem(child: Text("All nodes"),value: 1),
+//                       ]),
+//                           ],
+// )])]))
+// ])
+// )
+]));
                         
                         }
 

@@ -24,6 +24,21 @@
   <link rel="icon" type="image/png" sizes="32x32" href="https://i.ibb.co/Pr14TVT/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="https://i.ibb.co/pn2RBXj/Icon-192.png">
 
+  <script>
+    window.addEventListener('flutterInAppWebviewPlatformReady', function(event) {
+      window.flutter_inappwebview.callHandler('consoleLog').then(function() {
+        console.log = function(message) {
+          window.flutter_inappwebview.callHandler('consoleLog', message);
+        };
+      });
+    });
+  </script>
+  <script>
+    function receiveConsoleInput(input) {
+      // Send the input to the Dart side
+      window.dispatchEvent(new CustomEvent('consoleInput', { detail: input }));
+    }
+  </script>
 
   <script>
     // The value below is injected by flutter build, do not touch.

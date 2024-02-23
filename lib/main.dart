@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-
+import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -26,6 +26,8 @@ import 'entities/user.dart';
 import 'firebase_options.dart';
 import 'screens/disputes.dart';
 import 'package:provider/provider.dart';
+import 'dart:html';
+import 'dart:js' as js;
 String metamask="https://i.ibb.co/HpmDHg0/metamask.png";
 double switchAspect=1.2;
 List<Project> projects=[];
@@ -111,12 +113,12 @@ var transactionsCollection;
   }
   
   if (projects.length>0) {await createUsers();}
-  print("greater than zero adding MockTransactions");
-  var punem= actions.length;
-  if (punem < mockTansactions.length){
-    for (int i=0; i< mockTansactions.length - punem; i++){
-      actions.add(mockTansactions[i]);
-    }
+    print("greater than zero adding MockTransactions");
+    var punem= actions.length;
+    if (punem < mockTansactions.length){
+      for (int i=0; i< mockTansactions.length - punem; i++){
+        actions.add(mockTansactions[i]);
+      }
   }
 
   // actions.sort((a, b) => b.time.compareTo(a.time));
@@ -125,11 +127,34 @@ var transactionsCollection;
   await cf.getProjectsCounter();
   print("we have this many projects: "+numberOfProjects.toString());
   runApp(
-   ChangeNotifierProvider<Human>(
-      create: (context) => Human(),
-      child: MyApp(),
-    ));
-    }
+    ChangeNotifierProvider<Human>(
+        create: (context) => Human(),
+        child: MyApp(),
+      ));
+      listenForConsoleInputs();
+      }
+
+
+void listenForConsoleInputs() {
+  // Listen for the custom event
+  window.addEventListener('consoleInput', (event) {
+    final CustomEvent customEvent = event as CustomEvent;
+    final input = customEvent.detail;
+    print('Received input from console: $input');
+    // Here, you can call your chat function with the input
+    String response = chatFunction(input);
+    print(response); // This will log the response back to the console
+  });
+}
+
+
+String chatFunction(String prompt) {
+  // This function simulates chat interaction. Replace with actual functionality.
+  return "Responding to '$prompt'.";
+}
+
+
+
 
 class MyApp extends StatelessWidget {
   // Create a global variable for the overlay entry
@@ -309,10 +334,10 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                   ),
                 ),
               ),
-  ),
-    Padding(
-      padding: const EdgeInsets.all(18.0),
-      child: SizedBox( width:145,
+          ),
+            Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: SizedBox( width:145,
                   child: Center(
                     child: Opacity(
                       opacity: widget.isDisputes?1:0.6,

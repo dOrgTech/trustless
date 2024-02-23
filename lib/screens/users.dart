@@ -1,10 +1,7 @@
 
 import 'dart:typed_data';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:trustless/screens/prelaunch.dart';
 
 import '../entities/user.dart';
 import '../utils/reusable.dart';
@@ -13,7 +10,7 @@ import '../utils/scripts.dart';
 List<Widget> userCards=[];
 var selectedStatus="";
 class Users extends StatefulWidget {
-  
+  const Users({super.key});
   @override
   State<Users> createState() => _UsersState();
 }
@@ -26,7 +23,7 @@ class _UsersState extends State<Users> {
   for (int i = 0; i < 12 && i < users.length; i++) {
     userCards.add(users[i].getCard());
   }
-  print("usercards ${userCards.length}");
+  
   }
     int _selectedCardIndex = -1;
 
@@ -55,7 +52,7 @@ class _UsersState extends State<Users> {
                       padding: const EdgeInsets.symmetric(horizontal: 9),
                        height: 46, 
                        width: double.infinity,
-                        constraints: BoxConstraints(maxWidth: 1200),
+                        constraints: const BoxConstraints(maxWidth: 1200),
                        child:  MediaQuery(
                  data: MediaQuery.of(context).copyWith(textScaleFactor: 0.8),child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -71,9 +68,9 @@ class _UsersState extends State<Users> {
                                   decoration: InputDecoration(
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(8),
-                                         borderSide: BorderSide(width: 0.1),
+                                         borderSide: const BorderSide(width: 0.1),
                                       ),
-                                    prefixIcon: Icon(Icons.search),
+                                    prefixIcon: const Icon(Icons.search),
                                     hintText: 'Search user by address or alias',
                                     // other properties
                                   ),
@@ -85,7 +82,7 @@ class _UsersState extends State<Users> {
                             ],
                            ),
                       )),
-                      SizedBox(height: 23),
+                      const SizedBox(height: 23),
                   Container(
                        height: MediaQuery.of(context).size.height-210,
                     // color:Colors.yellow,
@@ -137,7 +134,7 @@ class _UsersState extends State<Users> {
                         ),
                               Expanded(
                                 child: Container(
-                                  padding: EdgeInsets.all(14),
+                                  padding: const EdgeInsets.all(14),
                                   child:
                                   _selectedCardIndex==-1?
                                   selectAnItem():
@@ -180,11 +177,11 @@ class _UsersState extends State<Users> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
-              padding: EdgeInsets.only(top:148.0,left:45),
+              padding: const EdgeInsets.only(top:148.0,left:45),
               child: Row(
                 children: [
                   FutureBuilder<Uint8List>(
-                      future: generateAvatarAsync(hashString(human.address!)),  // Make your generateAvatar function return Future<Uint8List>
+                      future: generateAvatarAsync(hashString(human.address)),  // Make your generateAvatar function return Future<Uint8List>
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.waiting) {
                           return Container(
@@ -193,7 +190,6 @@ class _UsersState extends State<Users> {
                             color: Colors.grey,
                           );
                         } else if (snapshot.hasData) {
-                          print("generating on the right");
                           return Image.memory(snapshot.data!);
                         } else {
                           return Container(
@@ -205,29 +201,29 @@ class _UsersState extends State<Users> {
                       },
                     ),
                  const SizedBox(width: 10),
-                  Text(human.address!, style: TextStyle(fontSize: 16),),
+                  Text(human.address, style: const TextStyle(fontSize: 16),),
                  const SizedBox(width: 10),
-                  TextButton(onPressed: (){}, child: Icon(Icons.copy))
+                  TextButton(onPressed: (){}, child: const Icon(Icons.copy))
                 ],
               ),
             ),
          const SizedBox(height: 39),
          const Padding(
             padding:  EdgeInsets.only(left:38.0),
-            child: Text("Involvements:",style: TextStyle(fontSize: 19),),
+            child: Text("Involvements:",style: TextStyle(fontSize: 19)),
           ),
-          SizedBox(height: 19),
+          const SizedBox(height: 19),
           Padding(
-            padding:  EdgeInsets.only(left:38.0),
+            padding:  const EdgeInsets.only(left:38.0),
             child: Row(
-              children: [
+              children: const [
                 Text("Project Name"),
                 SizedBox(width: 170),
                 Text("Stakeholder Type")
               ],
             ),
           ),
-          Divider(),
+          const Divider(),
           // Text("orice frate, orice")
               ],)
            

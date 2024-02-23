@@ -15,9 +15,9 @@ contract Economy {
 
     function createProject(
     string memory name, 
-    address contractor, 
+    address contractor,
     address arbiter, 
-    string memory termsHash, 
+    string memory termsHash,
     string memory repo
     // Make sure to pass the arbitration fee as an argument if it's not a fixed value in the Economy contract
     ) public payable {
@@ -72,6 +72,7 @@ contract NativeProject {
     uint public projectValue;
     uint public disputeResolution;
     string public ruling_hash;
+    bool fundsReleased;
     string public stage;
     uint public arbitrationFee;
     bool public arbitrationFeePaidOut = false;
@@ -87,9 +88,10 @@ contract NativeProject {
         string memory _termsHash,
         string memory _repo,
         uint _arbitrationFee)
-        payable 
+        payable
         {
         economy = Economy(address(_economy));
+        fundsReleased=false;
         name = _name;
         author = _author;
         contractor = _contractor;
@@ -112,14 +114,15 @@ contract NativeProject {
         }
     }
 
-    function setParties(address _contractor, address _arbiter) public payable{
+    function setParties(address _contractor, address _arbiter, string memory _termsHash) public payable{
         require(keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("open")) || 
         keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("pending")), 
-        "Can't set the parties unless the project is in 'open' or 'pending' stage.");
+        "Parties can be set only in 'open' or 'pending' stage.");
         require (msg.sender==author,"Only the Project's Author can set the other parties.");
         require(msg.value >= arbitrationFee / 2, "Must stake half the arbitration fee to sign the contract.");
         contractor=_contractor;
         arbiter=_arbiter;
+        termsHash=_termsHash;
         stage="pending";
     }
 
@@ -133,16 +136,15 @@ contract NativeProject {
     }
 
     event ContractorPaid(address contractor);
+
     function withdrawAsContractor() public {
         require(
-            keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("closed")) ,
+            keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("closed")),
             "The contractor can only withdraw once the project is closed.");
-
         require(msg.sender == contractor, "Only the contractor can withdraw.");
-
+        require(availableToContractor>0,"Nothing to withdraw");
         uint256 amountToWithdraw = availableToContractor;
         availableToContractor = 0; // Prevent re-entrancy by zeroing before transfer
-
         (bool sent, ) = payable(contractor).call{value: amountToWithdraw}("");
         economy.updateEarnings(contractor, amountToWithdraw);
         require(sent, "Failed to send Ether to contractor.");
@@ -157,6 +159,7 @@ contract NativeProject {
         contributors[msg.sender]=0;
         economy.updateSpendings(msg.sender,expenditure);
     }
+
 
     function reclaimArbitrationFee()public{
         require(
@@ -188,6 +191,8 @@ contract NativeProject {
             keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("closed")) ,
          "Withdrawals only allowed when the project is open, pending or closed.");
 
+        require(availableToContributors>0,"There are no funds available to contributors.");
+
         uint256 contributorAmount = contributors[msg.sender];
         require(contributorAmount > 0, "No contributions to withdraw.");      
         uint256 exitAmount;
@@ -204,13 +209,14 @@ contract NativeProject {
     }
 
     event ContractSigned(address contractor);
-     function signContract() public payable {
+    function signContract() public payable {
         // Check if the caller is the designated contractor
         require(msg.sender == contractor, "Only the designated contractor can sign the contract");
         // Check if the project is in the "pending" stage
         require(keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("pending")), "The project can only be signed while in `pending` stage.");
         // Update the stage to "ongoing"
         require(msg.value >= arbitrationFee / 2, "Must stake half the arbitration fee to sign the contract.");
+        require(projectValue > 0, "Can't sign a contract with no funds in it.");
         stage = "ongoing";
         emit ContractSigned(msg.sender);
     }
@@ -241,6 +247,8 @@ contract NativeProject {
         if (totalVotesForRelease > address(this).balance * 70 / 100) {
             stage = "closed";
             availableToContractor = projectValue;
+            fundsReleased = true;
+            availableToContributors=0;
             emit ProjectClosed(msg.sender);
         }
     }

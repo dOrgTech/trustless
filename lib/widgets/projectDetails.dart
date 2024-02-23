@@ -65,7 +65,7 @@ String extractGitHubPath(String? repoUrl) {
     List<Widget> openProjectFunctions = [
       functionItem("Send Funds to Project", "Anyone", SendFunds(project: widget.project)),
       functionItem("Set Parties", "Author", SetParty(project: widget.project)),
-      functionItem("Withdraw", "Anyone", Withdraw(project: widget.project)),
+      functionItem("Withdraw", "Backers", Withdraw(project: widget.project)),
     ];
     
     List<Widget> ongoingProjectFunctions = [
@@ -80,7 +80,7 @@ String extractGitHubPath(String? repoUrl) {
     ];
 
     List<Widget> closedProjectFunctions = [
-      functionItem("Withdraw as Backer", "Anyone", Withdraw(project: widget.project)),
+      functionItem("Withdraw as Backer", "Backers", Withdraw(project: widget.project)),
       functionItem("Withdraw as Contractor", "Contractor", Withdraw(project: widget.project)),
     ];
 

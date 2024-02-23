@@ -1,16 +1,9 @@
 import "package:flutter/material.dart";
-import "package:lottie/lottie.dart";
-import "package:provider/provider.dart";
-import "package:trustless/widgets/arbitrate.dart";
 import "package:trustless/widgets/newGenericProject.dart";
-import "package:trustless/widgets/sendfunds.dart";
-import "package:trustless/widgets/waiting.dart";
-import "package:webviewx/webviewx.dart";
 import "../entities/human.dart";
 import "../entities/project.dart";
 import "../main.dart";
 import "../widgets/footer.dart";
-import "../widgets/hovermenu.dart";
 import "../widgets/projectCard.dart";
 
 String? selectedNewProject="Open to proposals";
@@ -29,7 +22,6 @@ class Projects extends StatefulWidget {
 class ProjectsState extends State<Projects> {
   @override
   Widget build(BuildContext context) {
-    print("projects "+projects.length.toString());
     List<Widget>projectCards=[];
      for (Project p in projects){
       if (
@@ -45,7 +37,7 @@ class ProjectsState extends State<Projects> {
         }
       }
     }
-    if (projectCards.length==0){
+    if (projectCards.isEmpty){
       projectCards.add(const Center(child:SizedBox(
         height: 300,
         child: Center(child: Text("No projects match applied filters.",
@@ -55,31 +47,31 @@ class ProjectsState extends State<Projects> {
     // return Text("something");
     List<Widget> projectsMenu=[
      Padding(
-                  padding: const EdgeInsets.only(left:5.0),
-                  child: SizedBox(
-                    width: 
-                    MediaQuery.of(context).size.width>1200?
-                    500:
-                    MediaQuery.of(context).size.width * 0.5,
-                    child: TextField(
-                      style: TextStyle(fontSize: 20),
-                      onChanged: (value){
-                          setState(() {
-                          widget.query = value;
-                        });
-                      },
-                      decoration: InputDecoration(
+                padding: const EdgeInsets.only(left:5.0),
+                child: SizedBox(
+                  width: 
+                  MediaQuery.of(context).size.width>1200?
+                  500:
+                  MediaQuery.of(context).size.width * 0.5,
+                  child: TextField(
+                    style: const TextStyle(fontSize: 20),
+                    onChanged: (value){
+                        setState(() {
+                        widget.query = value;
+                      });
+                    },
+                    decoration: InputDecoration(
 
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(width: 0.1),
-                          ),
-                        prefixIcon: Icon(Icons.search),
-                        hintText: 'Search project',
-                      ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(width: 0.1),
+                        ),
+                      prefixIcon: const Icon(Icons.search),
+                      hintText: 'Search project',
                     ),
                   ),
                 ),
+              ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -100,19 +92,19 @@ class ProjectsState extends State<Projects> {
                           });
                               },
                                 ),
-                                SizedBox(width: 15),
+                                const SizedBox(width: 15),
                     Padding(
-                      padding:  EdgeInsets.only(right:8.0),
+                      padding:  const EdgeInsets.only(right:8.0),
                       child: Row(
                         children:   [
-                          Text("projects"),
-                          SizedBox(width: 60),
+                          const Text("projects"),
+                          const SizedBox(width: 60),
             // HoverExpandWidget(projectsState: this),
             ElevatedButton(onPressed: (){
                         Human().address==null?
                      showDialog(
                 context: context,
-                builder: (context) => AlertDialog(
+                builder: (context) => const AlertDialog(
             
                       content: SizedBox(height:100, width: 400,child:Center(child: 
                       Text("Connect your wallet firrst.")
@@ -124,7 +116,7 @@ class ProjectsState extends State<Projects> {
                     context: context, 
                     builder: (context) => AlertDialog(
                       
-                      content: Container(
+                      content: SizedBox(
                         width: 900,
                         // height: 500,
                         child: NewGenericProject(projectsState:this)
@@ -139,13 +131,13 @@ class ProjectsState extends State<Projects> {
                                 child: Text("Add Project",
                                 style: TextStyle(
                                   fontSize: 19,
-                                  color:Theme.of(context).brightness==Brightness.dark?Color.fromARGB(255, 0, 0, 0):Color.fromARGB(255, 255, 255, 255)),
+                                  color:Theme.of(context).brightness==Brightness.dark?const Color.fromARGB(255, 0, 0, 0):const Color.fromARGB(255, 255, 255, 255)),
                                 
                                 ),
                               ),
                             )),
               
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                                     ],
@@ -169,7 +161,7 @@ class ProjectsState extends State<Projects> {
                       padding: const EdgeInsets.symmetric(horizontal: 9),
                        height: 46, 
                        width: double.infinity,
-                        constraints: BoxConstraints(maxWidth: 1200),
+                        constraints: const BoxConstraints(maxWidth: 1200),
                        child:  MediaQuery(
             data: MediaQuery.of(context).copyWith(textScaleFactor: 0.8),
             child: Row(
@@ -193,7 +185,7 @@ class ProjectsState extends State<Projects> {
                         )),
                       ) 
                       ,
-                    SizedBox(height: 24,),
+                    const SizedBox(height: 24,),
                     // NewGenericProject(projectsState: this),
                    Container(
                     alignment: Alignment.topCenter,

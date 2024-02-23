@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
+import '../entities/human.dart';
 import '../entities/project.dart';
 import '../main.dart';
 
@@ -15,7 +16,7 @@ class _AnimatedStatsDisplayState extends State<AnimatedStatsDisplay> with Ticker
     'Ongoing Disputes': 1,
     'Open Projects': 2,
     'Active Projects': 4,
-    'Total XTZ Earned': 44390,
+    'Total ${Human().chain.nativeSymbol} Earned': 44390,
     'Total USDT Earned': 0,
   };
 

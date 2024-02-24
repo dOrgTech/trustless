@@ -14,7 +14,7 @@ class PCard extends StatelessWidget {
   Project? project;
   @override
   Widget build(BuildContext context) {
-    project!.holding= project!.contributions.values.fold(0, (a, b) => a! + b);
+    
     return  Card(
       elevation: 4,
       child: TextButton(
@@ -150,7 +150,7 @@ class ProjectCard extends StatelessWidget {
   Project? project;
   @override
   Widget build(BuildContext context) {
-    project!.holding= project!.contributions.values.fold(0, (a, b) => a! + b);
+    // project!.holding= project!.contributions.values.fold(0, (a, b) => a! + b);
     return Card(
       elevation: 4,
       child: TextButton(

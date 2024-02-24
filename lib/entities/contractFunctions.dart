@@ -30,6 +30,20 @@ class ContractFunctions{
       return rezultat;
     }
     
+  getNativeBalance(String address)async {
+    var httpClient = Client(); 
+    var ethClient = Web3Client(Human().chain.rpcNode, httpClient);
+    final ethAddress = EthereumAddress.fromHex(address);
+    final balance = await ethClient.getBalance(ethAddress);
+     // Close the HTTP client
+    httpClient.close();
+    return balance.getInWei;
+  }
+
+  getUSDTBalance(){
+    //TODO: implement this
+  }
+
   createProject(Project project,state)async{
     final BigInt valueInWei = BigInt.from(100);
     // final txOptions = project.status == "open" ? {} : jsify({'value': BigInt.from(100).toString()});
@@ -99,9 +113,13 @@ class ContractFunctions{
         }
     }
 
+
   setNativeParties(Project project,state)async{
       final BigInt valueInWei = BigInt.from(100);
-      final txOptions = jsify({'value': BigInt.from(100).toString()});
+      final txOptions = jsify({'value': BigInt.from(
+        project.status=="open"?
+        100:0
+        ).toString()});
       var sourceContract = Contract(project.contractAddress!, nativeProjectAbiString, Human().web3user);
         try {
           sourceContract = sourceContract.connect(Human().web3user!.getSigner());
@@ -145,6 +163,7 @@ class ContractFunctions{
       return "nu merge final" ;
       }
   }
+
 
   sendFunds(Project project, amount)async{
       print("sending funds");

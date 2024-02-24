@@ -7,6 +7,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:trustless/widgets/somethingsWrong.dart';
 import 'package:trustless/widgets/waiting.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../entities/human.dart';
@@ -34,6 +35,7 @@ class SetPartytate extends State<SetParty> {
   Widget build(BuildContext context) {
  
     return
+    widget.error?SomethingWentWrong(project:widget.project):
     Container(
       margin: const EdgeInsets.all(10),
       padding: const EdgeInsets.all(40),
@@ -174,7 +176,31 @@ class SetPartytate extends State<SetParty> {
             padding: EdgeInsets.symmetric(horizontal:80.0),
             child: Text("The Contractor will need to sign this Project contract before the funds are locked in Escrow. Make sure they agree with the terms as well as the designated Arbiter."),
           ),
-              const Spacer(),
+              SizedBox(height: 36),
+              widget.project.status=="open"?
+            Row(children: [
+            Padding(
+              padding: const EdgeInsets.only(left:178.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: const [
+                  Text("Arbitration fee: "),
+                  SizedBox(height: 8),
+                  Text("Your half (due now): "),
+              ],),
+            ),
+         const SizedBox(width: 20),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(widget.project.isUSDT?"160.0 USDT":"200.00 ${Human().chain.nativeSymbol}"),
+                const SizedBox(height: 8),
+                Text(
+                  widget.project.isUSDT?"80.0 USDT":"100.00 ${Human().chain.nativeSymbol}"
+                ),
+            ],),
+          ],):const Text("You already staked your half of the arbitration fee."),
+          Spacer(),
                 Center(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -233,6 +259,9 @@ class SetPartytate extends State<SetParty> {
                           String cevine = await cf.setNativeParties(widget.project, this);
                           if (cevine.contains("nu merge")){
                             print("nu merge din setParty");
+                            setState(() {
+                              widget.error=true;
+                            });
                             return;
                           }
                           widget.project.status = "pending";

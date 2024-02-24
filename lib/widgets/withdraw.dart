@@ -173,7 +173,18 @@ class _WidthdrawAsContractorState extends State<WidthdrawAsContractor>{
 
   @override
   Widget build(BuildContext context) {
-    return maina();
+    return Human().address?.toString() != widget.project.contractor?.toLowerCase().toString()?
+    SizedBox(height: 230, width: 400, child: Center(child: Column(
+      children: [
+         const  SizedBox(height:60),
+        const Text("You are not signed in as the Contractor of this Project.", textAlign: TextAlign.center,),
+         const  SizedBox(height:60),
+        ElevatedButton(onPressed: (){
+            Navigator.of(context).pop();
+        }, child: Text("OK"))
+      ],
+    ))):
+     maina();
   }
 
 

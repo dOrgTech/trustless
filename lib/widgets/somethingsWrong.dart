@@ -30,7 +30,7 @@ class SomethingWentWrong extends StatelessWidget {
           children: [
             Image.network(memes[random.nextInt(memes.length) ], height: 400,),
             const SizedBox(height:25),
-            const Text("The transaction failed. Debug info can be found in the app's dev console or in the block explorer. It might just be that you didn't connect your wallet."),
+            const Text("The transaction failed. Debug info can be found in the app's dev console or in the block explorer."),
             const SizedBox(height:35),
             ElevatedButton(onPressed: (){
               Navigator.of(context).pushNamed("/projects/${project.contractAddress}");

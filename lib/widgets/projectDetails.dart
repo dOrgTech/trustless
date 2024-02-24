@@ -22,6 +22,7 @@ import '../widgets/withdraw.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:http/http.dart' as http;
 
+
 class ProjectDetails extends StatefulWidget {
   ProjectDetails({super.key, required this.project});
   Project project;
@@ -52,6 +53,7 @@ String extractGitHubPath(String? repoUrl) {
   // Check if the URL contains "github.com/"
   int startIndex = repoUrl.indexOf('github.com/');
   if (startIndex == -1) {
+
     return 'default/fallback/path'; // Provide a default path or handle as needed
   }
   // Extract the part after "github.com/"
@@ -60,7 +62,7 @@ String extractGitHubPath(String? repoUrl) {
 }
   @override
   Widget build(BuildContext context) {
-    widget.project.holding= widget.project.contributions.values.fold(0, (a, b) => a! + b);
+    // widget.project.holding= widget.project.contributions.values.fold(0, (a, b) => a! + b);
 
     List<Widget> openProjectFunctions = [
       functionItem("Send Funds to Project", "Anyone", SendFunds(project: widget.project)),
@@ -81,13 +83,13 @@ String extractGitHubPath(String? repoUrl) {
 
     List<Widget> closedProjectFunctions = [
       functionItem("Withdraw as Backer", "Backers", Withdraw(project: widget.project)),
-      functionItem("Withdraw as Contractor", "Contractor", Withdraw(project: widget.project)),
+      functionItem("Withdraw as Contractor", "Contractor", WidthdrawAsContractor(project: widget.project)),
     ];
 
     List<Widget> pendingProjectFunctions = [
       functionItem("Send Funds to Project", "Anyone", SendFunds(project: widget.project)),
       functionItem("Withdraw", "Backers", Withdraw(project: widget.project)),
-
+      functionItem("Change Parties", "Author", SetParty(project: widget.project)),
       functionItem("Sign Contract", "Contractor", Sign(project: widget.project)),
       // functionItem("Set Parties", "Author", SetParty(project: widget.project)),
     ];
@@ -474,14 +476,30 @@ String extractGitHubPath(String? repoUrl) {
                                             const EdgeInsets.only(left: 28.0),
                                         child: Row(
                                           children: [
-                                            Text(
-                                              "${widget.project.holding!} ",
-                                              style: const TextStyle(
+                                           FutureBuilder(
+                          future:  widget.project.isUSDT?
+                           cf.getUSDTBalance():
+                           cf.getNativeBalance(widget.project.contractAddress!),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState==ConnectionState.done){
+                              String catare=snapshot.data.toString();
+                              double avem=double.parse(catare);
+                              if (widget.project!.holding!=avem){
+                                widget.project!.holding=avem;
+                                projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
+                              }
+                              // widget.project!.currentlyHolding=int.parse(catare);
+                            return Text(catare,style: const TextStyle(
                                                   fontSize: 25,
                                                   fontWeight: FontWeight.normal),
-                                            ),
+                                            );
+                            }else{
+                           return const Center(child: CircularProgressIndicator());
+                          }
+                        } ),
+                                          
                                             Text(
-                                              widget.project.isUSDT?"USDT":Human().chain.nativeSymbol,
+                                              widget.project.isUSDT?" USDT":" "+ Human().chain.nativeSymbol,
                                               style: const TextStyle(
                                                   fontSize: 25,
                                                   fontWeight: FontWeight.normal),
@@ -727,16 +745,16 @@ String extractGitHubPath(String? repoUrl) {
       customBorder: Border.all(),
       hoverColor: Color.fromARGB(37, 182, 182, 182),
       onTap: () {
-        // Human().address==null?
-        //  showDialog(
+        Human().address==null?
+         showDialog(
          
-        //     context: context,
-        //     builder: (context) => AlertDialog(
-        //           content: SizedBox(height:100, width: 400,child:Center(child: 
-        //           Text("Connect your wallet to call functions.")
-        //           )),
-        //         ))
-        // : 
+            context: context,
+            builder: (context) => AlertDialog(
+                  content: SizedBox(height:100, width: 400,child:Center(child: 
+                  Text("Connect your wallet to call functions.")
+                  )),
+                ))
+        : 
         showDialog(
            barrierDismissible: false,
             context: context,

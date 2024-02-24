@@ -25,7 +25,7 @@ contract Economy {
     if (contractor != address(0) && arbiter != address(0)) {
         // If both contractor and arbiter are specified, the project will be in "pending" stage
         // and require staking half the arbitration fee.
-        require(msg.value >= arbitrationFee / 2, "Insufficient funds to cover the arbitration fee.");
+        require(msg.value >= arbitrationFee / 2, "Must stake half the arbitration fee.");
         newProject = (new NativeProject){value: msg.value}(
             address(this),name,msg.sender,contractor,arbiter,termsHash,repo,arbitrationFee
         );
@@ -119,7 +119,10 @@ contract NativeProject {
         keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("pending")), 
         "Parties can be set only in 'open' or 'pending' stage.");
         require (msg.sender==author,"Only the Project's Author can set the other parties.");
-        require(msg.value >= arbitrationFee / 2, "Must stake half the arbitration fee to sign the contract.");
+        if (keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("open")))
+        {
+        require(msg.value >= arbitrationFee / 2, "Must stake half of the arbitration fee.");
+        }
         contractor=_contractor;
         arbiter=_arbiter;
         termsHash=_termsHash;
@@ -153,7 +156,7 @@ contract NativeProject {
 
     function updateContributorSpendings()public{
         require(
-            keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("closed")) ,
+            keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("closed")),
             "Stats for the contributor can be updated once the project is closed.");
         uint expenditure=contributors[msg.sender];
         contributors[msg.sender]=0;

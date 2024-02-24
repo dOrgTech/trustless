@@ -224,20 +224,20 @@ class _NewGenericProjectState extends State<NewGenericProject> {
           const SizedBox(height: 45), 
           Text(
             widget.project.status=="pending"?
-            "To deploy the Project you must stake your half of the arbitration fee. Before the contractor signs and stakes their half, you will still be able to withdraw this amount.  The stake will be released back to the parties if the Project concludes without a dispute."
+            "To deploy the Project you must stake your half of the arbitration fee. Until the contractor signs and stakes their half, you will still be able to withdraw this amount. The stake will be released back to the parties if the Project concludes without a dispute."
             :
-            "You may deploy this open project without staking half of the arbitration fee, but will need to to so later when you set the parties and terms. While the project is open and/or pending, people can send and withdraw funds from it at will. One can only withdraw what they previously put in."
+            "You may deploy this project without staking half of the arbitration fee, but will need to to so later when you set the parties and terms. While the project is open and/or pending, people can send and withdraw funds from it at will. One can only withdraw what they had previously put in."
             ),
           const SizedBox(height: 25),
             Row(children: [
             Padding(
               padding: const EdgeInsets.only(left:178.0),
-              child: Column(  
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: const [
                   Text("Arbitration fee: "),
                   SizedBox(height: 8),
-                  Text("Due now: "),
+                  Text("Your half (due now): "),
               ],),
             ),
          const SizedBox(width: 20),

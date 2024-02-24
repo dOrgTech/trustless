@@ -51,45 +51,45 @@ class _PopRightState extends State<PopRight>with TickerProviderStateMixin {
       children: [
         const Spacer(),
         AnimatedContainer(
-                    duration: const Duration(milliseconds: 700),
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    // width: sime-MediaQuery.of(context).size.width/10,
-                    color: Theme.of(context).cardColor,
-                    child: Center(
-                        // ignore: deprecated_member_use
-                        child: TyperAnimatedTextKit(
-                      isRepeatingAnimation: false,
-                      speed: const Duration(milliseconds: 75),
-                      text: const [ 'TRUSTLESS BUSINESS ENVIRONMENT',],
-                      textStyle: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold
-                          // fontFamily: "OCR-A",
-                          ),
-                    )),
+            duration: const Duration(milliseconds: 700),
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            // width: sime-MediaQuery.of(context).size.width/10,
+            color: Theme.of(context).cardColor,
+            child: Center(
+                // ignore: deprecated_member_use
+                child: TyperAnimatedTextKit(
+              isRepeatingAnimation: false,
+              speed: const Duration(milliseconds: 75),
+              text: const [ 'TRUSTLESS BUSINESS ENVIRONMENT',],
+              textStyle: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold
+                  // fontFamily: "OCR-A",
                   ),
-                  const SizedBox(height: 20),
-                  AnimatedOpacity(
-                    duration: const Duration(seconds: 1),
-                    opacity: opa,
-                    child:
-                        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                        const  SizedBox(height: 4),
-                          Row(
-                            children: [
-                              const Text("Economy Contract address: ",
-                                  style: TextStyle(fontFamily: "Roboto Mono")),
-                                  const SizedBox(width: 40),
-                                  Text(getShortAddress(sourceAddress)),
-                                  const SizedBox(width: 8),
-                                  TextButton(onPressed: (){
-                                    copied(context, sourceAddress);
-                                  }, child: const Icon(Icons.copy))
-        
-                            ],
-                          ),
-                          const SizedBox(height: 5),
+            )),
+          ),
+          const SizedBox(height: 20),
+          AnimatedOpacity(
+            duration: const Duration(seconds: 1),
+            opacity: opa,
+            child:
+                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                const  SizedBox(height: 4),
+                  Row(
+                    children: [
+                      const Text("Economy Contract address: ",
+                          style: TextStyle(fontFamily: "Roboto Mono")),
+                          const SizedBox(width: 40),
+                          Text(getShortAddress(sourceAddress)),
+                          const SizedBox(width: 8),
+                          TextButton(onPressed: (){
+                            copied(context, sourceAddress);
+                          }, child: const Icon(Icons.copy))
+
+                    ],
+                  ),
+                  const SizedBox(height: 5),
                         ])
                     ]),
                   ),

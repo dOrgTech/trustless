@@ -304,7 +304,7 @@ String extractGitHubPath(String? repoUrl) {
                                               ],
                                             )
                                           ),
-                                          ):Text(""),
+                                          ):const Text(""),
                                           widget.project.arbiter!.length>3?
                                             SizedBox(
                                       height: 35,
@@ -337,7 +337,7 @@ String extractGitHubPath(String? repoUrl) {
                                               ],
                                             ),
                                           ),
-                                          ):Text(""),
+                                          ):const Text(""),
                                       SizedBox(
                                       height: 35,
                                       child: Center(
@@ -392,10 +392,11 @@ String extractGitHubPath(String? repoUrl) {
                                       child: const Icon(Icons.copy)),
                                 ],
                               )
-                            ): SizedBox(),
-                            SizedBox(height: 15),
+                            ): const SizedBox(),
+                            const SizedBox(height: 15),
                              (widget.project.status=="closed") &&
-                             widget.project.rulingHash.length>3
+                             !(widget.project.arbiterAwardingContractor==null) &&
+                             widget.project.arbiterAwardingContractor! > 0.0
                             // true
                             ? Container( 
                                constraints: const BoxConstraints(
@@ -406,11 +407,11 @@ String extractGitHubPath(String? repoUrl) {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Text("Dispute resolved with ${widget.project.arbiterAwardingContractor } ${widget.project.isUSDT? "USDC": Human().chain.nativeSymbol} awarded to Contractor",style: TextStyle(fontSize: 20),),
+                                  Text("Dispute resolved with ${widget.project.arbiterAwardingContractor } ${widget.project.isUSDT? "USDC": Human().chain.nativeSymbol} awarded to Contractor",style: const TextStyle(fontSize: 20),),
                                  Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Opacity(opacity: 0.8, child: Text("Hash of the Aribter's ruling:")),
+                                  const Opacity(opacity: 0.8, child: Text("Hash of the Aribter's ruling:")),
                                   const SizedBox(width: 10),
                                   Text(widget.project.rulingHash??"" , style: const TextStyle(fontSize:12 , backgroundColor: Colors.black54, color: Colors.white70), ),
                                   const SizedBox(width: 10),
@@ -422,7 +423,7 @@ String extractGitHubPath(String? repoUrl) {
                                 ],
                               ),
                             ):
-                            SizedBox(),
+                            const SizedBox(),
                           ],
                         ),
                       ),
@@ -590,7 +591,7 @@ String extractGitHubPath(String? repoUrl) {
                                     ),
                                   ),
                                 ],
-                              ):Text("")
+                              ):const Text("")
                               ,
                               ! (widget.project.status == "open")     &&
                               ! (widget.project.status == "pending")
@@ -636,7 +637,7 @@ String extractGitHubPath(String? repoUrl) {
                                     ),
                                   ),
                                 ],
-                              ):Text("")
+                              ):const Text("")
                             ],
                           ),
                         ),
@@ -741,15 +742,15 @@ String extractGitHubPath(String? repoUrl) {
 
   Widget functionItem(String title, String access, target) {
     return InkWell(
-      borderRadius: BorderRadius.all(Radius.circular(4.0)),
+      borderRadius: const BorderRadius.all(Radius.circular(4.0)),
       customBorder: Border.all(),
-      hoverColor: Color.fromARGB(37, 182, 182, 182),
+      hoverColor: const Color.fromARGB(37, 182, 182, 182),
       onTap: () {
         Human().address==null?
          showDialog(
          
             context: context,
-            builder: (context) => AlertDialog(
+            builder: (context) => const AlertDialog(
                   content: SizedBox(height:100, width: 400,child:Center(child: 
                   Text("Connect your wallet to call functions.")
                   )),
@@ -763,15 +764,15 @@ String extractGitHubPath(String? repoUrl) {
                 ));
       },
       child: Container(
-        margin:EdgeInsets.all(1),
+        margin:const EdgeInsets.all(1),
         width: 410,
         height: 146,
         decoration: BoxDecoration(
-            color: Color.fromARGB(46, 37, 37, 37),
-            borderRadius:BorderRadius.all(Radius.circular(3.0)),
+            color: const Color.fromARGB(46, 37, 37, 37),
+            borderRadius:const BorderRadius.all(Radius.circular(3.0)),
             border: Border.all(
             
-              width: 3, color: Color.fromARGB(19, 39, 39, 39))),
+              width: 3, color: const Color.fromARGB(19, 39, 39, 39))),
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [
@@ -827,23 +828,23 @@ class BackersList extends StatelessWidget {
             children: [
               SizedBox(width:60, child:
          project.contributorsReleasing.containsKey(key) && project.contributorsReleasing[key]! > 0  ?
-          Icon(Icons.lock_open, color: Colors.green)
+          const Icon(Icons.lock_open, color: Colors.green)
           :
           project.contributorsDisputing.containsKey(key) && project.contributorsDisputing[key]! > 0 ?
           
           Image.asset('assets/scale2.png', height:25, color:Colors.red) 
          :
 
-          Text("")),
+          const Text("")),
               SizedBox(
                 width: 160,
                 child: Center(child: Text( getShortAddress( "$key")))),
               TextButton(onPressed: (){
                copied(context, key);
-              }, child: Icon(Icons.copy))
+              }, child: const Icon(Icons.copy))
             ],
           ),
-          SizedBox(width: 140), // Adjust as needed
+          const SizedBox(width: 140), // Adjust as needed
           Text("$value"),
         ],
       ),
@@ -857,13 +858,13 @@ class BackersList extends StatelessWidget {
       child: Center(
         child: ListView(
           children:[
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-            SizedBox(width: 40,), Text("Address"), SizedBox(width: 210,), Text("Amount"),SizedBox(width: 10,) 
+            const SizedBox(width: 40,), const Text("Address"), const SizedBox(width: 210,), const Text("Amount"),const SizedBox(width: 10,) 
             ],),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             ...rows,
           
             

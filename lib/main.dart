@@ -32,6 +32,7 @@ String metamask="https://i.ibb.co/HpmDHg0/metamask.png";
 double switchAspect=1.2;
 List<Project> projects=[];
 List<TTransaction> actions=[];
+List<User> otelezatori=[];
 String sourceAddress="";
 int valueInContracts=0;
 int usdtStored=0;
@@ -42,11 +43,13 @@ int totalUSDTpaid=0;
 ContractFunctions cf=ContractFunctions();
 var projectsGoerli = FirebaseFirestore.instance.collection('projectsGoerli');
 var transactionsGoerli = FirebaseFirestore.instance.collection('transactionsGoerli');
+var usersGoerli = FirebaseFirestore.instance.collection('usersGoerli');
 // var prelaunchCollection = FirebaseFirestore.instance.collection('prelaunch');
 // var voteCollection = FirebaseFirestore.instance.collection('vote');
 var statsCollection = FirebaseFirestore.instance.collection('stats');
 var projectsCollection;
 var transactionsCollection;
+var usersCollection;
 
     void main() async  {
       
@@ -54,7 +57,10 @@ var transactionsCollection;
       await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
       projectsCollection=FirebaseFirestore.instance.collection("projects${Human().chain.name}");
       transactionsCollection=FirebaseFirestore.instance.collection("transactions${Human().chain.name}");
+      usersCollection=FirebaseFirestore.instance.collection("users${Human().chain.name}");
+      
       var statsSnapshot = await statsCollection.doc(Human().chain.name).get();
+
       if (statsSnapshot.exists) {
           sourceAddress=statsSnapshot.data()!['sourceAddress'];
       } else {
@@ -63,6 +69,9 @@ var transactionsCollection;
       print("source address:" +sourceAddress);
       var querySnapshot = await projectsCollection.get();
       var transactionsSnapshot = await transactionsCollection.get();
+      var usersSnapshot = await usersCollection.get();
+
+
   // Iterate through the documents and print their data
       for(var doc in transactionsSnapshot.docs){ 
         // print(" hash ${doc.id.toString()}");

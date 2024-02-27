@@ -1,10 +1,12 @@
 import 'dart:math';
 import 'package:trustless/utils/reusable.dart';
+import '../entities/project.dart';
 import '../entities/user.dart';
 import '../main.dart';
 
 List<User>users=[];
 List<TTransaction> mockTansactions=[];
+
 
 createUsers(){
   for (int i = 0; i < 20; i++) {
@@ -24,6 +26,13 @@ createUsers(){
     mockTansactions.add(t);
 
     }
+}
+
+buildUsers(){
+  for (Project p in projects){
+
+  }
+
 }
 
 

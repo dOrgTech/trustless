@@ -46,7 +46,7 @@ class _ArbitrateState extends State<Arbitrate> {
       setState(() {
         widget.project.hashedFileName=_fileName;
         _hash = digest.toString();
-        widget.project.termsHash=_hash;
+        widget.project.rulingHash=_hash;
       });
     }
   }
@@ -70,11 +70,11 @@ return main();
   }
 
 Widget stage0(){
-    double onePercent = (widget.project.holding! /100) ;
+    double onePercent = ((widget.project.holding! - 200) /100) ;
     double awardToBackers = _useSlider ? 
-    widget.project.holding! - _sliderValue * onePercent
+    (widget.project.holding! - 200) - _sliderValue * onePercent
     : 
-    widget.project.holding! - (double.tryParse(_awardToContractorController.text) ?? 0);
+    (widget.project.holding! - 200) - (double.tryParse(_awardToContractorController.text) ?? 0);
     
     double awardToContractor = _useSlider ?
      _sliderValue  * onePercent
@@ -105,7 +105,7 @@ Widget stage0(){
         children: [
           Text("Arbitrate",  style: Theme.of(context).textTheme.headline5!,),
           const SizedBox(height: 20),
-          Text("Amount in Escrow: ${widget.project.holding!}",
+          Text("Amount in Escrow: ${(widget.project.holding! - 200)}",
                style: Theme.of(context).textTheme.subtitle1!,
           ),
          const SizedBox(height: 20),
@@ -159,7 +159,7 @@ Widget stage0(){
                       ),
                       onChanged: (value) {
                         setState(() {
-                          _canSubmit = _hash.length>8 && double.tryParse(value) != null && double.parse(value) <= widget.project.holding!;
+                          _canSubmit = _hash.length>8 && double.tryParse(value) != null && double.parse(value) <= (widget.project.holding! - 200);
                         });
                       },
                     ),

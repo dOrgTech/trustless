@@ -16,7 +16,6 @@ class User{
   List<String>projectsContracted;
   List<String>projectsArbitrated;
   List<String>projectsBacked;
-  
   UserCard getCard() {
     return UserCard(user: this);
   } 

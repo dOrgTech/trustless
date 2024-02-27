@@ -163,7 +163,6 @@ contract NativeProject {
         economy.updateSpendings(msg.sender,expenditure);
     }
 
-
     function reclaimArbitrationFee()public{
         require(
             keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("closed")) ,
@@ -186,15 +185,16 @@ contract NativeProject {
         }
     }
 
-
     function withdrawAsContributor() public {
         require(
             keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("open"))||
             keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("pending"))||
             keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("closed")) ,
          "Withdrawals only allowed when the project is open, pending or closed.");
-
+        if ( keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("closed")))
+        {
         require(availableToContributors>0,"There are no funds available to contributors.");
+        }
 
         uint256 contributorAmount = contributors[msg.sender];
         require(contributorAmount > 0, "No contributions to withdraw.");      
@@ -206,6 +206,7 @@ contract NativeProject {
         }else{
             exitAmount = contributorAmount;
         }
+        availableToContributors=availableToContributors-exitAmount;
         contributors[msg.sender] = 0; // Prevent re-entrancy
         (bool sent, ) = payable(msg.sender).call{value: exitAmount}("");
         require(sent, "Failed to send Ether");

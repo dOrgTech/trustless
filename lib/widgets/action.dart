@@ -22,6 +22,7 @@ Map<String, TextStyle> actionStyles = {
   "withdraw": GoogleFonts.ubuntuMono(fontWeight: FontWeight.w200),
   "voteToRelease": GoogleFonts.b612Mono(fontWeight: FontWeight.w600),
   "voteToDispute": GoogleFonts.b612Mono(fontWeight: FontWeight.w700),
+  "dispute": GoogleFonts.b612Mono(fontWeight: FontWeight.w700),
   "arbitrate": GoogleFonts.b612Mono(fontWeight: FontWeight.w400),
   "reimburse": GoogleFonts.b612Mono(fontWeight: FontWeight.w400),
 };
@@ -33,6 +34,7 @@ Map<String, Icon> actionIcons = {
   "withdraw": Icon(Icons.money_off,size: 13),
   "voteToRelease": Icon(Icons.how_to_vote,size: 13),
   "voteToDispute": Icon(Icons.gavel,size: 13),
+  "dispute": Icon(Icons.gavel,size: 13),
   "arbitrate": Icon(Icons.balance,size: 13),
   "reimburse": Icon(Icons.refresh,size: 13),
 };
@@ -46,6 +48,7 @@ Map<String, Color> actionColors = {
   "withdraw": Colors.red,
   "voteToRelease": Color.fromARGB(255, 167, 176, 39),
   "voteToDispute": Colors.amber,
+  "dispute": Colors.amber,
   "arbitrate": Colors.teal,
   "reimburse": Color.fromARGB(255, 161, 63, 181),
 };

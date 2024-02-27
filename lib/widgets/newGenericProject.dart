@@ -851,8 +851,9 @@ const SizedBox(
                                     ),
                                     Switch(
                                       value: widget.project.isUSDT,
-                                      onChanged: (value) =>
-                                          setState(() => widget.project.isUSDT = value),
+                                      onChanged: null,
+                                      // (value) =>
+                                      //     setState(() => widget.project.isUSDT = value),
                                       activeColor:  Colors.white24,
                                       activeTrackColor: Colors.grey,
                                       inactiveThumbColor: Colors.white24,

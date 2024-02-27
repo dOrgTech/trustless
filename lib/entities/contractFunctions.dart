@@ -483,6 +483,50 @@ class ContractFunctions{
       }
   }
 
+  disputeAsContractor(Project project)async{
+        print("signing...");
+      Human().busy=true;
+      var sourceContract = Contract(project.contractAddress!, nativeProjectAbiString, Human().web3user);
+        try {
+          sourceContract = sourceContract.connect(Human().web3user!.getSigner());
+          print("signed ok");
+          final transaction = await promiseToFuture(callMethod(
+              sourceContract, 
+              "disputeAsContractor",
+              [],
+            ));
+              print("facuram tranzactia");
+        final hash = json.decode(stringify(transaction))["hash"];
+        print("hash $hash");
+        final result = await promiseToFuture(
+            callMethod(Human().web3user!, 'waitForTransaction', [hash]));
+        if (json.decode(stringify(result))["status"] == 0) {
+        print("nu merge eroare de greseala");
+          Human().busy=false;
+          return "nu merge";
+        } else {
+          var rezultat=(json.decode(stringify(result)));
+          print("a venit si "+rezultat.toString());
+          print("e de tipul "+rezultat.runtimeType.toString());
+          Human().busy=false;
+          TTransaction t= TTransaction(
+              contractAddress:project.contractAddress!,
+              functionName: 'dispute',
+              params: 'params',
+              sender: Human().address!,
+              hash: hash,time: DateTime.now()
+              );
+              await transactionsCollection.doc(hash).set(t.toJson());
+            actions.add(t);
+          return hash.toString();
+        }
+      } catch (e) {    
+          print("nu merge c nu s-a putut" +e.toString());
+          Human().busy=false;
+        return "nu merge final" ;
+      }
+  }
+
 
   arbitrate(Project project, percentage, rulingHash)async{
       var sourceContract = Contract(project.contractAddress!, nativeProjectAbiString, Human().web3user);

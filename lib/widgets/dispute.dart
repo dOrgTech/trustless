@@ -118,7 +118,22 @@ class DisputeState extends State<Dispute> {
                       ),
                       onPressed: ()async{
                       setState(() {widget.stage="waiting";});
-                        print("Signing contract");
+                      if (Human().address!.toLowerCase()==widget.project.contractor!.toLowerCase())
+                     //CONTRACTOR DISPUTES
+                      {
+                        String cevine = await cf.disputeAsContractor(widget.project);
+                         print("dupa cevine");
+                            if (cevine.contains("nu merge")){
+                            print("nu merge din disputeAsContractor");
+                            setState(() { widget.stage="error";});
+                            return;
+                          }
+                          widget.project.status="dispute";
+                          await projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
+                          Navigator.of(context).pushNamed("/projects/${widget.project.contractAddress}");
+                      }
+                     //BACKER VOTES TO DISPUTE
+                      else{
                         String cevine = await cf.voteToDispute(widget.project);
                           print("dupa cevine");
                             if (cevine.contains("nu merge")){
@@ -147,7 +162,10 @@ class DisputeState extends State<Dispute> {
                         if (foundit==false){print("Still not finding it");}
 
                         Navigator.of(context).pushNamed("/projects/${widget.project.contractAddress}");
-                      },
+                      }
+                    },
+
+
                        child: const Center(
                       child: Text("SUBMIT", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color:Colors.black),),
                     )),

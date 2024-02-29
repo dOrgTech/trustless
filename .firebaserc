@@ -1,6 +1,8 @@
 {
   "projects": {
-    "default": "trustless-fbc30"
-  }
+    "default": "trustless-fbc30",
+    "trustless-production": "trustless-fbc30"
+  },
+  "targets": {},
+  "etags": {}
 }
-

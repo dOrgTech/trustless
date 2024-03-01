@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:trustless/entities/human.dart';
 import 'package:trustless/widgets/governance.dart';
 
 import '../main.dart';
@@ -14,7 +15,6 @@ import '../widgets/gameoflife.dart';
 class Landing extends StatefulWidget {
    bool done=false;
   bool wrapper=false;
-
   @override
   State<Landing> createState() => _LandingState();
 }

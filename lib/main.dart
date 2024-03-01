@@ -41,6 +41,7 @@ int totalXTZpaid=0;
 int totalUSDTpaid=0;
 // String selectedNetwork='Etherlink Testnet';
 ContractFunctions cf=ContractFunctions();
+var prelaunchCollection = FirebaseFirestore.instance.collection('prelaunch');
 var projectsGoerli = FirebaseFirestore.instance.collection('projectsGoerli');
 var transactionsGoerli = FirebaseFirestore.instance.collection('transactionsGoerli');
 var usersGoerli = FirebaseFirestore.instance.collection('usersGoerli');
@@ -192,7 +193,10 @@ class MyApp extends StatelessWidget {
             // Prelaunch();
             // Poll();
             //  BaseScaffold(selectedItem: 0, body: Users(), title: "Users");
-             BaseScaffold(selectedItem: 0, body: Landing(), title: "Trustless Business");
+             Human().beta?
+             BaseScaffold(selectedItem: 0, body: Landing(), title: "Trustless Business")
+             :Prelaunch()
+             ;
             // BaseScaffold(selectedItem: 1,body: Projects(), title: "Projects");
           } else if (settings.name!.startsWith('/projects/')) {
             final projectId = settings.name!.replaceFirst('/projects/', '');

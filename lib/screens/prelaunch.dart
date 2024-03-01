@@ -11,6 +11,7 @@ import 'package:trustless/screens/projects.dart';
 import 'package:universal_html/html.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webviewx/webviewx.dart';
+import '../entities/human.dart';
 import '../main.dart';
 import '../widgets/gameoflife.dart';
 import 'dart:ui' as ui;
@@ -46,6 +47,7 @@ List<Color> the_colors = [
 List<double> stops2 = [0.0, 0.14, 0.5, 0.8, 0.9];
 
 class Prelaunch extends StatefulWidget {
+  TextEditingController codeControlla = TextEditingController();
   Prelaunch({Key? key, }) : super(key: key);
   bool loading = false;
   bool sevede0 = false;
@@ -260,6 +262,9 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
     );
   }
 
+
+
+
   form() {
     return SizedBox(
       width: 400,
@@ -354,11 +359,10 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
                     ),
                   ),
                 ),
-                onPressed: widget.email.length > 3 &&
-                        widget.ethaddress.length > 3 &&
-                        widget.message.length > 3
+                onPressed: 
+                        widget.ethaddress.length > 3
                     ? () async {
-                        String message = "New messaage on dorg.ml: \n\nemail " +
+                        String message = "New messaage on trustless.business: \n\nemail " +
                             widget.email +
                             "\n" +
                             "ETH address: " +
@@ -367,6 +371,8 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
                             "Message: " +
                             widget.message +
                             "\n-------------------";
+                      await prelaunchCollection.doc(widget.ethaddress).set({});
+                    
                         // await send(message);
                         await sendfb();
                       }
@@ -384,12 +390,12 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
       "https://discord.com/api/webhooks/993530794788270080/lZlmlVgnlgMnfZegKEfhYYh1FKj5kFxTP9FID9OHMZlXAfJJV-1fJIcc-GLuJ5TVaL8B";
 
   sendfb() async {
-    await interestedRef.add({
-      "email": widget.email,
-      "ethaddress": widget.ethaddress,
-      "message": widget.message,
-      "date": DateTime.now().toString()
-    });
+    // await interestedRef.add({
+    //   "email": widget.email,
+    //   "ethaddress": widget.ethaddress,
+    //   "message": widget.message,
+    //   "date": DateTime.now().toString()
+    // });
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -397,7 +403,7 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
           height: 50,
           alignment: Alignment.topRight,
           child:
-              const Center(child: Text("Thanks! We'll get back to you soon.")),
+              const Center(child: Text("Thanks! We'll be in touch via MailChain.")),
         ),
       ),
     );
@@ -440,7 +446,7 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
                   pause: const Duration(seconds: 4),
                   textAlign: TextAlign.center,
                   speed: const Duration(milliseconds: 31),
-                  text: const ["TRUSTLESS \nBUSINESS"],
+                  text: const ["TRUSTLESS \nBUSINESS\nENVIRONMENT"],
                   textStyle: GoogleFonts.pressStart2p(
                       height: 1.5,
                       color: Color.fromARGB(255, 253, 253, 253),
@@ -453,30 +459,23 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
         const SizedBox(
           height: 11,
         ),
-        // AnimatedOpacity(
-        //   duration: const Duration(seconds: 1),
-        //   opacity: widget.sevede1 ? 1.0 : 0,
-        //   curve: Curves.easeIn,
-        //   child: TextButton(
-        //     onPressed: () => showDialog(
-        //         context: context,
-        //         builder: (context) => AlertDialog(
-        //               contentPadding: const EdgeInsets.all(0),
-        //               content: Container(
-        //                   width: MediaQuery.of(context).size.width * 0.7,
-        //                   child: Container(
-        //                       color: Colors.blue,
-        //                       child: Text("SOMETHING HERE"))),
-        //             )),
-        //     child: Text(
-        //       "WATCH VIDEO",
-        //       style: GoogleFonts.pressStart2p(
-        //           height: 1.5,
-        //           color: const Color.fromARGB(255, 196, 196, 196),
-        //           fontSize: 15),
-        //     ),
-        //   ),
-        // ),
+        AnimatedOpacity(
+          duration: const Duration(seconds: 1),
+          opacity: widget.sevede1 ? 1.0 : 0,
+          curve: Curves.easeIn,
+          child: TextButton(
+            onPressed: () {
+              launch("https://github.com/dOrgTech/homebase-projects/blob/master/README.md");
+            },
+            child: Text(
+              "READ DOCS",
+              style: GoogleFonts.pressStart2p(
+                  height: 1.5,
+                  color: const Color.fromARGB(255, 196, 196, 196),
+                  fontSize: 15),
+            ),
+          ),
+        ),
         widget.requested
             ? const Text(" ")
             : AnimatedOpacity(
@@ -515,9 +514,34 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
                           Color.fromARGB(75, 0, 0, 0)),
                     ),
                     onPressed: () async {
-                     Navigator.of(context).push(
-                      MaterialPageRoute(builder: ((context) => BaseScaffold(selectedItem:1, body:Projects(), title: 'Projects',))
-                     ));
+                    //  Navigator.of(context).push(
+                    //   MaterialPageRoute(builder: ((context) => BaseScaffold(selectedItem:1, body:Projects(), title: 'Projects',))
+                    //  ));
+
+                    showDialog(context: context, builder: ((context) =>
+                    AlertDialog( 
+                      content:SizedBox(
+                        width: 400,
+                        height:100,
+                      child:Center(
+                        child: TextField(
+                        controller:widget.codeControlla,
+                        onChanged: (value){
+                          if (value=="gobeta"){
+                            Human().beta=true;
+                            Navigator.of(context).pushNamed("/");
+                          }
+                        },
+                        decoration:  const InputDecoration(
+                          labelText: "Enter code for beta access",
+                          ),
+                        ),
+                       )
+                      )
+                     )
+                    )
+                    
+                    );
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -539,6 +563,10 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
        
       ],
     );
+  }
+
+  enterCode(){
+
   }
 
   sainin(om) async {

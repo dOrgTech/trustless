@@ -308,10 +308,10 @@ class _BaseScaffoldState extends State<BaseScaffold> {
 
   // The current selected value of the dropdown
   // String? selectedValue = 'Etherlink Testnet';
-     Widget logo=Image.network('https://i.ibb.co/Tvkq0Mz/trlogomic.png',
-   height: widget.isTrustless?23:22,
+     Widget logo=Image.network('https://i.ibb.co/QnyXWBP/bizlogo.png',
+   height: widget.isTrustless?33:32,
   );
-     Widget logotall=Image.network('https://i.ibb.co/Tvkq0Mz/trlogomic.png',
+     Widget logotall=Image.network('https://i.ibb.co/QnyXWBP/bizlogo.png',
    height:12,
   );
     print("height ${MediaQuery.of(context).size.height}");
@@ -396,16 +396,17 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                    Navigator.pushNamed(context, '/');
                  changeButton(0);
                             }, child: 
-                  Theme.of(context).brightness==Brightness.light?
-                  ColorFiltered(
-              colorFilter: const ColorFilter.matrix([
-                -1.0, 0.0, 0.0, 0.0, 255.0, // red
-                0.0, -1.0, 0.0, 0.0, 255.0, // green
-                0.0, 0.0, -1.0, 0.0, 255.0, // blue
-                0.0, 0.0, 0.0, 1.0, 0.0, // alpha
-              ]),
-              child:logo,
-            ):logo
+            //       Theme.of(context).brightness==Brightness.light?
+            //       ColorFiltered(
+            //   colorFilter: const ColorFilter.matrix([
+            //     -1.0, 0.0, 0.0, 0.0, 255.0, // red
+            //     0.0, -1.0, 0.0, 0.0, 255.0, // green
+            //     0.0, 0.0, -1.0, 0.0, 255.0, // blue
+            //     0.0, 0.0, 0.0, 1.0, 0.0, // alpha
+            //   ]),
+            //   child:logo,
+            // )
+            logo
                 ),
               ),
             ),const SizedBox(width: 35),

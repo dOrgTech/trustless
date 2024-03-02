@@ -208,7 +208,7 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
                           width: 34,
                           child: TextButton(
                             onPressed: () {
-                              launch("https://github.com/dorgtech");
+                              launch("https://github.com/dOrgTech/homebase-projects/blob/master/contracts/solidity/Lock.sol");
                             },
                             child: Image.network(
                               "https://i.ibb.co/qWf3xck/github.png",
@@ -220,25 +220,14 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
                           width: 34,
                           child: TextButton(
                             onPressed: () {
-                              launch("https://discord.gg/DtdHV2wWqt");
+                              launch("https://discord.gg/yqv8ABG2EN");
                             },
                             child: Image.network(
                               "https://i.ibb.co/Nr7Psjm/discord.png",
                               color: Color.fromARGB(255, 196, 196, 196),
                             ),
                           )),
-                      SizedBox(
-                          height: 34,
-                          width: 34,
-                          child: TextButton(
-                            onPressed: () {
-                              launch("https://twitter.com/dorg_tech");
-                            },
-                            child: Image.network(
-                              "https://i.ibb.co/sR4CWcJ/twitter-solid.png",
-                              color: Color.fromARGB(255, 196, 196, 196),
-                            ),
-                          )),
+                     
                       const SizedBox(width: 20),
                       SizedBox(
                         height: 32,

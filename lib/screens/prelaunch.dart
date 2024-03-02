@@ -19,30 +19,30 @@ import 'dart:math' as math;
 import 'dart:ui';
 int caree = 1;
 String col = "#7b8c94 9%, #9cb1b8 46%, #7f9191 66%, #63767d 96%";
-List<Color> colors = [Color.fromARGB(255, 52, 56, 58), const Color(0xff899dac),const Color(0xff9cb1b8),   Color.fromARGB(255, 162, 164, 173),
-  Color.fromARGB(255, 3, 38, 194),];
+List<Color> colors = [const Color.fromARGB(255, 52, 56, 58), const Color(0xff899dac),const Color(0xff9cb1b8),   const Color.fromARGB(255, 162, 164, 173),
+  const Color.fromARGB(255, 3, 38, 194),];
 List<double> stops =[0.01, 0.3, 0.6, 0.8, 0.9];
 List<Color> colors1 = [
-  Color.fromARGB(178, 116, 118, 126),
-  Color.fromARGB(195, 113, 115, 124),
-  Color.fromARGB(188, 121, 120, 133),
-  Color.fromARGB(190, 107, 115, 134),
-  Color.fromARGB(192, 107, 122, 134),
+  const Color.fromARGB(178, 116, 118, 126),
+  const Color.fromARGB(195, 113, 115, 124),
+  const Color.fromARGB(188, 121, 120, 133),
+  const Color.fromARGB(190, 107, 115, 134),
+  const Color.fromARGB(192, 107, 122, 134),
 ];
 List<double> stops1 = [0.0, 0.3, 0.6, 0.8, 0.9];
 List<Color> colors2 = [
- Color.fromARGB(255, 185, 209, 219),
- Color(0xff899dac),
- Color.fromARGB(255, 157, 180, 197),
- Color.fromARGB(255, 172, 192, 216),
- Color.fromARGB(255, 192, 209, 241)
+ const Color.fromARGB(255, 185, 209, 219),
+ const Color(0xff899dac),
+ const Color.fromARGB(255, 157, 180, 197),
+ const Color.fromARGB(255, 172, 192, 216),
+ const Color.fromARGB(255, 192, 209, 241)
 ];
 List<Color> the_colors = [
-  Color.fromARGB(255, 163, 170, 177),
-  Color.fromARGB(255, 155, 158, 170),
-  Color.fromARGB(255, 160, 158, 175),
-  Color.fromARGB(255, 107, 115, 134),
-  Color.fromARGB(255, 100, 100, 114),
+  const Color.fromARGB(255, 163, 170, 177),
+  const Color.fromARGB(255, 155, 158, 170),
+  const Color.fromARGB(255, 160, 158, 175),
+  const Color.fromARGB(255, 107, 115, 134),
+  const Color.fromARGB(255, 100, 100, 114),
 ];
 List<double> stops2 = [0.0, 0.14, 0.5, 0.8, 0.9];
 
@@ -66,12 +66,12 @@ class Prelaunch extends StatefulWidget {
 
 class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixin  {
   late WebViewXController webviewController;
-     AnimationController? _controller;
+  AnimationController? _controller;
   Animation<double>? _opacityAnimation;
   Animation<double>? _blurAnimation;
+
   @override
   void initState() {
-  
     _controller = AnimationController(
       duration: const Duration(milliseconds: 860), // Total duration for both animations
       vsync: this,
@@ -81,14 +81,14 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
     _opacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _controller!,
-        curve: Interval(0.0, 0.5, curve: Curves.easeIn), // Opacity for first half
+        curve: const Interval(0.0, 0.5, curve: Curves.easeIn), // Opacity for first half
       ),
     );
 
     _blurAnimation = Tween<double>(begin: 10.0, end: 0.0).animate(
       CurvedAnimation(
         parent: _controller!,
-        curve: Interval(0.5, 1.0, curve: Curves.easeOut), // Blur for second half
+        curve: const Interval(0.5, 1.0, curve: Curves.easeOut), // Blur for second half
       ),
     );
 
@@ -116,7 +116,12 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
+
+   return  MediaQuery.of(context).size.aspectRatio>1 ? wide() as Widget : tall() as Widget  ;
+  }
+
+ Widget wide(){
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Container(
@@ -130,22 +135,20 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
              Positioned(
                 left: 0,
                 child: Container(
-                  padding: EdgeInsets.only(left:260,top:140,bottom:70),
+                  padding: const EdgeInsets.only(left:260,top:140,bottom:70),
                   decoration: BoxDecoration(
                   gradient: LinearGradient(colors: colors2, stops: stops2)
                 ),
                   height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,
-                  child: Text(""))),
+                  child: const Text(""))),
             Opacity(
               opacity: 0.05,
               child: GameOfLife()),
-
             Positioned(
                 left: 0,
                 child: Container(
-                  padding: EdgeInsets.only(left:320,top:180,bottom:130),
-                
+                  padding: const EdgeInsets.only(left:320,top:180,bottom:130),
                     height: MediaQuery.of(context).size.height,
                     width: MediaQuery.of(context).size.width,
                     child: 
@@ -164,10 +167,8 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
           );
         },
         )
-                    
 
-
-                    )),
+    )),
               
             Padding(
               padding: EdgeInsets.only(
@@ -211,7 +212,7 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
                           },
                           child: Image.network(
                             "https://i.ibb.co/qWf3xck/github.png",
-                            color: Color.fromARGB(255, 196, 196, 196),
+                            color: const Color.fromARGB(255, 196, 196, 196),
                           ),
                         )),
                     SizedBox(
@@ -223,7 +224,7 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
                           },
                           child: Image.network(
                             "https://i.ibb.co/Nr7Psjm/discord.png",
-                            color: Color.fromARGB(255, 196, 196, 196),
+                            color: const Color.fromARGB(255, 196, 196, 196),
                           ),
                         )),
                    
@@ -238,7 +239,7 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
                         ),
                       ),
                     ),
-                    SizedBox(width: 150),
+                    const SizedBox(width: 150),
                   ],
                 ),
               ),
@@ -249,11 +250,133 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
     );
   }
 
+ Widget tall(){
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Container(
+       color: Colors.transparent,
+        // color: Color.fromARGB(255, 155, 155, 155),
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: Stack(
+          alignment: Alignment.topLeft,
+          children: [
+             Positioned(
+                left: 0,
+                child: Container(
+                  padding: const EdgeInsets.only(left:260,top:140,bottom:70),
+                  decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: colors2, stops: stops2)
+                ),
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  child: const Text(""))),
+            Opacity(
+              opacity: 0.05,
+              child: GameOfLife()),
+            Positioned(
+                left: 0,
+                child: Container(
+                  padding: const EdgeInsets.only(top:180, left:55,right:55),
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
+                    child: 
+                    AnimatedBuilder(
+        animation: _controller!,
+        builder: (context, child) {
+          return FadeTransition(
+            opacity: _opacityAnimation!,
+            child: ImageFiltered(
+              imageFilter: ui.ImageFilter.blur(
+                sigmaX: _blurAnimation!.value,
+                sigmaY: _blurAnimation!.value,
+              ),
+              child: Pattern1(),
+            ),
+          );
+        },
+        )
 
-
+    )),
+              
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 19
+              ),
+              child: Align(
+                  alignment: Alignment.topRight,
+                  child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 500),
+                      height: widget.sevede0
+                          ? MediaQuery.of(context).size.height
+                          : 0,
+                      
+                      decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                        colors: colors1,
+                        stops: stops1,
+                      )),
+                      // color:Color.fromARGB(255, 27, 27, 27),
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: widget.requesting ? form() : splash(),
+                      ))),
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  SizedBox(
+                      height: 34,
+                      width: 34,
+                      child: TextButton(
+                        onPressed: () {
+                          launch("https://github.com/dOrgTech/homebase-projects/blob/master/contracts/solidity/Lock.sol");
+                        },
+                        child: Image.network(
+                          "https://i.ibb.co/qWf3xck/github.png",
+                          color: const Color.fromARGB(255, 196, 196, 196),
+                        ),
+                      )),
+                  SizedBox(
+                      height: 34,
+                      width: 34,
+                      child: TextButton(
+                        onPressed: () {
+                          launch("https://discord.gg/yqv8ABG2EN");
+                        },
+                        child: Image.network(
+                          "https://i.ibb.co/Nr7Psjm/discord.png",
+                          color: const Color.fromARGB(255, 196, 196, 196),
+                        ),
+                      )),
+                 
+                  const SizedBox(width: 20),
+                  SizedBox(
+                    height: 32,
+                    child: Center(
+                      child: Text(
+                        "dOrg © ${DateTime.now().year}",
+                        style: const TextStyle(
+                            fontSize: 9, color: Colors.white60),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 150),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   form() {
-    return SizedBox(
+    return SizedBox( 
       width: 400,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -294,7 +417,7 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               TextButton(
-                style: ButtonStyle(
+                style: const ButtonStyle(
                     // elevation: MaterialStateProperty.all(0.4),
                     ),
                 child: SizedBox(
@@ -327,6 +450,24 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
                 style: ButtonStyle(
                   elevation: MaterialStateProperty.all(0.4),
                 ),
+                onPressed: 
+                        widget.ethaddress.length > 3
+                    ? () async {
+                        String message = "New messaage on trustless.business: \n\nemail " +
+                            widget.email +
+                            "\n" +
+                            "ETH address: " +
+                            widget.ethaddress +
+                            "\n" +
+                            "Message: " +
+                            widget.message +
+                            "\n-------------------";
+                      await prelaunchCollection.doc(widget.ethaddress).set({});
+                    
+                        // await send(message);
+                        await sendfb();
+                      }
+                    : null,
                 child: SizedBox(
                   height: 38,
                   width: 100,
@@ -346,24 +487,6 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
                     ),
                   ),
                 ),
-                onPressed: 
-                        widget.ethaddress.length > 3
-                    ? () async {
-                        String message = "New messaage on trustless.business: \n\nemail " +
-                            widget.email +
-                            "\n" +
-                            "ETH address: " +
-                            widget.ethaddress +
-                            "\n" +
-                            "Message: " +
-                            widget.message +
-                            "\n-------------------";
-                      await prelaunchCollection.doc(widget.ethaddress).set({});
-                    
-                        // await send(message);
-                        await sendfb();
-                      }
-                    : null,
               ),
             ],
           ),
@@ -417,9 +540,7 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        const SizedBox(
-          height: 1,
-        ),
+       
         Padding(
           padding: const EdgeInsets.only(left: 18.0),
           child: Align(
@@ -436,7 +557,7 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
                   text: const ["TRUSTLESS \nBUSINESS\nENVIRONMENT"],
                   textStyle: GoogleFonts.pressStart2p(
                       height: 1.5,
-                      color: Color.fromARGB(255, 253, 253, 253),
+                      color: const Color.fromARGB(255, 253, 253, 253),
                       fontSize: 23),
                 ),
               ),
@@ -458,7 +579,7 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
               "READ DOCS",
               style: GoogleFonts.pressStart2p(
                   height: 1.5,
-                  color: const Color.fromARGB(255, 196, 196, 196),
+                  color: Colors.white,
                   fontSize: 15),
             ),
           ),
@@ -479,7 +600,7 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
                     "REQUEST BETA ACCESS",
                     style: GoogleFonts.pressStart2p(
                         height: 1.5,
-                        color: const Color.fromARGB(255, 196, 196, 196),
+                        color: Colors.white,
                         fontSize: 15),
                   ),
                 ),
@@ -498,7 +619,7 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
                 : TextButton(
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(
-                          Color.fromARGB(75, 0, 0, 0)),
+                          const Color.fromARGB(75, 0, 0, 0)),
                     ),
                     onPressed: () async {
                     //  Navigator.of(context).push(
@@ -533,9 +654,9 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.password),
-                        SizedBox(width: 6),
-                        Placeholder(
+                        const Icon(Icons.password),
+                        const SizedBox(width: 6),
+                        const Placeholder(
                           color: Color.fromARGB(255, 192, 192, 192),
                           child: SizedBox(height: 24),
                         ),
@@ -552,9 +673,7 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
     );
   }
 
-  enterCode(){
-
-  }
+  
 
   sainin(om) async {
     print("Signing into the thing");
@@ -603,7 +722,7 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Placeholder(
+                        const Placeholder(
                           color: Colors.grey,
                           child: SizedBox(width: 100),
                         ),
@@ -614,7 +733,7 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
                         const SizedBox(
                           width: 14,
                         ),
-                        Placeholder(
+                        const Placeholder(
                           color: Colors.grey,
                           child: SizedBox(height: 100),
                         ),
@@ -648,7 +767,8 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
                 ),
               ),
             );
-          });
+          }
+          );
     }
   }
 }
@@ -708,7 +828,7 @@ class _Pattern1State extends State<Pattern1> with TickerProviderStateMixin {
 
    _position = Tween<Offset>(
       begin: Offset.zero,
-      end: Offset(0.02, 0.02),
+      end: const Offset(0.02, 0.02),
     ).animate(_positionController);
   }
 
@@ -883,7 +1003,7 @@ class _AnimatedImagesState extends State<AnimatedImages>
   late AnimationController translationController;
   late Animation<Offset> animation;
   final random = Random();
-  Offset translation = Offset(0, 0);
+  Offset translation = const Offset(0, 0);
   @override
   void initState() {
     super.initState();
@@ -995,7 +1115,7 @@ class _AnimatedImagesState extends State<AnimatedImages>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             widget,
-            SizedBox(
+            const SizedBox(
               width: 400,
             ),
           ],
@@ -1037,12 +1157,12 @@ class _AnimatedImagesState extends State<AnimatedImages>
     return FittedBox(
       fit: BoxFit.cover,
       child: Padding(
-          padding: EdgeInsets.all(200),
+          padding: const EdgeInsets.all(200),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset("assets/fara.png"),
-              SizedBox(
+              const SizedBox(
                 width: 500,
               )
             ],

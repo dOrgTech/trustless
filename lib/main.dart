@@ -192,11 +192,8 @@ class MyApp extends StatelessWidget {
             // ProjectDetails(project: projects[0]);
             // Prelaunch();
             // Poll();
-            //  BaseScaffold(selectedItem: 0, body: Users(), title: "Users");
-             Human().beta?
-             BaseScaffold(selectedItem: 0, body: Landing(), title: "Trustless Business")
-             :Prelaunch()
-             ;
+            //  BaseScaffold(selectedItem: 0, body: const Users(), title: "Users");
+             Human().beta?  BaseScaffold(selectedItem: 0, body: Landing(), title: "Trustless Business") :Prelaunch();
             // BaseScaffold(selectedItem: 1,body: Projects(), title: "Projects");
           } else if (settings.name!.startsWith('/projects/')) {
             final projectId = settings.name!.replaceFirst('/projects/', '');
@@ -216,17 +213,17 @@ class MyApp extends StatelessWidget {
             }
           } 
           else if (settings.name == '/users') {
-            builder = (_) => BaseScaffold(selectedItem: 3, body: Users(), title: "Users");
+            builder = (_) => BaseScaffold(selectedItem: 3, body: const Users(), title: "Users");
             } else if (settings.name == '/') {
             builder = (_) => BaseScaffold(selectedItem: 0, body: Landing(), title: "Trustless Business");
           } else if (settings.name == '/projects') {
-            builder = (_) => BaseScaffold(selectedItem: 1,body: Projects(), title: "Projects");
+            builder = (_) => BaseScaffold(selectedItem: 1, body: Projects(), title: "Projects");
           } else {
             // Handle other routes or unknown routes
             builder = (_) =>  BaseScaffold(
               selectedItem: 0,
               title: "Not a valid URL",
-              body: Center(child:Text("This is nothing.", style: TextStyle(fontSize: 40),)),);
+              body: const Center(child:Text("This is nothing.", style: TextStyle(fontSize: 40),)),);
           }
         
           // Implementing the crossfade transition
@@ -334,7 +331,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                   child: Opacity(
                     opacity: widget.isProjects?1:0.6,
                     child: Row(children: [
-                      SizedBox(width: 5),
+                      const SizedBox(width: 5),
                       Icon(Icons.local_activity,size:30, color:widget.isProjects?Theme.of(context).indicatorColor:Theme.of(context).textTheme.bodyLarge!.color!),
                       const SizedBox(width: 8),
                       TextButton(
@@ -360,7 +357,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                       }, child: 
                             Row(children:  [
                               Image.asset('assets/scale2.png', height:30, color:widget.isDisputes?Theme.of(context).indicatorColor:Theme.of(context).textTheme.bodyLarge!.color!),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       Text("DISPUTES", style: widget.isDisputes?selectedMenuItem:nonSelectedMenuItem,)
                                 ],)
                                 ),
@@ -379,7 +376,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                     opacity: widget.isUsers?1:0.6,
                     child: Row(children: [
                       Icon(Icons.people_alt_outlined,size:33,color:widget.isUsers?Theme.of(context).indicatorColor:Theme.of(context).textTheme.bodyLarge!.color!),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       Text("USERS", style: widget.isUsers?selectedMenuItem:nonSelectedMenuItem)
                     ],),
                               )
@@ -401,7 +398,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                             }, child: 
                   Theme.of(context).brightness==Brightness.light?
                   ColorFiltered(
-              colorFilter: ColorFilter.matrix([
+              colorFilter: const ColorFilter.matrix([
                 -1.0, 0.0, 0.0, 0.0, 255.0, // red
                 0.0, -1.0, 0.0, 0.0, 255.0, // green
                 0.0, 0.0, -1.0, 0.0, 255.0, // blue
@@ -411,7 +408,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
             ):logo
                 ),
               ),
-            ),SizedBox(width: 35),
+            ),const SizedBox(width: 35),
             TextButton(onPressed: (){ 
              changeButton(1);
               Navigator.of(context).pushNamed("/projects");
@@ -441,7 +438,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                   opacity: widget.isUsers?1:0.6,
                   child: Row(children: [
                     Icon(Icons.people_alt_outlined,size:33,color:widget.isUsers?Theme.of(context).indicatorColor:Theme.of(context).textTheme.bodyLarge!.color!),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Text("USERS", style: widget.isUsers?selectedMenuItem:nonSelectedMenuItem)
                   ],),
                             )
@@ -474,7 +471,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
            MediaQuery.of(context).size.aspectRatio > switchAspect?
               Container(
                 height: 9,
-                padding: EdgeInsets.symmetric(horizontal: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
                 decoration: BoxDecoration(
                                 border: Border.all(width: 0.1 , color: Theme.of(context).textTheme.bodyLarge!.color! ),
                                 color: Theme.of(context).indicatorColor.withOpacity(0.1)
@@ -484,7 +481,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                   Icon(Icons.connect_without_contact_sharp, size: 29,
                   color: Theme.of(context).indicatorColor,
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   Text( human.chain.name
                   ,style: GoogleFonts.changa(
                     color: Theme.of(context).indicatorColor,
@@ -492,7 +489,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                   )
                 ],
               )
-             ):Text(""),
+             ):const Text(""),
              const SizedBox(width: 35 ),
            const WalletBTN(),
            const SizedBox(width: 30),
@@ -508,8 +505,8 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                 child: LinearProgressIndicator(
                   backgroundColor: Theme.of(context).canvasColor,
                   color: Theme.of(context).indicatorColor,
-                )):SizedBox(height: 0),
-               human.wrongChain?WrongChain():
+                )):const SizedBox(height: 0),
+               human.wrongChain?const WrongChain():
                widget.body,
              ],
            )
@@ -526,7 +523,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
            SizedBox(
            width: 50,
            child: ColorFiltered(
-                   colorFilter: ColorFilter.matrix([
+                   colorFilter: const ColorFilter.matrix([
                      -1.0, 0.0, 0.0, 0.0, 255.0, // red
                      0.0, -1.0, 0.0, 0.0, 255.0, // green
                      0.0, 0.0, -1.0, 0.0, 255.0, // blue
@@ -622,31 +619,31 @@ class _WalletBTNState extends State<WalletBTN> {
               return  AlertDialog(
                 content: Container(
                   height:260,
-                  padding: EdgeInsets.all(30),
+                  padding: const EdgeInsets.all(30),
                   child: Column(
                     children: [
-                      Text("You need the Metamask wallet to sign into the app.",style: TextStyle(fontFamily: "Roboto Mono", fontSize: 16),),
-                      SizedBox(height: 10,),
+                      const Text("You need the Metamask wallet to sign into the app.",style: TextStyle(fontFamily: "Roboto Mono", fontSize: 16),),
+                      const SizedBox(height: 10,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.network(metamask,height: 100,),
-                          Icon(Icons.arrow_right_alt, size: 40,),
-                          SizedBox(width: 14,),
+                          const Icon(Icons.arrow_right_alt, size: 40,),
+                          const SizedBox(width: 14,),
                            Image.network(
                               "https://i.ibb.co/sFqQxYP/Icon-maskable-192.png",
                               height: 70),
-                            SizedBox(width: 13,),
+                            const SizedBox(width: 13,),
                         ],
                       ),
-                      SizedBox(height: 10,),
-                      Text("Download it from",style: TextStyle(fontFamily: "Roboto Mono", fontSize: 16),),
-                      SizedBox(height: 10,),
+                      const SizedBox(height: 10,),
+                      const Text("Download it from",style: TextStyle(fontFamily: "Roboto Mono", fontSize: 16),),
+                      const SizedBox(height: 10,),
                       TextButton(
                         onPressed: (){
                           launch("https://metamask.io/");
                         },
-                        child: Text("https://metamask.io/",style: TextStyle(fontFamily: "Roboto Mono", fontSize: 16),)),
+                        child: const Text("https://metamask.io/",style: TextStyle(fontFamily: "Roboto Mono", fontSize: 16),)),
                         
                     ],
                   ),
@@ -709,12 +706,12 @@ class _WalletBTNState extends State<WalletBTN> {
                             return Container(
                               width: 40.0,
                               height: 40.0,
-                              color: Color.fromARGB(255, 116, 116, 116),  // Error color
+                              color: const Color.fromARGB(255, 116, 116, 116),  // Error color
                             );
                           }
                         },
                       ),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                   Text(getShortAddress(human.address!)),
                 ],
               ),
@@ -851,8 +848,8 @@ class _WalletBTNState extends State<WalletBTN> {
   // Light Theme
   final ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
-    canvasColor:Color.fromARGB(255, 235, 235, 235),
-    primaryColor: Color.fromARGB(255, 155, 155, 155), // Main background color
+    canvasColor:const Color.fromARGB(255, 235, 235, 235),
+    primaryColor: const Color.fromARGB(255, 155, 155, 155), // Main background color
     accentColor: _lightThemeHighlightColor, // Primary accent/highlight color
     colorScheme:const  ColorScheme.light(
       primary: _lightThemeHighlightColor,
@@ -876,7 +873,7 @@ class _WalletBTNState extends State<WalletBTN> {
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        primary: Color.fromARGB(255, 20, 20, 20), // Ensuring text color is black and not the highlight color
+        primary: const Color.fromARGB(255, 20, 20, 20), // Ensuring text color is black and not the highlight color
       ),
     ),
     appBarTheme: const AppBarTheme(
@@ -909,7 +906,7 @@ class _WalletBTNState extends State<WalletBTN> {
       onError: Colors.black,
       brightness: Brightness.dark,
     ),
-    buttonTheme: ButtonThemeData(
+    buttonTheme: const ButtonThemeData(
       textTheme: ButtonTextTheme.primary,
     ),
     textButtonTheme: TextButtonThemeData(
@@ -917,11 +914,11 @@ class _WalletBTNState extends State<WalletBTN> {
         primary: Colors.white, // Ensuring text color is white and not the highlight color
       ),
     ),
-    appBarTheme: AppBarTheme(
+    appBarTheme: const AppBarTheme(
       backgroundColor: Color.fromARGB(255, 66, 66, 66),
-      iconTheme: const IconThemeData(color: Colors.white),
+      iconTheme: IconThemeData(color: Colors.white),
     ),
-    inputDecorationTheme: InputDecorationTheme(
+    inputDecorationTheme: const InputDecorationTheme(
       focusedBorder: OutlineInputBorder(
         borderSide: BorderSide(color: _darkThemeHighlightColor),
       ),

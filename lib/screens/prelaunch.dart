@@ -124,128 +124,126 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
         // color: Color.fromARGB(255, 155, 155, 155),
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
-        child: Expanded(
-          child: Stack(
-            alignment: Alignment.topLeft,
-            children: [
-               Positioned(
-                  left: 0,
-                  child: Container(
-                    padding: EdgeInsets.only(left:260,top:140,bottom:70),
-                    decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: colors2, stops: stops2)
-                  ),
+        child: Stack(
+          alignment: Alignment.topLeft,
+          children: [
+             Positioned(
+                left: 0,
+                child: Container(
+                  padding: EdgeInsets.only(left:260,top:140,bottom:70),
+                  decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: colors2, stops: stops2)
+                ),
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  child: Text(""))),
+            Opacity(
+              opacity: 0.05,
+              child: GameOfLife()),
+
+            Positioned(
+                left: 0,
+                child: Container(
+                  padding: EdgeInsets.only(left:320,top:180,bottom:130),
+                
                     height: MediaQuery.of(context).size.height,
                     width: MediaQuery.of(context).size.width,
-                    child: Text(""))),
-              Opacity(
-                opacity: 0.05,
-                child: GameOfLife()),
-
-              Positioned(
-                  left: 0,
-                  child: Container(
-                    padding: EdgeInsets.only(left:320,top:180,bottom:130),
-                  
-                      height: MediaQuery.of(context).size.height,
-                      width: MediaQuery.of(context).size.width,
-                      child: 
-                      AnimatedBuilder(
-          animation: _controller!,
-          builder: (context, child) {
-            return FadeTransition(
-              opacity: _opacityAnimation!,
-              child: ImageFiltered(
-                imageFilter: ui.ImageFilter.blur(
-                  sigmaX: _blurAnimation!.value,
-                  sigmaY: _blurAnimation!.value,
-                ),
-                child: Pattern1(),
+                    child: 
+                    AnimatedBuilder(
+        animation: _controller!,
+        builder: (context, child) {
+          return FadeTransition(
+            opacity: _opacityAnimation!,
+            child: ImageFiltered(
+              imageFilter: ui.ImageFilter.blur(
+                sigmaX: _blurAnimation!.value,
+                sigmaY: _blurAnimation!.value,
               ),
-            );
-          },
+              child: Pattern1(),
+            ),
+          );
+        },
         )
-                      
+                    
 
 
-                      )),
-                
-              Padding(
-                padding: EdgeInsets.only(
-                  right: MediaQuery.of(context).size.width / 4,
-                ),
-                child: Align(
-                    alignment: Alignment.topRight,
-                    child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 500),
-                        height: widget.sevede0
-                            ? MediaQuery.of(context).size.height
-                            : 0,
-                        width: widget.requesting ? 600 : 480,
-                        decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                          begin: Alignment.bottomCenter,
-                          end: Alignment.topCenter,
-                          colors: colors1,
-                          stops: stops1,
-                        )),
-                        // color:Color.fromARGB(255, 27, 27, 27),
-                        child: Align(
-                          alignment: Alignment.topCenter,
-                          child: widget.requesting ? form() : splash(),
-                        ))),
+                    )),
+              
+            Padding(
+              padding: EdgeInsets.only(
+                right: MediaQuery.of(context).size.width / 4,
               ),
-              Padding(
-                padding:
-                    EdgeInsets.only(right: MediaQuery.of(context).size.width / 4),
-                child: Align(
-                  alignment: Alignment.bottomRight,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      SizedBox(
-                          height: 34,
-                          width: 34,
-                          child: TextButton(
-                            onPressed: () {
-                              launch("https://github.com/dOrgTech/homebase-projects/blob/master/contracts/solidity/Lock.sol");
-                            },
-                            child: Image.network(
-                              "https://i.ibb.co/qWf3xck/github.png",
-                              color: Color.fromARGB(255, 196, 196, 196),
-                            ),
-                          )),
-                      SizedBox(
-                          height: 34,
-                          width: 34,
-                          child: TextButton(
-                            onPressed: () {
-                              launch("https://discord.gg/yqv8ABG2EN");
-                            },
-                            child: Image.network(
-                              "https://i.ibb.co/Nr7Psjm/discord.png",
-                              color: Color.fromARGB(255, 196, 196, 196),
-                            ),
-                          )),
-                     
-                      const SizedBox(width: 20),
-                      SizedBox(
-                        height: 32,
-                        child: Center(
-                          child: Text(
-                            "dOrg © ${DateTime.now().year}",
-                            style: const TextStyle(
-                                fontSize: 9, color: Colors.white60),
+              child: Align(
+                  alignment: Alignment.topRight,
+                  child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 500),
+                      height: widget.sevede0
+                          ? MediaQuery.of(context).size.height
+                          : 0,
+                      width: widget.requesting ? 600 : 480,
+                      decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                        colors: colors1,
+                        stops: stops1,
+                      )),
+                      // color:Color.fromARGB(255, 27, 27, 27),
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: widget.requesting ? form() : splash(),
+                      ))),
+            ),
+            Padding(
+              padding:
+                  EdgeInsets.only(right: MediaQuery.of(context).size.width / 4),
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    SizedBox(
+                        height: 34,
+                        width: 34,
+                        child: TextButton(
+                          onPressed: () {
+                            launch("https://github.com/dOrgTech/homebase-projects/blob/master/contracts/solidity/Lock.sol");
+                          },
+                          child: Image.network(
+                            "https://i.ibb.co/qWf3xck/github.png",
+                            color: Color.fromARGB(255, 196, 196, 196),
                           ),
+                        )),
+                    SizedBox(
+                        height: 34,
+                        width: 34,
+                        child: TextButton(
+                          onPressed: () {
+                            launch("https://discord.gg/yqv8ABG2EN");
+                          },
+                          child: Image.network(
+                            "https://i.ibb.co/Nr7Psjm/discord.png",
+                            color: Color.fromARGB(255, 196, 196, 196),
+                          ),
+                        )),
+                   
+                    const SizedBox(width: 20),
+                    SizedBox(
+                      height: 32,
+                      child: Center(
+                        child: Text(
+                          "dOrg © ${DateTime.now().year}",
+                          style: const TextStyle(
+                              fontSize: 9, color: Colors.white60),
                         ),
                       ),
-                      SizedBox(width: 150),
-                    ],
-                  ),
+                    ),
+                    SizedBox(width: 150),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

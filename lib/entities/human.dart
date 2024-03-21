@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_web3_provider/ethereum.dart';
 import 'package:flutter_web3_provider/ethers.dart';
 import 'package:http/http.dart';
+import 'package:trustless/widgets/chat.dart';
 import 'package:web3dart/web3dart.dart';
 import '../main.dart';
 //https://docs.google.com/spreadsheets/d/1hHE1HXEXXr3Abmj47CUogAJKmsqSKNqqPGS-BeI9IEo/edit#gid=0
@@ -21,7 +22,7 @@ var chains={
 
 class Human extends ChangeNotifier{
   bool busy=false;
-  bool beta=false;
+  bool beta=true;
   bool wrongChain=false;
   int chainID=5;
   String? address;
@@ -30,9 +31,12 @@ class Human extends ChangeNotifier{
   bool allowed=false;
   Web3Provider? web3user;
   bool voting=false;
+  bool isOverlayVisible = false;
+  Widget botonDeChat=AnimatedFabWithOverlay();
   bool voted=false;
   Human._internal(){
     _setupListeners();
+  
   }
   
   // Singleton instancelogo
@@ -41,6 +45,8 @@ class Human extends ChangeNotifier{
   factory Human() {
     return _instance;
   }
+
+
 
   void _setupListeners() {
     // Ensure Ethereum is available

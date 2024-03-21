@@ -3,6 +3,7 @@ import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_web3_provider/ethereum.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,6 +17,7 @@ import 'package:trustless/screens/projects.dart';
 import 'package:trustless/screens/users.dart';
 import 'package:trustless/utils/reusable.dart';
 import 'package:trustless/utils/scripts.dart';
+import 'package:trustless/widgets/chat.dart';
 import 'package:trustless/widgets/projectDetails.dart';
 import 'package:trustless/widgets/wrongChain.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -28,6 +30,26 @@ import 'screens/disputes.dart';
 import 'package:provider/provider.dart';
 import 'dart:html';
 import 'dart:js' as js;
+
+class OverlayControlNavigatorObserver extends NavigatorObserver {
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    super.didPush(route, previousRoute);
+    // Hide the overlay when navigating to a new route
+    Human().isOverlayVisible=false;
+    // Human().botonDeChat.toggleOverlay();
+    print("contracting ");
+  }
+
+  @override
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    super.didPop(route, previousRoute);
+    Human().isOverlayVisible=false;
+   print("contracting or something");
+  }
+}
+
+
 String metamask="https://i.ibb.co/HpmDHg0/metamask.png";
 double switchAspect=1.2;
 List<Project> projects=[];
@@ -184,6 +206,7 @@ class MyApp extends StatelessWidget {
         Human().metamask=true;
     }
     return  MaterialApp(
+      navigatorObservers: [OverlayControlNavigatorObserver()],
               themeMode: ThemeMode.system,
               debugShowCheckedModeBanner: false,
               title: 'Trustless Business',
@@ -198,7 +221,9 @@ class MyApp extends StatelessWidget {
             // Prelaunch();
             // Poll();  
             //  BaseScaffold(selectedItem: 0, body: const Users(), title: "Users");
-             Human().beta ?  BaseScaffold(selectedItem: 0, body: Landing(), title: "Trustless Business") : Prelaunch();
+             Human().beta ?  BaseScaffold(
+              botonChat: Human().botonDeChat,
+              selectedItem: 0, body: Landing(), title: "Trustless Business") : Prelaunch();
             // BaseScaffold(selectedItem: 1,body: Projects(), title: "Projects");
           } else if (settings.name!.startsWith('/projects/')) {
             final projectId = settings.name!.replaceFirst('/projects/', '');
@@ -218,14 +243,14 @@ class MyApp extends StatelessWidget {
             }
           } 
           else if (settings.name == '/users') {
-            builder = (_) => BaseScaffold(selectedItem: 3, body: const Users(), title: "Users");
+            builder = (_) => BaseScaffold(botonChat: Human().botonDeChat,selectedItem: 3, body: const Users(), title: "Users");
             } else if (settings.name == '/') {
-            builder = (_) => BaseScaffold(selectedItem: 0, body: Landing(), title: "Trustless Business");
+            builder = (_) => BaseScaffold(botonChat: Human().botonDeChat,selectedItem: 0, body: Landing(), title: "Trustless Business");
           } else if (settings.name == '/projects') {
-            builder = (_) => BaseScaffold(selectedItem: 1, body: Projects(), title: "Projects");
+            builder = (_) => BaseScaffold(botonChat: Human().botonDeChat,selectedItem: 1, body: Projects(), title: "Projects");
           } else {
             // Handle other routes or unknown routes
-            builder = (_) =>  BaseScaffold(
+            builder = (_) =>  BaseScaffold(botonChat: Human().botonDeChat,
               selectedItem: 0,
               title: "Not a valid URL",
               body: const Center(child:Text("This is nothing.", style: TextStyle(fontSize: 40),)),);
@@ -267,7 +292,7 @@ class MyApp extends StatelessWidget {
 // }
 
 class BaseScaffold extends StatefulWidget {
- 
+  Widget botonChat;
   final Widget body;
   final String title;
   late bool isTrustless;
@@ -276,7 +301,7 @@ class BaseScaffold extends StatefulWidget {
   late bool isUsers;
   int selectedItem;
   
-  BaseScaffold({required this.body, required this.title,
+  BaseScaffold({required this.body, required this.title, required this.botonChat,
   required this.selectedItem} ) {
     isTrustless = selectedItem == 0;
     isProjects = selectedItem == 1;
@@ -461,6 +486,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
 
           // Apply scale factor to the entire Scaffold
           return Scaffold(
+          // floatingActionButton: widget.botonChat,
           appBar: AppBar(
            toolbarHeight: 42,
            elevation: 1.8,
@@ -675,7 +701,9 @@ class _WalletBTNState extends State<WalletBTN> {
            Navigator.of(context).push(
         MaterialPageRoute(
           builder: ((context) =>
-            BaseScaffold(selectedItem: 0, body: Profile(), title: "Profile")
+            BaseScaffold(
+              botonChat: Human().botonDeChat,
+              selectedItem: 0, body: Profile(), title: "Profile")
           )
         )
       );

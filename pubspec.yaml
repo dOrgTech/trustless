@@ -37,6 +37,8 @@ dependencies:
   universal_html: ^2.0.8
   gojs: ^2.0.0
   dio:
+  flutter_expandable_fab: ^2.0.0
+  flutter_chat_ui: 
   webviewx: ^0.2.1
   web3dart: ^2.0.0
   ext_video_player: 

@@ -31,6 +31,7 @@ class ProjectDetails extends StatefulWidget {
 }
 
 class _ProjectDetailsState extends State<ProjectDetails> {
+  
    MarkdownStyleSheet getMarkdownStyleSheet(BuildContext context) {
   return MarkdownStyleSheet.fromCupertinoTheme(
     CupertinoThemeData(
@@ -60,6 +61,7 @@ String extractGitHubPath(String? repoUrl) {
   String path = repoUrl.substring(startIndex + 'github.com/'.length);
   return path.isEmpty ? 'default/fallback/path' : path; // Ensure the path is not empty
 }
+
   @override
   Widget build(BuildContext context) {
     // widget.project.holding= widget.project.contributions.values.fold(0, (a, b) => a! + b);
@@ -94,7 +96,9 @@ String extractGitHubPath(String? repoUrl) {
       // functionItem("Set Parties", "Author", SetParty(project: widget.project)),
     ];
      var human = Provider.of<Human>(context);
+    
     return BaseScaffold(
+      botonChat: Human().botonDeChat,
       selectedItem: 1,
       title: "Project",
       body: Container(

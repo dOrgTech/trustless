@@ -197,8 +197,8 @@ class MyApp extends StatelessWidget {
             // ProjectDetails(project: projects[0]);
             // Prelaunch();
             // Poll();  
-             BaseScaffold(selectedItem: 0, body: const Users(), title: "Users");
-            //  Human().beta ?  BaseScaffold(selectedItem: 0, body: Landing(), title: "Trustless Business") : Prelaunch();
+            //  BaseScaffold(selectedItem: 0, body: const Users(), title: "Users");
+             Human().beta ?  BaseScaffold(selectedItem: 0, body: Landing(), title: "Trustless Business") : Prelaunch();
             // BaseScaffold(selectedItem: 1,body: Projects(), title: "Projects");
           } else if (settings.name!.startsWith('/projects/')) {
             final projectId = settings.name!.replaceFirst('/projects/', '');

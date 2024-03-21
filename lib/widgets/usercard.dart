@@ -18,9 +18,8 @@ class UserCard extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
            children: <Widget>[
-              Container(
+              SizedBox(
                 height: 42,
-               
                 child:  Padding(
                   padding: const EdgeInsets.only(top:8.0,left:13,bottom:8),
                   child: Row(
@@ -55,14 +54,13 @@ class UserCard extends StatelessWidget {
                   ),
                 ),
               ),
-
               Container(
                 padding: EdgeInsets.only(right:24),
                 height: 42,
                 color: const Color.fromARGB(0, 76, 175, 79),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                  children: const [
                     Icon(Icons.work_history, size: 15),  SizedBox(width: 1), Text("3", style: TextStyle(fontSize: 13)),
                     SizedBox(width: 12),
                     Icon(Icons.edit,size: 15), SizedBox(width: 1),Text("1", style: TextStyle(fontSize: 13)),
@@ -72,8 +70,7 @@ class UserCard extends StatelessWidget {
                     Icon(Icons.money,size: 15),SizedBox(width: 1), Text("1", style: TextStyle(fontSize: 13)),
                   ],
                 )
-                ),  
-               
+                ),
                 Container(
                   padding: EdgeInsets.only(right: 13),
                 height: 42,

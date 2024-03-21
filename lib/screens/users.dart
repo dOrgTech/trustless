@@ -1,8 +1,12 @@
 
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:trustless/entities/human.dart';
+import 'package:trustless/widgets/action.dart';
 
+import '../entities/project.dart';
 import '../entities/user.dart';
 import '../main.dart';
 import '../utils/reusable.dart';
@@ -28,21 +32,15 @@ class _UsersState extends State<Users> {
   }
     int _selectedCardIndex = -1;
 
-  
-
 
   @override
   Widget build(BuildContext context) {
-
-    
-
     return 
      Container(
           alignment: Alignment.topCenter,
           height: MediaQuery.of(context).size.height-65,
           child: ListView( // Start of ListView
-            shrinkWrap: true, 
-            
+            shrinkWrap: true,
             children: [
               Column( // Start of Column
                 crossAxisAlignment: CrossAxisAlignment.center, // Set this property to center the items horizontally
@@ -79,7 +77,6 @@ class _UsersState extends State<Users> {
                                 ),
                               ),
                             ),
-                           
                             ],
                            ),
                       )),
@@ -95,7 +92,6 @@ class _UsersState extends State<Users> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(
-                          
                           height: MediaQuery.of(context).size.height-180,
                           width: 500,
                           child: SingleChildScrollView(
@@ -134,21 +130,20 @@ class _UsersState extends State<Users> {
                             child: userCard,
                               ),
                             );
-                                                }).toList(),
-                                              
+                              }).toList(),
                                  ],
                                ),
                           ),
                         ),
-                              Expanded(
-                                child: Container(
-                                  padding: const EdgeInsets.all(14),
-                                  child:
-                                  _selectedCardIndex==-1?
-                                  selectAnItem():
-                                  userDetails(users[_selectedCardIndex])
-                                ),
-                              ),
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.all(14),
+                              child:
+                              _selectedCardIndex==-1?
+                              selectAnItem():
+                              userDetails(users[_selectedCardIndex])
+                            ),
+                          ),
                         ],
                       ),
                     )
@@ -156,10 +151,8 @@ class _UsersState extends State<Users> {
                 ), 
               ],
             ), // End of ListView
-       
-      );
-    }
-
+        );
+      }
   Widget selectAnItem(){
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -175,17 +168,39 @@ class _UsersState extends State<Users> {
     );
   }
 
-  
 
+  Widget involvement(String address, String type){
+    return Padding(padding: const EdgeInsets.all(5),
+    child: Row(
+      children: [
+      const  SizedBox(width: 30),
+        TextButton(onPressed: (){}, child: Text(address)),
+        const Spacer(),
+        Text(type),
+        const SizedBox(width: 30),
+    ],),
+    );
+  }
   Widget userDetails(User human){
+    List<ActionItem> activity=[];
+    for (TTransaction t in actions){
+      activity.add(ActionItem(action: t, landingPage: false));
+    }
+
+    List<Widget> involvements = [];
+    for (String address in human.projectsArbitrated){involvements.add(involvement( address, "Arbiter"));}
+    for (String address in human.projectsAuthored){involvements.add(involvement( address, "Author"));}
+    for (String address in human.projectsBacked){involvements.add(involvement( address, "Backer"));}
+    for (String address in human.projectsContracted){involvements.add(involvement( address, "Contractor"));}
+    involvements.shuffle(Random());
     return Padding(
       padding: const EdgeInsets.only(left:28,top:30),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      child: ListView(
+        // mainAxisAlignment: MainAxisAlignment.start,
+        // crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
-              padding: const EdgeInsets.only(top:148.0,left:45),
+              padding: const EdgeInsets.only(top:8.0,left:45),
               child: Row(
                 children: [
                   FutureBuilder<Uint8List>(
@@ -208,30 +223,82 @@ class _UsersState extends State<Users> {
                         }
                       },
                     ),
-                 const SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   Text(human.address, style: const TextStyle(fontSize: 16),),
-                 const SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   TextButton(onPressed: (){}, child: const Icon(Icons.copy))
                 ],
               ),
             ),
-         const SizedBox(height: 39),
-         const Padding(
-            padding:  EdgeInsets.only(left:38.0),
-            child: Text("Involvements:",style: TextStyle(fontSize: 19)),
+              Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text( Human().chain.nativeSymbol.toString() +" spent: "+human.spent.toString()),
+                        const Text( "USDT spent: 0")
+                      ],),
+                  ),
+                    Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text( Human().chain.nativeSymbol.toString() +" earned: "+human.earned.toString()),
+                        const Text( "USDT earned: 0")
+                      ],),
+                  ),
+                    const SizedBox(height: 39),
+          SizedBox(
+            // height: MediaQuery.of(context).size.height-400,
+            width: 450,
+          child: DefaultTabController(
+            length: 2, 
+            initialIndex: 0,
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height-400,
+              width: 450,
+              child: Column(
+                children: [
+                  Container(
+                    height: 50,
+                    width: 300,
+                    alignment: Alignment.center,
+                    child: const TabBar(tabs: [Tab(text:"INVOLVEMENTS"),Tab(text:"ACTIVITY")]),
+                  ),
+                  Container(
+                    height: MediaQuery.of(context).size.height-450,
+                    child: TabBarView(children: [
+                      SizedBox(
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 30),
+                                  Padding(
+                                    padding:  const EdgeInsets.only(left:38.0),
+                                    child: Row(
+                                      children: const [
+                                        SizedBox(width: 50),
+                                        Text("Project"),
+                                        Spacer(),
+                                        Text("Stakeholder Type"),
+                                        SizedBox(width: 50)
+                                      ],
+                                    ),
+                                  ),
+                                  const Divider(),
+                                  ...involvements
+                          ],
+                        ),
+                      ),
+                     ListView(children: activity)
+                    ]),
+                  )
+                ],
+              ),
+            )
           ),
-          const SizedBox(height: 19),
-          Padding(
-            padding:  const EdgeInsets.only(left:38.0),
-            child: Row(
-              children: const [
-                Text("Project Name"),
-                SizedBox(width: 170),
-                Text("Stakeholder Type")
-              ],
-            ),
-          ),
-          const Divider(),
+         ),
+       
           // Text("orice frate, orice")
               ],)
            

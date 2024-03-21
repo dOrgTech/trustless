@@ -54,9 +54,10 @@ Map<String, Color> actionColors = {
 };
 class ActionItem extends StatefulWidget {
   TTransaction action;
+  bool landingPage;
   var opa=1.0;
   bool shown=false;
-  ActionItem({required this.action});
+  ActionItem({required this.action, required this.landingPage});
 
   @override
   State<ActionItem> createState() => _ActionItemState();
@@ -104,6 +105,7 @@ class _ActionItemState extends State<ActionItem> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+            widget.landingPage?
              Container(
                   width: 160,height: 40,
                   color: Color.fromARGB(0, 76, 175, 79),
@@ -148,8 +150,9 @@ class _ActionItemState extends State<ActionItem> {
                     ),
                   ),
 
-                ),
-      Spacer(),
+                ):SizedBox(),
+      widget.landingPage?
+      Spacer():SizedBox(),
                      
     TextButton(
       onPressed: (){
@@ -412,7 +415,9 @@ Future.delayed(Duration(milliseconds: 400)).then((value) {
             child: ListView.builder(
               itemCount: displayedActions.length,
               itemBuilder: (context, index) {
-                return Opacity(opacity: 0.85, child: ActionItem(action: displayedActions[index])); // Your list item
+                return Opacity(opacity: 0.85, child: ActionItem(
+                  landingPage: true,
+                  action: displayedActions[index])); // Your list item
               },
             ),
           ),
@@ -450,7 +455,9 @@ class FixedHeaderWithScrollableList extends StatelessWidget {
             child: ListView.builder(
               itemCount: displayedActions.length,
               itemBuilder: (context, index) {
-                return ActionItem(action: displayedActions[index].actions.first); // Your list item
+                return ActionItem(
+                  landingPage: true,
+                  action: displayedActions[index].actions.first); // Your list item
               },
             ),
           ),

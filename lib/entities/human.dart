@@ -13,17 +13,15 @@ import '../main.dart';
 //
 
 
-
 var chains={
  "0x5": Chain(id:5, name: "Goerli", nativeSymbol: "WEI", decimals:0, rpcNode: "https://goerli.infura.io/v3/1081d644fc4144b587a4f762846ceede"),
 //  "0xaa36a7": Chain(id:11155111, name: "Sepolia", nativeSymbol: "WEI", decimals:0, rpcNode: "https://sepolia.infura.io/v3/1081d644fc4144b587a4f762846ceede"),
 //  "0x1f47b": Chain(id:128123, name: "Etherlink-Testnet", nativeSymbol: "XTZ", decimals:18, rpcNode: "https://node.ghostnet.etherlink.com", ),
 };
 
-
 class Human extends ChangeNotifier{
   bool busy=false;
-  bool beta=false;
+  bool beta=true;
   bool wrongChain=false;
   int chainID=5;
   String? address;
@@ -36,14 +34,13 @@ class Human extends ChangeNotifier{
   Human._internal(){
     _setupListeners();
   }
-  // Singleton instance
+  
+  // Singleton instancelogo
   static final Human _instance = Human._internal();
   // Factory constructor to return the singleton instance
   factory Human() {
     return _instance;
   }
- 
-
 
   void _setupListeners() {
     // Ensure Ethereum is available

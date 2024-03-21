@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
-
 import '../entities/org.dart';
 import '../entities/proposal.dart';
+
 class ProposalCard extends StatelessWidget {
   ProposalCard({super.key,required this.proposal, required this.org});
   Proposal proposal;
@@ -19,8 +19,7 @@ class ProposalCard extends StatelessWidget {
               print("tapped on proposalCard");
               // Navigator.push(context,
               // MaterialPageRoute(
-              //   builder: (context) => DAO(InitialTabIndex: 1,org:org
-                
+              //   builder: (context) => DAO(InitialTabIndex: 1,org:org`
               //   )));
              
             },

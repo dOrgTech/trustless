@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 import '../entities/user.dart';
+import '../main.dart';
 import '../utils/reusable.dart';
 import '../utils/scripts.dart';
 
@@ -86,26 +87,33 @@ class _UsersState extends State<Users> {
                   Container(
                        height: MediaQuery.of(context).size.height-210,
                     // color:Colors.yellow,
-                    padding: const EdgeInsets.all(12),
-                    width: double.infinity,
-                    constraints: const BoxConstraints(maxWidth: 1200),
+                      padding: const EdgeInsets.all(12),
+                      width: double.infinity,
+                      constraints: const BoxConstraints(maxWidth: 1200),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(
+                          
                           height: MediaQuery.of(context).size.height-180,
                           width: 500,
                           child: SingleChildScrollView(
                             child: Column(
                               children: [
                                 Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: const [
-                                  Text("Addressss"),
+                                  Padding(
+                                    padding: EdgeInsets.only(left:24.0),
+                                    child: Text("Addressss"),
+                                  ),
                                   Text("            Involvements"),
-                                  Text("   Last Active"),
+                                  Padding(
+                                    padding: EdgeInsets.only(right:14),
+                                    child: Text("   Last Active"),
+                                  ),
                                 ],
                               ),
                                 ...userCards.asMap().entries.map((entry) {

@@ -1,24 +1,38 @@
 import 'package:trustless/entities/project.dart';
 import 'package:trustless/widgets/usercard.dart';
-
 import 'human.dart';
 
 String workingHash ="0x71436760615bde646197979c0be8a86c1c6179cd17ae7492355e76ff79949bbc";
 
 class User{
-  User({required this.address,required this.earned,
+  
+  User({required this.lastActive,  required this.address,required this.earned,
   required this.spent,required this.projectsContracted,
-  required this.projectsArbitrated,required this.projectsBacked});
+  required this.projectsArbitrated,required this.projectsBacked, 
+  required this.projectsAuthored});
+  
   List<TTransaction>actions=[];
   String address;
-  String earned;
-  String spent;
+  int earned;
+  int spent;
+  String? name;
   List<String>projectsContracted;
   List<String>projectsArbitrated;
+  List<String>projectsAuthored;
   List<String>projectsBacked;
+  DateTime lastActive;
   UserCard getCard() {
     return UserCard(user: this);
   } 
+
+  fromJson (Map<String, dynamic> geison){
+    earned=geison['earned'];
+    spent=geison['spent'];
+    projectsContracted=geison['contractor'];
+    projectsArbitrated=geison['arbiter'];
+    projectsAuthored=geison['author'];
+    projectsBacked=geison['backer'];
+  }
 }
 
 List<String>possibleActions=["createProject", "setParties","sendFunds","sign","withdraw","voteToRelease","voteToDispute","arbitrate","reimburse"];

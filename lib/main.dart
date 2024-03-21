@@ -32,7 +32,8 @@ String metamask="https://i.ibb.co/HpmDHg0/metamask.png";
 double switchAspect=1.2;
 List<Project> projects=[];
 List<TTransaction> actions=[];
-List<User> otelezatori=[];
+// List<User> otelezatori=[];
+List<User>users=[];
 String sourceAddress="";
 int valueInContracts=0;
 int usdtStored=0;
@@ -51,36 +52,40 @@ var statsCollection = FirebaseFirestore.instance.collection('stats');
 var projectsCollection;
 var transactionsCollection;
 var usersCollection;
-
     void main() async  {
-      
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
       projectsCollection=FirebaseFirestore.instance.collection("projects${Human().chain.name}");
       transactionsCollection=FirebaseFirestore.instance.collection("transactions${Human().chain.name}");
-      usersCollection=FirebaseFirestore.instance.collection("users${Human().chain.name}");
-      
+      usersCollection=FirebaseFirestore.instance.collection("users${Human().chain.name}");      
       var statsSnapshot = await statsCollection.doc(Human().chain.name).get();
-
       if (statsSnapshot.exists) {
           sourceAddress=statsSnapshot.data()!['sourceAddress'];
       } else {
         sourceAddress="source_address_not_available_at_the_moment";
       }
       print("source address:" +sourceAddress);
-      var querySnapshot = await projectsCollection.get();
+      var projectsSnapshot = await projectsCollection.get();
       var transactionsSnapshot = await transactionsCollection.get();
       var usersSnapshot = await usersCollection.get();
+      for (var doc in usersSnapshot.docs){
+        List<dynamic> contractor= doc.data()['contractor'];
+        List<dynamic> arbiter= doc.data()['arbiter'];
+        List<dynamic> author= doc.data()['author'];
+        List<dynamic> backer= doc.data()['backer'];
+        users.add(
+          User(address: doc.id.toString(), earned: doc.data()['earned'],
+          spent: doc.data()['spent'],
+          lastActive: (doc.data()['lastActive'] as Timestamp).toDate(),
+          projectsContracted: List<String>.from(contractor) , 
+          projectsArbitrated:  List<String>.from(arbiter) ,  
+          projectsBacked:  List<String>.from(backer) ,  
+          projectsAuthored:  List<String>.from(author)
+          )
+        );
+      }
 
-
-  // Iterate through the documents and print their data
       for(var doc in transactionsSnapshot.docs){ 
-        // print(" hash ${doc.id.toString()}");
-        // print(" functionName ${doc.data()["functionName"]}");
-        // print(" params ${doc.data()["params"]}");
-        // print(" sender ${doc.data()["sender"]}");
-        // print(" contractAddress ${doc.data()["contractAddress"]}");
-        // print(" time ${(doc.data()['time'] as Timestamp).toDate()}");
         actions.add(TTransaction(
           hash:doc.id.toString(),
           functionName: doc.data()["functionName"],
@@ -91,9 +96,7 @@ var usersCollection;
            ));
         }
 
-
-
-    for(var doc in querySnapshot.docs) {
+    for(var doc in projectsSnapshot.docs) {
       Project p =Project(
        isUSDT: doc.data()["isUSDT"],
        name: doc.data()["name"],
@@ -122,14 +125,16 @@ var usersCollection;
     p.rulingHash=doc.data()['rulingHash'];
   }
   
-  if (projects.length>0) {await createUsers();}
-    print("greater than zero adding MockTransactions");
-    var punem= actions.length;
-    if (punem < mockTansactions.length){
-      for (int i=0; i< mockTansactions.length - punem; i++){
-        actions.add(mockTansactions[i]);
-      }
-  }
+
+
+  // if (projects.length>0) {await createUsers();}
+  //   print("greater than zero adding MockTransactions");
+  //   var punem= actions.length;
+  //   if (punem < mockTansactions.length){
+  //     for (int i=0; i< mockTansactions.length - punem; i++){
+  //       actions.add(mockTansactions[i]);
+  //     }
+  // }
 
   // actions.sort((a, b) => b.time.compareTo(a.time));
 
@@ -191,9 +196,9 @@ class MyApp extends StatelessWidget {
             builder = (_) => 
             // ProjectDetails(project: projects[0]);
             // Prelaunch();
-            // Poll();
-            //  BaseScaffold(selectedItem: 0, body: const Users(), title: "Users");
-             Human().beta?  BaseScaffold(selectedItem: 0, body: Landing(), title: "Trustless Business") :Prelaunch();
+            // Poll();  
+             BaseScaffold(selectedItem: 0, body: const Users(), title: "Users");
+            //  Human().beta ?  BaseScaffold(selectedItem: 0, body: Landing(), title: "Trustless Business") : Prelaunch();
             // BaseScaffold(selectedItem: 1,body: Projects(), title: "Projects");
           } else if (settings.name!.startsWith('/projects/')) {
             final projectId = settings.name!.replaceFirst('/projects/', '');

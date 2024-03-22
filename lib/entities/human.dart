@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_web3_provider/ethereum.dart';
 import 'package:flutter_web3_provider/ethers.dart';
 import 'package:http/http.dart';
+import 'package:trustless/entities/user.dart';
 import 'package:trustless/widgets/chat.dart';
 import 'package:web3dart/web3dart.dart';
 import '../main.dart';
@@ -34,9 +35,9 @@ class Human extends ChangeNotifier{
   bool isOverlayVisible = false;
   Widget botonDeChat=AnimatedFabWithOverlay();
   bool voted=false;
+  User? user;
   Human._internal(){
     _setupListeners();
-  
   }
   
   // Singleton instancelogo
@@ -45,8 +46,6 @@ class Human extends ChangeNotifier{
   factory Human() {
     return _instance;
   }
-
-
 
   void _setupListeners() {
     // Ensure Ethereum is available
@@ -89,34 +88,50 @@ class Human extends ChangeNotifier{
 
   signIn()async{    
    try {
-      var accounts = await promiseToFuture(
-        ethereum!.request(
-          RequestParams(method: 'eth_requestAccounts'),
-        ),
-      );
-      address = ethereum?.selectedAddress.toString();
-      var chainaidi = ethereum?.chainId;
-      if (!chains.keys.contains(chainaidi)){
-          print("schimbam la nimic");
-          wrongChain=true;
-          chain=Chain(id: 0, name: 'N/A', nativeSymbol: '', decimals: 0, rpcNode: '');
-          
-          notifyListeners();
-          return "nogo";
+      // var accounts = await promiseToFuture(
+      //   ethereum!.request(
+      //     RequestParams(method: 'eth_requestAccounts'),
+      //   ),
+      // );
+      // address = ethereum?.selectedAddress.toString();
+      // var chainaidi = ethereum?.chainId;
+      // if (!chains.keys.contains(chainaidi)){
+      //     print("schimbam la nimic");
+      //     wrongChain=true;
+      //     chain=Chain(id: 0, name: 'N/A', nativeSymbol: '', decimals: 0, rpcNode: '');
+      //     notifyListeners();
+      //     return "nogo";
+      //   }else{
+      //     wrongChain=false;
+      //     chain=chains[chainaidi]!;
+      //     }
+      // web3user = Web3Provider(ethereum!);
+      address="0xa9F8F9C0bf3188cEDdb9684ae28655187552bAE9";
+      for (User u in users){
+        if (u.address.toLowerCase()==address!.toLowerCase()){
+          user=u;
         }else{
-          wrongChain=false;
-          chain=chains[chainaidi]!;
+          print("this is a new user");
+          user = User(
+          lastActive: DateTime.now(), 
+          address: address!, 
+          nativeEarned: 0, 
+          usdtEarned: 0, 
+          usdtSpent: 0,
+          nativeSpent: 0,
+          projectsContracted: [],
+          projectsArbitrated: [],
+          projectsBacked:[],
+          projectsAuthored: []);
           }
-      web3user = Web3Provider(ethereum!);
+      }
       notifyListeners(); // Notify listeners that signIn was successful
       return "ok";
     } catch (e) {
       print(e);
       return "nogo";
     }
-  
   }
-
 }
 
 class Chain{

@@ -58,7 +58,7 @@ fromJson(Map<String, dynamic> json) {
   arbiterAwardingContractor = json['arbiterAwardingContractor'];
   rulingHash = json['rulingHash'];
 }
-
+  
   @override
   String toString() {
     // use a StringBuffer to efficiently build the string

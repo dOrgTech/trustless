@@ -96,12 +96,14 @@ var usersCollection;
         List<dynamic> author= doc.data()['author'];
         List<dynamic> backer= doc.data()['backer'];
         users.add(
-          User(address: doc.id.toString(), earned: doc.data()['earned'],
-          spent: doc.data()['spent'],
+          User(address: doc.id.toString(), nativeEarned: doc.data()['nativeEarned'],
+          nativeSpent: doc.data()['nativeSpent'],
+          usdtEarned: doc.data()['usdtEarned'],
+          usdtSpent: doc.data()['usdtSpent'],
           lastActive: (doc.data()['lastActive'] as Timestamp).toDate(),
-          projectsContracted: List<String>.from(contractor) , 
-          projectsArbitrated:  List<String>.from(arbiter) ,  
-          projectsBacked:  List<String>.from(backer) ,  
+          projectsContracted: List<String>.from(contractor), 
+          projectsArbitrated:  List<String>.from(arbiter),  
+          projectsBacked:  List<String>.from(backer),  
           projectsAuthored:  List<String>.from(author)
           )
         );
@@ -146,7 +148,7 @@ var usersCollection;
     p.contributions.forEach((key, value) { valueInContracts+=value;});
     p.rulingHash=doc.data()['rulingHash'];
   }
-  
+  Human().signIn();
 
 
   // if (projects.length>0) {await createUsers();}
@@ -198,13 +200,13 @@ class MyApp extends StatelessWidget {
   OverlayEntry? _overlayEntry;
   @override
   Widget build(BuildContext context) {
-      if (ethereum==null){
-       print("n-are metamask");
-        Human().metamask=false;
-    }else{
-      print("are metamask");
-        Human().metamask=true;
-    }
+    //   if (ethereum==null){
+    //    print("n-are metamask");
+    //     Human().metamask=false;
+    // }else{
+    //   print("are metamask");
+    //     Human().metamask=true;
+    // }
     return  MaterialApp(
       navigatorObservers: [OverlayControlNavigatorObserver()],
               themeMode: ThemeMode.system,
@@ -220,10 +222,13 @@ class MyApp extends StatelessWidget {
             // ProjectDetails(project: projects[0]);
             // Prelaunch();
             // Poll();  
-            //  BaseScaffold(selectedItem: 0, body: const Users(), title: "Users");
-             Human().beta ?  BaseScaffold(
+             BaseScaffold(
               botonChat: Human().botonDeChat,
-              selectedItem: 0, body: Landing(), title: "Trustless Business") : Prelaunch();
+              selectedItem: 0, body: Profile(), title: "Profile"); 
+            //  BaseScaffold(selectedItem: 0, body: const Users(), title: "Users");
+            //  Human().beta ?  BaseScaffold(
+            //   botonChat: Human().botonDeChat,
+            //   selectedItem: 0, body: Landing(), title: "Trustless Business") : Prelaunch();
             // BaseScaffold(selectedItem: 1,body: Projects(), title: "Projects");
           } else if (settings.name!.startsWith('/projects/')) {
             final projectId = settings.name!.replaceFirst('/projects/', '');
@@ -475,7 +480,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                             )
                             ),
                 ),
-              ),
+              ), 
           
            
           ];

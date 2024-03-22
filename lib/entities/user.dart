@@ -6,15 +6,16 @@ String workingHash ="0x71436760615bde646197979c0be8a86c1c6179cd17ae7492355e76ff7
 
 class User{
   
-  User({required this.lastActive,  required this.address,required this.earned,
-  required this.spent,required this.projectsContracted,
+  User({required this.lastActive,  required this.address,required this.nativeEarned,
+  required this.usdtEarned,required this.usdtSpent,required this.nativeSpent,required this.projectsContracted,
   required this.projectsArbitrated,required this.projectsBacked, 
   required this.projectsAuthored});
-  
   List<TTransaction>actions=[];
   String address;
-  int earned;
-  int spent;
+  int nativeEarned;
+  int usdtEarned;
+  int nativeSpent;
+  int usdtSpent;
   String? name;
   List<String>projectsContracted;
   List<String>projectsArbitrated;
@@ -25,15 +26,21 @@ class User{
     return UserCard(user: this);
   } 
 
-  fromJson (Map<String, dynamic> geison){
-    earned=geison['earned'];
-    spent=geison['spent'];
-    projectsContracted=geison['contractor'];
-    projectsArbitrated=geison['arbiter'];
-    projectsAuthored=geison['author'];
-    projectsBacked=geison['backer'];
+  Map<String, dynamic> toJson() => {
+        'nativeEarned': nativeEarned,
+        'usdtEarned': usdtEarned,
+        'nativeSpent': nativeSpent,
+        'usdtSpent': usdtSpent,
+        'name': name,
+        'projectsContracted': projectsContracted,
+        'projectsArbitrated': projectsArbitrated,
+        'projectsAuthored': projectsAuthored,
+        'projectsBacked': projectsBacked,
+        'lastActive': lastActive,
+      };
   }
-}
+
+
 
 List<String>possibleActions=["createProject", "setParties","sendFunds","sign","withdraw","voteToRelease","voteToDispute","arbitrate","reimburse"];
 

@@ -1,7 +1,11 @@
 import "package:flutter/material.dart";
 import "package:trustless/utils/reusable.dart";
+import "package:trustless/widgets/footer.dart";
 
 import "../entities/human.dart";
+import "../entities/user.dart";
+import "../main.dart";
+import "../widgets/action.dart";
 
 
 class Profile extends StatefulWidget {
@@ -152,13 +156,13 @@ var sc=ScrollController();
                 unselectedLabelColor: Theme.of(context).hintColor,
                 tabs: [
               Tab(text: "OVERVIEW"),
-              Tab(text: "AUTHOR"),
-              Tab(text: "CONTRACTOR"),
-              Tab(text: "ARBITER"),
-              Tab(text: "BACKER"),
+              Tab(text: "AUTHOR OF "+Human().user!.projectsAuthored.length.toString()),
+              Tab(text: "CONTRACTOR OF "+Human().user!.projectsContracted.length.toString()),
+              Tab(text: "ARBITER OF "+Human().user!.projectsArbitrated.length.toString()),
+              Tab(text: "BACKER OF "+Human().user!.projectsBacked.length.toString()),
                ])),
             Container(
-              height: MediaQuery.of(context).size.height-185,
+              height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
               child:  TabBarView(
                     children: [
@@ -181,7 +185,8 @@ var sc=ScrollController();
                    
                     ]),
                 
-              )
+              ),
+              Footer(),
               ],),
           )),
       
@@ -192,19 +197,121 @@ var sc=ScrollController();
   }
 
 
-
 Widget overview(lumina){
-    
+   List<ActionItem> activity=[];
+    for (TTransaction t in actions){
+      activity.add(ActionItem(action: t, landingPage: false));
+    }
     return
     Container(
+      constraints: BoxConstraints(maxWidth: 1200),
       child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [ 
-              SizedBox(height: 20,),
+              SizedBox(height: 60,),
+              Container(
+                // padding: EdgeInsets.only(left:100),
+                height: 360,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                      child: Row(
+                        children: [
+                            Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        SizedBox(
+                          height: 50,
+                          child: Center(child: Text("Alias:")),
+                        ),
+                        SizedBox(height: 30),
+                         SizedBox(
+                          height: 50,
+                          child: Center(child: Text("Description:")),
+                        ),
+                        SizedBox(height: 70),
+                          SizedBox(
+                          height: 50,
+                          child: Center(child: Text("External Link:")),
+                        ),
+                      ],
+                    ),
+                    SizedBox(width: 20),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: 300,
+                          height: 50,
+                          child: TextField(
+                            maxLines: 1,
+                            decoration: InputDecoration(
+                              hintText: "Set an Alias"
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 30),
+                        SizedBox(
+                          width: 450,
+                          height: 120,
+                          child: TextField(
+                            maxLines: 3,
+                            maxLength: 200,
+                            decoration: InputDecoration(
+                              hintText: "Brief profile description"
+                            ),
+                          ),
+                        ),
+                          
+                            SizedBox(
+                          width: 450,
+                          height: 50,
+                          child: TextField(
+                            maxLines: 1,
+                            decoration: InputDecoration(
+                              hintText: "https://link-to-additional-context..."
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                        ],
+                      ),
+                    ),
+                    ElevatedButton(
+                      style: ButtonStyle(
+              foregroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+      // Return blue when enabled, implicitly use default for other states
+      if (!states.contains(MaterialState.disabled)) {
+        return Theme.of(context).canvasColor; // Active (enabled) text color
+      }
+      // Since a Color must always be returned and we don't want to explicitly set a disabled color,
+      // we return the default foreground color for the ElevatedButton theme.
+      // This approach assumes the theme's default aligns with your desired disabled state appearance.
+      return ElevatedButtonTheme.of(context).style?.foregroundColor?.resolve({}) ?? Colors.white;
+    }),
+                      ),
+                      onPressed: (){}, child: 
+                    SizedBox(
+                      height: 80,
+                      width: 90,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: const [
+                          Icon(Icons.save, size: 20),
+                          SizedBox(height: 7),
+                          Text("SAVE",style: TextStyle(fontSize: 20)),
+                        ],
+                      )))
+                  ],
+                ),
+              ),
               Wrap(
                 spacing: 57,
-                runSpacing: 20,
+                runSpacing: 40,
                 children: [
                   AnimatedContainer(
                         duration: Duration(milliseconds: 400),
@@ -224,7 +331,7 @@ Widget overview(lumina){
                           child: Center(
                               child: balance(
                                   "${Human().chain.nativeSymbol} Earned",
-                                 0.toString()
+                                 Human().user!.nativeEarned.toString()
                                   )),
                         )),  
                   AnimatedContainer(
@@ -245,9 +352,51 @@ Widget overview(lumina){
                           child: Center(
                               child: balance(
                                   "USDT Earmed",
-                                 0.toString()
+                                 Human().user!.usdtEarned.toString()
+                                  )),
+                        )), 
+                        AnimatedContainer(
+                        duration: Duration(milliseconds: 400),
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                color: Theme.of(context).backgroundColor,
+                                width: 0.9),
+                            color: lumina
+                                ? Color(0x54c9c9c9)
+                                : Color(0x432000000),
+                            borderRadius: BorderRadius.all(Radius.circular(20))),
+                        height: h1,
+                        width: 200,
+                        child: AnimatedOpacity(
+                          opacity: opa1,
+                          duration: Duration(milliseconds: 800),
+                          child: Center(
+                              child: balance(
+                                  "${Human().chain.nativeSymbol} Spent",
+                                 Human().user!.nativeSpent.toString()
                                   )),
                         )),  
+                  AnimatedContainer(
+                        duration: Duration(milliseconds: 400),
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                color: Theme.of(context).backgroundColor,
+                                width: 0.9),
+                            color: lumina
+                                ? Color(0x54c9c9c9)
+                                : Color(0x432000000),
+                            borderRadius: BorderRadius.all(Radius.circular(20))),
+                        height: h1,
+                        width: 200,
+                        child: AnimatedOpacity(
+                          opacity: opa1,
+                          duration: Duration(milliseconds: 800),
+                          child: Center(
+                              child: balance(
+                                  "USDT Spent",
+                                 Human().user!.usdtSpent.toString()
+                                  )),
+                        )),   
                       AnimatedContainer(
                         duration: Duration(milliseconds: 400),
                         decoration: BoxDecoration(
@@ -290,77 +439,18 @@ Widget overview(lumina){
                         )),
               ],),
                 SizedBox(height: 60,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("View data for the last ",style: TextStyle(fontSize: 17),),
-                    SizedBox(width: 10),
-                      DropdownButton(
-                    value: timescale,
-                    onChanged: (value) {
-                      int numar=value as int;
-                      setState(() {timescale=numar;});
-                        },
-                    items: [
-                    DropdownMenuItem(child: Text(timescales[1]!),value: 1),
-                    DropdownMenuItem(child: Text(timescales[2]!),value: 2),
-                    DropdownMenuItem(child: Text(timescales[3]!),value: 3),
-                    DropdownMenuItem(child: Text(timescales[4]!),value: 4),
-                    DropdownMenuItem(child: Text(timescales[5]!),value: 5),
-                    ])
-                ]),
-          SizedBox(height:20),
+              Text("ACTIVITY:"),
+                SizedBox(height: 20,),
+          
             Container(
+              height: 600,
+              width:700,
               decoration: BoxDecoration(
                 color: Color(0x23000000),
               ),
-              width: MediaQuery.of(context).size.width,
-            height: 110,
-            child:Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                      width:400,
-                      height:70,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(height: 20,
-                          child:Text("A graph showing earnings and expenditure",style: TextStyle(fontWeight: FontWeight.bold),)),
-                       
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 95),
-                SizedBox(
-                  height:70,
-                  child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: const [
-                                SizedBox(height: 7),
-                                Text('Total earnings :', style: TextStyle( fontSize: 17),),
-                                SizedBox(height: 3),
-                                Text('Total spent:',style: TextStyle(fontSize: 17)),
-                              ],
-                            ),
-                            const SizedBox(width: 15),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(height: 5),
-                                Text("0 ${Human().chain.nativeSymbol}" , style: TextStyle(fontFamily: 'Roboto Mono', fontSize: 17)),
-                                SizedBox(height: 2),
-                                Text("0 ${Human().chain.nativeSymbol}", style: TextStyle(fontFamily: 'Roboto Mono', fontSize: 17)),
-                              ]),
               
-                            ]),
-                ),
-            ],)
+            
+            child: ListView(children: activity)
             ),
               
           SizedBox(height: 20,),

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:trustless/entities/human.dart';
 import 'package:trustless/widgets/action.dart';
 
@@ -168,19 +169,81 @@ class _UsersState extends State<Users> {
     );
   }
 
-
   Widget involvement(String address, String type){
-    return Padding(padding: const EdgeInsets.all(5),
+    Project p= projects.firstWhere(
+                                (element) => element.contractAddress==address,
+                                orElse: () => projects[0]);
+  return Padding(padding: const EdgeInsets.all(5),
     child: Row(
+
       children: [
-      const  SizedBox(width: 30),
-        TextButton(onPressed: (){}, child: Text(address)),
+      const  SizedBox(width: 60),
+          Container(
+                 height: 40,
+                  color: Color.fromARGB(0, 76, 119, 175),
+                  child:  Padding(
+                    padding: const EdgeInsets.only(top:0,left:0,bottom:0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                  
+                        FutureBuilder<Uint8List>(
+                                future: generateAvatarAsync(hashString(p.contractAddress!)),  // Make your generateAvatar function return Future<Uint8List>
+                                builder: (context, snapshot) {
+                                  // Future.delayed(Duration(milliseconds: 500));
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return Container(
+                                      width: 20.0,
+                                      height:20.0,
+                                      color: Theme.of(context).canvasColor,
+                                     
+                                    );
+                                  } else if (snapshot.hasData) {
+                                    
+                                    return SizedBox(width: 20,height: 20,  child: Image.memory(snapshot.data!));
+                                    
+                                  } else {
+                                    return Container(
+                                      width: 20.0,
+                                      height: 20.0,
+                                      color: Theme.of(context).canvasColor, 
+                                       // Error color
+                                    );
+                                  }
+                                },
+                              ),
+                        const SizedBox(width: 10),
+                        TextButton(
+                          style: TextButton.styleFrom(
+                              padding: EdgeInsets.zero, // Minimize padding
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap, // Minimize the hit test area
+                            ),
+                          onPressed: (){
+                            Navigator.of(context).pushNamed("/projects/${p.contractAddress}");
+                          },
+                          
+                          child: SizedBox(
+                            
+                            child: Text(
+                             p.name!.length<17?
+                                              p.name!:
+                                              p.name!.substring(0,16)+".."
+                                ,
+                              style: GoogleFonts.dmMono(fontSize: 14,)),
+                          ),
+                        ),
+                        const SizedBox(width: 30),
+                      ],
+                    ),
+                  ),
+                ),
         const Spacer(),
         Text(type),
-        const SizedBox(width: 30),
+        const SizedBox(width: 60),
     ],),
     );
   }
+
   Widget userDetails(User human){
     List<ActionItem> activity=[];
     for (TTransaction t in actions){
@@ -235,8 +298,8 @@ class _UsersState extends State<Users> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text( Human().chain.nativeSymbol.toString() +" spent: "+human.spent.toString()),
-                        const Text( "USDT spent: 0")
+                        Text( Human().chain.nativeSymbol.toString() +" spent: "+human.nativeSpent.toString()),
+                         Text( "USDT spent: "+human.usdtSpent.toString())
                       ],),
                   ),
                     Padding(
@@ -244,8 +307,8 @@ class _UsersState extends State<Users> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text( Human().chain.nativeSymbol.toString() +" earned: "+human.earned.toString()),
-                        const Text( "USDT earned: 0")
+                        Text( Human().chain.nativeSymbol.toString() +" earned: "+human.nativeEarned.toString()),
+                        Text( "USDT earned: "+human.usdtEarned.toString())
                       ],),
                   ),
                     const SizedBox(height: 39),
@@ -253,7 +316,7 @@ class _UsersState extends State<Users> {
             // height: MediaQuery.of(context).size.height-400,
             width: 450,
           child: DefaultTabController(
-            length: 2, 
+            length: 3, 
             initialIndex: 0,
             child: SizedBox(
               height: MediaQuery.of(context).size.height-400,
@@ -262,13 +325,14 @@ class _UsersState extends State<Users> {
                 children: [
                   Container(
                     height: 50,
-                    width: 300,
+                    width: 400,
                     alignment: Alignment.center,
-                    child: const TabBar(tabs: [Tab(text:"INVOLVEMENTS"),Tab(text:"ACTIVITY")]),
+                    child: const TabBar(tabs: [Tab(text:"ABOUT"),Tab(text:"INVOLVEMENTS"),Tab(text:"ACTIVITY")]),
                   ),
                   Container(
                     height: MediaQuery.of(context).size.height-450,
                     child: TabBarView(children: [
+                      Container(child: Center(child: Text("ABOUT this user")),),
                       SizedBox(
                         child: Column(
                           children: [
@@ -290,7 +354,8 @@ class _UsersState extends State<Users> {
                           ],
                         ),
                       ),
-                     ListView(children: activity)
+                     ListView(children: activity),
+                    
                     ]),
                   )
                 ],

@@ -274,9 +274,9 @@ class _ActionItemState extends State<ActionItem> {
                  Spacer(),
          
               SizedBox(
-                width:200,
+                // width:200,
                 child: Text(
-                  getTimeAgo( widget.action.time)+"    ",
+                  widget.landingPage? getTimeAgo( widget.action.time)+"    ":getTimeAgo( widget.action.time),
                   style: GoogleFonts.dmMono(fontSize: 13),
                   )
 

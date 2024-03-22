@@ -31,7 +31,7 @@ class _UsersState extends State<Users> {
   }
   
   }
-    int _selectedCardIndex = -1;
+    int _selectedCardIndex = 0;
 
 
   @override
@@ -257,7 +257,7 @@ class _UsersState extends State<Users> {
     for (String address in human.projectsContracted){involvements.add(involvement( address, "Contractor"));}
     involvements.shuffle(Random());
     return Padding(
-      padding: const EdgeInsets.only(left:28,top:30),
+      padding: const EdgeInsets.only(left:38,top:10),
       child: ListView(
         // mainAxisAlignment: MainAxisAlignment.start,
         // crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -265,6 +265,7 @@ class _UsersState extends State<Users> {
           Padding(
               padding: const EdgeInsets.only(top:8.0,left:45),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   FutureBuilder<Uint8List>(
                       future: generateAvatarAsync(hashString(human.address)),  // Make your generateAvatar function return Future<Uint8List>
@@ -293,24 +294,42 @@ class _UsersState extends State<Users> {
                 ],
               ),
             ),
-              Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text( Human().chain.nativeSymbol.toString() +" spent: "+human.nativeSpent.toString()),
-                         Text( "USDT spent: "+human.usdtSpent.toString())
-                      ],),
-                  ),
-                    Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text( Human().chain.nativeSymbol.toString() +" earned: "+human.nativeEarned.toString()),
-                        Text( "USDT earned: "+human.usdtEarned.toString())
-                      ],),
-                  ),
+            SizedBox(height: 16),
+            SizedBox(
+              width: 300,
+              child: Container(
+                width: 300,
+                decoration: BoxDecoration(
+                  
+                  color: Theme.of(context).cardColor,
+                  border: Border.all(width: 0.3)
+                ),
+                padding: EdgeInsets.all(7),
+                child: Column(
+                  children: [
+                     Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text( Human().chain.nativeSymbol.toString() +" spent: "+human.nativeSpent.toString()),
+                           Text( "USDT spent: "+human.usdtSpent.toString())
+                        ],),
+                    ),
+                      Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text( Human().chain.nativeSymbol.toString() +" earned: "+human.nativeEarned.toString()),
+                          Text( "USDT earned: "+human.usdtEarned.toString())
+                        ],),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+             
                     const SizedBox(height: 39),
           SizedBox(
             // height: MediaQuery.of(context).size.height-400,
@@ -332,7 +351,21 @@ class _UsersState extends State<Users> {
                   Container(
                     height: MediaQuery.of(context).size.height-450,
                     child: TabBarView(children: [
-                      Container(child: Center(child: Text("ABOUT this user")),),
+                      Container(
+                        child: Column(children: [
+                          SizedBox(height: 40),
+                          Text("TheGratefulParalized", style:GoogleFonts.lato(
+                            color: Theme.of(context).indicatorColor,
+                            fontSize: 20)),
+                          SizedBox(height: 20),
+                          Text("Last seen: ${human.lastActive}", style: TextStyle(fontSize: 13),),
+                          SizedBox(height: 40),
+                          SizedBox(
+                            width: 390,
+                            child:Text("This is the description of the profile which will explain to the world at large what this user is all about in 200 characters or less. Or more. Or exactly 200 characters. I'm not sure what else to say. Tune in for part 3"),
+                          ),
+                        ],)
+                        ),
                       SizedBox(
                         child: Column(
                           children: [

@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:trustless/screens/projects.dart";
 import "package:trustless/utils/reusable.dart";
 import "package:trustless/widgets/footer.dart";
 
@@ -156,10 +157,10 @@ var sc=ScrollController();
                 unselectedLabelColor: Theme.of(context).hintColor,
                 tabs: [
               Tab(text: "OVERVIEW"),
-              Tab(text: "AUTHOR OF "+Human().user!.projectsAuthored.length.toString()),
-              Tab(text: "CONTRACTOR OF "+Human().user!.projectsContracted.length.toString()),
-              Tab(text: "ARBITER OF "+Human().user!.projectsArbitrated.length.toString()),
-              Tab(text: "BACKER OF "+Human().user!.projectsBacked.length.toString()),
+              Tab(text: "AUTHOR ("+Human().user!.projectsAuthored.length.toString()+")"),
+              Tab(text: "CONTRACTOR ("+Human().user!.projectsContracted.length.toString()+")"),
+              Tab(text: "ARBITER ("+Human().user!.projectsArbitrated.length.toString()+")"),
+              Tab(text: "BACKER ("+Human().user!.projectsBacked.length.toString()+")"),
                ])),
             Container(
               height: MediaQuery.of(context).size.height,
@@ -173,10 +174,7 @@ var sc=ScrollController();
                         
                       ],
                     ))),
-                    Center(
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width*0.7,
-                  child:Text("Coming soon..."))),
+             Projects(main:false),
                     
                     Center(
                 child: SizedBox(

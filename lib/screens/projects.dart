@@ -13,7 +13,8 @@ String? selectedNewProject="Open to proposals";
 // ignore: must_be_immutable
 class Projects extends StatefulWidget {
   String? selectedStatus = 'All';
-  Projects({super.key});
+  Projects({super.key, required this.main});
+  bool main;
   String query="";
   @override
   State<Projects> createState() => ProjectsState();
@@ -100,6 +101,7 @@ class ProjectsState extends State<Projects> {
                           const Text("projects"),
                           const SizedBox(width: 60),
             // HoverExpandWidget(projectsState: this),
+            widget.main?
             ElevatedButton(onPressed: (){
                         Human().address==null?
                      showDialog(
@@ -135,7 +137,7 @@ class ProjectsState extends State<Projects> {
                                 
                                 ),
                               ),
-                            )),
+                            )):Text(""),
               
                       const SizedBox(
                         width: 10,
@@ -159,7 +161,7 @@ class ProjectsState extends State<Projects> {
               MediaQuery.of(context).size.aspectRatio > switchAspect?
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 9),
-                       height: 46, 
+                       height: 46,
                        width: double.infinity,
                         constraints: const BoxConstraints(maxWidth: 1200),
                        child:  MediaQuery(
@@ -207,7 +209,7 @@ class ProjectsState extends State<Projects> {
                     height: 
                     projectCards.length<=4?690:
                      64),
-                   Footer()
+                  widget.main? Footer():Text("")
                 ],
               ), // End of Column
             ],

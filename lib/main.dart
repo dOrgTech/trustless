@@ -222,10 +222,10 @@ class MyApp extends StatelessWidget {
             // ProjectDetails(project: projects[0]);
             // Prelaunch();
             // Poll();  
-            //  BaseScaffold(
-            //   botonChat: Human().botonDeChat,
-            //   selectedItem: 0, body: Profile(), title: "Profile"); 
-             BaseScaffold(botonChat: Human().botonDeChat,selectedItem: 0, body: const Users(), title: "Users");
+             BaseScaffold(
+              botonChat: Human().botonDeChat,
+              selectedItem: 0, body: Profile(), title: "Profile"); 
+            //  BaseScaffold(botonChat: Human().botonDeChat,selectedItem: 0, body: const Users(), title: "Users");
             //  Human().beta ?  BaseScaffold(
             //   botonChat: Human().botonDeChat,
             //   selectedItem: 0, body: Landing(), title: "Trustless Business") : Prelaunch();
@@ -252,7 +252,7 @@ class MyApp extends StatelessWidget {
             } else if (settings.name == '/') {
             builder = (_) => BaseScaffold(botonChat: Human().botonDeChat,selectedItem: 0, body: Landing(), title: "Trustless Business");
           } else if (settings.name == '/projects') {
-            builder = (_) => BaseScaffold(botonChat: Human().botonDeChat,selectedItem: 1, body: Projects(), title: "Projects");
+            builder = (_) => BaseScaffold(botonChat: Human().botonDeChat,selectedItem: 1, body: Projects(main:true), title: "Projects");
           } else {
             // Handle other routes or unknown routes
             builder = (_) =>  BaseScaffold(botonChat: Human().botonDeChat,

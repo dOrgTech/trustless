@@ -7,6 +7,47 @@ import 'package:image/image.dart' as img;
 import 'dart:ui';
 import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+class OldSchoolLink extends StatelessWidget {
+  final String text;
+  final String url;
+  final TextStyle? textStyle;
+
+  const OldSchoolLink({
+    Key? key,
+    required this.text,
+    required this.url,
+    this.textStyle,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // Truncate text if longer than 42 characters
+    String displayText = text.length > 42 ? '${text.substring(0, 40)}...' : text;
+
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: () => launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication),
+        child: Text(
+          displayText,
+          style: textStyle ??
+              TextStyle(
+                fontSize: 12,
+                decoration: TextDecoration.underline,
+                color: Colors.blue,
+              ),
+        ),
+      ),
+    );
+  }
+}
 
 
 Future<Uint8List> generateAvatarAsync(String hash, {int size = 40, int pixelSize = 5}) async {

@@ -1,5 +1,13 @@
+import 'dart:math';
+import 'dart:typed_data';
+
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:trustless/entities/project.dart';
+import 'package:trustless/main.dart';
+import 'package:trustless/utils/reusable.dart';
 import 'package:trustless/widgets/usercard.dart';
+import '../widgets/action.dart';
 import 'human.dart';
 
 String workingHash ="0x71436760615bde646197979c0be8a86c1c6179cd17ae7492355e76ff79949bbc";
@@ -90,5 +98,251 @@ class TTransaction{
 
 }
 
+class UserDetails extends StatefulWidget {
+  User human;
+  UserDetails({required this.human,super.key});
 
+  @override
+  State<UserDetails> createState() => _UserDetailsState();
+}
+
+class _UserDetailsState extends State<UserDetails> {
+   Widget involvement(String address, String type){
+    Project p= projects.firstWhere(
+                                (element) => element.contractAddress==address,
+                                orElse: () => projects[0]);
+  return Padding(padding: const EdgeInsets.all(5),
+    child: Row(
+
+      children: [
+      const  SizedBox(width: 60),
+          Container(
+                 height: 40,
+                  color: const Color.fromARGB(0, 76, 119, 175),
+                  child:  Padding(
+                    padding: const EdgeInsets.only(top:0,left:0,bottom:0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                  
+                        FutureBuilder<Uint8List>(
+                                future: generateAvatarAsync(hashString(p.contractAddress!)),  // Make your generateAvatar function return Future<Uint8List>
+                                builder: (context, snapshot) {
+                                  // Future.delayed(Duration(milliseconds: 500));
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return Container(
+                                      width: 20.0,
+                                      height:20.0,
+                                      color: Theme.of(context).canvasColor,
+                                     
+                                    );
+                                  } else if (snapshot.hasData) {
+                                    
+                                    return SizedBox(width: 20,height: 20,  child: Image.memory(snapshot.data!));
+                                    
+                                  } else {
+                                    return Container(
+                                      width: 20.0,
+                                      height: 20.0,
+                                      color: Theme.of(context).canvasColor, 
+                                       // Error color
+                                    );
+                                  }
+                                },
+                              ),
+                        const SizedBox(width: 10),
+                        TextButton(
+                          style: TextButton.styleFrom(
+                              padding: EdgeInsets.zero, // Minimize padding
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap, // Minimize the hit test area
+                            ),
+                          onPressed: (){
+                            Navigator.of(context).pushNamed("/projects/${p.contractAddress}");
+                          },
+                          
+                          child: SizedBox(
+                            
+                            child: Text(
+                             p.name!.length<17?
+                                              p.name!:
+                                              p.name!.substring(0,16)+".."
+                                ,
+                              style: GoogleFonts.dmMono(fontSize: 14,)),
+                          ),
+                        ),
+                        const SizedBox(width: 30),
+                      ],
+                    ),
+                  ),
+                ),
+        const Spacer(),
+        Text(type),
+        const SizedBox(width: 60),
+    ],),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+        List<ActionItem> activity=[];
+    for (TTransaction t in actions){
+      activity.add(ActionItem(action: t, landingPage: false));
+    }
+
+    List<Widget> involvements = [];
+    for (String address in widget.human.projectsArbitrated){involvements.add(involvement( address, "Arbiter"));}
+    for (String address in widget.human.projectsAuthored){involvements.add(involvement( address, "Author"));}
+    for (String address in widget.human.projectsBacked){involvements.add(involvement( address, "Backer"));}
+    for (String address in widget.human.projectsContracted){involvements.add(involvement( address, "Contractor"));}
+    involvements.shuffle(Random());
+    return Padding(
+      padding: const EdgeInsets.only(left:38,top:10),
+      child: ListView(
+        // mainAxisAlignment: MainAxisAlignment.start,
+        // crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+              padding: const EdgeInsets.only(top:8.0,left:45),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FutureBuilder<Uint8List>(
+                      future: generateAvatarAsync(hashString(widget.human.address)),  // Make your generateAvatar function return Future<Uint8List>
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return Container(
+                            width: 40.0,
+                            height: 40.0,
+                            color: Colors.grey,
+                          );
+                        } else if (snapshot.hasData) {
+                          return Image.memory(snapshot.data!);
+                        } else {
+                          return Container(
+                            width: 40.0,
+                            height: 40.0,
+                            color: Colors.red,  // Error color
+                          );
+                        }
+                      },
+                    ),
+                  const SizedBox(width: 10),
+                  Text(widget.human.address, style: const TextStyle(fontSize: 16),),
+                  const SizedBox(width: 10),
+                  TextButton(onPressed: (){}, child: const Icon(Icons.copy))
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: 300,
+              child: Container(
+                width: 300,
+                decoration: BoxDecoration(
+                  
+                  color: Theme.of(context).cardColor,
+                  border: Border.all(width: 0.3)
+                ),
+                padding: const EdgeInsets.all(7),
+                child: Column(
+                  children: [
+                     Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text( Human().chain.nativeSymbol.toString() +" spent: "+widget.human.nativeSpent.toString()),
+                           Text( "USDT spent: "+widget.human.usdtSpent.toString())
+                        ],),
+                    ),
+                      Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text( Human().chain.nativeSymbol.toString() +" earned: "+widget.human.nativeEarned.toString()),
+                          Text( "USDT earned: "+widget.human.usdtEarned.toString())
+                        ],),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+             
+                    const SizedBox(height: 39),
+          SizedBox(
+            // height: MediaQuery.of(context).size.height-400,
+            width: 450,
+          child: DefaultTabController(
+            length: 3, 
+            initialIndex: 0,
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height-400,
+              width: 450,
+              child: Column(
+                children: [
+                  Container(
+                    height: 50,
+                    width: 400,
+                    alignment: Alignment.center,
+                    child: const TabBar(tabs: [Tab(text:"ABOUT"),Tab(text:"INVOLVEMENTS"),Tab(text:"ACTIVITY")]),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height-450,
+                    child: TabBarView(children: [
+                      Column(children: [
+                        const SizedBox(height: 40),
+                        Text("TheGratefulParalized", style:GoogleFonts.lato(
+                          color: Theme.of(context).indicatorColor,
+                          fontSize: 20)),
+                        const SizedBox(height: 10),
+                        OldSchoolLink(
+                            text: 'You can click on thisYou can click on thisYou can click on thisYou can click on thisYou can click on thisYou can click on thisYou can click on thisYou can click on this',
+                            url: 'https://example.com',
+                          ),
+                        const SizedBox(height: 15),
+                        Text("Last seen: ${widget.human.lastActive}", style: const TextStyle(fontSize: 13),),
+                        const SizedBox(height: 40),
+                        const SizedBox(
+                          width: 390,
+                          child:Text("This is the description of the profile which will explain to the world at large what this user is all about in 200 characters or less. Or more. Or exactly 200 characters. I'm not sure what else to say. Tune in for part 3"),
+                        ),
+                      ],),
+                      SizedBox(
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 30),
+                                  Padding(
+                                    padding:  const EdgeInsets.only(left:38.0),
+                                    child: Row(
+                                      children: const [
+                                        SizedBox(width: 50),
+                                        Text("Project"),
+                                        Spacer(),
+                                        Text("Stakeholder Type"),
+                                        SizedBox(width: 50)
+                                      ],
+                                    ),
+                                  ),
+                                  const Divider(),
+                                  ...involvements
+                          ],
+                        ),
+                      ),
+                     ListView(children: activity),
+                    
+                    ]),
+                  )
+                ],
+              ),
+            )
+          ),
+         ),
+       
+          // Text("orice frate, orice")
+              ],)
+           
+    );
+  }
+}
 

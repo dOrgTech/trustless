@@ -13,8 +13,9 @@ String? selectedNewProject="Open to proposals";
 // ignore: must_be_immutable
 class Projects extends StatefulWidget {
   String? selectedStatus = 'All';
-  Projects({super.key, required this.main});
+  Projects({super.key, required this.main, required this.capacity});
   bool main;
+  String capacity;
   String query="";
   @override
   State<Projects> createState() => ProjectsState();
@@ -25,9 +26,9 @@ class ProjectsState extends State<Projects> {
   Widget build(BuildContext context) {
     List<Widget>projectCards=[];
      for (Project p in projects){
-      if (
-        p.name!.toLowerCase().contains(widget.query.toLowerCase())
-      ){
+        if (
+          p.name!.toLowerCase().contains(widget.query.toLowerCase())
+        ){
         if (widget.selectedStatus!="All"){
           if(p.status!.toLowerCase()==widget.selectedStatus!.toLowerCase()){
           projectCards.add(ProjectCard(project:p));   
@@ -45,9 +46,9 @@ class ProjectsState extends State<Projects> {
         style: TextStyle(fontSize: 24, color:Colors.grey),
         )))));
     }
-    // return Text("something");
-    List<Widget> projectsMenu=[
-     Padding(
+        // return Text("something");
+        List<Widget> projectsMenu=[
+        Padding(
                 padding: const EdgeInsets.only(left:5.0),
                 child: SizedBox(
                   width: 
@@ -76,7 +77,13 @@ class ProjectsState extends State<Projects> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("Show "),
+                     Text(
+                      widget.capacity.length<2?
+                      "Showing ":
+                      "Showing my ${widget.capacity} projects in stage ",
+                      style: widget.capacity.length<2? TextStyle():
+                      TextStyle(fontSize: 18),
+                      ),
                             const SizedBox(width: 10),
                               DropdownButton<String>(
                                     value: widget.selectedStatus,
@@ -98,7 +105,9 @@ class ProjectsState extends State<Projects> {
                       padding:  const EdgeInsets.only(right:8.0),
                       child: Row(
                         children:   [
-                          const Text("projects"),
+                           Text(
+                          widget.capacity.length<2?" projects":""),
+                        
                           const SizedBox(width: 60),
             // HoverExpandWidget(projectsState: this),
             widget.main?
@@ -147,7 +156,7 @@ class ProjectsState extends State<Projects> {
                                 ),
                               ],
                             )
-    ];
+         ];
    return  Container(
           alignment: Alignment.topCenter,
           child: ListView( // Start of ListView
@@ -198,9 +207,6 @@ class ProjectsState extends State<Projects> {
                       runSpacing: 14,
                       alignment: WrapAlignment.start,
                       children: [...projectCards,
-                   
-             
-                      
                       ],
                       
                      ),

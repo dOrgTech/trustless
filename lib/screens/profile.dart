@@ -174,8 +174,7 @@ var sc=ScrollController();
                         
                       ],
                     ))),
-             Projects(main:false),
-                    
+             Projects(main:false, capacity: "authored",),
                     Center(
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width*0.7,
@@ -437,7 +436,23 @@ Widget overview(lumina){
                         )),
               ],),
                 SizedBox(height: 60,),
-              Text("ACTIVITY:"),
+             Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Show actions ",style: TextStyle(fontSize: 17),),
+                    SizedBox(width: 10),
+                      DropdownButton(
+                    value: timescale,
+                    onChanged: (value) {
+                      int numar=value as int;
+                      setState(() {timescale=numar;});
+                        },
+                    items: [
+                    DropdownMenuItem(child: Text("taken by me"),value: 1),
+                    DropdownMenuItem(child: Text("on all my involvements"),value: 2),
+                    
+                    ])
+                ]),
                 SizedBox(height: 20,),
           
             Container(

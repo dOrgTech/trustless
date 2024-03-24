@@ -252,7 +252,7 @@ class MyApp extends StatelessWidget {
             } else if (settings.name == '/') {
             builder = (_) => BaseScaffold(botonChat: Human().botonDeChat,selectedItem: 0, body: Landing(), title: "Trustless Business");
           } else if (settings.name == '/projects') {
-            builder = (_) => BaseScaffold(botonChat: Human().botonDeChat,selectedItem: 1, body: Projects(main:true), title: "Projects");
+            builder = (_) => BaseScaffold(botonChat: Human().botonDeChat,selectedItem: 1, body: Projects(main:true, capacity: "",), title: "Projects");
           } else {
             // Handle other routes or unknown routes
             builder = (_) =>  BaseScaffold(botonChat: Human().botonDeChat,

@@ -574,11 +574,11 @@ class ContractFunctions{
   var httpClient = Client(); 
   var ethClient = Web3Client(Human().chain.rpcNode, httpClient);
   final contractSursa =
-        DeployedContract(ContractAbi.fromJson(economyAbi,'Economy'), EthereumAddress.fromHex(sourceAddress!));
+        DeployedContract(ContractAbi.fromJson(economyAbi,'Economy'), EthereumAddress.fromHex(sourceAddress));
   var getRepToken = contractSursa.function('deployedProjects');
   print("intainte de marea functie");
   var counter = await ethClient
-          .call(contract: contractSursa, function: getRepToken, params: [BigInt.from(numberOfProjects!-1)]);
+          .call(contract: contractSursa, function: getRepToken, params: [BigInt.from(numberOfProjects-1)]);
     String rezultat= counter[0].toString();
     print("rezultat"+rezultat);
     print(rezultat.toString()+" "+rezultat.runtimeType.toString());

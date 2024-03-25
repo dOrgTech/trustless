@@ -198,6 +198,8 @@ String chatFunction(String prompt) {
 class MyApp extends StatelessWidget {
   // Create a global variable for the overlay entry
   OverlayEntry? _overlayEntry;
+
+  MyApp({super.key});
   @override
   Widget build(BuildContext context) {
     //   if (ethereum==null){
@@ -222,13 +224,13 @@ class MyApp extends StatelessWidget {
             // ProjectDetails(project: projects[0]);
             // Prelaunch();
             // Poll();  
-             BaseScaffold(
-              botonChat: Human().botonDeChat,
-              selectedItem: 0, body: Profile(), title: "Profile"); 
-            //  BaseScaffold(botonChat: Human().botonDeChat,selectedItem: 0, body: const Users(), title: "Users");
-            //  Human().beta ?  BaseScaffold(
+            //  BaseScaffold(
             //   botonChat: Human().botonDeChat,
-            //   selectedItem: 0, body: Landing(), title: "Trustless Business") : Prelaunch();
+            //   selectedItem: 0, body: Profile(), title: "Profile"); 
+            //  BaseScaffold(botonChat: Human().botonDeChat,selectedItem: 0, body: const Users(), title: "Users");
+             Human().beta ?  BaseScaffold(
+              botonChat: Human().botonDeChat,
+              selectedItem: 0, body: Landing(), title: "Trustless Business") : Prelaunch();
             // BaseScaffold(selectedItem: 1,body: Projects(), title: "Projects");
           } else if (settings.name!.startsWith('/projects/')) {
             final projectId = settings.name!.replaceFirst('/projects/', '');
@@ -296,6 +298,7 @@ class MyApp extends StatelessWidget {
 //   }
 // }
 
+// ignore: must_be_immutable
 class BaseScaffold extends StatefulWidget {
   Widget botonChat;
   final Widget body;
@@ -306,7 +309,7 @@ class BaseScaffold extends StatefulWidget {
   late bool isUsers;
   int selectedItem;
   
-  BaseScaffold({required this.body, required this.title, required this.botonChat,
+  BaseScaffold({super.key, required this.body, required this.title, required this.botonChat,
   required this.selectedItem} ) {
     isTrustless = selectedItem == 0;
     isProjects = selectedItem == 1;

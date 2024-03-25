@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:trustless/entities/human.dart';
+import 'package:trustless/entities/user.dart';
 import 'package:trustless/utils/reusable.dart';
+import 'package:trustless/widgets/action.dart';
 import 'package:trustless/widgets/arbitrate.dart';
 import 'package:trustless/widgets/dispute.dart';
 import 'package:trustless/widgets/footer.dart';
@@ -15,6 +17,7 @@ import 'package:trustless/widgets/sendfunds.dart';
 import 'package:trustless/widgets/setParty.dart';
 import 'package:intl/intl.dart';
 import 'package:trustless/widgets/sign.dart';
+import 'package:trustless/widgets/usercard.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../entities/project.dart';
 import '../main.dart';
@@ -61,6 +64,19 @@ String extractGitHubPath(String? repoUrl) {
   String path = repoUrl.substring(startIndex + 'github.com/'.length);
   return path.isEmpty ? 'default/fallback/path' : path; // Ensure the path is not empty
 }
+
+  Widget profileButton(Widget what){
+    return TextButton(onPressed: (){
+      showDialog(context: context, builder: 
+      (context)=>AlertDialog(
+        content: Container(
+          height: 700,width: 600,
+          padding:EdgeInsets.only(top:20,right:30, bottom:10), child: UserDetails(human: users[0])
+        ,)
+      )
+      );
+    }, child: what);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -252,17 +268,19 @@ String extractGitHubPath(String? repoUrl) {
                                              Text("Author: ", style:  TextStyle(
                                                     color: !(human.address == null) &&  human.address!.toLowerCase()==widget.project.author!.toLowerCase()?
                                                       Theme.of(context).indicatorColor:Theme.of(context).textTheme.displayMedium!.color,)),
-                                           Padding(
-                                               padding: const EdgeInsets.only(top:4.0),
-                                               child: Text(
-                                               widget.project.author!,
-                                                style:  TextStyle(
-                                                  fontSize: 11,
-                                                  color: !(human.address == null) && human.address!.toLowerCase()==widget.project.author!.toLowerCase()?
-                                                      Theme.of(context).indicatorColor:Theme.of(context).textTheme.displayMedium!.color
-                                                  ),
-                                                                                         ),
-                                             ),
+                                          profileButton(
+                                             Padding(
+                                                 padding: const EdgeInsets.only(top:4.0),
+                                                 child: Text(
+                                                 widget.project.author!,
+                                                  style:  TextStyle(
+                                                    fontSize: 11,
+                                                    color: !(human.address == null) && human.address!.toLowerCase()==widget.project.author!.toLowerCase()?
+                                                        Theme.of(context).indicatorColor:Theme.of(context).textTheme.displayMedium!.color
+                                                    ),
+                                                                                           ),
+                                               ),
+                                           ),
                                             const SizedBox(
                                               width: 2,
                                             ),
@@ -285,15 +303,17 @@ String extractGitHubPath(String? repoUrl) {
                                                     color: !(human.address == null) &&  human.address!.toLowerCase()==widget.project.contractor!.toLowerCase()?
                                                       Theme.of(context).indicatorColor:Theme.of(context).textTheme.displayMedium!.color,)),
                                              
-                                             Padding(
-                                               padding: const EdgeInsets.only(top:4.0),
-                                               child: Text(
-                                               widget.project.contractor!,
-                                                style:  TextStyle(
-                                                    color: !(human.address == null) &&  human.address!.toLowerCase()==widget.project.contractor!.toLowerCase()?
-                                                      Theme.of(context).indicatorColor:Theme.of(context).textTheme.displayMedium!.color,
-                                                  fontSize: 11),
-                                                                                         ),
+                                            profileButton(
+                                               Padding(
+                                                 padding: const EdgeInsets.only(top:4.0),
+                                                 child: Text(
+                                                 widget.project.contractor!,
+                                                  style:  TextStyle(
+                                                      color: !(human.address == null) &&  human.address!.toLowerCase()==widget.project.contractor!.toLowerCase()?
+                                                        Theme.of(context).indicatorColor:Theme.of(context).textTheme.displayMedium!.color,
+                                                    fontSize: 11),
+                                                                                           ),
+                                               ),
                                              ),
                                             const SizedBox(
                                               width: 2,
@@ -320,16 +340,18 @@ String extractGitHubPath(String? repoUrl) {
                                                     color: !(human.address == null) &&  human.address!.toLowerCase()==widget.project.arbiter!.toLowerCase()?
                                                       Theme.of(context).indicatorColor:Theme.of(context).textTheme.displayMedium!.color,)),
                                              
-                                            Padding(
-                                               padding: const EdgeInsets.only(top:4.0),
-                                               child: Text(
-                                               widget.project.arbiter!,
-                                                style:  TextStyle(
-                                                    color: !(human.address == null) &&  human.address!.toLowerCase()==widget.project.arbiter!.toLowerCase()?
-                                                      Theme.of(context).indicatorColor:Theme.of(context).textTheme.displayMedium!.color,
-                                                  fontSize: 11),
-                                                                                         ),
-                                             ),
+                                          profileButton(
+                                               Padding(
+                                                 padding: const EdgeInsets.only(top:4.0),
+                                                 child: Text(
+                                                 widget.project.arbiter!,
+                                                  style:  TextStyle(
+                                                      color: !(human.address == null) &&  human.address!.toLowerCase()==widget.project.arbiter!.toLowerCase()?
+                                                        Theme.of(context).indicatorColor:Theme.of(context).textTheme.displayMedium!.color,
+                                                    fontSize: 11),
+                                                                                           ),
+                                               ),
+                                            ),
                                             const SizedBox(
                                               width: 2,
                                             ), widget.project.contractor!.length<3?const SizedBox(width:54):
@@ -502,18 +524,17 @@ String extractGitHubPath(String? repoUrl) {
                            return const Center(child: CircularProgressIndicator());
                           }
                         } ),
-                                          
-                                            Text(
-                                              widget.project.isUSDT?" USDT":" "+ Human().chain.nativeSymbol,
-                                              style: const TextStyle(
-                                                  fontSize: 25,
-                                                  fontWeight: FontWeight.normal),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
+                                  Text(
+                                    widget.project.isUSDT?" USDT":" "+ Human().chain.nativeSymbol,
+                                    style: const TextStyle(
+                                        fontSize: 25,
+                                        fontWeight: FontWeight.normal),
                                   ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 18.0),
                                   child: Row(
@@ -680,54 +701,76 @@ String extractGitHubPath(String? repoUrl) {
                 const SizedBox(height: 40),
                 
 
-                  Container(
-                  decoration: BoxDecoration(
-                    
-                    color:Theme.of(context).brightness==Brightness.light?const Color.fromARGB(255, 223, 223, 223):Colors.black,
-                    border: Border.all(width: 0.5)
-                  ),
-                        padding: const EdgeInsets.all(50),
-                        child: 
-                        
-                        FutureBuilder(
-                          future: http.get(
-                            Uri.https(
-                              'raw.githubusercontent.com',
-                              '${extractGitHubPath(widget.project.repo)}/master/README.md',
-                            ),
-                          ),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState !=
-                                ConnectionState.done) {
-                              return const Align( 
-                                alignment: Alignment.topCenter,
-                                child: Padding(
-                                  padding: EdgeInsets.only(top: 20),
-                                  child: SizedBox(
-                                    width: 120,
-                                    height: 120,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 13,
+                  DefaultTabController(
+                    initialIndex: 0,
+                    length:2,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          width: 300,height: 35,
+                          child: TabBar(tabs: [Tab(text: "README.md"),Tab(text: "Activity"),])),
+                        SizedBox(
+                              height: 700,
+                              width: 1200,
+                          child: TabBarView(
+                            children: [
+                              Container(
+                            
+                              decoration: BoxDecoration(
+                                
+                                color:Theme.of(context).brightness==Brightness.light?const Color.fromARGB(255, 223, 223, 223):Colors.black,
+                                border: Border.all(width: 0.5)
+                              ),
+                                    padding: const EdgeInsets.all(50),
+                                    child: 
+                                    
+                                    FutureBuilder(
+                                      future: http.get(
+                                        Uri.https(
+                                          'raw.githubusercontent.com',
+                                          '${extractGitHubPath(widget.project.repo)}/master/README.md',
+                                        ),
+                                      ),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState !=
+                                            ConnectionState.done) {
+                                          return const Align( 
+                                            alignment: Alignment.topCenter,
+                                            child: Padding(
+                                              padding: EdgeInsets.only(top: 20),
+                                              child: SizedBox(
+                                                width: 120,
+                                                height: 120,
+                                                child: CircularProgressIndicator(
+                                                  strokeWidth: 13,
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        } else {
+                                          return SizedBox(
+                                            height: 700,
+                                            width: 1100,
+                                            child: Markdown(
+                                              styleSheet:
+                                                  getMarkdownStyleSheet(context),
+                                              data: (snapshot.data as http.Response)
+                                                  .body
+                                                  .toString(),
+                                            ),
+                                          );
+                                        }
+                                      },
                                     ),
                                   ),
-                                ),
-                              );
-                            } else {
-                              return SizedBox(
-                                height: 700,
-                                width: 1100,
-                                child: Markdown(
-                                  styleSheet:
-                                      getMarkdownStyleSheet(context),
-                                  data: (snapshot.data as http.Response)
-                                      .body
-                                      .toString(),
-                                ),
-                              );
-                            }
-                          },
+                            ActivityFeed()
+                        
+                            ],
+                          ),
                         ),
-                      ),
+                      ],
+                    ),
+                  ),
                 const SizedBox(height: 30),
                 Footer()
                   ]),

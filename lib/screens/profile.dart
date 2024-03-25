@@ -29,7 +29,7 @@ class _ProfileState extends State<Profile> {
      @override
   void initState() {
    if (widget.done==false){
-      Future.delayed(Duration(milliseconds: 200), () {
+      Future.delayed(const Duration(milliseconds: 200), () {
       setState(() {
         opa0 = 1;
         w1 = 200;
@@ -37,25 +37,25 @@ class _ProfileState extends State<Profile> {
         widget.done=true;
       });
     });
-    Future.delayed(Duration(milliseconds: 400), () {
+    Future.delayed(const Duration(milliseconds: 400), () {
       setState(() {
         w2 = 200;
         h2 = 90;
       });
     });
-    Future.delayed(Duration(milliseconds: 800), () {
+    Future.delayed(const Duration(milliseconds: 800), () {
       setState(() {
         h3 = 124;
         opa2 = 1;
       });
     });
    }
-    Future.delayed(Duration(milliseconds: 1200), () {
+    Future.delayed(const Duration(milliseconds: 1200), () {
       setState(() {
         opa3 = 1;
       });
     });
-    Future.delayed(Duration(milliseconds: 670), () {
+    Future.delayed(const Duration(milliseconds: 670), () {
       setState(() {
         opa1 = 1;
       });
@@ -70,14 +70,14 @@ class _ProfileState extends State<Profile> {
       children: [        
             Text(
               ce,
-              style: TextStyle(fontSize: 17),
+              style: const TextStyle(fontSize: 17),
             ),
-        SizedBox(
+        const SizedBox(
           height: 12,
         ),
         Text(
           cat,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 20,
             fontFamily: "Roboto Mono",
             letterSpacing: 1.3,
@@ -94,28 +94,28 @@ class _ProfileState extends State<Profile> {
       children: [        
             Text(
               ce,
-              style: TextStyle(fontSize: 17),
+              style: const TextStyle(fontSize: 17),
             ),
 
-        SizedBox(
+        const SizedBox(
           height: 5,
         ),
         Text(
           cat,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 20,
             fontFamily: "Roboto Mono",
             letterSpacing: 1.3,
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(  height: 5,),
+        const SizedBox(  height: 5,),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-          Text("from"),
-          SizedBox(width: 5,),
-          TextButton(onPressed: (){}, child: Text("0 projects",style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),)),
+          const Text("from"),
+          const SizedBox(width: 5,),
+          TextButton(onPressed: (){}, child: const Text("0 projects",style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),)),
         ],)
 
       ],
@@ -156,11 +156,11 @@ var sc=ScrollController();
                 // overlayColor:MaterialStateProperty.all(Colors.white),
                 unselectedLabelColor: Theme.of(context).hintColor,
                 tabs: [
-              Tab(text: "OVERVIEW"),
-              Tab(text: "AUTHOR ("+Human().user!.projectsAuthored.length.toString()+")"),
-              Tab(text: "CONTRACTOR ("+Human().user!.projectsContracted.length.toString()+")"),
-              Tab(text: "ARBITER ("+Human().user!.projectsArbitrated.length.toString()+")"),
-              Tab(text: "BACKER ("+Human().user!.projectsBacked.length.toString()+")"),
+             const Tab(text: "OVERVIEW"),
+              Tab(text: "AUTHOR (${Human().user!.projectsAuthored.length})"),
+              Tab(text: "CONTRACTOR (${Human().user!.projectsContracted.length})"),
+              Tab(text: "ARBITER (${Human().user!.projectsArbitrated.length})"),
+              Tab(text: "BACKER (${Human().user!.projectsBacked.length})"),
                ])),
             Container(
               height: MediaQuery.of(context).size.height,
@@ -170,7 +170,7 @@ var sc=ScrollController();
                     Scrollbar(child: SingleChildScrollView(child: Column(
                       children: [
                         overview(lumina),
-                        SizedBox(height:130),
+                        const SizedBox(height:130),
                         
                       ],
                     ))),
@@ -178,7 +178,7 @@ var sc=ScrollController();
                     Center(
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width*0.7,
-                  child:Text("Working on it..."))),
+                  child:const Text("Working on it..."))),
                    
                     ]),
                 
@@ -190,7 +190,6 @@ var sc=ScrollController();
     );
 
 
-    return overview(lumina);
   }
 
 
@@ -201,81 +200,79 @@ Widget overview(lumina){
     }
     return
     Container(
-      constraints: BoxConstraints(maxWidth: 1200),
+      constraints: const BoxConstraints(maxWidth: 1200),
       child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [ 
-              SizedBox(height: 60,),
+              const SizedBox(height: 60,),
               Container(
                 // padding: EdgeInsets.only(left:100),
                 height: 360,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Container(
-                      child: Row(
-                        children: [
-                            Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                    Row(
                       children: [
-                        SizedBox(
-                          height: 50,
-                          child: Center(child: Text("Alias:")),
-                        ),
-                        SizedBox(height: 30),
-                         SizedBox(
-                          height: 50,
-                          child: Center(child: Text("Description:")),
-                        ),
-                        SizedBox(height: 70),
-                          SizedBox(
-                          height: 50,
-                          child: Center(child: Text("External Link:")),
-                        ),
-                      ],
-                    ),
-                    SizedBox(width: 20),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: 300,
-                          height: 50,
-                          child: TextField(
-                            maxLines: 1,
-                            decoration: InputDecoration(
-                              hintText: "Set an Alias"
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 30),
-                        SizedBox(
-                          width: 450,
-                          height: 120,
-                          child: TextField(
-                            maxLines: 3,
-                            maxLength: 200,
-                            decoration: InputDecoration(
-                              hintText: "Brief profile description"
-                            ),
-                          ),
-                        ),
-                          
-                            SizedBox(
-                          width: 450,
-                          height: 50,
-                          child: TextField(
-                            maxLines: 1,
-                            decoration: InputDecoration(
-                              hintText: "https://link-to-additional-context..."
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                        ],
+                          Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children:const [
+                       SizedBox(
+                        height: 50,
+                        child: Center(child: Text("Alias:")),
                       ),
+                     SizedBox(height: 30),
+                       SizedBox(
+                        height: 50,
+                        child: Center(child: Text("Description:")),
+                      ),
+                      SizedBox(height: 70),
+                        SizedBox(
+                        height: 50,
+                        child: Center(child: Text("External Link:")),
+                      ),
+                    ],
+                    ),
+                    const SizedBox(width: 20),
+                    Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                       SizedBox(
+                        width: 300,
+                        height: 50,
+                        child: TextField(
+                          maxLines: 1,
+                          decoration: InputDecoration(
+                            hintText: "Set an Alias"
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 30),
+                      SizedBox(
+                        width: 450,
+                        height: 120,
+                        child: TextField(
+                          maxLines: 3,
+                          maxLength: 200,
+                          decoration: InputDecoration(
+                            hintText: "Brief profile description"
+                          ),
+                        ),
+                      ),
+                        
+                          SizedBox(
+                        width: 450,
+                        height: 50,
+                        child: TextField(
+                          maxLines: 1,
+                          decoration: InputDecoration(
+                            hintText: "https://link-to-additional-context..."
+                          ),
+                        ),
+                      ),
+                    ],
+                    ),
+                      ],
                     ),
                     ElevatedButton(
                       style: ButtonStyle(
@@ -311,20 +308,20 @@ Widget overview(lumina){
                 runSpacing: 40,
                 children: [
                   AnimatedContainer(
-                        duration: Duration(milliseconds: 400),
+                        duration: const Duration(milliseconds: 400),
                         decoration: BoxDecoration(
                             border: Border.all(
                                 color: Theme.of(context).backgroundColor,
                                 width: 0.9),
                             color: lumina
-                                ? Color(0x54c9c9c9)
-                                : Color(0x432000000),
-                            borderRadius: BorderRadius.all(Radius.circular(20))),
+                                ? const Color(0x54c9c9c9)
+                                : const Color(0x432000000),
+                            borderRadius: const BorderRadius.all(Radius.circular(20))),
                         height: h1,
                         width: 200,
                         child: AnimatedOpacity(
                           opacity: opa1,
-                          duration: Duration(milliseconds: 800),
+                          duration: const Duration(milliseconds: 800),
                           child: Center(
                               child: balance(
                                   "${Human().chain.nativeSymbol} Earned",
@@ -332,20 +329,20 @@ Widget overview(lumina){
                                   )),
                         )),  
                   AnimatedContainer(
-                        duration: Duration(milliseconds: 400),
+                        duration: const Duration(milliseconds: 400),
                         decoration: BoxDecoration(
                             border: Border.all(
                                 color: Theme.of(context).backgroundColor,
                                 width: 0.9),
                             color: lumina
-                                ? Color(0x54c9c9c9)
-                                : Color(0x432000000),
-                            borderRadius: BorderRadius.all(Radius.circular(20))),
+                                ? const Color(0x54c9c9c9)
+                                : const Color(0x432000000),
+                            borderRadius: const BorderRadius.all(Radius.circular(20))),
                         height: h1,
                         width: 200,
                         child: AnimatedOpacity(
                           opacity: opa1,
-                          duration: Duration(milliseconds: 800),
+                          duration: const Duration(milliseconds: 800),
                           child: Center(
                               child: balance(
                                   "USDT Earmed",
@@ -353,20 +350,20 @@ Widget overview(lumina){
                                   )),
                         )), 
                         AnimatedContainer(
-                        duration: Duration(milliseconds: 400),
+                        duration: const Duration(milliseconds: 400),
                         decoration: BoxDecoration(
                             border: Border.all(
                                 color: Theme.of(context).backgroundColor,
                                 width: 0.9),
                             color: lumina
-                                ? Color(0x54c9c9c9)
-                                : Color(0x432000000),
-                            borderRadius: BorderRadius.all(Radius.circular(20))),
+                                ? const Color(0x54c9c9c9)
+                                : const Color(0x432000000),
+                            borderRadius: const BorderRadius.all(Radius.circular(20))),
                         height: h1,
                         width: 200,
                         child: AnimatedOpacity(
                           opacity: opa1,
-                          duration: Duration(milliseconds: 800),
+                          duration: const Duration(milliseconds: 800),
                           child: Center(
                               child: balance(
                                   "${Human().chain.nativeSymbol} Spent",
@@ -374,20 +371,20 @@ Widget overview(lumina){
                                   )),
                         )),  
                   AnimatedContainer(
-                        duration: Duration(milliseconds: 400),
+                        duration: const Duration(milliseconds: 400),
                         decoration: BoxDecoration(
                             border: Border.all(
                                 color: Theme.of(context).backgroundColor,
                                 width: 0.9),
                             color: lumina
-                                ? Color(0x54c9c9c9)
-                                : Color(0x432000000),
-                            borderRadius: BorderRadius.all(Radius.circular(20))),
+                                ? const Color(0x54c9c9c9)
+                                : const Color(0x432000000),
+                            borderRadius: const BorderRadius.all(Radius.circular(20))),
                         height: h1,
                         width: 200,
                         child: AnimatedOpacity(
                           opacity: opa1,
-                          duration: Duration(milliseconds: 800),
+                          duration: const Duration(milliseconds: 800),
                           child: Center(
                               child: balance(
                                   "USDT Spent",
@@ -395,52 +392,52 @@ Widget overview(lumina){
                                   )),
                         )),   
                       AnimatedContainer(
-                        duration: Duration(milliseconds: 400),
+                        duration: const Duration(milliseconds: 400),
                         decoration: BoxDecoration(
                             border: Border.all(
                                 color: Theme.of(context).backgroundColor,
                                 width: 0.9),
                             color: lumina
-                                ?Color(0x54c9c9c9)
-                                : Color(0x432000000),
+                                ?const Color(0x54c9c9c9)
+                                : const Color(0x432000000),
                                 // Color(0x542e2d2d),
-                            borderRadius: BorderRadius.all(Radius.circular(20))),
+                            borderRadius: const BorderRadius.all(Radius.circular(20))),
                         height: h3,
                         width: 200,
                         child: AnimatedOpacity(
                           opacity: opa2,
-                          duration: Duration(milliseconds: 800),
+                          duration: const Duration(milliseconds: 800),
                           child: Center(
                             child: unclaimed(
                               "Unclaimed ${Human().chain.nativeSymbol}", "0.00")),
                         )),
                          AnimatedContainer(
-                        duration: Duration(milliseconds: 400),
+                        duration: const Duration(milliseconds: 400),
                         decoration: BoxDecoration(
                             border: Border.all(
                                 color: Theme.of(context).backgroundColor,
                                 width: 0.9),
                             color: lumina
-                                ?Color(0x54c9c9c9)
-                                : Color(0x432000000),
+                                ?const Color(0x54c9c9c9)
+                                : const Color(0x432000000),
                                 // Color(0x542e2d2d),
-                            borderRadius: BorderRadius.all(Radius.circular(20))),
+                            borderRadius: const BorderRadius.all(Radius.circular(20))),
                         height: h3,
                         width: 200,
                         child: AnimatedOpacity(
                           opacity: opa2,
-                          duration: Duration(milliseconds: 800),
+                          duration: const Duration(milliseconds: 800),
                           child: Center(
                             child: unclaimed(
                               "Unclaimed USDT", "0.00")),
                         )),
               ],),
-                SizedBox(height: 60,),
+               const SizedBox(height: 60,),
              Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Show actions ",style: TextStyle(fontSize: 17),),
-                    SizedBox(width: 10),
+                    const Text("Show actions ",style: TextStyle(fontSize: 17),),
+                    const SizedBox(width: 10),
                       DropdownButton(
                     value: timescale,
                     onChanged: (value) {
@@ -448,17 +445,17 @@ Widget overview(lumina){
                       setState(() {timescale=numar;});
                         },
                     items: [
-                    DropdownMenuItem(child: Text("taken by me"),value: 1),
-                    DropdownMenuItem(child: Text("on all my involvements"),value: 2),
+                    const DropdownMenuItem(child: Text("taken by me"),value: 1),
+                    const DropdownMenuItem(child: Text("on all my involvements"),value: 2),
                     
                     ])
                 ]),
-                SizedBox(height: 20,),
+                const SizedBox(height: 20,),
           
             Container(
               height: 600,
               width:700,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Color(0x23000000),
               ),
               
@@ -466,7 +463,7 @@ Widget overview(lumina){
             child: ListView(children: activity)
             ),
               
-          SizedBox(height: 20,),
+          const SizedBox(height: 20,),
 //             Center(
 //               child: Wrap(
 //                 spacing: 20,

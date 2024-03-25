@@ -81,8 +81,8 @@ class ProjectsState extends State<Projects> {
                       widget.capacity.length<2?
                       "Showing ":
                       "Showing my ${widget.capacity} projects in stage ",
-                      style: widget.capacity.length<2? TextStyle():
-                      TextStyle(fontSize: 18),
+                      style: widget.capacity.length<2? const TextStyle():
+                      const TextStyle(fontSize: 18),
                       ),
                             const SizedBox(width: 10),
                               DropdownButton<String>(

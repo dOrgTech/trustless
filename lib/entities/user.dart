@@ -116,9 +116,9 @@ class _UserDetailsState extends State<UserDetails> {
 
       children: [
       const  SizedBox(width: 60),
-          Container(
+          SizedBox(
                  height: 40,
-                  color: const Color.fromARGB(0, 76, 119, 175),
+                 
                   child:  Padding(
                     padding: const EdgeInsets.only(top:0,left:0,bottom:0),
                     child: Row(

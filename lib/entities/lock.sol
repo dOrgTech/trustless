@@ -19,7 +19,6 @@ contract Economy {
     address arbiter, 
     string memory termsHash,
     string memory repo
-    // Make sure to pass the arbitration fee as an argument if it's not a fixed value in the Economy contract
     ) public payable {
     NativeProject newProject;
     if (contractor != address(0) && arbiter != address(0)) {
@@ -38,7 +37,6 @@ contract Economy {
         deployedProjects.push(address(newProject));
         isProjectContract[address(newProject)] = true;
     }
-
     function updateEarnings(address user, uint amount) external {
         require(isProjectContract[msg.sender], "Only authorized Project contracts can call this function.");
         earned[user] += amount;
@@ -48,13 +46,13 @@ contract Economy {
         require(isProjectContract[msg.sender], "Only authorized Project contracts can call this function.");
         spent[user] += amount;
     }
-
 }
 
 
 contract NativeProject {
     // state variables
     Economy public economy;
+    uint public coolingOffPeriodEnds;
     string public name;
     address public author;
     address public contractor;
@@ -123,12 +121,12 @@ contract NativeProject {
         {
         require(msg.value >= arbitrationFee / 2, "Must stake half of the arbitration fee.");
         }
+        coolingOffPeriodEnds = block.timestamp + 2 minutes;
         contractor=_contractor;
         arbiter=_arbiter;
         termsHash=_termsHash;
         stage="pending";
     }
-
 
     function sendFunds() public payable {
         require(keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("open")) ||
@@ -218,6 +216,7 @@ contract NativeProject {
         require(msg.sender == contractor, "Only the designated contractor can sign the contract");
         // Check if the project is in the "pending" stage
         require(keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("pending")), "The project can only be signed while in `pending` stage.");
+        require(block.timestamp > coolingOffPeriodEnds, "Contract signing is blocked during the cooling-off period.");
         // Update the stage to "ongoing"
         require(msg.value >= arbitrationFee / 2, "Must stake half the arbitration fee to sign the contract.");
         require(projectValue > 0, "Can't sign a contract with no funds in it.");

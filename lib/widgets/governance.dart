@@ -283,7 +283,7 @@ class _BuyATNState extends State<BuyATN> with TickerProviderStateMixin {
                                       Icon(Icons.edit, color:  Theme.of(context).canvasColor,),
                                       SizedBox(width: 7),
                                       Text(
-                                        "Create a Project",
+                                        "Create Project",
                                         style: TextStyle(
                                           color:  Theme.of(context).canvasColor,
                                             ),

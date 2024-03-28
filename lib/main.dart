@@ -148,8 +148,6 @@ var usersCollection;
     p.contributions.forEach((key, value) { valueInContracts+=value;});
     p.rulingHash=doc.data()['rulingHash'];
   }
-  Human().signIn();
-
 
   // if (projects.length>0) {await createUsers();}
   //   print("greater than zero adding MockTransactions");
@@ -202,13 +200,13 @@ class MyApp extends StatelessWidget {
   MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    //   if (ethereum==null){
-    //    print("n-are metamask");
-    //     Human().metamask=false;
-    // }else{
-    //   print("are metamask");
-    //     Human().metamask=true;
-    // }
+      if (ethereum==null){
+       print("n-are metamask");
+        Human().metamask=false;
+    }else{
+      print("are metamask");
+        Human().metamask=true;
+    }
     return  MaterialApp(
       navigatorObservers: [OverlayControlNavigatorObserver()],
               themeMode: ThemeMode.system,
@@ -650,7 +648,6 @@ class _WalletBTNState extends State<WalletBTN> {
     }
 
     return TextButton(
-      
       onPressed: () async {
         if (!human.metamask) {
           showDialog(
@@ -662,7 +659,7 @@ class _WalletBTNState extends State<WalletBTN> {
                   padding: const EdgeInsets.all(30),
                   child: Column(
                     children: [
-                      const Text("You need the Metamask wallet to sign into the app.",style: TextStyle(fontFamily: "Roboto Mono", fontSize: 16),),
+                      const Text("You need the a web3 wallet to sign into the app.",style: TextStyle(fontFamily: "Roboto Mono", fontSize: 16),),
                       const SizedBox(height: 10,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,

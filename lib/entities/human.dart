@@ -23,7 +23,7 @@ var chains={
 
 class Human extends ChangeNotifier{
   bool busy=false;
-  bool beta=false;
+  bool beta=true;
   bool wrongChain=false;
   int chainID=5;
   String? address;
@@ -88,25 +88,25 @@ class Human extends ChangeNotifier{
 
   signIn()async{    
    try {
-      // var accounts = await promiseToFuture(
-      //   ethereum!.request(
-      //     RequestParams(method: 'eth_requestAccounts'),
-      //   ),
-      // );
-      // address = ethereum?.selectedAddress.toString();
-      // var chainaidi = ethereum?.chainId;
-      // if (!chains.keys.contains(chainaidi)){
-      //     print("schimbam la nimic");
-      //     wrongChain=true;
-      //     chain=Chain(id: 0, name: 'N/A', nativeSymbol: '', decimals: 0, rpcNode: '');
-      //     notifyListeners();
-      //     return "nogo";
-      //   }else{
-      //     wrongChain=false;
-      //     chain=chains[chainaidi]!;
-      //     }
-      // web3user = Web3Provider(ethereum!);
-      address="0xa9F8F9C0bf3188cEDdb9684ae28655187552bAE9";
+      var accounts = await promiseToFuture(
+        ethereum!.request(
+          RequestParams(method: 'eth_requestAccounts'),
+        ),
+      );
+      address = ethereum?.selectedAddress.toString();
+      var chainaidi = ethereum?.chainId;
+      if (!chains.keys.contains(chainaidi)){
+          print("schimbam la nimic");
+          wrongChain=true;
+          chain=Chain(id: 0, name: 'N/A', nativeSymbol: '', decimals: 0, rpcNode: '');
+          notifyListeners();
+          return "nogo";
+        }else{
+          wrongChain=false;
+          chain=chains[chainaidi]!;
+          }
+      web3user = Web3Provider(ethereum!);
+      // address="0xa9F8F9C0bf3188cEDdb9684ae28655187552bAE9";
       for (User u in users){
         if (u.address.toLowerCase()==address!.toLowerCase()){
           user=u;

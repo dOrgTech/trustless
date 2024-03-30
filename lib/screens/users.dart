@@ -31,7 +31,7 @@ class _UsersState extends State<Users> {
   }
   
   }
-    int _selectedCardIndex = 0;
+    int _selectedCardIndex = -1;
 
 
   @override

@@ -23,7 +23,7 @@ var chains={
 
 class Human extends ChangeNotifier{
   bool busy=false;
-  bool beta=true;
+  bool beta=false;
   bool wrongChain=false;
   int chainID=5;
   String? address;

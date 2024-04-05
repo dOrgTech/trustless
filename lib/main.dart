@@ -65,9 +65,7 @@ int totalUSDTpaid=0;
 // String selectedNetwork='Etherlink Testnet';
 ContractFunctions cf=ContractFunctions();
 var prelaunchCollection = FirebaseFirestore.instance.collection('prelaunch');
-var projectsGoerli = FirebaseFirestore.instance.collection('projectsGoerli');
-var transactionsGoerli = FirebaseFirestore.instance.collection('transactionsGoerli');
-var usersGoerli = FirebaseFirestore.instance.collection('usersGoerli');
+
 // var prelaunchCollection = FirebaseFirestore.instance.collection('prelaunch');
 // var voteCollection = FirebaseFirestore.instance.collection('vote');
 var statsCollection = FirebaseFirestore.instance.collection('stats');
@@ -149,16 +147,18 @@ var usersCollection;
     p.rulingHash=doc.data()['rulingHash'];
   }
 
-  // if (projects.length>0) {await createUsers();}
-  //   print("greater than zero adding MockTransactions");
-  //   var punem= actions.length;
-  //   if (punem < mockTansactions.length){
-  //     for (int i=0; i< mockTansactions.length - punem; i++){
-  //       actions.add(mockTansactions[i]);
-  //     }
-  // }
+  if (projects.length>0) {await createUsers();}
+    print("greater than zero adding MockTransactions");
+    var punem= actions.length;
+    if (punem < mockTansactions.length){
+      for (int i=0; i< mockTansactions.length - punem; i++){
+        actions.add(mockTansactions[i]);
+      }
+  }
 
-  // actions.sort((a, b) => b.time.compareTo(a.time));
+  
+
+  actions.sort((a, b) => b.time.compareTo(a.time));
 
 
   await cf.getProjectsCounter();
@@ -295,8 +295,8 @@ class MyApp extends StatelessWidget {
 //     notifyListeners();
 //   }
 // }
-
 // ignore: must_be_immutable
+
 class BaseScaffold extends StatefulWidget {
   Widget botonChat;
   final Widget body;
@@ -321,7 +321,6 @@ class BaseScaffold extends StatefulWidget {
 
 
 class _BaseScaffoldState extends State<BaseScaffold> {
-
   Color blendColors(Color color1, Color color2, double amount) {
   amount = amount.clamp(0.0, 1.0);
   return Color.lerp(color1, color2, amount)!;
@@ -597,7 +596,6 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                   }}
               
               foundChain ??= Chain(id: 0, name: 'N/A', nativeSymbol: '', decimals: 0, rpcNode: '');
-            
                setState(() {
                  human.chain=foundChain!;
                });

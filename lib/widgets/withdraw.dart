@@ -2,6 +2,7 @@
 
 import 'dart:isolate';
 import 'dart:html' as html;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/services.dart';  // Import this for TextInputFormatter
@@ -43,14 +44,14 @@ class WithdrawState extends State<Withdraw> {
             return stage0();
         }
   }
+
   @override
   Widget build(BuildContext context) {
-   
     return main();
   }
 
- Widget stage0(){
-  return   Container(
+  Widget stage0(){
+  return  Container(
       width: 650,
       height:650,
           padding: const EdgeInsets.symmetric(horizontal: 60),
@@ -61,7 +62,6 @@ class WithdrawState extends State<Withdraw> {
             ),
           ),
           // width: MediaQuery.of(context).size.width*0.7,
-          
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -133,6 +133,7 @@ class WithdrawState extends State<Withdraw> {
                             print("found it");
                             widget.project.contributions[key] = 0; // Update the value to 0
                             projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
+                            
                             break; // Exit the loop
                           }
                         }
@@ -150,7 +151,6 @@ class WithdrawState extends State<Withdraw> {
     );
  }
 }
-
 
 
 class WidthdrawAsContractor extends StatefulWidget {
@@ -268,7 +268,13 @@ class _WidthdrawAsContractorState extends State<WidthdrawAsContractor>{
                               return;
                           }
                         projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
-                        
+                        try{
+                        Human().user!.nativeEarned+=widget.project.contributions[Human().address]!;
+                        }catch (Exception) 
+                        {if (kDebugMode) {
+                          print("helo");
+                        }}
+                        usersCollection.doc(Human().address).set(Human().user!.toJson());
                         // ignore: use_build_context_synchronously
                         Navigator.of(context).pushNamed("/projects/${widget.project.contractAddress}");
                       },

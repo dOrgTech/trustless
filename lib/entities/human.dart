@@ -16,14 +16,14 @@ import '../main.dart';
 
 
 var chains={
-//  "0x5": Chain(id:5, name: "Goerli", nativeSymbol: "XTZ", decimals:0, rpcNode: "https://goerli.infura.io/v3/1081d644fc4144b587a4f762846ceede"),
- "0xaa36a7": Chain(id:11155111, name: "Sepolia", nativeSymbol: "WEI", decimals:18, rpcNode: "https://sepolia.infura.io/v3/1081d644fc4144b587a4f762846ceede"),
-//  "0x1f47b": Chain(id:128123, name: "Etherlink-Testnet", nativeSymbol: "XTZ", decimals:18, rpcNode: "https://node.ghostnet.etherlink.com", ),
+ "0x5": Chain(id:5, name: "Goerli", nativeSymbol: "XTZ", decimals:0, rpcNode: "https://goerli.infura.io/v3/1081d644fc4144b587a4f762846ceede"),
+ "0xaa36a7": Chain(id:11155111, name: "Sepolia", nativeSymbol: "WEI", decimals:0, rpcNode: "https://sepolia.infura.io/v3/1081d644fc4144b587a4f762846ceede"),
+ "0x1f47b": Chain(id:128123, name: "Etherlink-Testnet", nativeSymbol: "XTZ", decimals:0, rpcNode: "https://node.ghostnet.etherlink.com", ),
 };
 
 class Human extends ChangeNotifier{
   bool busy=false;
-  bool beta=false;
+  bool beta=true;
   bool wrongChain=false;
   int chainID=5;
   String? address;
@@ -59,6 +59,7 @@ class Human extends ChangeNotifier{
         } else {
           // Handle account change
           address = ethereum!.selectedAddress.toString();
+          getUser();
           print("Account changed: $address");
         }
         notifyListeners(); // Notify listeners about the change
@@ -107,30 +108,37 @@ class Human extends ChangeNotifier{
           }
       web3user = Web3Provider(ethereum!);
       // address="0xa9F8F9C0bf3188cEDdb9684ae28655187552bAE9";
-      for (User u in users){
-        if (u.address.toLowerCase()==address!.toLowerCase()){
-          user=u;
-        }else{
-          print("this is a new user");
-          user = User(
-          lastActive: DateTime.now(), 
-          address: address!, 
-          nativeEarned: 0, 
-          usdtEarned: 0, 
-          usdtSpent: 0,
-          nativeSpent: 0,
-          projectsContracted: [],
-          projectsArbitrated: [],
-          projectsBacked:[],
-          projectsAuthored: []);
-          }
-      }
+      getUser();
       notifyListeners(); // Notify listeners that signIn was successful
       return "ok";
     } catch (e) {
       print(e);
       return "nogo";
     }
+  }
+  getUser(){
+    print("getting user");
+     User us3r;
+     for (User u in users){
+        if (u.address.toLowerCase()==address!.toLowerCase()){
+          print("found user");
+          user=u;
+          return;
+        }}
+        print("this is a new user");
+        user = User(
+        lastActive: DateTime.now(), 
+        address: address!, 
+        nativeEarned: 0, 
+        usdtEarned: 0, 
+        usdtSpent: 0,
+        nativeSpent: 0,
+        projectsContracted: [],
+        projectsArbitrated: [],
+        projectsBacked:[],
+        projectsAuthored: []);
+        
+      
   }
 }
 

@@ -14,7 +14,9 @@ import '../entities/project.dart';
 import '../entities/user.dart';
 import '../main.dart';
 import '../utils/reusable.dart';
+
 Map<String, TextStyle> actionStyles = {
+  "reclaimFee": GoogleFonts.robotoMono(fontSize: 14),
   "createProject": GoogleFonts.spaceMono(fontSize: 14, ),
   "sign": GoogleFonts.spaceMono(fontSize: 14, ),
   "setParties": GoogleFonts.spaceMono(fontSize: 14,fontWeight:FontWeight.w500),
@@ -26,7 +28,9 @@ Map<String, TextStyle> actionStyles = {
   "arbitrate": GoogleFonts.b612Mono(fontWeight: FontWeight.w400),
   "reimburse": GoogleFonts.b612Mono(fontWeight: FontWeight.w400),
 };
+
 Map<String, Icon> actionIcons = {
+  "reclaimFee": Icon(Icons.create_new_folder,size: 13,),
   "createProject": Icon(Icons.create_new_folder,size: 13,),
   "sign": Icon(Icons.edit_document,size: 13,),
   "setParties": Icon(Icons.group_add,size: 13),
@@ -39,7 +43,6 @@ Map<String, Icon> actionIcons = {
   "reimburse": Icon(Icons.refresh,size: 13),
 };
 
-
 Map<String, Color> actionColors = {
   "createProject": Colors.blue,
   "sign": Colors.blue,
@@ -51,7 +54,9 @@ Map<String, Color> actionColors = {
   "dispute": Colors.amber,
   "arbitrate": Colors.teal,
   "reimburse": Color.fromARGB(255, 161, 63, 181),
+  "reclaimFee": Color.fromARGB(255, 161, 63, 181),
 };
+
 class ActionItem extends StatefulWidget {
   TTransaction action;
   bool landingPage;
@@ -63,7 +68,6 @@ class ActionItem extends StatefulWidget {
   State<ActionItem> createState() => _ActionItemState();
 }
 
-
 class _ActionItemState extends State<ActionItem> {
   @override
   void initState() {
@@ -71,9 +75,12 @@ class _ActionItemState extends State<ActionItem> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
+   User? u = users.firstWhere(
+    (user) => user.address.toLowerCase() == widget.action.sender.toString().toLowerCase(),
+    orElse: () => User.fromNew(widget.action.sender.toString()), // a new one of it's not found
+  );
      if (widget.opa==0.0){
     //   Future.delayed(Duration(milliseconds: 0)).then((value) {
     //   setState(() {
@@ -109,47 +116,58 @@ class _ActionItemState extends State<ActionItem> {
              Container(
                   width: 160,height: 40,
                   color: Color.fromARGB(0, 76, 175, 79),
-                  child:  Padding(
-                    padding: const EdgeInsets.only(top:8.0,left:0,bottom:8),
-                    child: Row(
-                      children: [
-                        FutureBuilder<Uint8List>(
-                            future: generateAvatarAsync(hashString(widget.action.sender!)),  // Make your generateAvatar function return Future<Uint8List>
-                            builder: (context, snapshot) {
-                              // Future.delayed(Duration(milliseconds: 500));
-                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                return Container(
-                                  width: 20.0,
-                                  height:20.0,
-                                  color: Theme.of(context).canvasColor,
-                                );
-                              } else if (snapshot.hasData) {
-                                return SizedBox(width: 20,height: 20,  child: Image.memory(snapshot.data!));
-                                
-                              } else {
-                                return Container(
-                                  width: 20.0,
-                                  height: 20.0,
-                                  color: Theme.of(context).canvasColor,  // Error color
-                                );
-                              }
-                            },
-                          ),
-                        const SizedBox(width: 5),
-                        Text(
-                          shortenString(widget.action.sender),
-                          style:const TextStyle(fontSize: 12)),
-                        const SizedBox(width: 3),
-                        SizedBox(
-                          width: 25,
-                          child: TextButton(onPressed: (){
-                            copied(context, widget.action.sender);
-                          }, child: Icon(Icons.copy, size: 17)),
-                        )
-                      ],
+                  child:  TextButton(
+                    onPressed: (){
+                       showDialog(context: context, builder: 
+                          (context)=>AlertDialog(
+                            content: Container(
+                              height: 700,width: 600,
+                              padding:EdgeInsets.only(top:20,right:30, bottom:10),
+                               child: UserDetails(human: u)
+                            ,)
+                          )
+                          );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(top:8.0,left:0,bottom:8),
+                      child: Row(
+                        children: [
+                          FutureBuilder<Uint8List>(
+                              future: generateAvatarAsync(hashString(widget.action.sender!)),  // Make your generateAvatar function return Future<Uint8List>
+                              builder: (context, snapshot) {
+                                // Future.delayed(Duration(milliseconds: 500));
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return Container(
+                                    width: 20.0,
+                                    height:20.0,
+                                    color: Theme.of(context).canvasColor,
+                                  );
+                                } else if (snapshot.hasData) {
+                                  return SizedBox(width: 20,height: 20,  child: Image.memory(snapshot.data!));
+                                } else {
+                                  return Container(
+                                    width: 20.0,
+                                    height: 20.0,
+                                    color: Theme.of(context).canvasColor,  // Error color
+                                  );
+                                }
+                              },
+                            ),
+                          const SizedBox(width: 5),
+                          Text(
+                            shortenString(widget.action.sender),
+                            style:const TextStyle(fontSize: 12)),
+                          const SizedBox(width: 3),
+                          // SizedBox(
+                          //   width: 25,
+                          //   child: TextButton(onPressed: (){
+                          //     copied(context, widget.action.sender);
+                          //   }, child: Icon(Icons.copy, size: 17)),
+                          // )
+                        ],
+                      ),
                     ),
                   ),
-
                 ):SizedBox(),
       widget.landingPage?
       Spacer():SizedBox(),

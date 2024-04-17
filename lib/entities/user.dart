@@ -8,13 +8,14 @@ import 'package:trustless/main.dart';
 import 'package:trustless/utils/reusable.dart';
 import 'package:trustless/widgets/usercard.dart';
 import '../widgets/action.dart';
+import '../widgets/projectDetails.dart';
 import 'human.dart';
 
 String workingHash ="0x71436760615bde646197979c0be8a86c1c6179cd17ae7492355e76ff79949bbc";
 
 class User{
   
-  User({required this.lastActive,  required this.address,required this.nativeEarned,
+  User({this.about,this.link, this.name, required this.lastActive,  required this.address,required this.nativeEarned,
   required this.usdtEarned,required this.usdtSpent,required this.nativeSpent,required this.projectsContracted,
   required this.projectsArbitrated,required this.projectsBacked, 
   required this.projectsAuthored});
@@ -25,6 +26,8 @@ class User{
   int nativeSpent;
   int usdtSpent;
   String? name;
+  String? link;
+  String? about;
   List<String>projectsContracted;
   List<String>projectsArbitrated;
   List<String>projectsAuthored;
@@ -36,21 +39,40 @@ class User{
 
   Map<String, dynamic> toJson() => {
         'nativeEarned': nativeEarned,
+        'link':link,
         'usdtEarned': usdtEarned,
         'nativeSpent': nativeSpent,
         'usdtSpent': usdtSpent,
         'name': name,
+        'about':about,
         'projectsContracted': projectsContracted,
         'projectsArbitrated': projectsArbitrated,
         'projectsAuthored': projectsAuthored,
         'projectsBacked': projectsBacked,
         'lastActive': lastActive,
       };
+  factory User.fromNew(String address){
+
+
+    User u= User(lastActive: DateTime.now(), address: address, 
+    nativeEarned: 0, 
+    usdtEarned: 0,
+    usdtSpent: 0,
+    link:"",
+    name:"(no alies set)",
+    about:null,
+    nativeSpent: 0,
+    projectsContracted: [],
+    projectsArbitrated: [], 
+    projectsBacked: [],
+    projectsAuthored: [],);
+    
+    return u;
+  }
   }
 
 
-
-List<String>possibleActions=["createProject", "setParties","sendFunds","sign","withdraw","voteToRelease","voteToDispute","arbitrate","reimburse"];
+List<String>possibleActions=["reclaimFee","createProject", "setParties","sendFunds","sign","withdraw","voteToRelease","voteToDispute","arbitrate","reimburse"];
 
 class TTransaction{
   TTransaction({
@@ -227,9 +249,11 @@ class _UserDetailsState extends State<UserDetails> {
                       },
                     ),
                   const SizedBox(width: 10),
-                  Text(widget.human.address, style: const TextStyle(fontSize: 16),),
+                  Text(widget.human.address, style: const TextStyle(fontSize: 13),),
                   const SizedBox(width: 10),
-                  TextButton(onPressed: (){}, child: const Icon(Icons.copy))
+                  TextButton(onPressed: (){
+                    copied(context, widget.human.address);
+                  }, child: const Icon(Icons.copy))
                 ],
               ),
             ),
@@ -285,29 +309,44 @@ class _UserDetailsState extends State<UserDetails> {
                     height: 50,
                     width: 400,
                     alignment: Alignment.center,
-                    child: const TabBar(tabs: [Tab(text:"ABOUT"),Tab(text:"INVOLVEMENTS"),Tab(text:"ACTIVITY")]),
+                    child:  TabBar(
+                      labelColor: Theme.of(context).textTheme.bodyLarge!.color,
+                      tabs: [Tab(text:"ABOUT"),Tab(text:"INVOLVEMENTS"),Tab(text:"ACTIVITY")]),
                   ),
                   SizedBox(
                     height: MediaQuery.of(context).size.height-450,
                     child: TabBarView(children: [
                       Column(children: [
                         const SizedBox(height: 40),
-                        Text("TheGratefulParalized", style:GoogleFonts.lato(
+                        Text(widget.human.name??"(no alias set)", style:GoogleFonts.lato(
                           color: Theme.of(context).indicatorColor,
                           fontSize: 20)),
                         const SizedBox(height: 10),
+                       
                         OldSchoolLink(
-                            text: 'You can click on thisYou can click on thisYou can click on thisYou can click on thisYou can click on thisYou can click on thisYou can click on thisYou can click on this',
-                            url: 'https://example.com',
+                            text: widget.human.link ?? "no link",
+                            url: widget.human.link ?? "no link",
                           ),
                         const SizedBox(height: 15),
                         Text("Last seen: ${widget.human.lastActive}", style: const TextStyle(fontSize: 13),),
                         const SizedBox(height: 40),
-                        const SizedBox(
+                        !(widget.human.about==null)?
+                         SizedBox(
                           width: 390,
-                          child:Text("This is the description of the profile which will explain to the world at large what this user is all about in 200 characters or less. Or more. Or exactly 200 characters. I'm not sure what else to say. Tune in for part 3"),
+                          child:Text(widget.human.about!),
+                        ):SizedBox(
+                          width: 390,
+                          height: MediaQuery.of(context).size.height/2 - 300,
+                          child:Center(child: 
+                          Opacity(
+                            opacity: 0.3,
+                            child: Text("No description provided",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize:24),
+                            ),
+                          )),
                         ),
-                      ],),
+                      ],),  
                       SizedBox(
                         child: Column(
                           children: [

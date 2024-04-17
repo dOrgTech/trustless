@@ -80,7 +80,7 @@ var usersCollection;
       usersCollection=FirebaseFirestore.instance.collection("users${Human().chain.name}");      
       var statsSnapshot = await statsCollection.doc(Human().chain.name).get();
       if (statsSnapshot.exists) {
-          sourceAddress=statsSnapshot.data()!['sourceAddress'];
+        sourceAddress=statsSnapshot.data()!['sourceAddress'];
       } else {
         sourceAddress="source_address_not_available_at_the_moment";
       }
@@ -89,10 +89,11 @@ var usersCollection;
       var transactionsSnapshot = await transactionsCollection.get();
       var usersSnapshot = await usersCollection.get();
       for (var doc in usersSnapshot.docs){
-        List<dynamic> contractor= doc.data()['contractor'];
-        List<dynamic> arbiter= doc.data()['arbiter'];
-        List<dynamic> author= doc.data()['author'];
-        List<dynamic> backer= doc.data()['backer'];
+        print("adding a user");
+        List<dynamic> contractor= doc.data()['projectsContracted'];
+        List<dynamic> arbiter= doc.data()['projectsArbitrated'];
+        List<dynamic> author= doc.data()['projectsAuthored'];
+        List<dynamic> backer= doc.data()['projectsBacked'];
         users.add(
           User(address: doc.id.toString(), nativeEarned: doc.data()['nativeEarned'],
           nativeSpent: doc.data()['nativeSpent'],
@@ -101,7 +102,10 @@ var usersCollection;
           lastActive: (doc.data()['lastActive'] as Timestamp).toDate(),
           projectsContracted: List<String>.from(contractor), 
           projectsArbitrated:  List<String>.from(arbiter),  
-          projectsBacked:  List<String>.from(backer),  
+          projectsBacked:  List<String>.from(backer),
+          name:doc.data()['name'],
+          link:doc.data()['link'],
+          about:doc.data()['about'],
           projectsAuthored:  List<String>.from(author)
           )
         );
@@ -147,14 +151,14 @@ var usersCollection;
     p.rulingHash=doc.data()['rulingHash'];
   }
 
-  if (projects.length>0) {await createUsers();}
-    print("greater than zero adding MockTransactions");
-    var punem= actions.length;
-    if (punem < mockTansactions.length){
-      for (int i=0; i< mockTansactions.length - punem; i++){
-        actions.add(mockTansactions[i]);
-      }
-  }
+  // if (projects.length>0) {await createUsers();}
+  //   print("greater than zero adding MockTransactions");
+  //   var punem= actions.length;
+  //   if (punem < mockTansactions.length){
+  //     for (int i=0; i< mockTansactions.length - punem; i++){
+  //       actions.add(mockTansactions[i]);
+  //     }
+  // }
 
   
 

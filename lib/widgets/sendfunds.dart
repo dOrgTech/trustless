@@ -12,6 +12,8 @@ import '../entities/project.dart';
 import '../entities/token.dart';
 import 'dart:math';
 
+import '../entities/user.dart';
+
 const String escape = '\uE00C';
 
 class SendFunds extends StatefulWidget {
@@ -181,6 +183,7 @@ Widget stage0(){
                                 widget.project.contributions[Human().address!] = int.parse(amount);
                               }
                          projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
+                         
                          Navigator.of(context).pushNamed("/projects/${widget.project.contractAddress}");
 
                         },

@@ -15,20 +15,20 @@ import '../entities/project.dart';
 import '../entities/token.dart';
 const String escape = '\uE00C';
 
-class Sign extends StatefulWidget {
+class ReclaimFee extends StatefulWidget {
 bool loading=false;
 bool done=false;
 bool error=false;
 Project project;
 String stage="main";
 // ignore: use_key_in_widget_constructors
-Sign({required this.project}) ;
+ReclaimFee({required this.project}) ;
 
   @override
-  SignState createState() => SignState();
+  ReclaimFeeState createState() => ReclaimFeeState();
 }
 int pmttoken=0;
-class SignState extends State<Sign> {
+class ReclaimFeeState extends State<ReclaimFee> {
 
   Widget main(){
       switch (widget.stage) {
@@ -49,13 +49,16 @@ class SignState extends State<Sign> {
 
  Widget stage0(){
  return 
-    ! (Human().address!.toLowerCase()==widget.project.contractor!.toLowerCase()) ? 
+     
+   (! (Human().address!.toLowerCase()==widget.project.contractor!.toLowerCase()) && 
+   ! (Human().address!.toLowerCase()==widget.project.author!.toLowerCase()) 
+    )?
     Container(
       height: 190,
       child:Column(
         children: [
           SizedBox(height: 40),
-          Text("You are not signed in as the designated Contractor."),
+          Text("The unused arbitration fee can be only reclaimed by the Author or the Contractor of the project. "),
           SizedBox(height: 40),
           ElevatedButton(onPressed: ()=> Navigator.of(context).pop(), child: Text("Got it.",style: TextStyle(color:Theme.of(context).canvasColor),))
         ],
@@ -79,12 +82,12 @@ class SignState extends State<Sign> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-          const  Text("Sign Contract",
+          const  Text("Reclaim Arbitration Fee",
             textAlign: TextAlign.center,
              style: TextStyle(fontSize: 19), 
               ),
             SizedBox(width: 380,
-            child:Text("Please ensure that you have reviewed and agree to the Project Terms as well as with the Author's choice of Arbiter. \n\nUpon taking this action, the funds held by this contract will be locked until one of the parties releases them to the other or a dispute is settled."
+            child:Text("Since the project was closed without a dispute, the arbiter need not be paid and the parties can claim back their half of the arbitration fee. "
             ,style: TextStyle(color: Theme.of(context).indicatorColor),
             )
             ),
@@ -132,21 +135,20 @@ class SignState extends State<Sign> {
                       ),
                       onPressed: ()async{
                         setState(() {widget.stage="waiting";});
-                          print("Signing contract");
-                          String cevine = await cf.sign(widget.project);
+                          print("ReclaimFeeing contract");
+                          String cevine = await cf.reclaimFee(widget.project);
                            print("dupa cevine");
                              if (cevine.contains("nu merge")){
                               print("nu merge din setParty");
                               setState(() { widget.stage="error";});
                               return;
                             }
-                        widget.project.status="ongoing";
+                        // widget.project.status="ongoing";
                         await projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
                         Human().user!.projectsContracted.add(widget.project.contractAddress!);
                         await usersCollection.doc(Human().address).set(Human().user!.toJson());
                         User u;
                         if (!users.any((user) => user.address == Human().address)){users.add(Human().user!);}
-                
                         if (!users.any((user) => user.address == widget.project.arbiter)){
                             u = User.fromNew(widget.project.arbiter!);
                             u.projectsArbitrated.add(widget.project.contractAddress!);

@@ -11,6 +11,7 @@ import 'package:trustless/widgets/dispute.dart';
 import 'package:trustless/widgets/footer.dart';
 import 'package:trustless/widgets/projectCard.dart';
 import 'package:trustless/widgets/proposalDetails.dart';
+import 'package:trustless/widgets/reclaimFee.dart';
 import 'package:trustless/widgets/reimburse.dart';
 import 'package:trustless/widgets/release.dart';
 import 'package:trustless/widgets/sendfunds.dart';
@@ -102,6 +103,7 @@ String extractGitHubPath(String? repoUrl) {
     List<Widget> closedProjectFunctions = [
       functionItem("Withdraw as Backer", "Backers", Withdraw(project: widget.project)),
       functionItem("Withdraw as Contractor", "Contractor", WidthdrawAsContractor(project: widget.project)),
+      functionItem("Reclaim Arbitration Fee", "Contractor and/or Author", ReclaimFee(project: widget.project)),
     ];
 
     List<Widget> pendingProjectFunctions = [
@@ -456,7 +458,6 @@ String extractGitHubPath(String? repoUrl) {
                     ),
                     const SizedBox(height:  20),
                     Container(
-                      
                       alignment: Alignment.topCenter,
                       width: double.infinity,
                       constraints: const BoxConstraints(
@@ -708,7 +709,9 @@ String extractGitHubPath(String? repoUrl) {
                       children: [
                         SizedBox(
                           width: 300,height: 35,
-                          child: TabBar(tabs: [Tab(text: "README.md"),Tab(text: "Activity"),])),
+                          child: TabBar(
+                             labelColor: Theme.of(context).textTheme.bodyLarge!.color,
+                            tabs: [Tab(text: "README.md"),Tab(text: "Activity"),])),
                         SizedBox(
                               height: 700,
                               width: 1200,

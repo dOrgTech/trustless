@@ -13,6 +13,7 @@ import 'package:trustless/utils/transitions.dart';
 import 'package:trustless/widgets/waiting.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../entities/project.dart';
+import '../entities/user.dart';
 import '../screens/projects.dart';
 import 'dart:convert';
 import 'dart:typed_data';
@@ -187,20 +188,20 @@ class _NewGenericProjectState extends State<NewGenericProject> {
              Row(children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                const Text("Currency:"),
-                const SizedBox(height: 8),
-                const Text("author (you):"),
-                const SizedBox(height: 8),
-                const Text("Project Repository:"),
-                const SizedBox(height: 8),
-                const Text("Terms File:"),
-                const SizedBox(height: 8),
-                const Text("Terms Hash:"),
-                const SizedBox(height: 8),
-                const Text("Contractor:"),
-                const SizedBox(height: 8),
-                const Text("Arbiter:"),
+              children: const [
+                Text("Currency:"),
+                SizedBox(height: 8),
+                Text("author (you):"),
+                SizedBox(height: 8),
+                Text("Project Repository:"),
+                SizedBox(height: 8),
+                Text("Terms File:"),
+                SizedBox(height: 8),
+                Text("Terms Hash:"),
+                SizedBox(height: 8),
+                Text("Contractor:"),
+                SizedBox(height: 8),
+                Text("Arbiter:"),
             ],),
          const SizedBox(width: 20),
             Column(
@@ -218,7 +219,7 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                 const SizedBox(height: 8),
                 Text(widget.project.contractor!.length<3?"N/A":widget.project.contractor!, style: const TextStyle( backgroundColor: Colors.black,color: Colors.white),),
                 const SizedBox(height: 8),
-                Text(widget.project.arbiter!.length<3?"N/A":widget.project.arbiter!, style: const TextStyle( backgroundColor: Colors.black,color: Colors.white),),
+                Text(widget.project.  arbiter!.length<3?"N/A":widget.project.arbiter!, style: const TextStyle( backgroundColor: Colors.black,color: Colors.white),),
             ],)
           ],),
           const SizedBox(height: 45), 
@@ -285,18 +286,29 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                       setState(() {
                         widget.stage=6;
                       });
-                      var address= await cf.createProject(widget.project, widget.projectsState);
+                      var address = await cf.createProject(widget.project, widget.projectsState);
+                      print("addresa care vine inapoin ${address}");
+                      if (address.contains("not ok")){
+                        print("suntem pe not ok in generic proj");
+                        Navigator.of(context).pop();
+                      }else{
                       print("deployed contract with address "+address);
-                      widget.project.contractAddress=address;
-                      await projectsCollection.doc(widget.project.contractAddress)
-                      .set(widget.project.toJson());
-                      // await Future.delayed(const Duration(seconds: 13));
-                      setState(() {
-                        widget.projectsState.setState(() {
-                          projects.add(widget.project);
+                        widget.project.contractAddress=address;
+                        await projectsCollection.doc(widget.project.contractAddress)
+                        .set(widget.project.toJson());
+                        print("before adding the user");
+                        Human().user!.projectsAuthored.add(widget.project.contractAddress!);
+                        await usersCollection.doc(Human().address).set(Human().user!.toJson());
+                        setState(() {
+                          if (!users.any((user) => user.address == Human().address)){
+                            users.add(Human().user!);
+                          }
+                          widget.projectsState.setState(() {
+                            projects.add(widget.project);
+                          });
                         });
-                      });
-                      Navigator.of(context).pushNamed("/projects/$address");
+                       Navigator.of(context).pushNamed("/projects/$address");
+                      }
                   },
                   child:  const Center(
                     child: Text(

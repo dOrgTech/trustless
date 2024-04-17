@@ -2,6 +2,7 @@ List<String> sourceAbiString=[
   'function createProject (string,address,address,string,string) payable',
 ];
 
+
 List<String> nativeProjectAbiString=[
   'function setParties (address, address, string) payable',
   'function sendFunds () payable',
@@ -13,8 +14,9 @@ List<String> nativeProjectAbiString=[
   'function arbitrate(uint256, string)',
   'function withdrawAsContributor ()',
   'function reclaimArbitrationFee ()',
-  'function withdrawAsContractor ()'
+  'function withdrawAsContractor ()',
 ];
+
 
 List<String> projectAbiString=[
   'function voteOnProject (bool)',

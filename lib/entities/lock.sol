@@ -151,7 +151,7 @@ contract NativeProject {
         require(sent, "Failed to send Ether to contractor.");
         emit ContractorPaid(contractor);
     }
-
+    
     function updateContributorSpendings()public{
         require(
             keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("closed")),

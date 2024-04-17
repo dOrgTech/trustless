@@ -68,7 +68,7 @@ class ReleaseState extends State<Release> {
               ),
             SizedBox(width: 380,
             child:Text("You are voting to release the payment to the Contractor."+
-            "\n\nYour vote is weighted by the amount that you contributed to the Project's funding. The funds will be released once 7 0% of the total voting power is calling this function."
+            "\n\nYour vote is weighted by the amount that you contributed to the Project's funding. The funds will be released once 70% of the total voting power is calling this function."
             ,style: TextStyle(color: Theme.of(context).indicatorColor),
             )
             ),

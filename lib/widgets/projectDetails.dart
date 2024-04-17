@@ -26,7 +26,6 @@ import '../widgets/withdraw.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:http/http.dart' as http;
 
-
 class ProjectDetails extends StatefulWidget {
   ProjectDetails({super.key, required this.project});
   Project project;
@@ -66,13 +65,14 @@ String extractGitHubPath(String? repoUrl) {
   return path.isEmpty ? 'default/fallback/path' : path; // Ensure the path is not empty
 }
 
-  Widget profileButton(Widget what){
+  Widget profileButton(Widget what, User user){
     return TextButton(onPressed: (){
       showDialog(context: context, builder: 
       (context)=>AlertDialog(
         content: Container(
           height: 700,width: 600,
-          padding:EdgeInsets.only(top:20,right:30, bottom:10), child: UserDetails(human: users[0])
+          padding:EdgeInsets.only(top:20,right:30, bottom:10), child: 
+          UserDetails(human: user)
         ,)
       )
       );
@@ -92,7 +92,7 @@ String extractGitHubPath(String? repoUrl) {
     List<Widget> ongoingProjectFunctions = [
       functionItem("Dispute Project", "Contractor or Backers", Dispute(project: widget.project)),
       functionItem("Release Funds to Contractor", "Backers", Release(project: widget.project)),
-      functionItem("Reinburse Backers", "Contractor", Reimburse(project: widget.project)),
+      functionItem("Reinburse Backers", "Contractor`", Reimburse(project: widget.project)),
     ];
 
     List<Widget> disputedProjectFunctions = [
@@ -281,7 +281,7 @@ String extractGitHubPath(String? repoUrl) {
                                                         Theme.of(context).indicatorColor:Theme.of(context).textTheme.displayMedium!.color
                                                     ),
                                                                                            ),
-                                               ),
+                                               ), users.firstWhere((user) => user.address==widget.project.author),
                                            ),
                                             const SizedBox(
                                               width: 2,
@@ -315,7 +315,7 @@ String extractGitHubPath(String? repoUrl) {
                                                         Theme.of(context).indicatorColor:Theme.of(context).textTheme.displayMedium!.color,
                                                     fontSize: 11),
                                                                                            ),
-                                               ),
+                                               ),users.firstWhere((user) => user.address==widget.project.contractor),
                                              ),
                                             const SizedBox(
                                               width: 2,
@@ -352,7 +352,7 @@ String extractGitHubPath(String? repoUrl) {
                                                         Theme.of(context).indicatorColor:Theme.of(context).textTheme.displayMedium!.color,
                                                     fontSize: 11),
                                                                                            ),
-                                               ),
+                                               ),users.firstWhere((user) => user.address.toLowerCase()==widget.project.arbiter!.toLowerCase()),
                                             ),
                                             const SizedBox(
                                               width: 2,

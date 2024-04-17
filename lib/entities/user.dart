@@ -210,7 +210,6 @@ class _UserDetailsState extends State<UserDetails> {
     for (TTransaction t in actions){
       activity.add(ActionItem(action: t, landingPage: false));
     }
-
     List<Widget> involvements = [];
     for (String address in widget.human.projectsArbitrated){involvements.add(involvement( address, "Arbiter"));}
     for (String address in widget.human.projectsAuthored){involvements.add(involvement( address, "Author"));}
@@ -263,7 +262,6 @@ class _UserDetailsState extends State<UserDetails> {
               child: Container(
                 width: 300,
                 decoration: BoxDecoration(
-                  
                   color: Theme.of(context).cardColor,
                   border: Border.all(width: 0.3)
                 ),
@@ -292,8 +290,7 @@ class _UserDetailsState extends State<UserDetails> {
                 ),
               ),
             ),
-             
-                    const SizedBox(height: 39),
+          const SizedBox(height: 39),
           SizedBox(
             // height: MediaQuery.of(context).size.height-400,
             width: 450,
@@ -322,7 +319,6 @@ class _UserDetailsState extends State<UserDetails> {
                           color: Theme.of(context).indicatorColor,
                           fontSize: 20)),
                         const SizedBox(height: 10),
-                       
                         OldSchoolLink(
                             text: widget.human.link ?? "no link",
                             url: widget.human.link ?? "no link",
@@ -337,7 +333,7 @@ class _UserDetailsState extends State<UserDetails> {
                         ):SizedBox(
                           width: 390,
                           height: MediaQuery.of(context).size.height/2 - 300,
-                          child:Center(child: 
+                          child: const Center(child: 
                           Opacity(
                             opacity: 0.3,
                             child: Text("No description provided",

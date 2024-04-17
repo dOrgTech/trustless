@@ -6,8 +6,11 @@ contract Economy {
     address[] public deployedProjects;
     mapping(address => bool) public isProjectContract;
     uint public arbitrationFee=200;
-    mapping (address => uint) public earned;
-    mapping (address => uint) public spent;
+    mapping (address => uint) public nativeEarned;
+    mapping (address => uint) public nativeSpent;
+    mapping (address => uint) public usdtEarned;
+    mapping (address => uint) public usdtSpent;
+
     // Function to deploy a new Project contract
     function getNumberOfProjects() public view returns (uint) {
         return deployedProjects.length;
@@ -37,14 +40,14 @@ contract Economy {
         deployedProjects.push(address(newProject));
         isProjectContract[address(newProject)] = true;
     }
-    function updateEarnings(address user, uint amount) external {
+    function updateNativeEarnings(address user, uint amount, bool native) external {
         require(isProjectContract[msg.sender], "Only authorized Project contracts can call this function.");
-        earned[user] += amount;
+        if (native){nativeEarned[user] += amount;}else{usdtEarned[user] += amount;}
     }
 
-    function updateSpendings(address user, uint amount) external {
+    function updateNativeSpendings(address user, uint amount,bool native) external {
         require(isProjectContract[msg.sender], "Only authorized Project contracts can call this function.");
-        spent[user] += amount;
+         if (native){nativeSpent[user] += amount;}else{usdtSpent[user] += amount;}
     }
 }
 
@@ -137,7 +140,6 @@ contract NativeProject {
     }
 
     event ContractorPaid(address contractor);
-
     function withdrawAsContractor() public {
         require(
             keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("closed")),
@@ -147,18 +149,20 @@ contract NativeProject {
         uint256 amountToWithdraw = availableToContractor;
         availableToContractor = 0; // Prevent re-entrancy by zeroing before transfer
         (bool sent, ) = payable(contractor).call{value: amountToWithdraw}("");
-        economy.updateEarnings(contractor, amountToWithdraw);
+        economy.updateNativeEarnings(contractor, amountToWithdraw,false);
         require(sent, "Failed to send Ether to contractor.");
         emit ContractorPaid(contractor);
     }
-    
+
     function updateContributorSpendings()public{
         require(
             keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("closed")),
-            "Stats for the contributor can be updated once the project is closed.");
+            "Stats can be updated once the project is closed.");
         uint expenditure=contributors[msg.sender];
+        if (expenditure>0){
         contributors[msg.sender]=0;
-        economy.updateSpendings(msg.sender,expenditure);
+        economy.updateNativeSpendings(msg.sender,expenditure,false);
+        }
     }
 
     function reclaimArbitrationFee()public{
@@ -189,20 +193,19 @@ contract NativeProject {
             keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("pending"))||
             keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("closed")) ,
          "Withdrawals only allowed when the project is open, pending or closed.");
-        if ( keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("closed")))
-        {
-        require(availableToContributors>0,"There are no funds available to contributors.");
-        }
-
         uint256 contributorAmount = contributors[msg.sender];
-        require(contributorAmount > 0, "No contributions to withdraw.");      
         uint256 exitAmount;
         if (disputeResolution>0){
             exitAmount = (contributorAmount * availableToContributors) / projectValue;
             uint expenditure=contributorAmount-exitAmount;
-            economy.updateSpendings(msg.sender,expenditure);
+            economy.updateNativeSpendings(msg.sender,expenditure,false);
         }else{
             exitAmount = contributorAmount;
+        }
+        if (availableToContributors==0){
+            economy.updateNativeSpendings(msg.sender,contributorAmount,false);
+            contributors[msg.sender] = 0; // Prevent re-entrancy
+            return;
         }
         availableToContributors=availableToContributors-exitAmount;
         contributors[msg.sender] = 0; // Prevent re-entrancy
@@ -293,7 +296,7 @@ contract NativeProject {
         payable(arbiter).transfer(arbitrationFee);
         arbitrationFeePaidOut = true;
         stage = "closed";
-        economy.updateEarnings(arbiter, arbitrationFee);
+        economy.updateNativeEarnings(arbiter, arbitrationFee,false);
         emit ProjectClosed(msg.sender);
     }
 }

@@ -24,8 +24,21 @@ class Projects extends StatefulWidget {
 class ProjectsState extends State<Projects> {
   @override
   Widget build(BuildContext context) {
+    List<Project> projectsToShow =[];
     List<Widget>projectCards=[];
-     for (Project p in projects){
+    if (widget.main==false){
+      projectsToShow = projects.where((p) {
+      return projects.any((project) =>
+      widget.capacity=="contracted"? p.contractor!.toLowerCase() == Human().address!.toLowerCase()
+        : widget.capacity=="authored"? p.author!.toLowerCase() == Human().address!.toLowerCase()
+       
+       : widget.capacity=="arbitrated"? p.arbiter!.toLowerCase() == Human().address!.toLowerCase()
+       : p.contributions.keys.contains(Human().address)
+          );
+      }).toList();
+    }
+    List<Project> items = widget.main? projects : projectsToShow;
+     for (Project p in items){
         if (
           p.name!.toLowerCase().contains(widget.query.toLowerCase())
         ){
@@ -39,6 +52,7 @@ class ProjectsState extends State<Projects> {
         }
       }
     }
+
     if (projectCards.isEmpty){
       projectCards.add(const Center(child:SizedBox(
         height: 300,

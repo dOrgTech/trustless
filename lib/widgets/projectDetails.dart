@@ -916,8 +916,6 @@ class BackersList extends StatelessWidget {
             ],),
             const SizedBox(height: 10),
             ...rows,
-          
-            
             ]
         ),
       ),

@@ -27,9 +27,7 @@ class SendFunds extends StatefulWidget {
   @override
   SendFundsState createState() => SendFundsState();
 }
-
 int pmttoken = 0;
-
 class SendFundsState extends State<SendFunds> {
   String? selectedToken;
   String? selectedAddress;
@@ -46,10 +44,10 @@ class SendFundsState extends State<SendFunds> {
             return SizedBox( height:500, child: WaitingOnChain());
           case 2:
             return SomethingWentWrong(project:widget.project);
-          default:       
+          default:
             return stage0();
         }
-        }
+      }
    if (widget.project.isUSDT){token="USDC";}
     return   MediaQuery(
   data: MediaQuery.of(context).copyWith(textScaleFactor: 
@@ -183,7 +181,12 @@ Widget stage0(){
                                 widget.project.contributions[Human().address!] = int.parse(amount);
                               }
                          projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
-                         
+
+                         if (!Human().user!.projectsBacked.contains(widget.project.contractAddress)) {
+                                Human().user!.projectsBacked.add(widget.project.contractAddress!);
+                          usersCollection.doc(Human().address).set(Human().user!.toJson());
+                          }
+
                          Navigator.of(context).pushNamed("/projects/${widget.project.contractAddress}");
 
                         },
@@ -203,8 +206,6 @@ Widget stage0(){
             ),
            const  SizedBox(height: 30),
               ],),
-            
         );
 }
-
 }

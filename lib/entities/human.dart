@@ -107,7 +107,7 @@ class Human extends ChangeNotifier{
           chain=chains[chainaidi]!;
           }
       web3user = Web3Provider(ethereum!);
-      // address="0xa9F8F9C0bf3188cEDdb9684ae28655187552bAE9";
+      // address="0xa9f8f9c0bf3188ceddb9684ae28655187552bae9";
       getUser();
       notifyListeners(); // Notify listeners that signIn was successful
       return "ok";

@@ -166,6 +166,7 @@ var usersCollection;
 
 
   await cf.getProjectsCounter();
+  // await Human().signIn();
   print("we have this many projects: "+numberOfProjects.toString());
   runApp(
     ChangeNotifierProvider<Human>(

@@ -12,22 +12,36 @@ import "../widgets/action.dart";
 class Profile extends StatefulWidget {
    Profile({super.key});
    bool done=false;
+   bool madeInvolvements=false;
+   List<Widget> involvements=[];
+   String oldAbout=Human().user!.about??"";
+   String oldlink=Human().user!.link??"";
+   String oldAlias=Human().user!.name??"";
+   bool valuesChanged=false;
+   TextEditingController aliasControlla = TextEditingController();
+   TextEditingController aboutControlla = TextEditingController();
+   TextEditingController linkControlla = TextEditingController();
+
   @override
   State<Profile> createState() => _ProfileState();
 }
-  double opa0 = 0;
+    double opa0 = 0;
     double opa1 = 0;
     double opa2 = 0;
     double opa3 = 0;
     double h1 = 0;
     double w1 = 20;
     double h2 = 0;
+    double h5 = 0;
     double w2 = 20;
     double h3 = 0;
     double w3 = 20;
 class _ProfileState extends State<Profile> {
      @override
   void initState() {
+    widget.aliasControlla.text=Human().user!.name??"";
+    widget.aboutControlla.text=Human().user!.about??"";
+    widget.linkControlla.text=Human().user!.link??"";
    if (widget.done==false){
       Future.delayed(const Duration(milliseconds: 200), () {
       setState(() {
@@ -47,6 +61,7 @@ class _ProfileState extends State<Profile> {
       setState(() {
         h3 = 124;
         opa2 = 1;
+        h5=50;
       });
     });
    }
@@ -88,19 +103,11 @@ class _ProfileState extends State<Profile> {
     );
   }
     Widget unclaimed(ce, cat) {
-    return Column(
+    return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [        
-            Text(
-              ce,
-              style: const TextStyle(fontSize: 17),
-            ),
-
-        const SizedBox(
-          height: 5,
-        ),
-        Text(
+      children: [   
+         Text(
           cat,
           style: const TextStyle(
             fontSize: 20,
@@ -109,7 +116,17 @@ class _ProfileState extends State<Profile> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(  height: 5,),
+        SizedBox(width: 10),     
+            Text(
+              ce,
+              style: const TextStyle(fontSize: 17),
+            ),
+
+        const SizedBox(
+          height: 5,
+        ),
+       
+        const SizedBox(  width:10,),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -140,7 +157,7 @@ var sc=ScrollController();
         //  height: MediaQuery.of(context).size.height,
           child: DefaultTabController(
           initialIndex: 0,
-          length: 3, 
+          length: 5, 
           child: SizedBox(
             width: MediaQuery.of(context).size.width,
             child: Column(
@@ -171,33 +188,51 @@ var sc=ScrollController();
                       children: [
                         overview(lumina),
                         const SizedBox(height:130),
-                        
                       ],
                     ))),
              Projects(main:false, capacity: "authored",),
-                    Center(
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width*0.7,
-                  child:const Text("Working on it..."))),
-                   
+             Projects(main:false, capacity: "contracted",),
+             Projects(main:false, capacity: "arbitrated",),
+             Projects(main:false, capacity: "backed",),
                     ]),
-                
               ),
               Footer(),
               ],),
           )),
-      
     );
-
-
   }
+
+List<Widget> allInvolvements(){ 
+if (!widget.madeInvolvements){
+  List<TTransaction> filteredTransactions = actions.where((transaction) {
+      return projects.any((project) =>
+          project.author == Human().address ||
+          project.contractor == Human().address ||
+          project.arbiter == Human().address ||
+          project.contributions.keys.contains(Human().address));
+    }).toList();
+  for (TTransaction t in filteredTransactions){
+    widget.involvements.add(ActionItem(action: t, landingPage: true));
+  }
+  widget.madeInvolvements=true;
+  }
+
+return widget.involvements;
+
+}
 
 
 Widget overview(lumina){
    List<ActionItem> activity=[];
     for (TTransaction t in actions){
-      activity.add(ActionItem(action: t, landingPage: false));
+      if (t.sender==Human().address){
+      activity.add(ActionItem(action: t, landingPage: true));
+      }
     }
+    List<Widget> showing;
+    if (timescale==1){
+      showing=activity;
+    }else{showing=allInvolvements();}
     return
     Container(
       constraints: const BoxConstraints(maxWidth: 1200),
@@ -221,12 +256,12 @@ Widget overview(lumina){
                         height: 50,
                         child: Center(child: Text("Alias:")),
                       ),
-                     SizedBox(height: 30),
+                     SizedBox(height: 40),
                        SizedBox(
                         height: 50,
                         child: Center(child: Text("Description:")),
                       ),
-                      SizedBox(height: 70),
+                      SizedBox(height: 120),
                         SizedBox(
                         height: 50,
                         child: Center(child: Text("External Link:")),
@@ -236,35 +271,60 @@ Widget overview(lumina){
                     const SizedBox(width: 20),
                     Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children:  [
                        SizedBox(
                         width: 300,
-                        height: 50,
+                        height: 90,
                         child: TextField(
+                          controller: widget.aliasControlla,
                           maxLines: 1,
+                          maxLength: 25,
+                          onChanged: (value) {
+                           if (!(value==widget.oldAlias)){
+                              setState(() {
+                                widget.valuesChanged=true;
+                              });
+                           }
+                          },
                           decoration: InputDecoration(
                             hintText: "Set an Alias"
                           ),
                         ),
                       ),
-                      SizedBox(height: 30),
+                      SizedBox(height: 10),
                       SizedBox(
                         width: 450,
-                        height: 120,
+                        height: 160,
                         child: TextField(
-                          maxLines: 3,
-                          maxLength: 200,
+                         controller: widget.aboutControlla,
+                          maxLines: 5,
+                          maxLength: 500,
+                          onChanged: (value) {
+                           if (!(value==widget.oldAbout)){
+                             setState(() {
+                                widget.valuesChanged=true;
+                              });
+                           }
+                          },
                           decoration: InputDecoration(
                             hintText: "Brief profile description"
                           ),
                         ),
                       ),
-                        
                           SizedBox(
                         width: 450,
-                        height: 50,
+                        height: 80,
                         child: TextField(
+                           controller: widget.linkControlla,
                           maxLines: 1,
+                          maxLength: 150,
+                          onChanged: (value) {
+                           if (!(value==widget.oldlink)){
+                              setState(() {
+                                widget.valuesChanged=true;
+                              });
+                           }
+                          },
                           decoration: InputDecoration(
                             hintText: "https://link-to-additional-context..."
                           ),
@@ -285,9 +345,30 @@ Widget overview(lumina){
       // we return the default foreground color for the ElevatedButton theme.
       // This approach assumes the theme's default aligns with your desired disabled state appearance.
       return ElevatedButtonTheme.of(context).style?.foregroundColor?.resolve({}) ?? Colors.white;
-    }),
+     }),
                       ),
-                      onPressed: (){}, child: 
+                      onPressed: widget.valuesChanged?()async{
+                        Human().user!.about=widget.aboutControlla.text;
+                        Human().user!.link=widget.linkControlla.text;
+                        Human().user!.name=widget.aliasControlla.text;
+                        await usersCollection.doc(Human().address).set(Human().user!.toJson());
+                        setState(() {
+                          widget.valuesChanged=false;
+                        });
+                    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        // The content of the SnackBar.
+        content: Center(
+            child: Text(
+          'Settings saved',
+          style: TextStyle(fontSize: 15),
+        )),
+        // The duration of the SnackBar.
+        duration: Duration(seconds: 2),
+      ),
+    );
+                      }: null
+                      , child: 
                     SizedBox(
                       height: 80,
                       width: 90,
@@ -303,6 +384,7 @@ Widget overview(lumina){
                   ],
                 ),
               ),
+              SizedBox(height: 30),
               Wrap(
                 spacing: 57,
                 runSpacing: 40,
@@ -370,7 +452,7 @@ Widget overview(lumina){
                                  Human().user!.nativeSpent.toString()
                                   )),
                         )),  
-                  AnimatedContainer(
+                   AnimatedContainer(
                         duration: const Duration(milliseconds: 400),
                         decoration: BoxDecoration(
                             border: Border.all(
@@ -390,8 +472,14 @@ Widget overview(lumina){
                                   "USDT Spent",
                                  Human().user!.usdtSpent.toString()
                                   )),
-                        )),   
-                      AnimatedContainer(
+                        )),  
+                         ],),
+                         const SizedBox( height: 30),
+                         Wrap(
+                          spacing: 30,
+                          runSpacing: 20,
+                          children: [
+                        AnimatedContainer(
                         duration: const Duration(milliseconds: 400),
                         decoration: BoxDecoration(
                             border: Border.all(
@@ -401,9 +489,9 @@ Widget overview(lumina){
                                 ?const Color(0x54c9c9c9)
                                 : const Color(0x432000000),
                                 // Color(0x542e2d2d),
-                            borderRadius: const BorderRadius.all(Radius.circular(20))),
-                        height: h3,
-                        width: 200,
+                            borderRadius: const BorderRadius.all(Radius.circular(8))),
+                        height: h5,
+                        width: 400,
                         child: AnimatedOpacity(
                           opacity: opa2,
                           duration: const Duration(milliseconds: 800),
@@ -411,7 +499,7 @@ Widget overview(lumina){
                             child: unclaimed(
                               "Unclaimed ${Human().chain.nativeSymbol}", "0.00")),
                         )),
-                         AnimatedContainer(
+                     AnimatedContainer(
                         duration: const Duration(milliseconds: 400),
                         decoration: BoxDecoration(
                             border: Border.all(
@@ -421,28 +509,34 @@ Widget overview(lumina){
                                 ?const Color(0x54c9c9c9)
                                 : const Color(0x432000000),
                                 // Color(0x542e2d2d),
-                            borderRadius: const BorderRadius.all(Radius.circular(20))),
-                        height: h3,
-                        width: 200,
+                            borderRadius: const BorderRadius.all(Radius.circular(8))),
+                        height: h5,
+                        width: 400,
                         child: AnimatedOpacity(
                           opacity: opa2,
                           duration: const Duration(milliseconds: 800),
                           child: Center(
                             child: unclaimed(
-                              "Unclaimed USDT", "0.00")),
+                              "Unclaimed USDC", "0.00")),
                         )),
-              ],),
-               const SizedBox(height: 60,),
+                          ],
+                         ), 
+                    
+             
+               const SizedBox(height: 120,),
              Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("Show actions ",style: TextStyle(fontSize: 17),),
+                    const Text("Show actions "  , style: TextStyle(fontSize: 17),),
                     const SizedBox(width: 10),
                       DropdownButton(
                     value: timescale,
                     onChanged: (value) {
                       int numar=value as int;
-                      setState(() {timescale=numar;});
+                      setState(() {
+                        timescale=numar;
+                        
+                        });
                         },
                     items: [
                     const DropdownMenuItem(child: Text("taken by me"),value: 1),
@@ -450,74 +544,20 @@ Widget overview(lumina){
                     
                     ])
                 ]),
-                const SizedBox(height: 20,),
+                const SizedBox(height: 10,),
           
             Container(
               height: 600,
-              width:700,
+              
               decoration: const BoxDecoration(
                 color: Color(0x23000000),
               ),
               
             
-            child: ListView(children: activity)
+            child: ListView(children: showing)
             ),
               
           const SizedBox(height: 20,),
-//             Center(
-//               child: Wrap(
-//                 spacing: 20,
-//                 children: [
-//             SizedBox(
-//           width:500,
-//           child: Column(
-//             children: [
-//                 Column(
-//                     children: [
-//                         Row(
-//                           mainAxisAlignment: MainAxisAlignment.center,
-//                           children: [
-//                             Text("Dividends from  ", style: TextStyle(fontSize: 17,),),
-//                             DropdownButton(
-//                       value: 1,
-//                       onChanged: (value) {
-//                             int numar=value as int;
-//                             setState(() {});
-//                               },
-//                       items: [
-//                       DropdownMenuItem(child: Text("All projects"),value: 1),
-//                       ]),
-//                           ],
-//                         ),
-                     
-                      
-//              ] ),
-//                         ],
-//                       ),
-//                     ),
-//                      SizedBox(
-//           width:500,
-//           child: Column(
-//               children: [
-//                 Column(
-//                     children: [
-//                         Row(
-//                           mainAxisAlignment: MainAxisAlignment.center,
-//                           children: [
-//                             Text("Mining rewards from  ", style: TextStyle(fontSize: 17,),),
-//                             DropdownButton(
-//                       value: 1,
-//                       onChanged: (value) {
-//                             int numar=value as int;
-//                             setState(() {});
-//                               },
-//                       items: [
-//                       DropdownMenuItem(child: Text("All nodes"),value: 1),
-//                       ]),
-//                           ],
-// )])]))
-// ])
-// )
 ]));
                         
                         }

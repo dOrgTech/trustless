@@ -545,15 +545,11 @@ Widget overview(lumina){
                     ])
                 ]),
                 const SizedBox(height: 10,),
-          
             Container(
               height: 600,
-              
               decoration: const BoxDecoration(
                 color: Color(0x23000000),
               ),
-              
-            
             child: ListView(children: showing)
             ),
               

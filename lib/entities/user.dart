@@ -140,13 +140,12 @@ class _UserDetailsState extends State<UserDetails> {
       const  SizedBox(width: 60),
           SizedBox(
                  height: 40,
-                 
-                  child:  Padding(
+                  child:  Padding
+                  (
                     padding: const EdgeInsets.only(top:0,left:0,bottom:0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                  
                         FutureBuilder<Uint8List>(
                                 future: generateAvatarAsync(hashString(p.contractAddress!)),  // Make your generateAvatar function return Future<Uint8List>
                                 builder: (context, snapshot) {
@@ -208,7 +207,9 @@ class _UserDetailsState extends State<UserDetails> {
   Widget build(BuildContext context) {
         List<ActionItem> activity=[];
     for (TTransaction t in actions){
+      if (t.sender==widget.human.address){
       activity.add(ActionItem(action: t, landingPage: false));
+      }
     }
     List<Widget> involvements = [];
     for (String address in widget.human.projectsArbitrated){involvements.add(involvement( address, "Arbiter"));}

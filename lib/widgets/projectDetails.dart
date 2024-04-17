@@ -26,9 +26,14 @@ import '../widgets/withdraw.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:http/http.dart' as http;
 
+import 'coolOff.dart';
+
 class ProjectDetails extends StatefulWidget {
   ProjectDetails({super.key, required this.project});
   Project project;
+  bool cooling=false;
+  int? remainingTime;
+  List<Widget> projectActivity=[];
   @override
   State<ProjectDetails> createState() => _ProjectDetailsState();
 }
@@ -81,8 +86,28 @@ String extractGitHubPath(String? repoUrl) {
 
   @override
   Widget build(BuildContext context) {
-    // widget.project.holding= widget.project.contributions.values.fold(0, (a, b) => a! + b);
+   if (widget.project.status=="pending") {
+   final filteredTransactions = actions.where(
+    (transaction) =>
+        transaction.functionName == 'setParties' ||
+        transaction.functionName == 'createProject'
+         &&
+        transaction.contractAddress == widget.project.contractAddress,
+    ).toList();
 
+    filteredTransactions.sort((a, b) => b.time.compareTo(a.time));
+    final latestSetPartiesTransaction = filteredTransactions.first;
+    widget.remainingTime=DateTime.now().difference(latestSetPartiesTransaction.time).inMinutes;
+    if ( widget.remainingTime!<2){
+      setState(() {
+        widget.cooling=true;
+      });
+    }else{
+      setState(() {
+        widget.cooling=false;
+      });
+    }
+   } 
     List<Widget> openProjectFunctions = [
       functionItem("Send Funds to Project", "Anyone", SendFunds(project: widget.project)),
       functionItem("Set Parties", "Author", SetParty(project: widget.project)),
@@ -110,11 +135,32 @@ String extractGitHubPath(String? repoUrl) {
       functionItem("Send Funds to Project", "Anyone", SendFunds(project: widget.project)),
       functionItem("Withdraw", "Backers", Withdraw(project: widget.project)),
       functionItem("Change Parties", "Author", SetParty(project: widget.project)),
+      widget.cooling?
+      Container(
+        margin:const EdgeInsets.all(1),
+        width: 410,
+        height: 146,
+        decoration: BoxDecoration(
+            color: const Color.fromARGB(46, 37, 37, 37),
+            borderRadius:const BorderRadius.all(Radius.circular(3.0)),
+            border: Border.all(
+            
+              width: 3, color: const Color.fromARGB(19, 39, 39, 39))),
+        padding: const EdgeInsets.all(10),
+        child: Center(child: Countdown(duration: Duration(minutes:widget.remainingTime!) , projectDetailsState: this))
+      ):
       functionItem("Sign Contract", "Contractor", Sign(project: widget.project)),
       // functionItem("Set Parties", "Author", SetParty(project: widget.project)),
     ];
      var human = Provider.of<Human>(context);
-    
+  List<TTransaction> filteredTransactions = [];
+  
+  for (TTransaction t in actions){
+    if (t.contractAddress==widget.project.contractAddress){
+      filteredTransactions.add(t);
+       widget.projectActivity.add(ActionItem(action: t, landingPage: true));
+    }
+  }
     return BaseScaffold(
       botonChat: Human().botonDeChat,
       selectedItem: 1,
@@ -315,7 +361,7 @@ String extractGitHubPath(String? repoUrl) {
                                                         Theme.of(context).indicatorColor:Theme.of(context).textTheme.displayMedium!.color,
                                                     fontSize: 11),
                                                                                            ),
-                                               ),users.firstWhere((user) => user.address==widget.project.contractor),
+                                               ),users.firstWhere((user) => user.address.toLowerCase()==widget.project.contractor!.toLowerCase()),
                                              ),
                                             const SizedBox(
                                               width: 2,
@@ -352,7 +398,8 @@ String extractGitHubPath(String? repoUrl) {
                                                         Theme.of(context).indicatorColor:Theme.of(context).textTheme.displayMedium!.color,
                                                     fontSize: 11),
                                                                                            ),
-                                               ),users.firstWhere((user) => user.address.toLowerCase()==widget.project.arbiter!.toLowerCase()),
+                                               ),
+                                               users.firstWhere((user) => user.address.toLowerCase()==widget.project.arbiter!.toLowerCase()),
                                             ),
                                             const SizedBox(
                                               width: 2,
@@ -667,7 +714,6 @@ String extractGitHubPath(String? repoUrl) {
                             ],
                           ),
                         ),
-
                         const Padding(
                           padding: EdgeInsets.symmetric(horizontal: 28.0),
                           child: Opacity(
@@ -680,6 +726,7 @@ String extractGitHubPath(String? repoUrl) {
                         const SizedBox(
                           height: 37,
                         ),
+                    
                         Wrap(
                             runAlignment: WrapAlignment.center,
                             spacing: 40,
@@ -700,7 +747,6 @@ String extractGitHubPath(String? repoUrl) {
                   ),
                 ),
                 const SizedBox(height: 40),
-                
 
                   DefaultTabController(
                     initialIndex: 0,
@@ -766,8 +812,14 @@ String extractGitHubPath(String? repoUrl) {
                                       },
                                     ),
                                   ),
-                            ActivityFeed()
-                        
+                          Container(
+              height: 600,
+              
+              decoration: const BoxDecoration(
+                color: Color(0x23000000),
+              ),
+            child: ListView(children: widget.projectActivity)
+            ),
                             ],
                           ),
                         ),

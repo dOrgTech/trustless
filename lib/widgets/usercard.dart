@@ -60,14 +60,14 @@ class UserCard extends StatelessWidget {
                 color: const Color.fromARGB(0, 76, 175, 79),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(Icons.work_history, size: 15),  SizedBox(width: 1), Text("3", style: TextStyle(fontSize: 13)),
+                  children:  [
+                    Icon(Icons.work_history, size: 15),  SizedBox(width: 1), Text(user.projectsContracted.length.toString(), style: TextStyle(fontSize: 13)),
                     SizedBox(width: 12),
-                    Icon(Icons.edit,size: 15), SizedBox(width: 1),Text("1", style: TextStyle(fontSize: 13)),
+                    Icon(Icons.edit,size: 15), SizedBox(width: 1),Text(user.projectsAuthored.length.toString(), style: TextStyle(fontSize: 13)),
                     SizedBox(width:12),
-                    Icon(Icons.gavel,size: 15), SizedBox(width: 1),Text("1", style: TextStyle(fontSize: 13)),
+                    Icon(Icons.gavel,size: 15), SizedBox(width: 1),Text(user.projectsArbitrated.length.toString(), style: TextStyle(fontSize: 13)),
                     SizedBox(width: 12),
-                    Icon(Icons.money,size: 15),SizedBox(width: 1), Text("1", style: TextStyle(fontSize: 13)),
+                    Icon(Icons.money,size: 15),SizedBox(width: 1), Text(user.projectsBacked.length.toString(), style: TextStyle(fontSize: 13)),
                   ],
                 )
                 ),

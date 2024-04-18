@@ -224,6 +224,7 @@ class MyApp extends StatelessWidget {
           WidgetBuilder builder;
           if (settings.name == '/') {
             builder = (_) => 
+            // BaseScaffold(body: BackersList(project: projects[0]), title: "title", botonChat: Human().botonDeChat, selectedItem: 0);
             // ProjectDetails(project: projects[0]);
             // Prelaunch();
             // Poll();  

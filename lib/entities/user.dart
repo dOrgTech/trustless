@@ -105,6 +105,19 @@ class TTransaction{
     };
   }
 
+  @override
+  String toString() {
+    return '''
+      TTransaction:
+        Time: $time
+        Sender: $sender
+        Function Name: $functionName
+        Contract Address: $contractAddress
+        Parameters: $params
+        Hash: $hash
+    ''';
+  }
+
   // Create a TTransaction instance from a map (JSON).
   factory TTransaction.fromJson(Map<String, dynamic> json) {
     TTransaction transaction = TTransaction(
@@ -218,13 +231,13 @@ class _UserDetailsState extends State<UserDetails> {
     for (String address in widget.human.projectsContracted){involvements.add(involvement( address, "Contractor"));}
     involvements.shuffle(Random());
     return Padding(
-      padding: const EdgeInsets.only(left:38,top:10),
+      padding: const EdgeInsets.only(left:18,top:10),
       child: ListView(
         // mainAxisAlignment: MainAxisAlignment.start,
         // crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
-              padding: const EdgeInsets.only(top:8.0,left:45),
+              padding: const EdgeInsets.only(top:8.0,left:15),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

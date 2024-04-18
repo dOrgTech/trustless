@@ -1,10 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:trustless/widgets/projectDetails.dart';
 
 class Countdown extends StatefulWidget {
   final Duration duration;
-  var projectDetailsState;
+  ProjectDetailsState projectDetailsState;
   Countdown({required this.duration, required this.projectDetailsState});
 
   @override
@@ -33,7 +34,9 @@ class _CountdownState extends State<Countdown> {
   }
 
   void _onDone() {
-    widget.projectDetailsState.setState({widget.projectDetailsState.widget.cooling=false});
+    widget.projectDetailsState.setState(() {
+      widget.projectDetailsState.widget.cooling=false;
+    });
   }
 
   @override

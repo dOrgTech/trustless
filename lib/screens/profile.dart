@@ -218,7 +218,6 @@ if (!widget.madeInvolvements){
   }
 
 return widget.involvements;
-
 }
 
 
@@ -279,7 +278,7 @@ Widget overview(lumina){
                           controller: widget.aliasControlla,
                           maxLines: 1,
                           maxLength: 25,
-                          onChanged: (value) {
+                          onChanged: widget.valuesChanged==true?null: (value) {
                            if (!(value==widget.oldAlias)){
                               setState(() {
                                 widget.valuesChanged=true;
@@ -299,7 +298,7 @@ Widget overview(lumina){
                          controller: widget.aboutControlla,
                           maxLines: 5,
                           maxLength: 500,
-                          onChanged: (value) {
+                          onChanged:widget.valuesChanged==true?null:  (value) {
                            if (!(value==widget.oldAbout)){
                              setState(() {
                                 widget.valuesChanged=true;
@@ -318,7 +317,7 @@ Widget overview(lumina){
                            controller: widget.linkControlla,
                           maxLines: 1,
                           maxLength: 150,
-                          onChanged: (value) {
+                          onChanged: widget.valuesChanged==true?null: (value) {
                            if (!(value==widget.oldlink)){
                               setState(() {
                                 widget.valuesChanged=true;

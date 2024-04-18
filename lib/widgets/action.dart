@@ -108,7 +108,7 @@ class _ActionItemState extends State<ActionItem> {
         // decoration: BoxDecoration(),
         padding: EdgeInsets.all(0.0),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal:15.0),
+          padding: const EdgeInsets.only(left:15.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -292,11 +292,14 @@ class _ActionItemState extends State<ActionItem> {
                  Spacer(),
          
               SizedBox(
-                // width:200,
-                child: Text(
-                  widget.landingPage? getTimeAgo( widget.action.time)+"    ":getTimeAgo( widget.action.time),
-                  style: GoogleFonts.dmMono(fontSize: 13),
-                  )
+                width:180,
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    widget.landingPage? getTimeAgo( widget.action.time)+"    ":getTimeAgo( widget.action.time),
+                    style: GoogleFonts.dmMono(fontSize: 13),
+                    ),
+                )
 
               ),
              

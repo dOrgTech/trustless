@@ -32,13 +32,13 @@ class ProjectDetails extends StatefulWidget {
   ProjectDetails({super.key, required this.project});
   Project project;
   bool cooling=false;
-  int? remainingTime;
+  Duration? remainingTime;
   List<Widget> projectActivity=[];
   @override
-  State<ProjectDetails> createState() => _ProjectDetailsState();
+  State<ProjectDetails> createState() => ProjectDetailsState();
 }
 
-class _ProjectDetailsState extends State<ProjectDetails> {
+class ProjectDetailsState extends State<ProjectDetails> {
   
    MarkdownStyleSheet getMarkdownStyleSheet(BuildContext context) {
   return MarkdownStyleSheet.fromCupertinoTheme(
@@ -87,18 +87,21 @@ String extractGitHubPath(String? repoUrl) {
   @override
   Widget build(BuildContext context) {
    if (widget.project.status=="pending") {
-   final filteredTransactions = actions.where(
-    (transaction) =>
-        transaction.functionName == 'setParties' ||
-        transaction.functionName == 'createProject'
-         &&
-        transaction.contractAddress == widget.project.contractAddress,
-    ).toList();
+  final filteredTransactions = actions.where(
+  (transaction) =>
+    (transaction.functionName == 'setParties' ||
+     transaction.functionName == 'createProject') &&
+    transaction.contractAddress == widget.project.contractAddress,
+).toList();
 
     filteredTransactions.sort((a, b) => b.time.compareTo(a.time));
+    print("filtered transactions ${filteredTransactions}");
     final latestSetPartiesTransaction = filteredTransactions.first;
-    widget.remainingTime=DateTime.now().difference(latestSetPartiesTransaction.time).inMinutes;
-    if ( widget.remainingTime!<2){
+    print("latest ${latestSetPartiesTransaction}");
+    Duration elapsed=DateTime.now().difference(latestSetPartiesTransaction.time);
+    widget.remainingTime=Duration(minutes: 306) - elapsed;
+    print("remaining time ${widget.remainingTime}");
+    if ( widget.remainingTime!.inMinutes>0){
       setState(() {
         widget.cooling=true;
       });
@@ -147,7 +150,7 @@ String extractGitHubPath(String? repoUrl) {
             
               width: 3, color: const Color.fromARGB(19, 39, 39, 39))),
         padding: const EdgeInsets.all(10),
-        child: Center(child: Countdown(duration: Duration(minutes:widget.remainingTime!) , projectDetailsState: this))
+        child: Center(child: Countdown(duration:widget.remainingTime!, projectDetailsState: this))
       ):
       functionItem("Sign Contract", "Contractor", Sign(project: widget.project)),
       // functionItem("Set Parties", "Author", SetParty(project: widget.project)),
@@ -210,11 +213,12 @@ String extractGitHubPath(String? repoUrl) {
                                     return Container(
                                      
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(25.0)
+                                        borderRadius: BorderRadius.circular(25.0),
+                                          color: Theme.of(context).canvasColor,
                                       ),
                                       width: 50.0,
                                       height:50.0,
-                                      color: Theme.of(context).canvasColor,
+                                    
                                     );
                                   } else if (snapshot.hasData) {
                                     
@@ -873,7 +877,6 @@ String extractGitHubPath(String? repoUrl) {
             color: const Color.fromARGB(46, 37, 37, 37),
             borderRadius:const BorderRadius.all(Radius.circular(3.0)),
             border: Border.all(
-            
               width: 3, color: const Color.fromARGB(19, 39, 39, 39))),
         padding: const EdgeInsets.all(10),
         child: Column(
@@ -910,16 +913,24 @@ String extractGitHubPath(String? repoUrl) {
   }
 }
 
-class BackersList extends StatelessWidget {
+class BackersList extends StatefulWidget {
   Project project;
-   BackersList({super.key, required this.project});
+  User? selectedUser;
+  bool main=true;
+  BackersList({super.key, required this.project});
+  @override
+  State<BackersList> createState() => _BackersListState();
+}
+
+class _BackersListState extends State<BackersList> {
   List<Widget> rows = [];
+
   @override
   Widget build(BuildContext context) {
-    project.contributions.forEach((key, value) {
+    rows.clear();
+    widget.project.contributions.forEach((key, value) {
   rows.add(
     Container(
-     
       margin: const EdgeInsets.all(4),
       color:Theme.of(context).canvasColor,
       height: 40,
@@ -929,54 +940,98 @@ class BackersList extends StatelessWidget {
           Row(
             children: [
               SizedBox(width:60, child:
-         project.contributorsReleasing.containsKey(key) && project.contributorsReleasing[key]! > 0  ?
+          widget.project.contributorsReleasing.containsKey(key) && widget.project.contributorsReleasing[key]! > 0  ?
           const Icon(Icons.lock_open, color: Colors.green)
           :
-          project.contributorsDisputing.containsKey(key) && project.contributorsDisputing[key]! > 0 ?
-          
+          widget.project.contributorsDisputing.containsKey(key) && widget.project.contributorsDisputing[key]! > 0 ?
           Image.asset('assets/scale2.png', height:25, color:Colors.red) 
-         :
-
+          :
           const Text("")),
-              SizedBox(
-                width: 160,
-                child: Center(child: Text( getShortAddress( "$key")))),
-              TextButton(onPressed: (){
-               copied(context, key);
-              }, child: const Icon(Icons.copy))
+              TextButton(
+                onPressed: (){
+                  widget.selectedUser=users.firstWhere((u) => u.address.toLowerCase()==key.toLowerCase());
+                  setState(() {
+                    widget.main=false;
+                  });
+                },
+                child: SizedBox(
+                  width: 160,
+                  child: Center(child: Text( getShortAddress( "$key")))),
+              ),
             ],
           ),
-          const SizedBox(width: 140), // Adjust as needed
-          Text("$value"),
+          const Spacer(), // Adjust as needed
+          Padding(
+            padding: const EdgeInsets.only(right:88.0),
+            child: Text("$value"),
+          ),
         ],
       ),
     ),
   );
 });
 
-    return Container(
-      height:600,
-      width: 500,
-      child: Center(
-        child: ListView(
-          children:[
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-            const SizedBox(width: 40,), const Text("Address"), const SizedBox(width: 210,), const Text("Amount"),const SizedBox(width: 10,) 
-            ],),
-            const SizedBox(height: 10),
-            ...rows,
-            ]
+  switch (widget.main) {
+          case true:
+          return stage0();
+          default: return stage1(widget.selectedUser!);
+      }
+  }
+
+ Widget stage0(){
+  return SizedBox(
+     height:570,
+      width: 600,
+    child: Center(child: SizedBox(
+        height:570,
+        width: 600,
+          child: ListView(
+            children:[
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: const [
+               SizedBox(width: 40,),  Text("Address"),  SizedBox(width: 210,),  Text("Amount"),const SizedBox(width: 10,) 
+              ],),
+              const SizedBox(height: 10),
+              ...rows,
+              ]
+          ),
         ),
       ),
-    );
+  );
+ }
+
+
+ Widget stage1(User user){
+  return SizedBox(
+      height:570,
+      width: 600,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              TextButton(onPressed: (){
+                setState(() {
+                  widget.main=true;
+                });
+              }, child:const Opacity(
+                opacity: 0.7,
+                child:  Text("< BACK")))
+            ],),
+          SizedBox(
+          height:500,
+          width: 600,
+            child: UserDetails(human: user))
+        ],
+      )
+      );
   }
 }
 
-  copied(context, text) async{
-    
+
+copied(context, text) async{
     await Clipboard.setData(
           ClipboardData(text:text)
         );

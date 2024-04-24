@@ -26,6 +26,8 @@ class Human extends ChangeNotifier{
   bool beta=false;
   bool wrongChain=false;
   int chainID=5;
+  int chainNativeEarnings=0;
+  int chainUSDTEarnings=0;
   String? address;
   Chain chain=chains["0xaa36a7"]!;
   bool metamask=true;

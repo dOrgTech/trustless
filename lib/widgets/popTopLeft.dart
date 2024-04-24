@@ -6,20 +6,19 @@ import '../entities/project.dart';
 import '../main.dart';
 
 class AnimatedStatsDisplay extends StatefulWidget {
+    final Map<String, int> data = {
+    'Total Projects': 0,
+    'Ongoing Disputes': 0,
+    'Stakeholders': 0,
+    'Total ${Human().chain.nativeSymbol} Earned': Human().chainNativeEarnings,
+    'Total USDT Earned': Human().chainUSDTEarnings,
+  };
   @override
   _AnimatedStatsDisplayState createState() => _AnimatedStatsDisplayState();
 }
 
 class _AnimatedStatsDisplayState extends State<AnimatedStatsDisplay> with TickerProviderStateMixin {
-
-  final Map<String, int> data = {
-    'Ongoing Disputes': 1,
-    'Open Projects': 2,
-    'Active Projects': 4,
-    'Total ${Human().chain.nativeSymbol} Earned': 44390,
-    'Total USDT Earned': 0,
-  };
-
+  
   List<AnimationController> _numberControllers = [];
   List<Animation<int>> _numberAnimations = [];
   List<AnimationController> _opacityControllers = [];
@@ -27,16 +26,16 @@ class _AnimatedStatsDisplayState extends State<AnimatedStatsDisplay> with Ticker
 
   @override
   void initState() {
+    widget.data['Stakeholders']=users.length;
     for (Project p in projects){
-      if (p.status=="dispute"){data["Ongoing Disputes"]!=data["Ongoing Disputes"]!+1;}
-      if (p.status=="ongoing"){data["Active Projects"]!=data["Active Projects"]!+1;}
-      if (p.status=="open"){data["Open Projects"]!=1;}
+      widget.data['Total Projects']=widget.data['Total Projects']!+1;
+      if (p.status=='dispute')  {widget.data['Ongoing Disputes']=widget.data['Ongoing Disputes']!+1;}
     }
 
     super.initState();
 
     int delay = 0;
-    data.forEach((key, value) {
+    widget.data.forEach((key, value) {
       final numberController = AnimationController(
         duration: Duration(seconds: 1),
         vsync: this,
@@ -111,8 +110,8 @@ class _AnimatedStatsDisplayState extends State<AnimatedStatsDisplay> with Ticker
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> statWidgets = List.generate(data.length, (index) {
-      String key = data.keys.elementAt(index);
+    List<Widget> statWidgets = List.generate(widget.data.length, (index) {
+      String key = widget.data.keys.elementAt(index);
       return _buildStatItem(key, index);
     });
 

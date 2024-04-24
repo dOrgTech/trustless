@@ -101,14 +101,14 @@ class _ActionItemState extends State<ActionItem> {
         Theme.of(context).indicatorColor.withOpacity(1),
         Theme.of(context).indicatorColor.withOpacity(0.5),
       ];
-    List<double> stops = [0.01, 0.59]; 
-    return  Container(
+      List<double> stops = [0.01, 0.59]; 
+      return  Container(
         margin: EdgeInsets.symmetric(vertical: 4),
         color: Color.fromARGB(12, 0, 0, 0),
         // decoration: BoxDecoration(),
         padding: EdgeInsets.all(0.0),
         child: Padding(
-          padding: const EdgeInsets.only(left:15.0),
+          padding: const EdgeInsets.only(left:0.0,right:15),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [

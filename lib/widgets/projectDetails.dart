@@ -75,8 +75,8 @@ String extractGitHubPath(String? repoUrl) {
       showDialog(context: context, builder: 
       (context)=>AlertDialog(
         content: Container(
-          height: 700,width: 600,
-          padding:EdgeInsets.only(top:20,right:30, bottom:10), child: 
+          height: 700,width: 640,
+          padding:EdgeInsets.only(top:20,right:10, bottom:10), child: 
           UserDetails(human: user)
         ,)
       )
@@ -99,7 +99,7 @@ String extractGitHubPath(String? repoUrl) {
     final latestSetPartiesTransaction = filteredTransactions.first;
     print("latest ${latestSetPartiesTransaction}");
     Duration elapsed=DateTime.now().difference(latestSetPartiesTransaction.time);
-    widget.remainingTime=Duration(minutes: 306) - elapsed;
+    widget.remainingTime=Duration(minutes: 180) - elapsed;
     print("remaining time ${widget.remainingTime}");
     if ( widget.remainingTime!.inMinutes>0){
       setState(() {
@@ -147,7 +147,6 @@ String extractGitHubPath(String? repoUrl) {
             color: const Color.fromARGB(46, 37, 37, 37),
             borderRadius:const BorderRadius.all(Radius.circular(3.0)),
             border: Border.all(
-            
               width: 3, color: const Color.fromARGB(19, 39, 39, 39))),
         padding: const EdgeInsets.all(10),
         child: Center(child: Countdown(duration:widget.remainingTime!, projectDetailsState: this))

@@ -81,6 +81,8 @@ var usersCollection;
       var statsSnapshot = await statsCollection.doc(Human().chain.name).get();
       if (statsSnapshot.exists) {
         sourceAddress=statsSnapshot.data()!['sourceAddress'];
+        Human().chainNativeEarnings=statsSnapshot.data()!['native'];
+        Human().chainUSDTEarnings=statsSnapshot.data()!['usdt'];
       } else {
         sourceAddress="source_address_not_available_at_the_moment";
       }

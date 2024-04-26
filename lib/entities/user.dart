@@ -72,7 +72,7 @@ class User{
   }
 
 
-List<String>possibleActions=["reclaimFee","createProject", "setParties","sendFunds","sign","withdraw","voteToRelease","voteToDispute","arbitrate","reimburse"];
+List<String>possibleActions=["updateStats", "reclaimFee","createProject", "setParties","sendFunds","sign","withdraw","voteToRelease","voteToDispute","arbitrate","reimburse"];
 
 class TTransaction{
   TTransaction({
@@ -142,6 +142,8 @@ class UserDetails extends StatefulWidget {
 }
 
 class _UserDetailsState extends State<UserDetails> {
+
+
    Widget involvement(String address, String type){
     Project p= projects.firstWhere(
                                 (element) => element.contractAddress==address,

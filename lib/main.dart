@@ -57,11 +57,9 @@ List<TTransaction> actions=[];
 // List<User> otelezatori=[];
 List<User>users=[];
 String sourceAddress="";
-int valueInContracts=0;
-int usdtStored=0;
-int xtzStored=0;
-int totalXTZpaid=0;
-int totalUSDTpaid=0;
+// int valueInContracts=0;
+int nativeEarned=0;
+int usdtEarned=0;
 // String selectedNetwork='Etherlink Testnet';
 ContractFunctions cf=ContractFunctions();
 var prelaunchCollection = FirebaseFirestore.instance.collection('prelaunch');
@@ -89,6 +87,7 @@ var usersCollection;
       var transactionsSnapshot = await transactionsCollection.get();
       var usersSnapshot = await usersCollection.get();
       for (var doc in usersSnapshot.docs){
+        nativeEarned = nativeEarned + (doc.data()['nativeEarned'] as int);
         print("adding a user");
         List<dynamic> contractor= doc.data()['projectsContracted'];
         List<dynamic> arbiter= doc.data()['projectsArbitrated'];
@@ -147,7 +146,7 @@ var usersCollection;
     p.hashedFileName=doc.data()['hashedFileName']??"";
     p.arbiterAwardingContractor=doc.data()['arbiterAwardingContractor'];
     projects.add(p);
-    p.contributions.forEach((key, value) { valueInContracts+=value;});
+    // p.contributions.forEach((key, value) { valueInContracts+=value;});
     p.rulingHash=doc.data()['rulingHash'];
   }
 

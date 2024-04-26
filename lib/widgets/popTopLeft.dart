@@ -10,7 +10,7 @@ class AnimatedStatsDisplay extends StatefulWidget {
     'Total Projects': 0,
     'Ongoing Disputes': 0,
     'Stakeholders': 0,
-    'Total ${Human().chain.nativeSymbol} Earned': Human().chainNativeEarnings,
+    'Total ${Human().chain.nativeSymbol} Earned': nativeEarned,
     'Total USDT Earned': Human().chainUSDTEarnings,
   };
   @override
@@ -18,7 +18,6 @@ class AnimatedStatsDisplay extends StatefulWidget {
 }
 
 class _AnimatedStatsDisplayState extends State<AnimatedStatsDisplay> with TickerProviderStateMixin {
-  
   List<AnimationController> _numberControllers = [];
   List<Animation<int>> _numberAnimations = [];
   List<AnimationController> _opacityControllers = [];
@@ -26,6 +25,7 @@ class _AnimatedStatsDisplayState extends State<AnimatedStatsDisplay> with Ticker
 
   @override
   void initState() {
+    widget.data['Total ${Human().chain.nativeSymbol} Earned']=nativeEarned;
     widget.data['Stakeholders']=users.length;
     for (Project p in projects){
       widget.data['Total Projects']=widget.data['Total Projects']!+1;
@@ -33,7 +33,6 @@ class _AnimatedStatsDisplayState extends State<AnimatedStatsDisplay> with Ticker
     }
 
     super.initState();
-
     int delay = 0;
     widget.data.forEach((key, value) {
       final numberController = AnimationController(
@@ -62,7 +61,6 @@ class _AnimatedStatsDisplayState extends State<AnimatedStatsDisplay> with Ticker
         opacityController.forward();
         numberController.forward();
       });
-
       delay += 300; // Increment delay for staggered appearance
     });
   }

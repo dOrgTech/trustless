@@ -269,7 +269,15 @@ class _WidthdrawAsContractorState extends State<WidthdrawAsContractor>{
                           }
                         projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
                         try{
-                        Human().user!.nativeEarned+=widget.project.contributions[Human().address]!;
+                              int oldEarned = Human().user!.nativeEarned;
+                              int newEarned=oldEarned;
+                              cf.getNativeEarned( Human().user!.address).then((value){
+                                newEarned=value;
+                                if ( newEarned > oldEarned ){
+                                  print("avem diferente");
+                                   Human().user!.nativeEarned=newEarned;
+                                  usersCollection.doc(Human().user!.address).set(Human().user!.toJson());}
+                              });
                         }catch (Exception) 
                         {if (kDebugMode) {
                           print("helo");

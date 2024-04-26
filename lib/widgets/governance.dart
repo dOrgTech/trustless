@@ -126,23 +126,20 @@ class _BuyATNState extends State<BuyATN> with TickerProviderStateMixin {
                                   ),
                                 ),
                               ),
-                         Transform(
-                              alignment: Alignment.center,
-                              transform: Matrix4.rotationY(math.pi), child: Padding(
-                              padding: const EdgeInsets.all(9.0),
-                              child: Stack(
-                                children: [
-                                  Image.asset("assets/tgri.png"),
-                                  AnimatedOpacity(
-                                    duration: Duration(milliseconds: 1500),
-                                    opacity: widget.opa_aur,
-                                    child: 
-                                  Image.asset("assets/taur.png")
-                                  ),
-                                ],
-                              ),
+                         Padding(
+                         padding: const EdgeInsets.all(9.0),
+                         child: Stack(
+                           children: [
+                             Image.asset("assets/newlogo_layer3.png"),
+                             AnimatedOpacity(
+                               duration: Duration(milliseconds: 1500),
+                               opacity: widget.opa_aur,
+                               child: 
+                             Image.asset("assets/newlogo_layer1.png")
+                             ),
+                           ],
+                         ),
                             ),
-                          ),
                              ],
                       )),
                   ),
@@ -200,7 +197,7 @@ class _BuyATNState extends State<BuyATN> with TickerProviderStateMixin {
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20.0),
                             child: Text(
-                              "An architecture of incentives to help with value emergence. It comes with the stability of traditional legal contracts and none of the drawbacks.",
+                              "An architecture of incentives to help with value emergence. It comes with all the stability of traditional legal contracts and none of the drawbacks.",
                               textAlign: TextAlign.justify,
                               style:
                                   TextStyle(fontSize: 17, fontWeight: FontWeight.bold),

@@ -18,6 +18,7 @@ import 'package:trustless/widgets/sendfunds.dart';
 import 'package:trustless/widgets/setParty.dart';
 import 'package:intl/intl.dart';
 import 'package:trustless/widgets/sign.dart';
+import 'package:trustless/widgets/updateSpendings.dart';
 import 'package:trustless/widgets/usercard.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../entities/project.dart';
@@ -40,7 +41,7 @@ class ProjectDetails extends StatefulWidget {
 
 class ProjectDetailsState extends State<ProjectDetails> {
   
-   MarkdownStyleSheet getMarkdownStyleSheet(BuildContext context) {
+  MarkdownStyleSheet getMarkdownStyleSheet(BuildContext context) {
   return MarkdownStyleSheet.fromCupertinoTheme(
     CupertinoThemeData(
       brightness: Theme.of(context).brightness,
@@ -110,6 +111,7 @@ String extractGitHubPath(String? repoUrl) {
       });
     }
    } 
+
     List<Widget> openProjectFunctions = [
       functionItem("Send Funds to Project", "Anyone", SendFunds(project: widget.project)),
       functionItem("Set Parties", "Author", SetParty(project: widget.project)),
@@ -131,6 +133,7 @@ String extractGitHubPath(String? repoUrl) {
       functionItem("Withdraw as Backer", "Backers", Withdraw(project: widget.project)),
       functionItem("Withdraw as Contractor", "Contractor", WidthdrawAsContractor(project: widget.project)),
       functionItem("Reclaim Arbitration Fee", "Contractor and/or Author", ReclaimFee(project: widget.project)),
+      functionItem("Update Spendings", "Backers", UpdateSpendings(project: widget.project)),
     ];
 
     List<Widget> pendingProjectFunctions = [

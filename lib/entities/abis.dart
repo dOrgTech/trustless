@@ -1,5 +1,6 @@
 List<String> sourceAbiString=[
   'function createProject (string,address,address,string,string) payable',
+  
 ];
 
 
@@ -15,6 +16,7 @@ List<String> nativeProjectAbiString=[
   'function withdrawAsContributor ()',
   'function reclaimArbitrationFee ()',
   'function withdrawAsContractor ()',
+  'function updateContributorSpendings()',
 ];
 
 
@@ -33,19 +35,6 @@ List<String> projectAbiString=[
 var economyAbi=
 r'''
 [
-	{
-		"inputs": [],
-		"name": "arbitrationFee",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
 	{
 		"inputs": [
 			{
@@ -82,6 +71,65 @@ r'''
 	{
 		"inputs": [
 			{
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "native",
+				"type": "bool"
+			}
+		],
+		"name": "updateEarnings",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "native",
+				"type": "bool"
+			}
+		],
+		"name": "updateSpendings",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "arbitrationFee",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
@@ -93,25 +141,6 @@ r'''
 				"internalType": "address",
 				"name": "",
 				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "earned",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -157,7 +186,7 @@ r'''
 				"type": "address"
 			}
 		],
-		"name": "spent",
+		"name": "nativeEarned",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -172,36 +201,57 @@ r'''
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "user",
+				"name": "",
 				"type": "address"
-			},
+			}
+		],
+		"name": "nativeSpent",
+		"outputs": [
 			{
 				"internalType": "uint256",
-				"name": "amount",
+				"name": "",
 				"type": "uint256"
 			}
 		],
-		"name": "updateEarnings",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "user",
+				"name": "",
 				"type": "address"
-			},
+			}
+		],
+		"name": "usdtEarned",
+		"outputs": [
 			{
 				"internalType": "uint256",
-				"name": "amount",
+				"name": "",
 				"type": "uint256"
 			}
 		],
-		"name": "updateSpendings",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "usdtSpent",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	}
 ]

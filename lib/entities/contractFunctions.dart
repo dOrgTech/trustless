@@ -19,7 +19,6 @@ class ContractFunctions{
 
 
 getProjectsCounter() async {
-  print("we are getting the counter baby");
   var httpClient = Client();
   var ethClient = Web3Client(Human().chain.rpcNode, httpClient);
 
@@ -69,13 +68,15 @@ getProjectsCounter() async {
   }
 }
 
-// Helper function to convert Uint8List to hex string
-String bytesToHex(Uint8List bytes) {
-  return bytes.map((byte) => byte.toRadixString(16).padLeft(2, '0')).join();
-}
 
 
-  getNativeBalance(String address)async {
+  // Helper function to convert Uint8List to hex string
+  String bytesToHex(Uint8List bytes) {
+    return bytes.map((byte) => byte.toRadixString(16).padLeft(2, '0')).join();
+  }
+
+
+  getNativeBalance(String address) async {
     var httpClient = Client(); 
     var ethClient = Web3Client(Human().chain.rpcNode, httpClient);
     final ethAddress = EthereumAddress.fromHex(address);
@@ -88,22 +89,40 @@ String bytesToHex(Uint8List bytes) {
   getUSDTBalance(){
     //TODO: implement this
   }
-
-  getEarned(User user)async{
-    print("we are getting the counter baby");
+  
+  getNativeEarned(String address)async{
     var httpClient = Client(); 
     var ethClient = Web3Client(Human().chain.rpcNode, httpClient);
     final contractSursa =
             DeployedContract(ContractAbi.fromJson(economyAbi,'Economy'), EthereumAddress.fromHex(sourceAddress));
-    var getRepToken = contractSursa.function('earned');
+    var getRepToken = contractSursa.function('nativeEarned');
     var counter = await ethClient
-            .call(contract: contractSursa, function: getRepToken, params: []);
+            .call(contract: contractSursa, function: getRepToken, params: [
+             EthereumAddress.fromHex(address)
+            ]);
     int rezultat= int.parse(counter[0].toString()) as int;
     numberOfProjects=rezultat;
-    print(rezultat.toString()+" "+rezultat.runtimeType.toString());
+    print("Avem așa ceva: ");
+    print( rezultat.toString()+" "+rezultat.runtimeType.toString());
     return rezultat;
   }
 
+  getNativeSpent(String address)async{
+    var httpClient = Client(); 
+    var ethClient = Web3Client(Human().chain.rpcNode, httpClient);
+    final contractSursa =
+            DeployedContract(ContractAbi.fromJson(economyAbi,'Economy'), EthereumAddress.fromHex(sourceAddress));
+    var getRepToken = contractSursa.function('nativeSpent');
+    var counter = await ethClient
+            .call(contract: contractSursa, function: getRepToken, params: [
+             EthereumAddress.fromHex(address)
+            ]);
+    int rezultat= int.parse(counter[0].toString()) as int;
+    numberOfProjects=rezultat;
+    print("Avem așa ceva: ");
+    print( rezultat.toString()+" "+rezultat.runtimeType.toString());
+    return rezultat;
+  }
 
   createProject(Project project,state)async{
     final BigInt valueInWei = BigInt.from(100);
@@ -660,7 +679,7 @@ String bytesToHex(Uint8List bytes) {
           Human().busy=false;
           TTransaction t= TTransaction(
               contractAddress:project.contractAddress!,
-              functionName: 'reclaimFee',
+              functionName: 'updateRep',
               params: 'params',
               sender: Human().address!,
               hash: hash,time: DateTime.now()

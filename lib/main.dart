@@ -65,8 +65,6 @@ int totalUSDTpaid=0;
 // String selectedNetwork='Etherlink Testnet';
 ContractFunctions cf=ContractFunctions();
 var prelaunchCollection = FirebaseFirestore.instance.collection('prelaunch');
-
-// var prelaunchCollection = FirebaseFirestore.instance.collection('prelaunch');
 // var voteCollection = FirebaseFirestore.instance.collection('vote');
 var statsCollection = FirebaseFirestore.instance.collection('stats');
 var projectsCollection;
@@ -534,9 +532,10 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                   )
                 ],
               )
-             ):const Text(""),
+             )
+             :const Text(""),
              const SizedBox(width: 35 ),
-           const WalletBTN(),
+          const SizedBox(width:200, child: WalletBTN()),
            const SizedBox(width: 30),
           
            

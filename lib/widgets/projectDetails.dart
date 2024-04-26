@@ -93,13 +93,12 @@ String extractGitHubPath(String? repoUrl) {
      transaction.functionName == 'createProject') &&
     transaction.contractAddress == widget.project.contractAddress,
 ).toList();
-
     filteredTransactions.sort((a, b) => b.time.compareTo(a.time));
     print("filtered transactions ${filteredTransactions}");
     final latestSetPartiesTransaction = filteredTransactions.first;
     print("latest ${latestSetPartiesTransaction}");
     Duration elapsed=DateTime.now().difference(latestSetPartiesTransaction.time);
-    widget.remainingTime=Duration(minutes: 180) - elapsed;
+    widget.remainingTime=Duration(minutes: 5) - elapsed;
     print("remaining time ${widget.remainingTime}");
     if ( widget.remainingTime!.inMinutes>0){
       setState(() {
@@ -163,6 +162,36 @@ String extractGitHubPath(String? repoUrl) {
        widget.projectActivity.add(ActionItem(action: t, landingPage: true));
     }
   }
+
+
+  User? arbiter = users.firstWhere((user) => user.address.toLowerCase() == widget.project.arbiter!.toLowerCase(), orElse: () {
+      return User(
+        lastActive: DateTime.now(),
+        address: widget.project.arbiter!,
+        nativeEarned: 0,
+        usdtEarned: 0,
+        usdtSpent: 0,
+        nativeSpent: 0,
+        projectsContracted: [],
+        projectsArbitrated: [],
+        projectsBacked: [],
+        projectsAuthored: [],
+      );
+    });
+     User? contractor = users.firstWhere((user) => user.address.toLowerCase() == widget.project.contractor!.toLowerCase(), orElse: () {
+      return User(
+        lastActive: DateTime.now(),
+        address: widget.project.contractor!,
+        nativeEarned: 0,
+        usdtEarned: 0,
+        usdtSpent: 0,
+        nativeSpent: 0,
+        projectsContracted: [],
+        projectsArbitrated: [],
+        projectsBacked: [],
+        projectsAuthored: [],
+      );
+    });
     return BaseScaffold(
       botonChat: Human().botonDeChat,
       selectedItem: 1,
@@ -343,7 +372,8 @@ String extractGitHubPath(String? repoUrl) {
                                               ],
                                             ),
                                           ),
-                                          ),widget.project.contractor!.length>3?
+                                          ),
+                                          widget.project.contractor!.length>3?
                                            SizedBox(
                                       height: 35,
                                       child: Center(
@@ -362,9 +392,9 @@ String extractGitHubPath(String? repoUrl) {
                                                   style:  TextStyle(
                                                       color: !(human.address == null) &&  human.address!.toLowerCase()==widget.project.contractor!.toLowerCase()?
                                                         Theme.of(context).indicatorColor:Theme.of(context).textTheme.displayMedium!.color,
-                                                    fontSize: 11),
-                                                                                           ),
-                                               ),users.firstWhere((user) => user.address.toLowerCase()==widget.project.contractor!.toLowerCase()),
+                                                    fontSize: 11),                              ),
+                                               ),
+                                             contractor
                                              ),
                                             const SizedBox(
                                               width: 2,
@@ -402,11 +432,11 @@ String extractGitHubPath(String? repoUrl) {
                                                     fontSize: 11),
                                                                                            ),
                                                ),
-                                               users.firstWhere((user) => user.address.toLowerCase()==widget.project.arbiter!.toLowerCase()),
+                                              arbiter
                                             ),
                                             const SizedBox(
                                               width: 2,
-                                            ), widget.project.contractor!.length<3?const SizedBox(width:54):
+                                            ), widget.project.arbiter!.length<3?const SizedBox(width:54):
                                             TextButton(
                                                 onPressed: () {
                                                   copied(context, widget.project.arbiter);
@@ -821,7 +851,9 @@ String extractGitHubPath(String? repoUrl) {
               decoration: const BoxDecoration(
                 color: Color(0x23000000),
               ),
-            child: ListView(children: widget.projectActivity)
+            child: 
+            // Text("")
+            ListView(children: widget.projectActivity)
             ),
                             ],
                           ),
@@ -928,6 +960,21 @@ class _BackersListState extends State<BackersList> {
   Widget build(BuildContext context) {
     rows.clear();
     widget.project.contributions.forEach((key, value) {
+        User? user = users.firstWhere((user) => user.address.toLowerCase() == key.toLowerCase(), orElse: () {
+      return User(
+        lastActive: DateTime.now(),
+        address: widget.project.arbiter!,
+        nativeEarned: 0,
+        usdtEarned: 0,
+        usdtSpent: 0,
+        nativeSpent: 0,
+        projectsContracted: [],
+        projectsArbitrated: [],
+        projectsBacked: [],
+        projectsAuthored: [],
+      );
+    });
+    
   rows.add(
     Container(
       margin: const EdgeInsets.all(4),
@@ -948,7 +995,7 @@ class _BackersListState extends State<BackersList> {
           const Text("")),
               TextButton(
                 onPressed: (){
-                  widget.selectedUser=users.firstWhere((u) => u.address.toLowerCase()==key.toLowerCase());
+                  widget.selectedUser=user;
                   setState(() {
                     widget.main=false;
                   });

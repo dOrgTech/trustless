@@ -72,7 +72,7 @@ class User{
   }
 
 
-List<String>possibleActions=["updateStats", "reclaimFee","createProject", "setParties","sendFunds","sign","withdraw","voteToRelease","voteToDispute","arbitrate","reimburse"];
+List<String>possibleActions=["updateRep", "reclaimFee","createProject", "setParties","sendFunds","sign","withdraw","voteToRelease","voteToDispute","arbitrate","reimburse"];
 
 class TTransaction{
   TTransaction({

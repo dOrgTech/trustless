@@ -310,6 +310,7 @@ class BaseScaffold extends StatefulWidget {
   late  bool isProjects;
   late bool isDisputes;
   late bool isUsers;
+  late bool isProfile;
   int selectedItem;
   
   BaseScaffold({super.key, required this.body, required this.title, required this.botonChat,
@@ -318,6 +319,7 @@ class BaseScaffold extends StatefulWidget {
     isProjects = selectedItem == 1;
     isDisputes = selectedItem == 2;
     isUsers = selectedItem == 3;
+    isProfile = selectedItem==4;
   }
 
   @override

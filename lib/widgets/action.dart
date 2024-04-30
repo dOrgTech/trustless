@@ -23,7 +23,7 @@ Map<String, TextStyle> actionStyles = {
   "sendFunds": GoogleFonts.robotoMono(fontWeight: FontWeight.w500),
   "withdraw": GoogleFonts.ubuntuMono(fontWeight: FontWeight.w200),
   "voteToRelease": GoogleFonts.b612Mono(fontWeight: FontWeight.w600),
-  "updateStats": GoogleFonts.b612Mono(fontWeight: FontWeight.w600),
+  "updateRep": GoogleFonts.b612Mono(fontWeight: FontWeight.w600),
   "voteToDispute": GoogleFonts.b612Mono(fontWeight: FontWeight.w700),
   "dispute": GoogleFonts.b612Mono(fontWeight: FontWeight.w700),
   "arbitrate": GoogleFonts.b612Mono(fontWeight: FontWeight.w400),
@@ -31,7 +31,7 @@ Map<String, TextStyle> actionStyles = {
 };
 
 Map<String, Icon> actionIcons = {
-  "updateStats":Icon(Icons.update,size: 13),
+  "updateRep":Icon(Icons.update,size: 13),
   "reclaimFee": Icon(Icons.create_new_folder,size: 13,),
   "createProject": Icon(Icons.create_new_folder,size: 13,),
   "sign": Icon(Icons.edit_document,size: 13,),
@@ -46,7 +46,7 @@ Map<String, Icon> actionIcons = {
 };
 
 Map<String, Color> actionColors = {
-   "updateStats":Color.fromARGB(255, 76, 86, 175),
+   "updateRep":Color.fromARGB(255, 76, 86, 175),
   "createProject": Colors.blue,
   "sign": Colors.blue,
   "setParties": Colors.green,

@@ -1,5 +1,6 @@
 import 'package:crypto/crypto.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:trustless/widgets/fundProject.dart';
@@ -142,9 +143,7 @@ Widget stage0(){
                       onChanged: (value) {
                         setState(() {
                           _sliderValue = value;
-                          print("converting to int");
-                          percentage = ((value /100!) * 100).round();
-                          print("converted to percentage ${percentage}");
+                          percentage = ((value /100) * 100).round();
                           _canSubmit = true;
                         });
                       },
@@ -293,6 +292,23 @@ Widget stage0(){
                           widget.project.arbiterAwardingContractor=percentage*onePercent;
                           widget.project.status='closed';
                           await projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
+                           try{
+                              int oldEarned = Human().user!.nativeEarned;
+                              int newEarned=oldEarned;
+                              cf.getNativeEarned( Human().user!.address).then((value){
+                                newEarned=value;
+                                if ( newEarned > oldEarned ){
+                                  print("avem diferente");
+                                   Human().user!.nativeEarned=newEarned;
+                                  usersCollection.doc(Human().user!.address).set(Human().user!.toJson());}
+                              });
+                        }catch (Exception) 
+                        {if (kDebugMode) {
+                          print("helo");
+                        }}
+                         
+                         
+                         
                           Navigator.of(context).pushNamed("/projects/${widget.project.contractAddress}");
                         }
                       : null,

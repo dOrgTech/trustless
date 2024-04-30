@@ -21,7 +21,7 @@ var chains={
 
 class Human extends ChangeNotifier{
   bool busy=false;
-  bool beta=false;
+  bool beta=true;
   bool wrongChain=false;
   int chainID=5;
   int chainNativeEarnings=0;

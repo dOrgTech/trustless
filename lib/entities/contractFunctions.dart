@@ -178,7 +178,7 @@ getProjectsCounter() async {
               time: DateTime.now()
               );
               await transactionsCollection.doc(hash).set(t.toJson());
-          actions.add(t);
+         actions.insert(0,t);
             }
         return projectAddress;
         
@@ -234,7 +234,7 @@ getProjectsCounter() async {
               time: DateTime.now()
               );
               await transactionsCollection.doc(hash).set(t.toJson());
-            actions.add(t);
+            actions.insert(0,t);
           return hash.toString();
         }
       } catch (e) {
@@ -283,7 +283,7 @@ getProjectsCounter() async {
               time: DateTime.now()
               );
               await transactionsCollection.doc(hash).set(t.toJson());
-            actions.add(t);
+           actions.insert(0,t);
           return hash.toString();
         }
       } catch (e) {   
@@ -329,7 +329,7 @@ getProjectsCounter() async {
               hash: hash,time: DateTime.now()
               );
               await transactionsCollection.doc(hash).set(t.toJson());
-            actions.add(t);
+           actions.insert(0,t);
           return hash.toString();
         }
       } catch (e) {    
@@ -375,7 +375,7 @@ getProjectsCounter() async {
               hash: hash,time: DateTime.now()
               );
               await transactionsCollection.doc(hash).set(t.toJson());
-            actions.add(t);
+           actions.insert(0,t);
           return hash.toString();
         }
       } catch (e) {    
@@ -420,7 +420,7 @@ getProjectsCounter() async {
               hash: hash,time: DateTime.now()
               );
               await transactionsCollection.doc(hash).set(t.toJson());
-            actions.add(t);
+           actions.insert(0,t);
           return hash.toString();
         }
       } catch (e) {    
@@ -464,7 +464,7 @@ getProjectsCounter() async {
               hash: hash,time: DateTime.now()
               );
               await transactionsCollection.doc(hash).set(t.toJson());
-            actions.add(t);
+           actions.insert(0,t);
           return hash.toString();
         }
       } catch (e) {    
@@ -509,7 +509,7 @@ getProjectsCounter() async {
               hash: hash,time: DateTime.now()
               );
               await transactionsCollection.doc(hash).set(t.toJson());
-            actions.add(t);
+           actions.insert(0,t);
           return hash.toString();
         }
       } catch (e) {    
@@ -553,7 +553,7 @@ getProjectsCounter() async {
               hash: hash,time: DateTime.now()
               );
               await transactionsCollection.doc(hash).set(t.toJson());
-            actions.add(t);
+            actions.insert(0,t);
           return hash.toString();
         }
       } catch (e) {    
@@ -597,7 +597,7 @@ getProjectsCounter() async {
               hash: hash,time: DateTime.now()
               );
               await transactionsCollection.doc(hash).set(t.toJson());
-            actions.add(t);
+           actions.insert(0,t);
           return hash.toString();
         }
       } catch (e) {    
@@ -641,7 +641,7 @@ getProjectsCounter() async {
               hash: hash,time: DateTime.now()
               );
               await transactionsCollection.doc(hash).set(t.toJson());
-            actions.add(t);
+            actions.insert(0,t);
           return hash.toString();
         }
       } catch (e) {    
@@ -685,9 +685,9 @@ getProjectsCounter() async {
               hash: hash,time: DateTime.now()
               );
               await transactionsCollection.doc(hash).set(t.toJson());
-            actions.add(t);
+            actions.insert(0,t);
           return hash.toString();
-        }
+        } 
       } catch (e) {    
           print("nu merge c nu s-a putut" +e.toString());
           Human().busy=false;
@@ -728,7 +728,7 @@ getProjectsCounter() async {
               hash: hash,time: DateTime.now()
               );
               await transactionsCollection.doc(hash).set(t.toJson());
-          actions.add(t);
+          actions.insert(0,t);
           return hash.toString();
         }
       } catch (e) {

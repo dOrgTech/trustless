@@ -223,7 +223,6 @@ class _BuyATNState extends State<BuyATN> with TickerProviderStateMixin {
                                   launch("https://github.com/dOrgTech/homebase-projects/blob/master/README.md");
                                 },
                                 child: Center(child: 
-                              
                                     Text("Read Docs"),
                                   ),
                               ),

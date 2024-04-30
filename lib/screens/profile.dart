@@ -474,55 +474,55 @@ Widget overview(lumina){
                         )),  
                          ],),
                          const SizedBox( height: 30),
-                         Wrap(
-                          spacing: 30,
-                          runSpacing: 20,
-                          children: [
-                        AnimatedContainer(
-                        duration: const Duration(milliseconds: 400),
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Theme.of(context).backgroundColor,
-                                width: 0.9),
-                            color: lumina
-                                ?const Color(0x54c9c9c9)
-                                : const Color(0x432000000),
-                                // Color(0x542e2d2d),
-                            borderRadius: const BorderRadius.all(Radius.circular(8))),
-                        height: h5,
-                        width: 400,
-                        child: AnimatedOpacity(
-                          opacity: opa2,
-                          duration: const Duration(milliseconds: 800),
-                          child: Center(
-                            child: unclaimed(
-                              "Unclaimed ${Human().chain.nativeSymbol}", "0.00")),
-                        )),
-                     AnimatedContainer(
-                        duration: const Duration(milliseconds: 400),
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Theme.of(context).backgroundColor,
-                                width: 0.9),
-                            color: lumina
-                                ?const Color(0x54c9c9c9)
-                                : const Color(0x432000000),
-                                // Color(0x542e2d2d),
-                            borderRadius: const BorderRadius.all(Radius.circular(8))),
-                        height: h5,
-                        width: 400,
-                        child: AnimatedOpacity(
-                          opacity: opa2,
-                          duration: const Duration(milliseconds: 800),
-                          child: Center(
-                            child: unclaimed(
-                              "Unclaimed USDC", "0.00")),
-                        )),
-                          ],
-                         ), 
+                    //      Wrap(
+                    //       spacing: 30,
+                    //       runSpacing: 20,
+                    //       children: [
+                    //     AnimatedContainer(
+                    //     duration: const Duration(milliseconds: 400),
+                    //     decoration: BoxDecoration(
+                    //         border: Border.all(
+                    //             color: Theme.of(context).backgroundColor,
+                    //             width: 0.9),
+                    //         color: lumina
+                    //             ?const Color(0x54c9c9c9)
+                    //             : const Color(0x432000000),
+                    //             // Color(0x542e2d2d),
+                    //         borderRadius: const BorderRadius.all(Radius.circular(8))),
+                    //     height: h5,
+                    //     width: 400,
+                    //     child: AnimatedOpacity(
+                    //       opacity: opa2,
+                    //       duration: const Duration(milliseconds: 800),
+                    //       child: Center(
+                    //         child: unclaimed(
+                    //           "Unclaimed ${Human().chain.nativeSymbol}", "0.00")),
+                    //     )),
+                    //  AnimatedContainer(
+                    //     duration: const Duration(milliseconds: 400),
+                    //     decoration: BoxDecoration(
+                    //         border: Border.all(
+                    //             color: Theme.of(context).backgroundColor,
+                    //             width: 0.9),
+                    //         color: lumina
+                    //             ?const Color(0x54c9c9c9)
+                    //             : const Color(0x432000000),
+                    //             // Color(0x542e2d2d),
+                    //         borderRadius: const BorderRadius.all(Radius.circular(8))),
+                    //     height: h5,
+                    //     width: 400,
+                    //     child: AnimatedOpacity(
+                    //       opacity: opa2,
+                    //       duration: const Duration(milliseconds: 800),
+                    //       child: Center(
+                    //         child: unclaimed(
+                    //           "Unclaimed USDC", "0.00")),
+                    //     )),
+                    //       ],
+                    //      ), 
                     
              
-               const SizedBox(height: 120,),
+               const SizedBox(height: 80,),
              Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

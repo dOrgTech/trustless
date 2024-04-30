@@ -87,6 +87,7 @@ String extractGitHubPath(String? repoUrl) {
 
   @override
   Widget build(BuildContext context) {
+
    if (widget.project.status=="pending") {
   final filteredTransactions = actions.where(
   (transaction) =>
@@ -132,7 +133,8 @@ String extractGitHubPath(String? repoUrl) {
     List<Widget> closedProjectFunctions = [
       functionItem("Withdraw as Backer", "Backers", Withdraw(project: widget.project)),
       functionItem("Withdraw as Contractor", "Contractor", WidthdrawAsContractor(project: widget.project)),
-      functionItem("Reclaim Arbitration Fee", "Contractor and/or Author", ReclaimFee(project: widget.project)),
+      widget.project.arbiterAwardingContractor==null?
+      functionItem("Reclaim Arbitration Fee", "Contractor and/or Author", ReclaimFee(project: widget.project)):Text(""),
       functionItem("Update Spendings", "Backers", UpdateSpendings(project: widget.project)),
     ];
 
@@ -158,7 +160,7 @@ String extractGitHubPath(String? repoUrl) {
     ];
      var human = Provider.of<Human>(context);
   List<TTransaction> filteredTransactions = [];
-  
+  widget.projectActivity=[];
   for (TTransaction t in actions){
     if (t.contractAddress==widget.project.contractAddress){
       filteredTransactions.add(t);

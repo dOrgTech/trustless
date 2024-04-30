@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 
 contract Economy {
+
     // Array to hold addresses of deployed projects
     address[] public deployedProjects;
     mapping(address => bool) public isProjectContract;
@@ -32,7 +33,7 @@ contract Economy {
             address(this),name,msg.sender,contractor,arbiter,termsHash,repo,arbitrationFee
         );
     } else {
-        // If the contractor is not specified, the project is in "open" stage
+        // If the contractor is not specified, the project is in "open" stage 
         newProject = new NativeProject(address(this),
             name, msg.sender, address(0), address(0), termsHash, repo, arbitrationFee
             );
@@ -40,13 +41,13 @@ contract Economy {
         deployedProjects.push(address(newProject));
         isProjectContract[address(newProject)] = true;
     }
-    function updateNativeEarnings(address user, uint amount, bool native) external {
-        require(isProjectContract[msg.sender], "Only authorized Project contracts can call this function.");
+    function updateEarnings(address user, uint amount, bool native) external {
+        require(isProjectContract[msg.sender], "Only Project contracts can call this function.");
         if (native){nativeEarned[user] += amount;}else{usdtEarned[user] += amount;}
     }
 
-    function updateNativeSpendings(address user, uint amount,bool native) external {
-        require(isProjectContract[msg.sender], "Only authorized Project contracts can call this function.");
+    function updateSpendings(address user, uint amount,bool native) external {
+        require(isProjectContract[msg.sender], "Only Project contracts can call this function.");
          if (native){nativeSpent[user] += amount;}else{usdtSpent[user] += amount;}
     }
 }
@@ -137,6 +138,7 @@ contract NativeProject {
           "Funding is only allowed when the project is in 'open' or 'pending' stage.");
         contributors[msg.sender] += msg.value;
         projectValue += msg.value;
+        availableToContributors=projectValue;
     }
 
     event ContractorPaid(address contractor);
@@ -149,8 +151,8 @@ contract NativeProject {
         uint256 amountToWithdraw = availableToContractor;
         availableToContractor = 0; // Prevent re-entrancy by zeroing before transfer
         (bool sent, ) = payable(contractor).call{value: amountToWithdraw}("");
-        economy.updateNativeEarnings(contractor, amountToWithdraw,false);
-        require(sent, "Failed to send Ether to contractor.");
+        economy.updateEarnings(contractor, amountToWithdraw, true);
+        require(sent, "Failed");
         emit ContractorPaid(contractor);
     }
 
@@ -161,7 +163,7 @@ contract NativeProject {
         uint expenditure=contributors[msg.sender];
         if (expenditure>0){
         contributors[msg.sender]=0;
-        economy.updateNativeSpendings(msg.sender,expenditure,false);
+        economy.updateSpendings(msg.sender,expenditure,true);
         }
     }
 
@@ -198,14 +200,9 @@ contract NativeProject {
         if (disputeResolution>0){
             exitAmount = (contributorAmount * availableToContributors) / projectValue;
             uint expenditure=contributorAmount-exitAmount;
-            economy.updateNativeSpendings(msg.sender,expenditure,false);
+            economy.updateSpendings(msg.sender,expenditure,true);
         }else{
             exitAmount = contributorAmount;
-        }
-        if (availableToContributors==0){
-            economy.updateNativeSpendings(msg.sender,contributorAmount,false);
-            contributors[msg.sender] = 0; // Prevent re-entrancy
-            return;
         }
         availableToContributors=availableToContributors-exitAmount;
         contributors[msg.sender] = 0; // Prevent re-entrancy
@@ -234,6 +231,7 @@ contract NativeProject {
         // Check that the project is currently in the "ongoing" stage
         require(keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("ongoing")), "This action can only be performed while the project is ongoing.");
         // Move the project to "closed" mode
+        availableToContributors=projectValue;
         stage = "closed";
         emit ProjectClosed(msg.sender);
     }
@@ -286,17 +284,17 @@ contract NativeProject {
     }
 
     function arbitrate(uint256 percent, string memory rulingHash) public {
+        require(keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("dispute")), "Arbitration can only occur if the project is in dispute.");
         require(msg.sender == arbiter, "Only the Arbiter can call this function");
         require(percent >= 0 && percent <= 100, "Resolution needs to be a number between 0 and 100");
-        require(keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("dispute")), "Arbitration can only occur if the project is in dispute.");
         availableToContractor = (projectValue * percent) / 100;
         availableToContributors = projectValue - availableToContractor;
         disputeResolution=percent;
         ruling_hash = rulingHash;
         payable(arbiter).transfer(arbitrationFee);
         arbitrationFeePaidOut = true;
-        stage = "closed";
-        economy.updateNativeEarnings(arbiter, arbitrationFee,false);
+        stage = "closed"; 
+        economy.updateEarnings(arbiter, arbitrationFee,true);
         emit ProjectClosed(msg.sender);
     }
 }

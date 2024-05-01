@@ -132,7 +132,7 @@ class ReleaseState extends State<Release> {
                             print("found it");
                             widget.project.contributorsReleasing[key] = widget.project.contributions[key]!; // Update the value to 0
                             widget.project.contributorsDisputing[key] = 0; 
-                            if (widget.project.contributorsReleasing.values.fold(0, (a, b) => a + b) / widget.project.contributions.values.fold(0, (a, b) => a + b) >= 0.7)
+                            if (widget.project.contributorsReleasing.values.fold(0, (a, b) => a + b) / widget.project.contributions.values.fold(0, (a, b) => a + b) > 0.7)
                             {
                               widget.project.status="closed";
                             }

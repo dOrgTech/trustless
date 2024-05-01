@@ -68,7 +68,6 @@ contract NativeProject {
     mapping (address => uint) public contributorsReleasing;
     mapping (address => uint) public contributorsDisputing;
     uint public availableToContractor;
-    uint public availableToContributors;
     uint public totalVotesForRelease;
     uint public totalVotesForDispute;
     uint public projectValue;
@@ -101,11 +100,10 @@ contract NativeProject {
         termsHash = _termsHash;
         repo = _repo;
         availableToContractor = 0;
-        availableToContributors = 0;
         totalVotesForRelease=0;
         totalVotesForDispute=0;
         projectValue=0;
-        disputeResolution = 0;
+        disputeResolution = 100;
         arbitrationFee = _arbitrationFee;
         ruling_hash = "";
         if (contractor != address (0) && arbiter != address (0)) { // check if the contractor and arbiter are assigned.
@@ -138,7 +136,6 @@ contract NativeProject {
           "Funding is only allowed when the project is in 'open' or 'pending' stage.");
         contributors[msg.sender] += msg.value;
         projectValue += msg.value;
-        availableToContributors=projectValue;
     }
 
     event ContractorPaid(address contractor);
@@ -172,7 +169,7 @@ contract NativeProject {
             keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("closed")) ,
             "Arbitration fee can be reclaimed once the project is closed.");
         require (arbitrationFeePaidOut==false, "The fee has been paid out to the Arbiter (because there was a dispute).");
-        require (msg.sender==author||msg.sender==contractor, "Arbitration fee can only be returned to the parties that stakes it");
+        require (msg.sender==author||msg.sender==contractor, "Arbitration fee can only be returned to the parties.");
         if (msg.sender==author){
             require(authorWithdrawnArbitrationFee==false, "You have already claimed this back.");
             authorWithdrawnArbitrationFee=true;
@@ -196,16 +193,8 @@ contract NativeProject {
             keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("closed")) ,
          "Withdrawals only allowed when the project is open, pending or closed.");
         uint256 contributorAmount = contributors[msg.sender];
-        uint256 exitAmount;
-        if (disputeResolution>0){
-            exitAmount = (contributorAmount * availableToContributors) / projectValue;
-            uint expenditure=contributorAmount-exitAmount;
-            economy.updateSpendings(msg.sender,expenditure,true);
-        }else{
-            exitAmount = contributorAmount;
-        }
-        availableToContributors=availableToContributors-exitAmount;
-        contributors[msg.sender] = 0; // Prevent re-entrancy
+        uint256 exitAmount = (contributorAmount / 100 ) * (100 - disputeResolution);
+        contributors[msg.sender] = 0; 
         (bool sent, ) = payable(msg.sender).call{value: exitAmount}("");
         require(sent, "Failed to send Ether");
     }
@@ -231,7 +220,7 @@ contract NativeProject {
         // Check that the project is currently in the "ongoing" stage
         require(keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("ongoing")), "This action can only be performed while the project is ongoing.");
         // Move the project to "closed" mode
-        availableToContributors=projectValue;
+        
         stage = "closed";
         emit ProjectClosed(msg.sender);
     }
@@ -248,11 +237,10 @@ contract NativeProject {
         }
         contributorsReleasing[msg.sender] = contributors[msg.sender];
         // Check if the threshold for releasing the payment is met
-        if (totalVotesForRelease > address(this).balance * 70 / 100) {
+        if (totalVotesForRelease >projectValue * 70 / 100) {
             stage = "closed";
             availableToContractor = projectValue;
             fundsReleased = true;
-            availableToContributors=0;
             emit ProjectClosed(msg.sender);
         }
     }
@@ -270,7 +258,7 @@ contract NativeProject {
         }
         contributorsDisputing[msg.sender] = contributors[msg.sender];
         // Check if the threshold for disputing the project is met
-        if (totalVotesForDispute > address(this).balance * 70 / 100) {
+        if (totalVotesForDispute > projectValue * 70 / 100) {
             stage = "dispute";
             emit ProjectDisputed(msg.sender);
         }
@@ -287,13 +275,13 @@ contract NativeProject {
         require(keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("dispute")), "Arbitration can only occur if the project is in dispute.");
         require(msg.sender == arbiter, "Only the Arbiter can call this function");
         require(percent >= 0 && percent <= 100, "Resolution needs to be a number between 0 and 100");
-        availableToContractor = (projectValue * percent) / 100;
-        availableToContributors = projectValue - availableToContractor;
+        availableToContractor = (projectValue / 100) * percent;
+        // availableToContributors = projectValue - availableToContractor;
         disputeResolution=percent;
         ruling_hash = rulingHash;
         payable(arbiter).transfer(arbitrationFee);
         arbitrationFeePaidOut = true;
-        stage = "closed"; 
+        stage = "closed";
         economy.updateEarnings(arbiter, arbitrationFee,true);
         emit ProjectClosed(msg.sender);
     }

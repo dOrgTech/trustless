@@ -150,7 +150,7 @@ class DisputeState extends State<Dispute> {
                             widget.project.contributorsReleasing[key] =0; // Update the value to 0
                             widget.project.contributorsDisputing[key] =  widget.project.contributions[key]!; // Update the value to 0
                             
-                            if (widget.project.contributorsDisputing.values.fold(0, (a, b) => a + b) / widget.project.contributions.values.fold(0, (a, b) => a + b) >= 0.7)
+                            if (widget.project.contributorsDisputing.values.fold(0, (a, b) => a + b) / widget.project.contributions.values.fold(0, (a, b) => a + b) > 0.7)
                             {
                               widget.project.status="dispute";
                             }

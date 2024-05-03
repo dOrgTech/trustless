@@ -21,7 +21,7 @@ var chains={
 
 class Human extends ChangeNotifier{
   bool busy=false;
-  bool beta=false;
+  bool beta=true;
   bool wrongChain=false;
   int chainID=5;
   int chainNativeEarnings=0;
@@ -33,9 +33,13 @@ class Human extends ChangeNotifier{
   Web3Provider? web3user;
   bool voting=false;
   bool isOverlayVisible = false;
-  Widget botonDeChat=AnimatedFabWithOverlay();
   bool voted=false;
   User? user;
+  List<ChatItem> chatHistory=[
+    ChatItem(isSender: false, 
+    message: "Welcome to Trustless Business! If you have questions about the platform, ask them here.",
+    )
+  ];
   Human._internal(){
     _setupListeners();
   }
@@ -149,4 +153,11 @@ class Chain{
   String nativeSymbol;
   String rpcNode;
   var fbCollection;
+}
+
+
+class ChatItem{
+  ChatItem({required this.isSender, required this.message});
+  bool isSender;
+  String message;
 }

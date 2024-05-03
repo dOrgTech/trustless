@@ -32,6 +32,8 @@ import 'package:provider/provider.dart';
 import 'dart:html';
 import 'dart:js' as js;
 
+import 'widgets/bubbles.dart';
+
 class OverlayControlNavigatorObserver extends NavigatorObserver {
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
@@ -224,7 +226,7 @@ class MyApp extends StatelessWidget {
           WidgetBuilder builder;
           if (settings.name == '/') {
             builder = (_) => 
-            // BaseScaffold(body: BackersList(project: projects[0]), title: "title", botonChat: Human().botonDeChat, selectedItem: 0);
+            BaseScaffold(body: Bubbles(), title: "title",  selectedItem: 0);
             // ProjectDetails(project: projects[0]);
             // Prelaunch();
             // Poll();  
@@ -233,9 +235,8 @@ class MyApp extends StatelessWidget {
             //   selectedItem: 0, body: Profile(), title: "Profile"); 
             // Scaffold(body: SetParty(project: projects[0]));
             //  BaseScaffold(botonChat: Human().botonDeChat,selectedItem: 0, body: const Users(), title: "Users");
-             Human().beta ?  BaseScaffold(
-             
-              selectedItem: 0, body: Landing(), title: "Trustless Business") : Prelaunch();
+            //  Human().beta ?  BaseScaffold(
+            //   selectedItem: 0, body: Landing(), title: "Trustless Business") : Prelaunch();
             // BaseScaffold(selectedItem: 1,body: Projects(), title: "Projects");
           } else if (settings.name!.startsWith('/projects/')) {
             final projectId = settings.name!.replaceFirst('/projects/', '');
@@ -304,7 +305,7 @@ class MyApp extends StatelessWidget {
 // }
 // ignore: must_be_immutable
 
-AnimatedFabWithOverlay butonDechat = AnimatedFabWithOverlay();
+
 class BaseScaffold extends StatefulWidget {
 // GlobalKey<AnimatedFabWithOverlayState> cheieBoton = GlobalKey();
  
@@ -661,6 +662,7 @@ class _WalletBTNState extends State<WalletBTN> {
         ),
       );
     }
+    
 
     return TextButton(
       onPressed: () async {
@@ -774,124 +776,6 @@ class _WalletBTNState extends State<WalletBTN> {
     );
   }
 }
-
-
-// class WalletBTN extends StatefulWidget {
-//   const WalletBTN({super.key});
-
-//   @override
-//   State<WalletBTN> createState() => _WalletBTNState();
-// }
-
-// class _WalletBTNState extends State<WalletBTN> {
-//  bool _isConnecting=false;
-//   void initState() {
-//     super.initState();
-//     // Load existing address
-   
-//   }
-//   @override
-//   Widget build(BuildContext context) {
-//     if (_isConnecting) {
-//           return const SizedBox(
-//             width: 160,
-//             height: 7,
-//             child: Center(
-//               child: LinearProgressIndicator(
-//                   minHeight: 2,
-//                 // backgroundColor: Colors.black54,
-//               ),
-//             ),
-//           );
-//         }
-//    return 
-
-//    Human().address==null?
-
-//    TextButton(onPressed: ()async{
-//     if (Human().metamask==false){
-      
-//       showDialog(context: context, builder: (context){return 
-//       const AlertDialog(
-//         content: Text("Metamask not detected.")
-//       );
-//       });
-//     }
-//     setState((){
-//       _isConnecting=true;
-//     });
-
-//       await Human().signIn();
-//     setState((){
-//       _isConnecting=false;
-//     });
-
-//    }, child: 
-//    SizedBox(
-//     width: 160,
-//      child: Center(
-//        child:
-//         Human().address==null?
-//         Row(
-//           children: [
-//             SizedBox(width: 4),
-//             Image.network(metamask,height:27),
-//             SizedBox(width: 9),
-//             Text("Connect Wallet"),
-//           ],
-//         ):  Text(Human().address!),
-//      ),
-//    ))
-//     :
-//    SizedBox(
-//       width: 160,
-//       child: DropdownButtonHideUnderline(
-//         child: DropdownButton<String>(
-//           focusColor: Colors.transparent,
-//           isExpanded: true,
-//           value: getShortAddress(Human().address!.toString()),
-//           icon: const Icon(Icons.arrow_drop_down),
-//           hint: Text(shortenString(Human().address!.toString())),
-//           onChanged: (value) {
-//             // Implement actions based on dropdown selection
-//             if (value == 'Profile') {
-//       Navigator.of(context).push(
-//         MaterialPageRoute(
-//           builder: ((context) =>
-//             BaseScaffold(selectedItem: 0, body: Profile(), title: "Profile")
-//           )
-//         )
-//       );
-//     }
-//           },
-//           items: [
-//             DropdownMenuItem(
-//               value: getShortAddress(Human().address!.toString()),
-//               child: Text(shortenString(Human().address!.toString())),
-//             ),
-//             DropdownMenuItem(
-//               value: 'Profile',
-//               child: const Text('Profile'),
-            
-//             ),
-//             const DropdownMenuItem(
-//               value: 'Switch Address',
-//               child: Text('Switch Address'),
-//             ),
-//             const DropdownMenuItem(
-//               value: 'Disconnect',
-//               child: Text('Disconnect'),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//    }
-//  }
-
-// import 'package:flutter/material.dart';
-
-
 
 
 

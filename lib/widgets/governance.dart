@@ -249,16 +249,16 @@ class _BuyATNState extends State<BuyATN> with TickerProviderStateMixin {
                         children: [
                           Container(
                             width: double.infinity,
-                            
                               padding: const EdgeInsets.symmetric(horizontal:34.0),
-                              child: Center(
+                              child: const Center(
                                 child: Text(
                                 "Engage in trustless business arrangements. ",
                                 style:
                                     TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                                                         ),
                               ),
-                            ),SizedBox(height: 22),
+                            ),
+                            const SizedBox(height: 22),
                           Padding(
                             padding: const EdgeInsets.only(bottom:30.0),
                             child: TextButton(

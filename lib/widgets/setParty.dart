@@ -66,14 +66,19 @@ class SetPartytate extends State<SetParty> {
                       widget.project.arbiter!.length > 2 &&
                       widget.project.termsHash!.length > 4;
     return Container(
+      width:1200,
+      // height:500,
+      height:MediaQuery.of(context).size.height-100,
       key: const ValueKey(1),
-      constraints: const BoxConstraints(minHeight: 500,maxWidth: 1200),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+      // constraints: const BoxConstraints(maxHeight: 500,maxWidth: 1200),
+      child: ListView(
+        // mainAxisAlignment: MainAxisAlignment.start,
         children: [
-             const Opacity(
-            opacity: 0.9,
-            child: Text("Set Parties",style: TextStyle(fontSize: 22),)),
+          const   Center(
+               child:  Opacity(
+                         opacity: 0.9,
+                         child: Text("Set Parties",style: TextStyle(fontSize: 22),)),
+             ),
           const SizedBox(height: 25),
   RichText(
   text: TextSpan(
@@ -88,7 +93,7 @@ class SetPartytate extends State<SetParty> {
         recognizer: TapGestureRecognizer()
           ..onTap = () {
             // Link handling code
-            launch("https://your-link-to-the-docs.com");
+            launch("https://github.com/dOrgTech/homebase-projects/blob/master/README.md");
           },
       ),
       const TextSpan(
@@ -99,35 +104,39 @@ class SetPartytate extends State<SetParty> {
 )
 ,
 
-          const SizedBox(height: 60),
-          Container(
-                    constraints: const BoxConstraints(maxHeight: 400),
-                    child:  TextField(
-                      controller: widget.contractorControlla,
-                      onChanged: (value){setState(() {
-                        widget.project.contractor=value;
-                      });},
-                      style: const TextStyle(fontSize: 13),
-                      decoration:  const InputDecoration(
-                        labelText: "Contractor Address",
-                        ),),
-                  ),
+          const SizedBox(height: 30),
+          Center(
+            child: Container(
+                      constraints: const BoxConstraints(maxHeight: 70, maxWidth: 600),
+                      child:  TextField(
+                        controller: widget.contractorControlla,
+                        onChanged: (value){setState(() {
+                          widget.project.contractor=value;
+                        });},
+                        style: const TextStyle(fontSize: 13),
+                        decoration:  const InputDecoration(
+                          labelText: "Contractor Address",
+                          ),),
+                    ),
+          ),
           const SizedBox(height: 40),
-         Container(
-                    constraints: const BoxConstraints(maxHeight: 400),
-                    child: TextField(
-                      controller: widget.arbiterControlla,
-                       onChanged: (value){setState(() {
-                        widget.project.arbiter=value;
-                      });},
-                      style: const TextStyle(fontSize: 13),
-                      decoration:  const InputDecoration(
-                        labelText: "Arbiter Address",
-                        ),),
-                  ), 
+         Center(
+           child: Container(
+                      constraints: const BoxConstraints(maxHeight: 70, maxWidth: 600),
+                      child: TextField(
+                        controller: widget.arbiterControlla,
+                         onChanged: (value){setState(() {
+                          widget.project.arbiter=value;
+                        });},
+                        style: const TextStyle(fontSize: 13),
+                        decoration:  const InputDecoration(
+                          labelText: "Arbiter Address",
+                          ),),
+                    ),
+         ), 
                 const SizedBox(height: 39),
               SizedBox(
-                  // width:600,
+                  width: double.infinity,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -146,7 +155,7 @@ class SetPartytate extends State<SetParty> {
             ),
           ),    
           const SizedBox(width: 38),
-          const SizedBox(      
+          const SizedBox( 
             child: SizedBox(
                     width: 500,
                     child: Text("Select the TERMS.md file. This should not be modified throughout the life cycle of the project. A hash of its content will be immutably stored in the contract."
@@ -161,22 +170,25 @@ class SetPartytate extends State<SetParty> {
           alignment: Alignment.centerLeft,
           child: Padding(
             padding: const EdgeInsets.only(left:38.0),
-            child: Row(
-              children: [
-                Opacity(
-                  opacity: 0.7,
-                  child: Text(_fileName.isNotEmpty ? 'File hash: ':"",)
-                  ),
-                Text('$_hash', style:  const TextStyle(fontWeight: FontWeight.w100, color:Color.fromRGBO(253, 251, 231, 1), backgroundColor: Colors.black),),
-              ],
+            child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Opacity(
+                    opacity: 0.7,
+                    child: Text(_fileName.isNotEmpty ? 'File hash: ':"",)
+                    ),
+                  Text('$_hash', style:  const TextStyle(fontWeight: FontWeight.w100, color:Color.fromRGBO(253, 251, 231, 1), backgroundColor: Colors.black),),
+                ],
+              ),
             ),
           )),
-          const SizedBox(height: 60),
+          const SizedBox(height: 30),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal:80.0),
             child: Text("The Contractor will need to sign this Project contract before the funds are locked in Escrow. Make sure they agree with the terms as well as the designated Arbiter."),
           ),
-              SizedBox(height: 36),
+              const SizedBox(height: 36),
               widget.project.status=="open"?
             Row(children: [
             Padding(
@@ -199,8 +211,9 @@ class SetPartytate extends State<SetParty> {
                   widget.project.isUSDT?"80.0 USDT":"100.00 ${Human().chain.nativeSymbol}"
                 ),
             ],),
-          ],):const Text("You already staked your half of the arbitration fee."),
-          Spacer(),
+          ],): const Center(child: Text("You already staked your half of the arbitration fee.")),
+          const Spacer(),
+          const SizedBox(height: 30),
                 Center(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,

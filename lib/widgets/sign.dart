@@ -147,11 +147,11 @@ class SignState extends State<Sign> {
                         User u;
                         if (!users.any((user) => user.address == Human().address)){users.add(Human().user!);}
                 
-                        if (!users.any((user) => user.address == widget.project.arbiter)){
+                        if (!users.any((user) => user.address.toLowerCase() == widget.project.arbiter!.toLowerCase())){
                             u = User.fromNew(widget.project.arbiter!);
                             u.projectsArbitrated.add(widget.project.contractAddress!);
                             users.add(u);
-                         }else{u = users.firstWhere((user) => user.address == widget.project.arbiter);}
+                         }else{u = users.firstWhere((user) => user.address.toLowerCase()  == widget.project.arbiter!.toLowerCase());}
                           await usersCollection.doc(widget.project.arbiter).set(u.toJson());
                         Navigator.of(context).pushNamed("/projects/${widget.project.contractAddress}");
                       },

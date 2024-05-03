@@ -613,7 +613,7 @@ const SizedBox(
                   )
                   ],
                 ),
-    ); 
+           ); 
   }
   stage1(){
     return Container(
@@ -639,7 +639,7 @@ const SizedBox(
         recognizer: TapGestureRecognizer()
           ..onTap = () {
             // Link handling code
-            launch("https://your-link-to-the-docs.com");
+            launch("https://github.com/dOrgTech/homebase-projects/blob/master/README.md");
           },
       ),
       const TextSpan(
@@ -651,31 +651,35 @@ const SizedBox(
 ,
 
           const SizedBox(height: 60),
-          SizedBox(
-                    // width:630,
-                    child:  TextField(
-                      controller: widget.contractorControlla,
-                      onChanged: (value){setState(() {
-                        widget.project.contractor=value;
-                      });},
-                      style: const TextStyle(fontSize: 13),
-                      decoration:  const InputDecoration(
-                        labelText: "Contractor Address",
-                        ),),
-                  ),
+         Center(
+            child: Container(
+                      constraints: const BoxConstraints(maxHeight: 70, maxWidth: 600),
+                      child:  TextField(
+                        controller: widget.contractorControlla,
+                        onChanged: (value){setState(() {
+                          widget.project.contractor=value;
+                        });},
+                        style: const TextStyle(fontSize: 13),
+                        decoration:  const InputDecoration(
+                          labelText: "Contractor Address",
+                          ),),
+                    ),
+          ),
           const SizedBox(height: 40),
-          SizedBox(
-                    // width:630,
-                    child: TextField(
-                      controller: widget.arbiterControlla,
-                       onChanged: (value){setState(() {
-                        widget.project.arbiter=value;
-                      });},
-                      style: const TextStyle(fontSize: 13),
-                      decoration:  const InputDecoration(
-                        labelText: "Arbiter Address",
-                        ),),
-                  ), 
+         Center(
+           child: Container(
+                      constraints: const BoxConstraints(maxHeight: 70, maxWidth: 600),
+                      child: TextField(
+                        controller: widget.arbiterControlla,
+                         onChanged: (value){setState(() {
+                          widget.project.arbiter=value;
+                        });},
+                        style: const TextStyle(fontSize: 13),
+                        decoration:  const InputDecoration(
+                          labelText: "Arbiter Address",
+                          ),),
+                    ),
+         ), 
                 const SizedBox(height: 39),
  SizedBox(
                   // width:600,
@@ -713,14 +717,17 @@ const SizedBox(
           alignment: Alignment.centerLeft,
           child: Padding(
             padding: const EdgeInsets.only(left:38.0),
-            child: Row(
-              children: [
-                Opacity(
-                  opacity: 0.7,
-                  child: Text(_fileName.isNotEmpty ? 'File hash: ':"",)
-                  ),
-                Text('$_hash', style:  const TextStyle(fontWeight: FontWeight.w100, color:Color.fromRGBO(253, 251, 231, 1), backgroundColor: Colors.black),),
-              ],
+            child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Opacity(
+                    opacity: 0.7,
+                    child: Text(_fileName.isNotEmpty ? 'File hash: ':"",)
+                    ),
+                  Text('$_hash', style:  const TextStyle(fontWeight: FontWeight.w100, color:Color.fromRGBO(253, 251, 231, 1), backgroundColor: Colors.black),),
+                ],
+              ),
             ),
           )),
           const SizedBox(height: 60),

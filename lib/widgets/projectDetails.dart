@@ -198,7 +198,7 @@ String extractGitHubPath(String? repoUrl) {
       );
     });
     return BaseScaffold(
-      botonChat: Human().botonDeChat,
+     
       selectedItem: 1,
       title: "Project",
       body: Container(
@@ -597,8 +597,8 @@ String extractGitHubPath(String? repoUrl) {
                             if (snapshot.connectionState==ConnectionState.done){
                               String catare=snapshot.data.toString();
                               double avem=double.parse(catare);
-                              if (widget.project!.holding!=avem){
-                                widget.project!.holding=avem;
+                              if (widget.project.holding!=avem){
+                                widget.project.holding=avem;
                                 projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
                               }
                               // widget.project!.currentlyHolding=int.parse(catare);

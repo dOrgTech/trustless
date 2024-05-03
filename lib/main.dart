@@ -19,6 +19,7 @@ import 'package:trustless/utils/reusable.dart';
 import 'package:trustless/utils/scripts.dart';
 import 'package:trustless/widgets/chat.dart';
 import 'package:trustless/widgets/projectDetails.dart';
+import 'package:trustless/widgets/setParty.dart';
 import 'package:trustless/widgets/wrongChain.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:web3dart/web3dart.dart';
@@ -230,9 +231,10 @@ class MyApp extends StatelessWidget {
             //  BaseScaffold(
             //   botonChat: Human().botonDeChat,
             //   selectedItem: 0, body: Profile(), title: "Profile"); 
+            // Scaffold(body: SetParty(project: projects[0]));
             //  BaseScaffold(botonChat: Human().botonDeChat,selectedItem: 0, body: const Users(), title: "Users");
              Human().beta ?  BaseScaffold(
-              botonChat: Human().botonDeChat,
+             
               selectedItem: 0, body: Landing(), title: "Trustless Business") : Prelaunch();
             // BaseScaffold(selectedItem: 1,body: Projects(), title: "Projects");
           } else if (settings.name!.startsWith('/projects/')) {
@@ -253,14 +255,14 @@ class MyApp extends StatelessWidget {
             }
           } 
           else if (settings.name == '/users') {
-            builder = (_) => BaseScaffold(botonChat: Human().botonDeChat,selectedItem: 3, body: const Users(), title: "Users");
+            builder = (_) => BaseScaffold(selectedItem: 3, body: const Users(), title: "Users");
             } else if (settings.name == '/') {
-            builder = (_) => BaseScaffold(botonChat: Human().botonDeChat,selectedItem: 0, body: Landing(), title: "Trustless Business");
+            builder = (_) => BaseScaffold(selectedItem: 0, body: Landing(), title: "Trustless Business");
           } else if (settings.name == '/projects') {
-            builder = (_) => BaseScaffold(botonChat: Human().botonDeChat,selectedItem: 1, body: Projects(main:true, capacity: "",), title: "Projects");
+            builder = (_) => BaseScaffold(selectedItem: 1, body: Projects(main:true, capacity: "",), title: "Projects");
           } else {
             // Handle other routes or unknown routes
-            builder = (_) =>  BaseScaffold(botonChat: Human().botonDeChat,
+            builder = (_) =>  BaseScaffold(
               selectedItem: 0,
               title: "Not a valid URL",
               body: const Center(child:Text("This is nothing.", style: TextStyle(fontSize: 40),)),);
@@ -302,8 +304,13 @@ class MyApp extends StatelessWidget {
 // }
 // ignore: must_be_immutable
 
+AnimatedFabWithOverlay butonDechat = AnimatedFabWithOverlay();
 class BaseScaffold extends StatefulWidget {
-  Widget botonChat;
+// GlobalKey<AnimatedFabWithOverlayState> cheieBoton = GlobalKey();
+ 
+// Call the dispose function
+
+
   final Widget body;
   final String title;
   late bool isTrustless;
@@ -313,7 +320,7 @@ class BaseScaffold extends StatefulWidget {
   late bool isProfile;
   int selectedItem;
   
-  BaseScaffold({super.key, required this.body, required this.title, required this.botonChat,
+  BaseScaffold({super.key, required this.body, required this.title, 
   required this.selectedItem} ) {
     isTrustless = selectedItem == 0;
     isProjects = selectedItem == 1;
@@ -333,13 +340,16 @@ class _BaseScaffoldState extends State<BaseScaffold> {
   return Color.lerp(color1, color2, amount)!;
 }
 
+
+
   void changeButton(int position) {
-    setState(() {
+    setState(() { 
         widget.isTrustless = position == 1;
         widget.isProjects = position == 0;
         widget.isDisputes = position == 2;
         widget.isUsers = position == 3;
     });
+      // butonDechat.createElement().state.dispose();
   }
 
   @override
@@ -488,17 +498,16 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                             ),
                 ),
               ), 
-          
-           
           ];
           var human = Provider.of<Human>(context);
           final double scaleFactor = MediaQuery.of(context).size.width * MediaQuery.of(context).size.height < 1600000 ? 0.8 : 1.0;
          
         // final double scaleFactor = MediaQuery.of(context).size.width * MediaQuery.of(context).size.height < 1400000 ? 0.8 : 1.0;
+          
 
           // Apply scale factor to the entire Scaffold
           return Scaffold(
-          // floatingActionButton: widget.botonChat,
+          floatingActionButton:ExpandableFAB(),
           appBar: AppBar(
            toolbarHeight: 42,
            elevation: 1.8,
@@ -713,7 +722,7 @@ class _WalletBTNState extends State<WalletBTN> {
         MaterialPageRoute(
           builder: ((context) =>
             BaseScaffold(
-              botonChat: Human().botonDeChat,
+              
               selectedItem: 0, body: Profile(), title: "Profile")
           )
         )
@@ -907,7 +916,7 @@ class _WalletBTNState extends State<WalletBTN> {
       surface: Color.fromARGB(255, 39, 39, 39), // Card and dialog backgrounds
       onSurface: Color.fromARGB(255, 211, 211, 211), // Text on surface
       error: Colors.red,
-      onError: Colors.white,
+      onError: Color.fromARGB(255, 228, 228, 228),
       brightness: Brightness.light,
     ),
 
@@ -948,7 +957,7 @@ class _WalletBTNState extends State<WalletBTN> {
       surface: Color.fromARGB(255, 37, 37, 37), // Card and dialog backgrounds
       onSurface: Colors.white, // Text on surface
       error: Colors.red,
-      onError: Colors.black,
+      onError: Color.fromARGB(255, 31, 31, 31),
       brightness: Brightness.dark,
     ),
     buttonTheme: const ButtonThemeData(

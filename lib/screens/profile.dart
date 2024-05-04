@@ -2,7 +2,6 @@ import "package:flutter/material.dart";
 import "package:trustless/screens/projects.dart";
 import "package:trustless/utils/reusable.dart";
 import "package:trustless/widgets/footer.dart";
-
 import "../entities/human.dart";
 import "../entities/user.dart";
 import "../main.dart";

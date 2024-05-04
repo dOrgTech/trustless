@@ -26,7 +26,6 @@ IF ERRORLEVEL 1 (
 
 REM Perform flutter and firebase operations
 
-
 ECHO Operations completed successfully.
 EXIT /B 0
 
@@ -41,7 +40,6 @@ IF ERRORLEVEL 1 EXIT /B 1
 CALL git push -u dorg master
 IF ERRORLEVEL 1 EXIT /B 1
 EXIT /B 0
-
 
 
 :git_ops_functions

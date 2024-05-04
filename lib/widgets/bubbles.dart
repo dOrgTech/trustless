@@ -2,12 +2,14 @@ import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:graphite/graphite.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:trustless/entities/human.dart';
 
 class Bubbles extends StatefulWidget {
-  const Bubbles({super.key});
-
+  Bubbles({super.key});
+  List<Widget>allMessages=[];
   @override
   State<Bubbles> createState() => _BubblesState();
 }
@@ -16,9 +18,22 @@ class Bubbles extends StatefulWidget {
 class _BubblesState extends State<Bubbles> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController messageController = TextEditingController();
-  String result = ''; // To store the result from the API call
+   // To store the result from the API call
 
-  Future<void> makeRequest() async {
+  Future<String> makeRequest() async {
+  bool ready=false;
+  Widget? content;
+  Widget chenar=Padding(padding: EdgeInsets.all(8),
+   child:  Padding(
+           padding: const EdgeInsets.symmetric(vertical:9.0),
+           child: SizedBox(
+           width: 200,
+          height: 40,
+          child: !ready?LinearProgressIndicator():content!   
+          ,)
+       ),
+  );
+  
   final url = apiUrl;
   final response = await http.post(
     Uri.parse(url),
@@ -26,52 +41,24 @@ class _BubblesState extends State<Bubbles> {
       'Content-Type': 'application/json',
     },
     body: jsonEncode({
-       'session_id': "oer3raatever",
+      'session_id': Human().address??Human().session_id,
       'message': messageController.text, 
     }),
   );
-
   if (response.statusCode == 200) {
     print('Success: ${response.body}');
+    Human().chatHistory.add(
+      ChatItem(isSender: false, 
+      message: response.body.toString(),
+      )
+    );
   } else {
     print('Error: ${response.statusCode}');
   }
+  return response.body;
 }
 
-  Future<void> _postData() async {
-    print("method starts");
-    try {
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, dynamic>{
-          'name': "something name",
-          'message': messageController.text,
-        }),
-      );
-      
-      print(response.toString());
-      if (response.statusCode == 201) {
-        final responseData = jsonDecode(response.body);
-        setState(() {
-          result = 'Success! Response: $responseData';
-        });
-      } else {
-        setState(() {
-          result = 'Error: ${response.statusCode}';
-        });
-      }
-    } catch (e) {
-      print( "ocatching chasdoiajsd");
-      print(e);
-      setState(() {
-        result = 'Error: $e';
-      });
-    }
-    print("method ends");
-  }
+ 
 Duration duration = new Duration();
 Duration position = new Duration();
 DateTime now=DateTime.now();
@@ -80,36 +67,34 @@ bool isLoading = false;
 bool isPause = false;
   @override
   Widget build(BuildContext context) {
+    widget.allMessages=[];
+    for (ChatItem chatItem in Human().chatHistory){
+     widget.allMessages.add(
+       Padding(
+         padding: const EdgeInsets.symmetric(vertical:9.0),
+         child: BubbleNormal(
+              text: chatItem.message,
+              isSender: chatItem.isSender,
+              color: chatItem.isSender?Theme.of(context).colorScheme.onSurface
+              :Theme.of(context).canvasColor
+              ,
+              textStyle: TextStyle(
+                color:  chatItem.isSender?Theme.of(context).canvasColor
+              :Theme.of(context).colorScheme.onSurface
+              ),
+              tail: true,
+              sent: true,
+            ),
+       ),
+     );
+    }
     return SizedBox(
       height: MediaQuery.of(context).size.height-100,
       child: Stack(
         children: [
           SingleChildScrollView(
             child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical:8.0),
-                  child: BubbleNormal(
-                    text: "Welcome to Trustless Business! If you have questions about the platform, ask them here.",
-                    isSender: false,
-                    color: Theme.of(context).colorScheme.surface,
-                    
-                    tail: true,
-                    textStyle: TextStyle(
-                      fontSize: 20,
-                      color: Colors.white  
-                    ),
-                  ),
-                ),
-                BubbleNormal(
-                  text: 'bubble normal with tail bubble normal with tailbubble normal with tail',
-                  isSender: true,
-                  color: Theme.of(context).colorScheme.onSurface,
-                  tail: true,
-                  sent: true,
-                ),
-          
-              ],
+              children: widget.allMessages,
             ),
           ),
           Positioned(
@@ -118,7 +103,6 @@ bool isPause = false;
             child: SizedBox(
               width: MediaQuery.of(context).size.width,
               // height: 100,
-
               // height: MediaQuery.of(),
               child: 
               TextField(
@@ -129,22 +113,25 @@ bool isPause = false;
                   suffix: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextButton(
-                      onPressed: (){
-                        print("posting "+messageController.text);
-                         makeRequest();
+                      onPressed: () async{
+                        setState(() {
+                          Human().chatHistory.add(
+                            ChatItem(isSender: true, message: messageController.text)
+                          );
+                        });
+                         messageController.clear();
+                        //  makeRequest();
                       },
-                      child: Icon(Icons.send, size: 24)),
+                      child: const Icon(Icons.send, size: 24)),
                   ),
                   filled: true,
                   hintText: "Type your message here",
                   fillColor: Theme.of(context).dividerColor,
                 ),
-
               )
             ),
           ),
         ],
-      
       // This trailing comma makes auto-formatting nicer for build methods.
       ),
     );

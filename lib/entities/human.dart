@@ -6,6 +6,7 @@ import 'package:flutter_web3_provider/ethereum.dart';
 import 'package:flutter_web3_provider/ethers.dart';
 import 'package:http/http.dart';
 import 'package:trustless/entities/user.dart';
+import 'package:trustless/utils/reusable.dart';
 import 'package:trustless/widgets/chat.dart';
 import 'package:web3dart/web3dart.dart';
 import '../main.dart';
@@ -23,6 +24,7 @@ class Human extends ChangeNotifier{
   bool busy=false;
   bool beta=true;
   bool wrongChain=false;
+  String session_id=generateWalletAddress();
   int chainID=5;
   int chainNativeEarnings=0;
   int chainUSDTEarnings=0;
@@ -37,7 +39,7 @@ class Human extends ChangeNotifier{
   User? user;
   List<ChatItem> chatHistory=[
     ChatItem(isSender: false, 
-    message: "Welcome to Trustless Business! If you have questions about the platform, ask them here.",
+    message: "If you have questions about the platform, ask them here. I'm not human but I'll do my best.",
     )
   ];
   Human._internal(){
@@ -160,4 +162,5 @@ class ChatItem{
   ChatItem({required this.isSender, required this.message});
   bool isSender;
   String message;
+  
 }

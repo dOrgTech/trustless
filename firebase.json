@@ -1,10 +1,23 @@
 {
-    "hosting": {
-      "public": "build/web",
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
       "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
+        "venv",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
       ]
     }
-  }
+  ]
+}

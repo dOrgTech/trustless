@@ -52,7 +52,7 @@ class OverlayControlNavigatorObserver extends NavigatorObserver {
   }
 }
 
-
+String? api;
 String metamask="https://i.ibb.co/HpmDHg0/metamask.png";
 double switchAspect=1.2;
 List<Project> projects=[];
@@ -74,6 +74,11 @@ var usersCollection;
     void main() async  {
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+      var apisnap= await statsCollection.doc("systen").get();
+      if (apisnap.exists){
+        api=apisnap.data()!['api'];
+       print("apiiiiiiiiii  ${api}");
+      }else{print("not exists the thing you know");}
       projectsCollection=FirebaseFirestore.instance.collection("projects${Human().chain.name}");
       transactionsCollection=FirebaseFirestore.instance.collection("transactions${Human().chain.name}");
       usersCollection=FirebaseFirestore.instance.collection("users${Human().chain.name}");      
@@ -85,6 +90,7 @@ var usersCollection;
       } else {
         sourceAddress="source_address_not_available_at_the_moment";
       }
+      
       print("source address:" +sourceAddress);
       var projectsSnapshot = await projectsCollection.get();
       var transactionsSnapshot = await transactionsCollection.get();
@@ -226,7 +232,7 @@ class MyApp extends StatelessWidget {
           WidgetBuilder builder;
           if (settings.name == '/') {
             builder = (_) => 
-            BaseScaffold(body: Bubbles(), title: "title",  selectedItem: 0);
+            // BaseScaffold(body: Bubbles(), title: "title",  selectedItem: 0);
             // ProjectDetails(project: projects[0]);
             // Prelaunch();
             // Poll();  
@@ -235,8 +241,8 @@ class MyApp extends StatelessWidget {
             //   selectedItem: 0, body: Profile(), title: "Profile"); 
             // Scaffold(body: SetParty(project: projects[0]));
             //  BaseScaffold(botonChat: Human().botonDeChat,selectedItem: 0, body: const Users(), title: "Users");
-            //  Human().beta ?  BaseScaffold(
-            //   selectedItem: 0, body: Landing(), title: "Trustless Business") : Prelaunch();
+             Human().beta ?  BaseScaffold(
+              selectedItem: 0, body: Landing(), title: "Trustless Business") : Prelaunch();
             // BaseScaffold(selectedItem: 1,body: Projects(), title: "Projects");
           } else if (settings.name!.startsWith('/projects/')) {
             final projectId = settings.name!.replaceFirst('/projects/', '');
@@ -724,10 +730,9 @@ class _WalletBTNState extends State<WalletBTN> {
         MaterialPageRoute(
           builder: ((context) =>
             BaseScaffold(
-              
               selectedItem: 0, body: Profile(), title: "Profile")
+            )
           )
-        )
       );
         }
         }
@@ -780,7 +785,7 @@ class _WalletBTNState extends State<WalletBTN> {
 
 
 
-  const Color _lightThemeHighlightColor = Color.fromARGB(255, 124, 112, 93); // For light theme
+  const Color _lightThemeHighlightColor = Color.fromRGBO(124, 112, 93, 1); // For light theme
   const Color _darkThemeHighlightColor = Color.fromARGB(255, 212, 195, 140); // For dark theme
 
   // Light Theme

@@ -22,7 +22,7 @@ var chains={
 
 class Human extends ChangeNotifier{
   bool busy=false;
-  bool beta=true;
+  bool beta=false;
   bool wrongChain=false;
   String session_id=generateWalletAddress();
   int chainID=5;

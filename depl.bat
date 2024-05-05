@@ -23,6 +23,14 @@ IF ERRORLEVEL 1 (
     EXIT /B 1
 )
 
+CD /D "functions" 
+
+CALL :git_ops_functions "functions: %COMMIT_MSG%" "functions"
+IF ERRORLEVEL 1 (
+    ECHO Git operations for 'functions' failed.
+    EXIT /B 1
+)
+
 ECHO Operations completed successfully.
 EXIT /B 0
 
@@ -43,5 +51,15 @@ REM A subroutine to perform flutter and firebase operations
 CALL flutter build web
 IF ERRORLEVEL 1 EXIT /B 1
 CALL firebase deploy --only hosting
+IF ERRORLEVEL 1 EXIT /B 1
+EXIT /B 0
+
+
+:git_ops_functions
+CALL git add .
+IF ERRORLEVEL 1 EXIT /B 1
+CALL git commit -m "%~1"
+IF ERRORLEVEL 1 EXIT /B 1
+CALL git push -u origin master
 IF ERRORLEVEL 1 EXIT /B 1
 EXIT /B 0

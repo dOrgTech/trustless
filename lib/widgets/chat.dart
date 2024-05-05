@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:trustless/widgets/bubbles.dart';
 
 
 
@@ -73,7 +74,12 @@ Widget build(BuildContext context) {
               bottom: 60,
               right:8, // position just above the FAB
               child: Container(
-                child: const Center(child: Text("here we have something")),
+                padding: EdgeInsets.all(8),
+              
+                child: SizedBox(
+                  width: 580,
+                  height: MediaQuery.of(context).size.height-105,
+                  child:  Expanded(child: Bubbles())),
                 height: animationHeight.value > 699
           ? screenHeight // use screenHeight if animation value is greater
           : animationHeight.value, // animate the height

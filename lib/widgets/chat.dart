@@ -41,9 +41,11 @@ void toggle() {
 }
 
 
+
 @override
 Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height-92;
+
 
   return AnimatedBuilder(
     animation: animationHeight,
@@ -59,7 +61,6 @@ Widget build(BuildContext context) {
  
   child: 
        Stack(
-          
           children: [
            Positioned(
               bottom: 0,
@@ -110,4 +111,52 @@ Widget build(BuildContext context) {
     },
   );
 }
+}
+
+
+class NonBlockingPopup extends StatelessWidget {
+  final String message;
+
+  const NonBlockingPopup({required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        // Close the popup when tapped outside
+        Navigator.of(context).pop();
+      },
+      child: Material(
+        color: Colors.transparent,
+        child: Center(
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  blurRadius: 8,
+                  spreadRadius: 2,
+                ),
+              ],
+            ),
+            child: Text(
+              message,
+              style: TextStyle(fontSize: 16),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+void showNonBlockingPopup(BuildContext context, String message) {
+  OverlayEntry overlayEntry = OverlayEntry(
+
+    builder: (context) => NonBlockingPopup(message: message),
+  );
+  Overlay.of(context)!.insert(overlayEntry);
 }

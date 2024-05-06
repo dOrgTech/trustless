@@ -64,7 +64,7 @@ class _BuyATNState extends State<BuyATN> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
      Future.delayed(Duration(milliseconds: 500), () {
       setState(() {
-      widget.opa_aur = 0.7;
+      widget.opa_aur = 0.3;
       });
     });
     List<Color> colors = [

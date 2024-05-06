@@ -32,9 +32,9 @@ class _BubblesState extends State<Bubbles> {
        bool ready=true;
        isLoading=false;
       return null;}
-    setState(() {
-  bool ready=false;
-});
+          setState(() {
+        bool ready=false;
+      });
     print("started make request");
       scrollController.animateTo(
         scrollController.position.maxScrollExtent,

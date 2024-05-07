@@ -75,13 +75,8 @@ class _BubblesState extends State<Bubbles> {
         duration: Duration(milliseconds: 20),
         curve: Curves.easeOut,
       );
-      
     });
-  
   }
-
-
- 
 
 
 Duration duration = new Duration();
@@ -99,7 +94,7 @@ bool isPause = false;
        Container(
          padding: const EdgeInsets.symmetric(vertical:9.0),
          child: BubbleNormal(
-          constraints: BoxConstraints(maxWidth: 460),
+          constraints: BoxConstraints(maxWidth: 470),
               text: chatItem.message,
               isSender: chatItem.isSender,
               color: chatItem.isSender?Theme.of(context).colorScheme.onSurface
@@ -115,7 +110,6 @@ bool isPause = false;
        ),
      );
     }
-     
 
     if (isLoading){
       widget.allMessages.add(
@@ -124,7 +118,6 @@ bool isPause = false;
              child:  Center(child: SizedBox(
                   height:30,
                   width: 250,
-                  
                   child: Opacity(
                     opacity: 0.5,
                     child: ColorFiltered(
@@ -170,7 +163,7 @@ bool isPause = false;
             bottom: 0,
             left: 0,
             child: SizedBox(
-              width: 580,
+              width: 800,
               // height: 100,
               // height: MediaQuery.of(),
               child: 

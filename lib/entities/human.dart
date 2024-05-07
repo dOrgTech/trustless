@@ -40,7 +40,7 @@ class Human extends ChangeNotifier{
   List<ChatItem> chatHistory=[
     ChatItem(isSender: false, 
     message: "If you have questions about the platform, ask them here. I'm not human but I'll do my best.",
-    )
+    ),
   ];
   Human._internal(){
     _setupListeners();

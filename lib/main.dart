@@ -260,7 +260,7 @@ class MyApp extends StatelessWidget {
             body:  Center(
               child: Container(
                 constraints: BoxConstraints(
-                  maxWidth: 1200
+                  maxWidth: 800
                 ),
                 
                 child: Bubbles(),

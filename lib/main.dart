@@ -168,8 +168,6 @@ var usersCollection;
   //     }
   // }
 
-  
-
   actions.sort((a, b) => b.time.compareTo(a.time));
 
 
@@ -204,8 +202,6 @@ String chatFunction(String prompt) {
 }
 
 
-
-
 class MyApp extends StatelessWidget {
   // Create a global variable for the overlay entry
   OverlayEntry? _overlayEntry;
@@ -236,9 +232,7 @@ class MyApp extends StatelessWidget {
             // ProjectDetails(project: projects[0]);
             // Prelaunch();
             // Poll();  
-            //  BaseScaffold(
-            //   botonChat: Human().botonDeChat,
-            //   selectedItem: 0, body: Profile(), title: "Profile"); 
+            
             // Scaffold(body: SetParty(project: projects[0]));
             //  BaseScaffold(botonChat: Human().botonDeChat,selectedItem: 0, body: const Users(), title: "Users");
              Human().beta ?  BaseScaffold(
@@ -260,7 +254,19 @@ class MyApp extends StatelessWidget {
             } else {
               builder = (context) => const Text("Project not found");
             }
-          } 
+          }
+            else if (settings.name == '/chat') {
+            builder = (_) => BaseScaffold(selectedItem: 5, title: "Chat" ,
+            body:  Center(
+              child: Container(
+                constraints: BoxConstraints(
+                  maxWidth: 1200
+                ),
+                
+                child: Bubbles(),
+              ),
+            ), );
+            } 
           else if (settings.name == '/users') {
             builder = (_) => BaseScaffold(selectedItem: 3, body: const Users(), title: "Users");
             } else if (settings.name == '/') {
@@ -322,6 +328,7 @@ class BaseScaffold extends StatefulWidget {
   final String title;
   late bool isTrustless;
   late  bool isProjects;
+  late  bool isChat;
   late bool isDisputes;
   late bool isUsers;
   late bool isProfile;
@@ -332,6 +339,7 @@ class BaseScaffold extends StatefulWidget {
     isTrustless = selectedItem == 0;
     isProjects = selectedItem == 1;
     isDisputes = selectedItem == 2;
+    isChat= selectedItem==5;
     isUsers = selectedItem == 3;
     isProfile = selectedItem==4;
   }
@@ -355,6 +363,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
         widget.isProjects = position == 0;
         widget.isDisputes = position == 2;
         widget.isUsers = position == 3;
+        widget.isChat = position == 5;
     });
       // butonDechat.createElement().state.dispose();
   }
@@ -516,18 +525,37 @@ class _BaseScaffoldState extends State<BaseScaffold> {
           return Scaffold(
           floatingActionButton:ExpandableFAB(),
           appBar: AppBar(
-           toolbarHeight: 42,
+           toolbarHeight: 44,
            elevation: 1.8,
            automaticallyImplyLeading: MediaQuery.of(context).size.aspectRatio < switchAspect,
            title: 
            MediaQuery.of(context).size.aspectRatio >= switchAspect?
            Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
            children:
            [...botoane,]
            ):  null,
           
            actions: <Widget>[
-           
+            TextButton(onPressed: (){ 
+             changeButton(5);
+              Navigator.of(context).pushNamed("/chat");
+              }, child: 
+            SizedBox(
+              width:100,
+              child: Center(
+                child: Opacity(
+                  opacity: widget.isProjects?1:0.6,
+                  child: Row(children: [
+                    Icon(Icons.chat,size:30, color:widget.isChat?Theme.of(context).indicatorColor:Theme.of(context).textTheme.bodyLarge!.color!),
+                    const SizedBox(width: 8),
+                    Text("Chat", style: widget.isChat?selectedMenuItem:nonSelectedMenuItem)
+                  ],),
+                ),
+              ),
+            )
+            ),
+            SizedBox(width: 50),
            MediaQuery.of(context).size.aspectRatio > switchAspect?
               Container(
                 height: 9,

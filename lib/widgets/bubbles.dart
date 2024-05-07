@@ -122,7 +122,7 @@ bool isPause = false;
         Container(
              padding: EdgeInsets.all(30),
              child:  Center(child: SizedBox(
-                  height:60,
+                  height:30,
                   width: 250,
                   
                   child: Opacity(

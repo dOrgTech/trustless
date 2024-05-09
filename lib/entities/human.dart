@@ -41,11 +41,11 @@ class Human extends ChangeNotifier{
     ChatItem(isSender: false, 
     message: "If you have questions about the platform, ask them here. I'm not human but I'll do my best.",
     ),
+ 
   ];
   Human._internal(){
     _setupListeners();
   }
-  
 
   // Singleton instancelogo
   static final Human _instance = Human._internal();

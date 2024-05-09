@@ -140,18 +140,19 @@ bool isPause = false;
 
     return SizedBox(
      
-      height: MediaQuery.of(context).size.height-100,
+      // height: MediaQuery.of(context).size.height-100,
       // height: 300,
-      child: Stack(
-        fit: StackFit.expand,
+      child: Column(
+       
         children: [
            Container(
-              height: MediaQuery.of(context).size.height-170,
+              height: MediaQuery.of(context).size.height-80,
               child:
           SingleChildScrollView(
             scrollDirection: Axis.vertical,
             controller: scrollController,
             child: SizedBox(
+             
               width: 594,
               child: Column(
                   children: widget.allMessages,
@@ -159,62 +160,57 @@ bool isPause = false;
             ),
             ),
           ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            child: SizedBox(
-              width: 800,
-              // height: 100,
-              // height: MediaQuery.of(),
-              child: 
-              SizedBox(
-                child: TextField(
-                  
-                  controller: messageController,
-                  minLines: 1,
-                  maxLines: 2,
-                  decoration: InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(17.0),
+          SizedBox(
+            width: 600,
+            // height: 100,
+            // height: MediaQuery.of(),
+            child: 
+            SizedBox(
+              child: TextField(
+                controller: messageController,
+                minLines: 1,
+                maxLines: 2,
+                decoration: InputDecoration(
+                  focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(1.0),
 
-                    ),
-                   border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                    suffix: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextButton(
-                        onPressed: 
-
-                        () async{
-                          setState(() {
-                            Human().chatHistory.add(
-                              ChatItem(isSender: true, message: messageController.text)
-                            );
-                           isLoading=true;
-                           
-                          });
-                          String query=messageController.text;
-                          messageController.clear();
-                          await makeRequest(query);
-                          setState(() {
-                          scrollController.animateTo(
-                                scrollController.position.maxScrollExtent,
-                                duration: Duration(milliseconds: 100),
-                                curve: Curves.easeOut,
-                              );
-                          });
-              
-                        },
-                        child: const Icon(Icons.send, size: 24)),
-                    ),
-                    filled: true,
-                    hintText: "Type your message here",
-                    fillColor: Theme.of(context).dividerColor,
                   ),
+                 border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(1.0),
+                      ),
+                  suffix: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextButton(
+                      onPressed: 
+
+                      () async{
+                        setState(() {
+                          Human().chatHistory.add(
+                            ChatItem(isSender: true, message: messageController.text)
+                          );
+                         isLoading=true;
+                         
+                        });
+                        String query=messageController.text;
+                        messageController.clear();
+                        await makeRequest(query);
+                        setState(() {
+                        scrollController.animateTo(
+                              scrollController.position.maxScrollExtent,
+                              duration: Duration(milliseconds: 100),
+                              curve: Curves.easeOut,
+                            );
+                        });
+            
+                      },
+                      child: const Icon(Icons.send, size: 24)),
+                  ),
+                  filled: true,
+                  hintText: "Type your message here",
+                  fillColor: Theme.of(context).dividerColor,
                 ),
-              )
-            ),
+              ),
+            )
           ),
         ],
       // This trailing comma makes auto-formatting nicer for build methods.

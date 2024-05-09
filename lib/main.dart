@@ -234,10 +234,10 @@ class MyApp extends StatelessWidget {
             // Poll();  
             
             // Scaffold(body: SetParty(project: projects[0]));
-            //  BaseScaffold(botonChat: Human().botonDeChat,selectedItem: 0, body: const Users(), title: "Users");
+            //  BaseScaffold(selectedItem: 0, body: const Users(), title: "Users");
              Human().beta ?  BaseScaffold(
               selectedItem: 0, body: Landing(), title: "Trustless Business") : Prelaunch();
-            // BaseScaffold(selectedItem: 1,body: Projects(), title: "Projects");
+            // BaseScaffold(selectedItem: 1,body: Projects( main: true, capacity: ""), title: "Projects");
           } else if (settings.name!.startsWith('/projects/')) {
             final projectId = settings.name!.replaceFirst('/projects/', '');
             Project? project;
@@ -319,8 +319,7 @@ class MyApp extends StatelessWidget {
 
 
 class BaseScaffold extends StatefulWidget {
-// GlobalKey<AnimatedFabWithOverlayState> cheieBoton = GlobalKey();
- 
+final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>(); 
 // Call the dispose function
 
 
@@ -520,10 +519,24 @@ class _BaseScaffoldState extends State<BaseScaffold> {
          
         // final double scaleFactor = MediaQuery.of(context).size.width * MediaQuery.of(context).size.height < 1400000 ? 0.8 : 1.0;
           
-
+          
           // Apply scale factor to the entire Scaffold
           return Scaffold(
-          floatingActionButton:ExpandableFAB(),
+            key:widget._scaffoldKey,
+          endDrawer: Drawer(
+            semanticLabel: "AI Helper",
+            elevation: 10,
+            width: 600,
+            child: Bubbles()
+            
+          ),
+          // floatingActionButton:ExpandableFAB(),
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: Theme.of(context).colorScheme.onError,
+            child: const Icon(Icons.contact_support, size: 57,),
+            onPressed: (){
+           widget. _scaffoldKey.currentState?.openEndDrawer();
+          }),
           appBar: AppBar(
            toolbarHeight: 44,
            elevation: 1.8,
@@ -537,25 +550,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
            ):  null,
           
            actions: <Widget>[
-            TextButton(onPressed: (){ 
-             changeButton(5);
-              Navigator.of(context).pushNamed("/chat");
-              }, child: 
-            SizedBox(
-              width:100,
-              child: Center(
-                child: Opacity(
-                  opacity: widget.isProjects?1:0.6,
-                  child: Row(children: [
-                    Icon(Icons.chat,size:30, color:widget.isChat?Theme.of(context).indicatorColor:Theme.of(context).textTheme.bodyLarge!.color!),
-                    const SizedBox(width: 8),
-                    Text("Chat", style: widget.isChat?selectedMenuItem:nonSelectedMenuItem)
-                  ],),
-                ),
-              ),
-            )
-            ),
-            SizedBox(width: 50),
+           
            MediaQuery.of(context).size.aspectRatio > switchAspect?
               Container(
                 height: 9,

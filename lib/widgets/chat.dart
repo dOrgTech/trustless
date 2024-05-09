@@ -114,6 +114,7 @@ Widget build(BuildContext context) {
 }
 
 
+
 class NonBlockingPopup extends StatelessWidget {
   final String message;
 
@@ -127,20 +128,16 @@ class NonBlockingPopup extends StatelessWidget {
         Navigator.of(context).pop();
       },
       child: Material(
-        color: Colors.transparent,
+        
         child: Center(
           child: Container(
+            width: 400,
+            height: 400,
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white,
+             
               borderRadius: BorderRadius.circular(8),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  blurRadius: 8,
-                  spreadRadius: 2,
-                ),
-              ],
+             
             ),
             child: Text(
               message,

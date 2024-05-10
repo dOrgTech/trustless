@@ -19,7 +19,7 @@ class Project{
   String? termsHash="";
   String? repo="";
   String? requirements;
-  double? holding=0;
+  String holding="0";
   double releasing=0;
   double disputing=0;
   String? status;
@@ -30,7 +30,7 @@ class Project{
   List<Token>? acceptedTokens;
   // Constructor with logic
   Project({required this.isUSDT,this.contractAddress, this.contractor,this.name,  this.creationDate, this.description,this.author, this.arbiter, this.requirements, this.status, this.repo}){
-    int random = Random().nextInt(331) + 90;
+    // int random = Random().nextInt(331) + 90;
     // holding = contributions.values.fold(0, (a, b) => a! + b);
     releasing = contributorsReleasing.values.fold(0, (a, b) => a + b);
     disputing = contributorsDisputing.values.fold(0, (a, b) => a + b);
@@ -54,6 +54,7 @@ fromJson(Map<String, dynamic> json) {
   termsHash = json['termsHash'];
   status = json['status'];
   author = json['author'];
+  holding=json['holding'];
   contributions = json['contributions'];
   arbiterAwardingContractor = json['arbiterAwardingContractor'];
   rulingHash = json['rulingHash'];
@@ -84,6 +85,7 @@ fromJson(Map<String, dynamic> json) {
     return {
       'isUSDT':isUSDT,
       'name':name,
+      'holding':holding,
       'contractor':contractor,
       'created':creationDate,
       'description':description,
@@ -100,7 +102,6 @@ fromJson(Map<String, dynamic> json) {
       'arbiterAwardingContractor':arbiterAwardingContractor
     };
   }
-    
 }
 
 

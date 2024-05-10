@@ -145,7 +145,7 @@ class SignState extends State<Sign> {
                         Human().user!.projectsContracted.add(widget.project.contractAddress!);
                         await usersCollection.doc(Human().address).set(Human().user!.toJson());
                         User u;
-                        if (!users.any((user) => user.address == Human().address)){users.add(Human().user!);}
+                        if (!users.any((user) => user.address.toLowerCase() == Human().address!.toLowerCase())){users.add(Human().user!);}
                 
                         if (!users.any((user) => user.address.toLowerCase() == widget.project.arbiter!.toLowerCase())){
                             u = User.fromNew(widget.project.arbiter!);

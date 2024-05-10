@@ -154,9 +154,10 @@ var usersCollection;
     p.termsHash=doc.data()['termsHash']??"";
     p.hashedFileName=doc.data()['hashedFileName']??"";
     p.arbiterAwardingContractor=doc.data()['arbiterAwardingContractor'];
+    p.rulingHash=doc.data()['rulingHash'];
+    p.holding=doc.data()['holding'];
     projects.add(p);
     // p.contributions.forEach((key, value) { valueInContracts+=value;});
-    p.rulingHash=doc.data()['rulingHash'];
   }
 
   // if (projects.length>0) {await createUsers();}
@@ -170,7 +171,6 @@ var usersCollection;
 
   actions.sort((a, b) => b.time.compareTo(a.time));
 
-
   await cf.getProjectsCounter();
   // await Human().signIn();
   print("we have this many projects: "+numberOfProjects.toString());
@@ -181,7 +181,6 @@ var usersCollection;
       ));
       listenForConsoleInputs();
       }
-
 
 void listenForConsoleInputs() {
   // Listen for the custom event
@@ -519,10 +518,10 @@ class _BaseScaffoldState extends State<BaseScaffold> {
          
         // final double scaleFactor = MediaQuery.of(context).size.width * MediaQuery.of(context).size.height < 1400000 ? 0.8 : 1.0;
           
-          
           // Apply scale factor to the entire Scaffold
           return Scaffold(
             key:widget._scaffoldKey,
+
           endDrawer: Drawer(
             semanticLabel: "AI Helper",
             elevation: 10,
@@ -826,7 +825,7 @@ class _WalletBTNState extends State<WalletBTN> {
       
       onBackground: Colors.black,
       surface: Color.fromARGB(255, 39, 39, 39), // Card and dialog backgrounds
-      onSurface: Color.fromARGB(255, 211, 211, 211), // Text on surface
+      onSurface: Color.fromARGB(255, 54, 54, 54), // Text on surface
       error: Colors.red,
       onError: Color.fromARGB(255, 228, 228, 228),
       brightness: Brightness.light,

@@ -19,50 +19,49 @@ class ContractFunctions{
 getProjectsCounter() async {
   var httpClient = Client();
   var ethClient = Web3Client(Human().chain.rpcNode, httpClient);
+
   final contractSursa = DeployedContract(
     ContractAbi.fromJson(economyAbi, 'Economy'),
     EthereumAddress.fromHex(sourceAddress),
   );
 
-  var getNumberOfProjects = contractSursa.function('getNumberOfProjects');
-  Uint8List encodedData = getNumberOfProjects.encodeCall([]);
-  var response ;
-  final Map<String, String> headers = {
-  'Content-type': 'application/json',
-  'Accept': 'application/json',
-};
+  var getRepToken = contractSursa.function('getNumberOfProjects');
+  Uint8List encodedData = getRepToken.encodeCall([]);
+
   try {
     // Log the RPC request
     print('RPC Request:');
     print(jsonEncode({
-      
       'jsonrpc': '2.0',
       'method': 'eth_call',
       'params': [
         {
           'to': sourceAddress,
-          'data': '0x${bytesToHex(encodedData)}',
+          'data': '0x' + bytesToHex(encodedData),
         },
         'latest',
       ],
       'id': 1,
     }));
-    print("before trying to make the call");
 
-    response = await ethClient.call(
-      
+    var counter = await ethClient.call(
       contract: contractSursa,
-      function: getNumberOfProjects,
+      function: getRepToken,
       params: [],
     );
-    print("after the call");
-    return 5;
+
+    // Log the RPC response
+    print('RPC Response:');
+    print(counter.toString());
+    int rezultat = int.parse(counter[0].toString()) as int;
+    numberOfProjects = rezultat;
+    print('$rezultat ${rezultat.runtimeType}');
+    return rezultat;
   } catch (e) {
     print('Error: $e');
     // Log the full response body
     print('Response Body:');
-    print(response.toString()
-    );
+    print(httpClient.toString());
     rethrow;
   }
 }
@@ -80,7 +79,7 @@ getProjectsCounter() async {
     final balance = await ethClient.getBalance(ethAddress);
      // Close the HTTP client
     httpClient.close();
-    return balance.getInWei;
+    return balance.getInWei.toString();
   }
 
   getUSDTBalance(){
@@ -165,7 +164,7 @@ getProjectsCounter() async {
                 project.creationDate=DateTime.now();
                 print("added project");
                 print("suntem inainte de pop");
-
+        print ("projectAddress "+ projectAddress.toString());
         TTransaction t= TTransaction(
               contractAddress:projectAddress,
               functionName: 'createProject',
@@ -691,7 +690,6 @@ getProjectsCounter() async {
         return "nu merge final" ;
       }
   }
-
 
   arbitrate(Project project, percentage, rulingHash)async{
       var sourceContract = Contract(project.contractAddress!, nativeProjectAbiString, Human().web3user);

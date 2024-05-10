@@ -589,32 +589,37 @@ String extractGitHubPath(String? repoUrl) {
                                             const EdgeInsets.only(left: 28.0),
                                         child: Row(
                                           children: [
-                                           FutureBuilder(
-                          future:  widget.project.isUSDT?
-                           cf.getUSDTBalance():
-                           cf.getNativeBalance(widget.project.contractAddress!),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState==ConnectionState.done){
-                              String catare=snapshot.data.toString();
-                              double avem=double.parse(catare);
-                              if (widget.project.holding!=avem){
-                                widget.project.holding=avem;
-                                projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
-                              }
-                              // widget.project!.currentlyHolding=int.parse(catare);
-                            return Text(catare,style: const TextStyle(
-                                                  fontSize: 25,
-                                                  fontWeight: FontWeight.normal),
-                                            );
-                            }else{
-                           return const Center(child: CircularProgressIndicator());
-                          }
-                        } ),
+                        //  FutureBuilder(
+                        //   future:  widget.project.isUSDT?
+                        //    cf.getUSDTBalance():
+                        //    cf.getNativeBalance(widget.project.contractAddress!),
+                        //   builder: (context, snapshot) {
+                        //     if (snapshot.connectionState==ConnectionState.done){
+                        //       String catare=snapshot.data.toString();
+                        //       double avem=double.parse(catare);
+                        //       if (widget.project.holding!=avem){
+                        //         widget.project.holding=avem;
+                        //         projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
+                        //       }
+                        //       // widget.project!.currentlyHolding=int.parse(catare);
+                        //     return Text(catare,style: const TextStyle(
+                        //                           fontSize: 25,
+                        //                           fontWeight: FontWeight.normal),
+                        //                     );
+                        //     }else{
+                        //    return const Center(child: CircularProgressIndicator());
+                        //   }
+                        // } ),
+                        Text(widget.project.holding.toString(),style: const TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.normal),
+                                  
+                                    ),
                                   Text(
                                     widget.project.isUSDT?" USDT":" "+ Human().chain.nativeSymbol,
                                     style: const TextStyle(
-                                        fontSize: 25,
-                                        fontWeight: FontWeight.normal),
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.normal),
                                   ),
                                 ],
                               ),

@@ -49,32 +49,36 @@
   <style>
     /* Custom styles */
     body {
-      margin: 0;
-      padding: 0;
-      background-color: #E0E0E0; /* Example: Light grey for the loading background */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    #loader {
-      width: 60%;
-      height: 20px;
-      background-color: #808080; /* Example: Dark grey for the loading bar */
-      border-radius: 10px;
-      overflow: hidden;
-    }
-    #loader-inner {
-      width: 0;
-      height: 100%;
-      background-color: #A0A0A0; /* Slightly lighter grey for the progress indicator */
-      transition: width 2s ease-in-out;
-    }
+            margin: 0;
+            padding: 0;
+            background-color: #E0E0E0; /* Light grey for the loading background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden; /* Hide scrollbars */
+        }
+        #iframe-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+                overflow: hidden;
+        }
+        iframe {
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            border: none; /* Remove iframe border */
+        }
   </style>
 </head>
 <body>
   <script src="https://cdn.ethers.io/lib/ethers-5.0.umd.min.js" type="application/javascript"></script>
-  <div id="loader"><div id="loader-inner"></div></div> <!-- Custom loader -->
+  <div id="iframe-container">
+    <iframe src="https://dorgtech.github.io/game-of-life-nft/docs/" frameborder="0" ></iframe>
+</div>
 
   <script type="module">
     // Import the functions you need from the SDKs you need

@@ -294,6 +294,8 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                       }else{
                       print("deployed contract with address "+address);
                         widget.project.contractAddress=address;
+                        String holding=cf.getNativeBalance(address);
+                        widget.project.holding=holding;
                         await projectsCollection.doc(widget.project.contractAddress)
                         .set(widget.project.toJson());
                         print("before adding the user");

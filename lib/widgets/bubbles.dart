@@ -17,15 +17,10 @@ class Bubbles extends StatefulWidget {
   State<Bubbles> createState() => _BubblesState();
 }
 
-  final String apiUrl = 'http://127.0.0.1:5001/trustless-fbc30/us-central1/on_request_example'; 
-  
-
-
 class _BubblesState extends State<Bubbles> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController messageController = TextEditingController();
    // To store the result from the API call
-
   final scrollController = ScrollController();
   Future<void> makeRequest(query) async {
     if (query.length<2){
@@ -40,7 +35,6 @@ class _BubblesState extends State<Bubbles> {
         scrollController.position.maxScrollExtent,
         duration: Duration(milliseconds: 20),
         curve: Curves.easeOut);
-
         final url = api!;
         final response = await http.post(
           Uri.parse(url),
@@ -62,7 +56,7 @@ class _BubblesState extends State<Bubbles> {
         } else {
           print('Error: ${response.statusCode}');
         }
-
+   
   // await Future.delayed(Duration(seconds: 3));
   
   // String response="somehgoisjoasidnoas oaisndoiandasoi doasi doasid asidnoas oaisndoiandasoi doasi doasid asidnoas oaisndoiandasoi doasi doasid asidnoas oaisndoiandasoi doasi doasid asidnoas oaisndoiandasoi doasi doasid asidnoas oaisndoiandasoi doasi doasid asidnoas oaisndoiandasoi doasi doasid asidnoas oaisndoiandasoi doasi doasid asidnoas oaisndoiandasoi doasi doasid asidnoas oaisndoiandasoi doasi doasid ";
@@ -78,14 +72,12 @@ class _BubblesState extends State<Bubbles> {
     });
   }
 
-
 Duration duration = new Duration();
 Duration position = new Duration();
 DateTime now=DateTime.now();
 bool isPlaying = false;
 bool isLoading = false;
 bool isPause = false;
-
   @override
   Widget build(BuildContext context) {
     widget.allMessages=[];
@@ -94,14 +86,14 @@ bool isPause = false;
        Container(
          padding: const EdgeInsets.symmetric(vertical:9.0),
          child: BubbleNormal(
-          constraints: BoxConstraints(maxWidth: 470),
+          constraints: BoxConstraints(maxWidth: 520),
               text: chatItem.message,
               isSender: chatItem.isSender,
               color: chatItem.isSender?Theme.of(context).colorScheme.onSurface
-              :Theme.of(context).canvasColor
+              : Theme.of(context).canvasColor
               ,
               textStyle: TextStyle(
-                color:  chatItem.isSender?Theme.of(context).canvasColor
+                color:  chatItem.isSender?Theme.of(context).cardColor
               :Theme.of(context).colorScheme.onSurface
               ),
               tail: true,
@@ -110,7 +102,6 @@ bool isPause = false;
        ),
      );
     }
-
     if (isLoading){
       widget.allMessages.add(
         Container(
@@ -123,12 +114,10 @@ bool isPause = false;
                     child: ColorFiltered(
           colorFilter: ColorFilter.mode(Theme.of(context).indicatorColor, BlendMode.srcIn),
           child:  Lottie.asset(
-                        
                         "assets/typing.json",fit: BoxFit.fitHeight),
                     )),
                   )))
-      );
-               
+                 );     
                   setState(() {
                 scrollController.animateTo(
                       scrollController.position.maxScrollExtent,
@@ -136,14 +125,11 @@ bool isPause = false;
                       curve: Curves.easeOut,
                     );
             });
-      }
-
+      }                                                          
     return SizedBox(
-     
       // height: MediaQuery.of(context).size.height-100,
       // height: 300,
       child: Column(
-       
         children: [
            Container(
               height: MediaQuery.of(context).size.height-80,
@@ -152,7 +138,6 @@ bool isPause = false;
             scrollDirection: Axis.vertical,
             controller: scrollController,
             child: SizedBox(
-             
               width: 594,
               child: Column(
                   children: widget.allMessages,

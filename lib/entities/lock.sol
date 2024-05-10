@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.0; 
 
 contract Economy {
-
+    
     // Array to hold addresses of deployed projects
     address[] public deployedProjects;
     mapping(address => bool) public isProjectContract;
@@ -11,8 +11,8 @@ contract Economy {
     mapping (address => uint) public nativeSpent;
     mapping (address => uint) public usdtEarned;
     mapping (address => uint) public usdtSpent;
-
     // Function to deploy a new Project contract
+
     function getNumberOfProjects() public view returns (uint) {
         return deployedProjects.length;
     }
@@ -152,8 +152,9 @@ contract NativeProject {
         require(sent, "Failed");
         emit ContractorPaid(contractor);
     }
-
+    
     function updateContributorSpendings()public{
+        require(disputeResolution < 100, "on disputed projects, spendings are updated in the withdraw function.");
         require(
             keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("closed")),
             "Stats can be updated once the project is closed.");
@@ -194,6 +195,8 @@ contract NativeProject {
          "Withdrawals only allowed when the project is open, pending or closed.");
         uint256 contributorAmount = contributors[msg.sender];
         uint256 exitAmount = (contributorAmount / 100 ) * (100 - disputeResolution);
+        uint256 expenditure = contributorAmount - exitAmount;
+        economy.updateSpendings(msg.sender,expenditure,true);
         contributors[msg.sender] = 0; 
         (bool sent, ) = payable(msg.sender).call{value: exitAmount}("");
         require(sent, "Failed to send Ether");
@@ -220,7 +223,6 @@ contract NativeProject {
         // Check that the project is currently in the "ongoing" stage
         require(keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("ongoing")), "This action can only be performed while the project is ongoing.");
         // Move the project to "closed" mode
-        
         stage = "closed";
         emit ProjectClosed(msg.sender);
     }

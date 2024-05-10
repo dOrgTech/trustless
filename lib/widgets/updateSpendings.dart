@@ -118,7 +118,10 @@ class UpdateSpendingsState extends State<UpdateSpendings> {
                         ),
                       ),
                       onPressed: ()async{
-                      setState(() {widget.stage="waiting";});
+                      setState(() {widget.stage="waiting"; Human().busy=true;});
+                      setState(() {
+                        
+                      });
                            print("updating");
                             String cevine = await cf.updateContributorSpendings(widget.project);
                            print("dupa cevine");

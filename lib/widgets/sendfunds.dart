@@ -167,10 +167,10 @@ Widget stage0(){
                           ),
                         ),
                          onPressed: () async {
-                          setState(() { widget.stage=1;});
+                          setState(() { widget.stage=1; Human().busy=true;});
                            String cevine = await cf.sendFunds(widget.project,amount);
                            print("dupa cevine");
-                            if (cevine.contains("nu merge")){
+                          if (cevine.contains("nu merge")){
                               print("nu merge din setParty");
                               setState(() { widget.stage=2;});
                               return;
@@ -180,13 +180,17 @@ Widget stage0(){
                               } else {
                                 widget.project.contributions[Human().address!] = int.parse(amount);
                               }
-                         projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
-
+                               projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
                          if (!Human().user!.projectsBacked.contains(widget.project.contractAddress)) {
-                                Human().user!.projectsBacked.add(widget.project.contractAddress!);
-                          usersCollection.doc(Human().address).set(Human().user!.toJson());
+                                Human().user!.projectsBacked.add(widget.project.contractAddress!); 
                           }
-
+                         
+                          if (!users.any((user) => user.address.toLowerCase()==Human().address!.toLowerCase())){
+                            users.add(Human().user!);
+                            await usersCollection.doc(Human().address).set(Human().user!.toJson());
+                          }
+                         
+                         
                          Navigator.of(context).pushNamed("/projects/${widget.project.contractAddress}");
 
                         },

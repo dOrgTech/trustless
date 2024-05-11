@@ -11,10 +11,10 @@ List<TTransaction> mockTansactions=[];
 createUsers(){
   for (int i = 0; i < 20; i++) {
     String address = generateWalletAddress();
-      User user=User(address: address, nativeEarned: Random().nextInt(15400),
-       usdtSpent: Random().nextInt(15400), 
+      User user=User(address: address, nativeEarned: Random().nextInt(15400).toString(),
+       usdtSpent: Random().nextInt(15400).toString(), 
        
-       projectsContracted: [], projectsArbitrated: [], projectsBacked: [], lastActive: DateTime.now(), nativeSpent: Random().nextInt(15400), projectsAuthored: [], usdtEarned: 0);
+       projectsContracted: [], projectsArbitrated: [], projectsBacked: [], lastActive: DateTime.now(), nativeSpent: Random().nextInt(15400).toString(), projectsAuthored: [], usdtEarned: "0");
       users.add(user);
 
     TTransaction t= TTransaction(

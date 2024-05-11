@@ -119,9 +119,6 @@ class UpdateSpendingsState extends State<UpdateSpendings> {
                       ),
                       onPressed: ()async{
                       setState(() {widget.stage="waiting"; Human().busy=true;});
-                      setState(() {
-                        
-                      });
                            print("updating");
                             String cevine = await cf.updateContributorSpendings(widget.project);
                            print("dupa cevine");
@@ -131,7 +128,7 @@ class UpdateSpendingsState extends State<UpdateSpendings> {
                               return;
                           }
                           try {
-                            int cheltuit= await cf.getNativeSpent(Human().address!);
+                            String cheltuit= await cf.getNativeSpent(Human().address!);
                             Human().user!.nativeSpent=cheltuit;
                             usersCollection.doc(Human().address).set(Human().user!.toJson());
                           } catch (e) {

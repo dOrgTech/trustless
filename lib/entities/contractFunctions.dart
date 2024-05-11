@@ -85,6 +85,20 @@ getProjectsCounter() async {
   getUSDTBalance(){
     //TODO: implement this
   }
+
+  getStage(String address) async {
+    var httpClient = Client(); 
+    var ethClient = Web3Client(Human().chain.rpcNode, httpClient);
+    final deployedContract =
+            DeployedContract(ContractAbi.fromJson(nativeProjectAbi,'NativeProject'), EthereumAddress.fromHex(address));
+    var getRepToken = deployedContract.function('stage');
+    var counter = await ethClient
+            .call(contract: deployedContract, function: getRepToken, params: []);
+    String rezultat= counter[0];
+    print( rezultat.toString()+" "+rezultat.runtimeType.toString());
+    httpClient.close();
+    return rezultat;
+  }
   
   getNativeEarned(String address)async{
     var httpClient = Client(); 
@@ -113,13 +127,13 @@ getProjectsCounter() async {
             .call(contract: contractSursa, function: getRepToken, params: [
              EthereumAddress.fromHex(address)
             ]);
-    int rezultat= int.parse(counter[0].toString()) as int;
-    numberOfProjects=rezultat;
+    String rezultat= counter[0].toString();
+    // numberOfProjects=rezultat;
     print("Avem așa ceva: ");
     print( rezultat.toString()+" "+rezultat.runtimeType.toString());
     return rezultat;
   }
-
+  
   createProject(Project project,state)async{
     final BigInt valueInWei = BigInt.from(100);
     // final txOptions = project.status == "open" ? {} : jsify({'value': BigInt.from(100).toString()});

@@ -10,6 +10,7 @@ import 'package:trustless/entities/human.dart';
 import 'package:trustless/main.dart';
 import 'package:trustless/utils/reusable.dart';
 import 'package:trustless/utils/transitions.dart';
+import 'package:trustless/widgets/somethingsWrong.dart';
 import 'package:trustless/widgets/waiting.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../entities/project.dart';
@@ -96,6 +97,8 @@ class _NewGenericProjectState extends State<NewGenericProject> {
             return stage2();
           case 6:
             return WaitingOnChain();
+          case 7:
+            return SomethingWentWrong(project:widget.project);
           default:
             return stage0();
         }
@@ -290,25 +293,34 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                       print("addresa care vine inapoin ${address}");
                       if (address.contains("not ok")){
                         print("suntem pe not ok in generic proj");
-                        Navigator.of(context).pop();
-                      }else{
-                      print("deployed contract with address "+address);
-                        widget.project.contractAddress=address;
-                        String holding=cf.getNativeBalance(address);
-                        widget.project.holding=holding;
-                        await projectsCollection.doc(widget.project.contractAddress)
-                        .set(widget.project.toJson());
-                        print("before adding the user");
-                        Human().user!.projectsAuthored.add(widget.project.contractAddress!);
-                        await usersCollection.doc(Human().address).set(Human().user!.toJson());
                         setState(() {
-                          if (!users.any((user) => user.address == Human().address)){
-                            users.add(Human().user!);
-                          }
-                          widget.projectsState.setState(() {
-                            projects.add(widget.project);
-                          });
+                          widget.stage=7;
                         });
+                      }else{
+                        try {
+                            print("deployed contract with address "+address);
+                            widget.project.contractAddress=address;
+                            String holding= await cf.getNativeBalance(address);
+                            widget.project.holding=holding;
+                            await projectsCollection.doc(widget.project.contractAddress)
+                            .set(widget.project.toJson());
+                            print("before adding the user");
+                            Human().user!.projectsAuthored.add(widget.project.contractAddress!);
+                            await usersCollection.doc(Human().address).set(Human().user!.toJson());
+                            setState(() {
+                              if (!users.any((user) => user.address == Human().address)){
+                                users.add(Human().user!);
+                              }
+                              widget.projectsState.setState(() {
+                                projects.add(widget.project);
+                              });
+                            });
+                        } catch (e) {
+                            print("error: "+e.toString());                        }
+                            setState(() {
+                            widget.stage=7;
+                            });
+                      
                        Navigator.of(context).pushNamed("/projects/$address");
                       }
                   },

@@ -198,16 +198,15 @@ class ProjectCard extends StatelessWidget {
                                   builder: (context, snapshot) {
                                     // Future.delayed(Duration(milliseconds: 500));
                                     if (snapshot.connectionState == ConnectionState.waiting) {
-                                      
-                                      
+                                     
                                       return Container(
-                                       
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(25.0)
+                                          borderRadius: BorderRadius.circular(25.0),
+                                           color: Theme.of(context).canvasColor,
                                         ),
                                         width: 50.0,
                                         height:50.0,
-                                        color: Theme.of(context).canvasColor,
+                                        
                                       );
                                     } else if (snapshot.hasData) {
                                       

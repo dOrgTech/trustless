@@ -21,10 +21,10 @@ class User{
   required this.projectsAuthored});
   List<TTransaction>actions=[];
   String address;
-  int nativeEarned;
-  int usdtEarned;
-  int nativeSpent;
-  int usdtSpent;
+  String nativeEarned;
+  String usdtEarned;
+  String nativeSpent;
+  String usdtSpent;
   String? name;
   String? link;
   String? about;
@@ -55,13 +55,13 @@ class User{
 
 
     User u= User(lastActive: DateTime.now(), address: address, 
-    nativeEarned: 0, 
-    usdtEarned: 0,
-    usdtSpent: 0,
+    nativeEarned: "0", 
+    usdtEarned: "0",
+    usdtSpent: "0",
     link:"",
     name:"(no alies set)",
     about:null,
-    nativeSpent: 0,
+    nativeSpent: "0",
     projectsContracted: [],
     projectsArbitrated: [], 
     projectsBacked: [],

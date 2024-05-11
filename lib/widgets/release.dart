@@ -116,11 +116,9 @@ class ReleaseState extends State<Release> {
                       ),
                       onPressed: ()async{
                          setState(() {widget.stage="waiting";});
-                          print("Signing contract");
                           String cevine = await cf.voteToReleasePayment(widget.project);
-                           print("dupa cevine");
                              if (cevine.contains("nu merge")){
-                              print("nu merge din setParty");
+                              print("nu merge din functie.");
                               setState(() { widget.stage="error";});
                               return;
                             }
@@ -131,19 +129,15 @@ class ReleaseState extends State<Release> {
                             foundit=true;
                             print("found it");
                             widget.project.contributorsReleasing[key] = widget.project.contributions[key]!; // Update the value to 0
-                            widget.project.contributorsDisputing[key] = 0; 
-                            if (widget.project.contributorsReleasing.values.fold(0, (a, b) => a + b) / widget.project.contributions.values.fold(0, (a, b) => a + b) > 0.7)
-                            {
-                              widget.project.status="closed";
-                            }
-                            await projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
+                            widget.project.contributorsDisputing[key] = "0"; 
                             break; // Exit the loop
                           }
-                          print("the loop was  not broken");
                         }
                         if (foundit==false){print("Still not finding it");}
+                        String stageAfterVote= await cf.getStage(widget.project.contractAddress!);
+                        if (stageAfterVote=="closed"){widget.project.status="closed";}
+                          await projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
                         Navigator.of(context).pushNamed("/projects/${widget.project.contractAddress}");
-                         
                       },
                        child: const Center(
                       child: Text("SUBMIT", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color:Colors.black),),

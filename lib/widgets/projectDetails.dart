@@ -159,24 +159,24 @@ String extractGitHubPath(String? repoUrl) {
       // functionItem("Set Parties", "Author", SetParty(project: widget.project)),
     ];
      var human = Provider.of<Human>(context);
-  List<TTransaction> filteredTransactions = [];
-  widget.projectActivity=[];
-  for (TTransaction t in actions){
-    if (t.contractAddress==widget.project.contractAddress){
-      filteredTransactions.add(t);
-       widget.projectActivity.add(ActionItem(action: t, landingPage: true));
-    }
-  }
+      List<TTransaction> filteredTransactions = [];
+      widget.projectActivity=[];
+      for (TTransaction t in actions){
+        if (t.contractAddress==widget.project.contractAddress){
+          filteredTransactions.add(t);
+          widget.projectActivity.add(ActionItem(action: t, landingPage: true));
+        }
+      }
 
 
   User? arbiter = users.firstWhere((user) => user.address.toLowerCase() == widget.project.arbiter!.toLowerCase(), orElse: () {
       return User(
         lastActive: DateTime.now(),
         address: widget.project.arbiter!,
-        nativeEarned: 0,
-        usdtEarned: 0,
-        usdtSpent: 0,
-        nativeSpent: 0,
+        nativeEarned: "0",
+        usdtEarned: "0",
+        usdtSpent: "0",
+        nativeSpent: "0",
         projectsContracted: [],
         projectsArbitrated: [],
         projectsBacked: [],
@@ -187,10 +187,10 @@ String extractGitHubPath(String? repoUrl) {
       return User(
         lastActive: DateTime.now(),
         address: widget.project.contractor!,
-        nativeEarned: 0,
-        usdtEarned: 0,
-        usdtSpent: 0,
-        nativeSpent: 0,
+        nativeEarned: "0",
+        usdtEarned: "0",
+        usdtSpent: "0",
+        nativeSpent: "0",
         projectsContracted: [],
         projectsArbitrated: [],
         projectsBacked: [],
@@ -509,7 +509,7 @@ String extractGitHubPath(String? repoUrl) {
                             const SizedBox(height: 15),
                              (widget.project.status=="closed") &&
                              !(widget.project.arbiterAwardingContractor==null) &&
-                             widget.project.arbiterAwardingContractor! > 0.0
+                            BigInt.parse( widget.project.arbiterAwardingContractor!) > BigInt.zero
                             // true
                             ? Container( 
                                constraints: const BoxConstraints(
@@ -691,7 +691,9 @@ String extractGitHubPath(String? repoUrl) {
                                       children: [
                                         Text(
                                           "${
-                                            widget.project.contributorsReleasing.values.fold(0, (a, b) => a + b)
+                                            widget.project.contributorsReleasing.values.fold(
+                                             BigInt.zero, (a, b) => BigInt.parse(a as String) + BigInt.parse(b)) 
+                                              
                                           } ",
                                           style: const TextStyle(
                                               fontSize: 21,
@@ -737,8 +739,9 @@ String extractGitHubPath(String? repoUrl) {
                                       children: [
                                         Text(
                                           "${
-                                            widget.project.contributorsDisputing.values.fold(0, (a, b) => a + b)
-                                          } ",
+                                            widget.project.contributorsDisputing.values.fold(
+                                                BigInt.zero, (a, b) => BigInt.parse(a as String) + BigInt.parse(b)) 
+                                            } ",
                                           style: const TextStyle(
                                               fontSize: 21,
                                               fontWeight: FontWeight.normal),
@@ -769,7 +772,6 @@ String extractGitHubPath(String? repoUrl) {
                         const SizedBox(
                           height: 37,
                         ),
-                    
                         Wrap(
                             runAlignment: WrapAlignment.center,
                             spacing: 40,
@@ -965,7 +967,6 @@ class BackersList extends StatefulWidget {
 
 class _BackersListState extends State<BackersList> {
   List<Widget> rows = [];
-
   @override
   Widget build(BuildContext context) {
     rows.clear();
@@ -974,10 +975,10 @@ class _BackersListState extends State<BackersList> {
       return User(
         lastActive: DateTime.now(),
         address: widget.project.arbiter!,
-        nativeEarned: 0,
-        usdtEarned: 0,
-        usdtSpent: 0,
-        nativeSpent: 0,
+        nativeEarned: "0",
+        usdtEarned: "0",
+        usdtSpent: "0",
+        nativeSpent: "0",
         projectsContracted: [],
         projectsArbitrated: [],
         projectsBacked: [],
@@ -996,10 +997,10 @@ class _BackersListState extends State<BackersList> {
           Row(
             children: [
               SizedBox(width:60, child:
-          widget.project.contributorsReleasing.containsKey(key) && widget.project.contributorsReleasing[key]! > 0  ?
+          widget.project.contributorsReleasing.containsKey(key) && BigInt.parse (widget.project.contributorsReleasing[key]!) > BigInt.zero  ?
           const Icon(Icons.lock_open, color: Colors.green)
           :
-          widget.project.contributorsDisputing.containsKey(key) && widget.project.contributorsDisputing[key]! > 0 ?
+          widget.project.contributorsDisputing.containsKey(key) &&  BigInt.parse (widget.project.contributorsDisputing[key]!) > BigInt.zero ?
           Image.asset('assets/scale2.png', height:25, color:Colors.red) 
           :
           const Text("")),

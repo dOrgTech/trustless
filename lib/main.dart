@@ -61,8 +61,8 @@ List<TTransaction> actions=[];
 List<User>users=[];
 String sourceAddress="";
 // int valueInContracts=0;
-int nativeEarned=0;
-int usdtEarned=0;
+BigInt nativeEarned=BigInt.zero;
+BigInt usdtEarned=BigInt.zero;
 // String selectedNetwork='Etherlink Testnet';
 ContractFunctions cf=ContractFunctions();
 var prelaunchCollection = FirebaseFirestore.instance.collection('prelaunch');
@@ -77,8 +77,7 @@ var usersCollection;
       var apisnap= await statsCollection.doc("systen").get();
       if (apisnap.exists){
         api=apisnap.data()!['api'];
-       print("apiiiiiiiiii  ${api}");
-      }else{print("not exists the thing you know");}
+      }else{print("could not find system collection;");}
       projectsCollection=FirebaseFirestore.instance.collection("projects${Human().chain.name}");
       transactionsCollection=FirebaseFirestore.instance.collection("transactions${Human().chain.name}");
       usersCollection=FirebaseFirestore.instance.collection("users${Human().chain.name}");      
@@ -96,7 +95,8 @@ var usersCollection;
       var transactionsSnapshot = await transactionsCollection.get();
       var usersSnapshot = await usersCollection.get();
       for (var doc in usersSnapshot.docs){
-        nativeEarned = nativeEarned + (doc.data()['nativeEarned'] as int);
+        // nativeEarned = nativeEarned + (doc.data()['nativeEarned'] as int);
+        nativeEarned = BigInt.zero;
         print("adding a user");
         List<dynamic> contractor= doc.data()['projectsContracted'];
         List<dynamic> arbiter= doc.data()['projectsArbitrated'];
@@ -145,11 +145,11 @@ var usersCollection;
        contractAddress: doc.id.toString()
       );
     Map<String, dynamic> fbContributions = doc.data()['contributions'];
-    p.contributions = Map<String, int>.from(fbContributions);
+    p.contributions = Map<String, String>.from(fbContributions);
     Map<String, dynamic> fbReleasing = doc.data()['contributorsReleasing'];
-    p.contributorsReleasing = Map<String, int>.from(fbReleasing);
+    p.contributorsReleasing = Map<String, String>.from(fbReleasing);
     Map<String, dynamic> fbDisputing = doc.data()['contributorsDisputing'];
-    p.contributorsDisputing = Map<String, int>.from(fbDisputing);
+    p.contributorsDisputing = Map<String, String>.from(fbDisputing);
     p.contractAddress=doc.id.toString();
     p.termsHash=doc.data()['termsHash']??"";
     p.hashedFileName=doc.data()['hashedFileName']??"";
@@ -357,8 +357,8 @@ class _BaseScaffoldState extends State<BaseScaffold> {
 
   void changeButton(int position) {
     setState(() { 
-        widget.isTrustless = position == 1;
         widget.isProjects = position == 0;
+        widget.isTrustless = position == 1;
         widget.isDisputes = position == 2;
         widget.isUsers = position == 3;
         widget.isChat = position == 5;
@@ -389,95 +389,26 @@ class _BaseScaffoldState extends State<BaseScaffold> {
     // final themeNotifier = Provider.of<ThemeNotifier>(context);
 
     List<Widget>buttall=[
-  Padding(
-    padding: const EdgeInsets.all(18.0),
-    child: SizedBox(
-                width:150,
-                child: Center(
-                  child: Opacity(
-                    opacity: widget.isProjects?1:0.6,
-                    child: Row(children: [
-                      const SizedBox(width: 5),
-                      Icon(Icons.local_activity,size:30, color:widget.isProjects?Theme.of(context).indicatorColor:Theme.of(context).textTheme.bodyLarge!.color!),
-                      const SizedBox(width: 8),
-                      TextButton(
-                        onPressed: () {
-                          changeButton(1);
-                          Navigator.of(context).pushNamed("/");
-                        },
-                        child: Text("PROJECTS", style: widget.isTrustless?selectedMenuItem:nonSelectedMenuItem))
-                    ],),
-                  ),
-                ),
-              ),
-          ),
-            Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: SizedBox( width:145,
-                  child: Center(
-                    child: Opacity(
-                      opacity: widget.isDisputes?1:0.6,
-                      child: TextButton(onPressed: (){
-                        changeButton(2);
-                        Navigator.of(context).pushNamed("/trials");
-                      }, child: 
-                            Row(children:  [
-                              Image.asset('assets/scale2.png', height:30, color:widget.isDisputes?Theme.of(context).indicatorColor:Theme.of(context).textTheme.bodyLarge!.color!),
-                      const SizedBox(width: 8),
-                      Text("DISPUTES", style: widget.isDisputes?selectedMenuItem:nonSelectedMenuItem,)
-                                ],)
-                                ),
-                    ),
-                  ),
-                ),
-    ),  
-   Padding(
-     padding: const EdgeInsets.all(18.0),
-     child: SizedBox( width:145,
-                    child: TextButton(onPressed: (){
-                    changeButton(3);
-                     Navigator.of(context).pushNamed("/users");
-                    }, child: 
-                              Opacity(
-                    opacity: widget.isUsers?1:0.6,
-                    child: Row(children: [
-                      Icon(Icons.people_alt_outlined,size:33,color:widget.isUsers?Theme.of(context).indicatorColor:Theme.of(context).textTheme.bodyLarge!.color!),
-                      const SizedBox(width: 8),
-                      Text("USERS", style: widget.isUsers?selectedMenuItem:nonSelectedMenuItem)
-                    ],),
-                              )
-                              ),
-                  ),
-   ),
-
+ 
     ];
-
     List<Widget>botoane=[
             Opacity(
-              opacity: widget.isTrustless?1:0.6,
+              opacity: widget.isTrustless?0.85:0.7,
               child: SizedBox(
                 width:170,
                 child: TextButton(onPressed: 
                 (){
                    Navigator.pushNamed(context, '/');
-                 changeButton(0);
+                 changeButton(1);
                             }, child: 
-            //       Theme.of(context).brightness==Brightness.light?
-            //       ColorFiltered(
-            //   colorFilter: const ColorFilter.matrix([
-            //     -1.0, 0.0, 0.0, 0.0, 255.0, // red
-            //     0.0, -1.0, 0.0, 0.0, 255.0, // green
-            //     0.0, 0.0, -1.0, 0.0, 255.0, // blue
-            //     0.0, 0.0, 0.0, 1.0, 0.0, // alpha
-            //   ]),
-            //   child:logo,
-            // )
-            logo
+                  Theme.of(context).brightness==Brightness.light?
+              Image.asset("bizlogo_light.png", height: widget.isTrustless?33:32)
+          : logo
                 ),
               ),
             ),const SizedBox(width: 35),
             TextButton(onPressed: (){ 
-             changeButton(1);
+             changeButton(0);
               Navigator.of(context).pushNamed("/projects");
               }, child: 
             SizedBox(

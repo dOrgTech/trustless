@@ -1,5 +1,3 @@
-
-
 import 'dart:isolate';
 import 'dart:html' as html;
 import 'package:flutter/material.dart';
@@ -132,40 +130,36 @@ class DisputeState extends State<Dispute> {
                           await projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
                           Navigator.of(context).pushNamed("/projects/${widget.project.contractAddress}");
                       }
-                     //BACKER VOTES TO DISPUTE
+                      //BACKER VOTES TO DISPUTE
                       else{
-                        String cevine = await cf.voteToDispute(widget.project);
-                          print("dupa cevine");
+                         String cevine = await cf.voteToDispute(widget.project);
+                         print("dupa cevine");
                             if (cevine.contains("nu merge")){
-                            print("nu merge din setParty");
-                            setState(() { widget.stage="error";});
-                            return;
-                          }
-                         bool foundit=false;
+                              print("nu merge din disputeAsContributor");
+                              setState(() { widget.stage="error";});
+                              return;
+                            }
+                          bool foundit=false;
                           for (var entry in widget.project.contributions.entries) {
                           var key = entry.key;
                           if (key == Human().address) {
                             foundit=true;
                             print("found it");
-                            widget.project.contributorsReleasing[key] =0; // Update the value to 0
-                            widget.project.contributorsDisputing[key] =  widget.project.contributions[key]!; // Update the value to 0
-                            
-                            if (widget.project.contributorsDisputing.values.fold(0, (a, b) => a + b) / widget.project.contributions.values.fold(0, (a, b) => a + b) > 0.7)
-                            {
-                              widget.project.status="dispute";
-                            }
-                            projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
+                            widget.project.contributorsReleasing[key] ="0"; // Update the value to 0
+                            widget.project.contributorsDisputing[key] =  widget.project.contributions[key]!; 
                             break; // Exit the loop
                           }
                           print("the loop was  not broken");
                         }
                         if (foundit==false){print("Still not finding it");}
-
+                        String stageAfterVote= await cf.getStage(widget.project.contractAddress!);
+                        if (stageAfterVote=="dispute"){
+                          widget.project.status="dispute";
+                          }
+                        await projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
                         Navigator.of(context).pushNamed("/projects/${widget.project.contractAddress}");
                       }
-                    },
-
-
+                      },
                        child: const Center(
                       child: Text("SUBMIT", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color:Colors.black),),
                     )),

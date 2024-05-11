@@ -131,7 +131,7 @@ class WithdrawState extends State<Withdraw> {
                           var key = entry.key;
                           if (key == Human().address) {
                             print("found it");
-                            widget.project.contributions[key] = 0; // Update the value to 0
+                            widget.project.contributions[key] = "0"; // Update the value to 0
                             projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
                             
                             break; // Exit the loop
@@ -269,11 +269,11 @@ class _WidthdrawAsContractorState extends State<WidthdrawAsContractor>{
                           }
                         projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
                         try{
-                              int oldEarned = Human().user!.nativeEarned;
-                              int newEarned=oldEarned;
+                              String oldEarned = Human().user!.nativeEarned;
+                              String newEarned=oldEarned;
                               cf.getNativeEarned( Human().user!.address).then((value){
                                 newEarned=value;
-                                if ( newEarned > oldEarned ){
+                                if ( BigInt.parse(newEarned) > BigInt.parse(oldEarned) ){
                                   print("avem diferente");
                                    Human().user!.nativeEarned=newEarned;
                                   usersCollection.doc(Human().user!.address).set(Human().user!.toJson());}

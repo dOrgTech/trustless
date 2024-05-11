@@ -13,9 +13,7 @@ import '../entities/token.dart';
 import 'dart:math';
 
 import '../entities/user.dart';
-
 const String escape = '\uE00C';
-
 class SendFunds extends StatefulWidget {
   bool loading = false;
   bool done = false;
@@ -176,11 +174,10 @@ Widget stage0(){
                               return;
                             }
                           if ( widget.project.contributions.containsKey(Human().address!)) {
-                                widget.project.contributions[Human().address!] = widget.project.contributions[Human().address!]! + int.parse(amount);
+                                widget.project.contributions[Human().address!] = (BigInt.parse(widget.project.contributions[Human().address!]!) + BigInt.parse(amount)).toString();
                               } else {
-                                widget.project.contributions[Human().address!] = int.parse(amount);
+                                widget.project.contributions[Human().address!] = BigInt.parse(amount).toString();
                               }
-                               projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
                          if (!Human().user!.projectsBacked.contains(widget.project.contractAddress)) {
                                 Human().user!.projectsBacked.add(widget.project.contractAddress!); 
                           }
@@ -189,8 +186,9 @@ Widget stage0(){
                             users.add(Human().user!);
                             await usersCollection.doc(Human().address).set(Human().user!.toJson());
                           }
-                         
-                         
+                         String newBalance =  await cf.getNativeBalance(widget.project.contractAddress!);
+                         widget.project.holding=newBalance;
+                         projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
                          Navigator.of(context).pushNamed("/projects/${widget.project.contractAddress}");
 
                         },

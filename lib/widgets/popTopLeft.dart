@@ -10,8 +10,8 @@ class AnimatedStatsDisplay extends StatefulWidget {
     'Total Projects': 0,
     'Ongoing Disputes': 0,
     'Stakeholders': 0,
-    'Total ${Human().chain.nativeSymbol} Earned': nativeEarned,
-    'Total USDT Earned': Human().chainUSDTEarnings,
+    'Total ${Human().chain.nativeSymbol} Earned':0,
+    'Total USDT Earned': 0,
   };
   @override
   _AnimatedStatsDisplayState createState() => _AnimatedStatsDisplayState();
@@ -25,7 +25,7 @@ class _AnimatedStatsDisplayState extends State<AnimatedStatsDisplay> with Ticker
 
   @override
   void initState() {
-    widget.data['Total ${Human().chain.nativeSymbol} Earned']=nativeEarned;
+    widget.data['Total ${Human().chain.nativeSymbol} Earned']=0;
     widget.data['Stakeholders']=users.length;
     for (Project p in projects){
       widget.data['Total Projects']=widget.data['Total Projects']!+1;

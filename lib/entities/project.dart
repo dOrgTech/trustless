@@ -20,20 +20,24 @@ class Project{
   String? repo="";
   String? requirements;
   String holding="0";
-  double releasing=0;
-  double disputing=0;
+  String releasing="0";
+  String disputing="0";
   String? status;
-  double? arbiterAwardingContractor;
-  Map<String,int>contributions={};
-  Map<String,int>contributorsReleasing={};
-  Map<String,int>contributorsDisputing={};
+  String? arbiterAwardingContractor;
+  Map<String,String>contributions={};
+  Map<String,String>contributorsReleasing={};
+  Map<String,String>contributorsDisputing={};
   List<Token>? acceptedTokens;
   // Constructor with logic
   Project({required this.isUSDT,this.contractAddress, this.contractor,this.name,  this.creationDate, this.description,this.author, this.arbiter, this.requirements, this.status, this.repo}){
-    // int random = Random().nextInt(331) + 90;
-    // holding = contributions.values.fold(0, (a, b) => a! + b);
-    releasing = contributorsReleasing.values.fold(0, (a, b) => a + b);
-    disputing = contributorsDisputing.values.fold(0, (a, b) => a + b);
+
+    releasing = contributorsReleasing.values.fold(
+      BigInt.zero, (a, b) => BigInt.parse(a as String) + BigInt.parse(b)
+      ).toString();
+
+    disputing = contributorsDisputing.values.fold(
+      BigInt.zero, (a, b) => BigInt.parse(a as String) + BigInt.parse(b)
+      ).toString();
     creationDate=this.creationDate??DateTime.now();
     expiresAt=creationDate!.add(Duration(days: 30));
     acceptedTokens=[

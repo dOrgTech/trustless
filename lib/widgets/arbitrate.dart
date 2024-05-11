@@ -289,15 +289,15 @@ Widget stage0(){
                           // next line failing with Uncaught (in promise) Error: FormatException: Invalid double
                           // widget.project.arbiterAwardingContractor=double.parse( _awardToContractorController.text.toString());
                           // widget.project.arbiterAwardingContractor=double.parse( _awardToContractorController.text.toString());
-                          widget.project.arbiterAwardingContractor=percentage*onePercent;
+                          widget.project.arbiterAwardingContractor=(percentage*onePercent).toString();
                           widget.project.status='closed';
                           await projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
                            try{
-                              int oldEarned = Human().user!.nativeEarned;
-                              int newEarned=oldEarned;
+                              String oldEarned = Human().user!.nativeEarned;
+                              String newEarned=oldEarned;
                               cf.getNativeEarned( Human().user!.address).then((value){
                                 newEarned=value;
-                                if ( newEarned > oldEarned ){
+                                if (BigInt.parse(newEarned) > BigInt.parse( oldEarned) ){
                                   print("avem diferente");
                                    Human().user!.nativeEarned=newEarned;
                                   usersCollection.doc(Human().user!.address).set(Human().user!.toJson());}
@@ -306,9 +306,6 @@ Widget stage0(){
                         {if (kDebugMode) {
                           print("helo");
                         }}
-                         
-                         
-                         
                           Navigator.of(context).pushNamed("/projects/${widget.project.contractAddress}");
                         }
                       : null,

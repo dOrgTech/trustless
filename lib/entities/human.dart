@@ -16,8 +16,9 @@ import '../main.dart';
 
 var chains={
  "0x5": Chain(id:5, name: "Goerli", nativeSymbol: "XTZ", decimals:0, rpcNode: "https://goerli.infura.io/v3/1081d644fc4144b587a4f762846ceede"),
- "0xaa36a7": Chain(id:11155111, name: "Sepolia", nativeSymbol: "XTZ", decimals:0, rpcNode: "https://sepolia.infura.io/v3/1081d644fc4144b587a4f762846ceede"),
- "0x1f47b": Chain(id:128123, name: "Etherlink-Testnet", nativeSymbol: "XTZ", decimals:0, rpcNode: "https://node.ghostnet.etherlink.com", ),
+ "0xaa36a7": Chain(id:11155111, name: "Sepolia", nativeSymbol: "sETH", decimals:0, rpcNode: "https://sepolia.infura.io/v3/1081d644fc4144b587a4f762846ceede"),
+//  "0x1f47b": Chain(id:128123, name: "Etherlink-Testnet", nativeSymbol: "XTZ", decimals:0, rpcNode: "https://node.ghostnet.etherlink.com", ),
+ "0x1f47b": Chain(id:128123, name: "Etherlink-Testnet", nativeSymbol: "XTZ", decimals:0, rpcNode: "https://rpc.etherlink-testnet.tz.soap.coffee", ),
 };
 
 class Human extends ChangeNotifier{
@@ -26,8 +27,8 @@ class Human extends ChangeNotifier{
   bool wrongChain=false;
   String session_id=generateWalletAddress();
   int chainID=5;
-  int chainNativeEarnings=0;
-  int chainUSDTEarnings=0;
+  String chainNativeEarnings="0";
+  String chainUSDTEarnings="0";
   String? address;
   Chain chain=chains["0xaa36a7"]!;
   bool metamask=true;
@@ -136,10 +137,10 @@ class Human extends ChangeNotifier{
         user = User(
         lastActive: DateTime.now(), 
         address: address!, 
-        nativeEarned: 0, 
-        usdtEarned: 0, 
-        usdtSpent: 0,
-        nativeSpent: 0,
+        nativeEarned: "0", 
+        usdtEarned: "0", 
+        usdtSpent: "0",
+        nativeSpent: "0",
         projectsContracted: [],
         projectsArbitrated: [],
         projectsBacked:[],

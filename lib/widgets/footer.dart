@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Footer extends StatelessWidget {
   @override
@@ -9,7 +10,7 @@ class Footer extends StatelessWidget {
   children: [
         Container(
           width: MediaQuery.of(context).size.width,
-          color: Color.fromARGB(62, 0, 0, 0),
+          color: Color.fromARGB(38, 0, 0, 0),
           padding: EdgeInsets.symmetric(vertical: 26, horizontal: 32),
           child: Center(
             child: Container(
@@ -26,7 +27,7 @@ class Footer extends StatelessWidget {
                         child: Text(
                           'Terms',
                           style: TextStyle(
-                            color: Colors.white,
+                            
                             decoration: TextDecoration.underline,
                           ),
                         ),
@@ -37,7 +38,7 @@ class Footer extends StatelessWidget {
                         child: Text(
                           'Privacy',
                           style: TextStyle(
-                            color: Colors.white,
+                            
                             decoration: TextDecoration.underline,
                           ),
                         ),
@@ -48,7 +49,7 @@ class Footer extends StatelessWidget {
                         child: Text(
                           'Contact',
                           style: TextStyle(
-                            color: Colors.white,
+                           
                             decoration: TextDecoration.underline,
                           ),
                         ),
@@ -61,8 +62,10 @@ class Footer extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                    Image.network(
-                                   'https://i.ibb.co/6PXBBLG/business-logo.png',
+                    Image.asset(
+                      Theme.of(context).brightness==Brightness.light?
+
+                                   'bizlogo_light.png':'bizlogo_dark.png',
                                   height: 64,
                                    // color: Colors.red,
                              ),
@@ -75,7 +78,7 @@ class Footer extends StatelessWidget {
                         '© Tezos-Homebase ${DateTime.now().year}',
                         style: TextStyle(
                           fontSize: 12,
-                          color: Colors.white,
+
                         ),
                       ),
                     ],
@@ -91,7 +94,7 @@ class Footer extends StatelessWidget {
                               'Powered by ',
                               style: TextStyle(
                                 fontSize: 14,
-                                color: Colors.white,
+                                
                               ),
                             ),
                           ),
@@ -101,7 +104,6 @@ class Footer extends StatelessWidget {
                       'Tezos Commons',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.white,
                         decoration: TextDecoration.underline,
                       ),
                     ),
@@ -112,19 +114,19 @@ class Footer extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        'Developed by EightRice of ',
+                        'Developed by ',
                         style: TextStyle(
                           fontSize: 14,
-                          color: Colors.white,
                         ),
                       ),
                        InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      launch("https://actual.monster");
+                    },
                     child: Text(
-                      'dOrg',
+                      'EightRice',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.white,
                         decoration: TextDecoration.underline,
                       ),
                     ),

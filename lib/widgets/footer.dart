@@ -55,17 +55,14 @@ class Footer extends StatelessWidget {
                         ),
                       ),
                     ],
-                  ),
+                  ), 
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                    Image.asset(
-                      Theme.of(context).brightness==Brightness.light?
-
-                                   'bizlogo_light.png':'bizlogo_dark.png',
+                    Image.network('https://i.ibb.co/QnyXWBP/bizlogo.png',
                                   height: 64,
                                    // color: Colors.red,
                              ),

@@ -33,6 +33,7 @@ class ProjectDetails extends StatefulWidget {
   ProjectDetails({super.key, required this.project});
   Project project;
   bool cooling=false;
+  bool refreshingBalance=false;
   Duration? remainingTime;
   List<Widget> projectActivity=[];
   @override
@@ -563,53 +564,63 @@ String extractGitHubPath(String? repoUrl) {
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Padding(
-                                        padding:
-                                          const EdgeInsets.only(left: 28.0),
-                                        child: Text(
-                                          widget.project.status == "open" ||
-                                          widget.project.status == "pending" ||
-                                          widget.project.status == "closed"
-                                              ? 
-                                              "Funds in Contract"
-                                              :
-                                              "Funds in Escrow",
-                                          style: TextStyle(
-                                              fontSize: 17,
-                                              color: Theme.of(context)
-                                                  .indicatorColor,
-                                              fontWeight: FontWeight.normal),
-                                        ),
+                                      Row(
+                                        children: [
+                                         
+                                          Padding(
+                                            padding:
+                                              const EdgeInsets.only(left: 28.0),
+                                            child: Text(
+                                              widget.project.status == "open" ||
+                                              widget.project.status == "pending" ||
+                                              widget.project.status == "closed"
+                                                  ? 
+                                                  "Funds in Contract"
+                                                  :
+                                                  "Funds in Escrow",
+                                              style: TextStyle(
+                                                  fontSize: 17,
+                                                  color: Theme.of(context)
+                                                      .indicatorColor,
+                                                  fontWeight: FontWeight.normal),
+                                            ),
+                                          ),
+                                           SizedBox(
+                                            width: 29,
+                                             child: TextButton(child: Center(child: Icon(Icons.refresh)), 
+                                              onPressed: ()async {
+                                                setState(() {
+                                                  widget.refreshingBalance=true;
+                                                });
+                                                 String newBalance = await cf.getNativeBalance(widget.project.contractAddress!);
+                                                if (!(widget.project.holding==newBalance)){
+                                                  print("not the same balance");
+                                                  widget.project.holding=newBalance;
+                                                  await projectsCollection.doc(widget.project.contractAddress)
+                                                      .set(widget.project.toJson());
+                                                }else{print("same balance");}
+                                                setState(() {
+                                                  widget.refreshingBalance=false;
+                                                });
+                                              } ),
+                                           )
+                                        ],
                                       ),
                                       const SizedBox(
                                         height: 8,
                                       ),
-                                      Padding(
+                                      Container(
+                                        height: 35,
                                         padding:
                                             const EdgeInsets.only(left: 28.0),
-                                        child: Row(
+                                        child: 
+                                        widget.refreshingBalance?Container(
+                                          constraints: BoxConstraints(maxHeight: 3),
+                                          width:35, height: 35, child: CircularProgressIndicator(strokeWidth: 2,))
+                                        :
+                                        Row(
                                           children: [
-                        //  FutureBuilder(
-                        //   future:  widget.project.isUSDT?
-                        //    cf.getUSDTBalance():
-                        //    cf.getNativeBalance(widget.project.contractAddress!),
-                        //   builder: (context, snapshot) {
-                        //     if (snapshot.connectionState==ConnectionState.done){
-                        //       String catare=snapshot.data.toString();
-                        //       double avem=double.parse(catare);
-                        //       if (widget.project.holding!=avem){
-                        //         widget.project.holding=avem;
-                        //         projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
-                        //       }
-                        //       // widget.project!.currentlyHolding=int.parse(catare);
-                        //     return Text(catare,style: const TextStyle(
-                        //                           fontSize: 25,
-                        //                           fontWeight: FontWeight.normal),
-                        //                     );
-                        //     }else{
-                        //    return const Center(child: CircularProgressIndicator());
-                        //   }
-                        // } ),
+
                         Text(widget.project.holding.toString(),style: const TextStyle(
                                       fontSize: 25,
                                       fontWeight: FontWeight.normal),
@@ -691,8 +702,9 @@ String extractGitHubPath(String? repoUrl) {
                                       children: [
                                         Text(
                                           "${
-                                            widget.project.contributorsReleasing.values.fold(
-                                             BigInt.zero, (a, b) => BigInt.parse(a as String) + BigInt.parse(b)) 
+                                            widget.project.contributorsReleasing.values.fold(BigInt.zero, (sum, value) {
+                                                return sum + BigInt.parse(value);
+                                              })
                                               
                                           } ",
                                           style: const TextStyle(
@@ -739,8 +751,9 @@ String extractGitHubPath(String? repoUrl) {
                                       children: [
                                         Text(
                                           "${
-                                            widget.project.contributorsDisputing.values.fold(
-                                                BigInt.zero, (a, b) => BigInt.parse(a as String) + BigInt.parse(b)) 
+                                           widget.project.contributorsDisputing.values.fold(BigInt.zero, (sum, value) {
+                                                return sum + BigInt.parse(value);
+                                              })
                                             } ",
                                           style: const TextStyle(
                                               fontSize: 21,

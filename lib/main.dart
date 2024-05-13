@@ -353,8 +353,6 @@ class _BaseScaffoldState extends State<BaseScaffold> {
   return Color.lerp(color1, color2, amount)!;
 }
 
-
-
   void changeButton(int position) {
     setState(() { 
         widget.isProjects = position == 0;
@@ -400,10 +398,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                 (){
                    Navigator.pushNamed(context, '/');
                  changeButton(1);
-                            }, child: 
-                  Theme.of(context).brightness==Brightness.light?
-              Image.asset("bizlogo_light.png", height: widget.isTrustless?33:32)
-          : logo
+                            }, child:  logo
                 ),
               ),
             ),const SizedBox(width: 35),

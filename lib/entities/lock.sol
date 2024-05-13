@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0; 
 
 contract Economy {
-    
+
     // Array to hold addresses of deployed projects
     address[] public deployedProjects;
     mapping(address => bool) public isProjectContract;
@@ -52,7 +52,6 @@ contract Economy {
     }
 }
 
-
 contract NativeProject {
     // state variables
     Economy public economy;
@@ -64,6 +63,7 @@ contract NativeProject {
     string public termsHash;
     string public repo;
     bool reimbursement;
+    address[] public backers;
     mapping (address => uint) public contributors;
     mapping (address => uint) public contributorsReleasing;
     mapping (address => uint) public contributorsDisputing;
@@ -103,7 +103,7 @@ contract NativeProject {
         totalVotesForRelease=0;
         totalVotesForDispute=0;
         projectValue=0;
-        disputeResolution = 100;
+        disputeResolution = 0;
         arbitrationFee = _arbitrationFee;
         ruling_hash = "";
         if (contractor != address (0) && arbiter != address (0)) { // check if the contractor and arbiter are assigned.
@@ -112,6 +112,30 @@ contract NativeProject {
         } else {
             stage = "open"; // assign "open" to the stage variable
         }
+    }
+
+    function getInfo1() public view returns (string memory){
+        return string(abi.encodePacked(
+            "{",
+            '"coolingOffPeriodEnds":', uintToString(coolingOffPeriodEnds), ",",
+            '"name":"', name, '",',
+            '"stage":"', stage, '",',
+            '"repo":"', repo, '",',
+            '"projectValue":"', uintToString(projectValue), '",',
+            '"disputing":"', uintToString(totalVotesForDispute), '",',
+            '"releasing":"', uintToString(totalVotesForRelease), '",',
+            "}"
+        ));
+    }
+
+    function getParties() public view returns (string memory){
+        return string(abi.encodePacked(
+            "{",
+            '"author":"', addressToString(author), '",',
+            '"contractor":"', addressToString(contractor), '",',
+            '"arbiter":"', addressToString(arbiter), '",',
+            "}"
+        ));
     }
 
     function setParties(address _contractor, address _arbiter, string memory _termsHash) public payable{
@@ -135,6 +159,7 @@ contract NativeProject {
          keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("pending")),
           "Funding is only allowed when the project is in 'open' or 'pending' stage.");
         contributors[msg.sender] += msg.value;
+        backers.push(msg.sender);
         projectValue += msg.value;
     }
 
@@ -194,12 +219,15 @@ contract NativeProject {
             keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("closed")) ,
          "Withdrawals only allowed when the project is open, pending or closed.");
         uint256 contributorAmount = contributors[msg.sender];
-        uint256 exitAmount = (contributorAmount / 100 ) * (100 - disputeResolution);
+        uint256 exitAmount = (contributorAmount / 100 ) * (100-disputeResolution);
         uint256 expenditure = contributorAmount - exitAmount;
-        economy.updateSpendings(msg.sender,expenditure,true);
-        contributors[msg.sender] = 0; 
+        if (disputeResolution>0){
+            economy.updateSpendings(msg.sender,expenditure,true);
+        }
+        contributors[msg.sender] = 0;
         (bool sent, ) = payable(msg.sender).call{value: exitAmount}("");
         require(sent, "Failed to send Ether");
+        projectValue=projectValue-exitAmount;
     }
 
     event ContractSigned(address contractor);
@@ -278,7 +306,6 @@ contract NativeProject {
         require(msg.sender == arbiter, "Only the Arbiter can call this function");
         require(percent >= 0 && percent <= 100, "Resolution needs to be a number between 0 and 100");
         availableToContractor = (projectValue / 100) * percent;
-        // availableToContributors = projectValue - availableToContractor;
         disputeResolution=percent;
         ruling_hash = rulingHash;
         payable(arbiter).transfer(arbitrationFee);
@@ -287,4 +314,38 @@ contract NativeProject {
         economy.updateEarnings(arbiter, arbitrationFee,true);
         emit ProjectClosed(msg.sender);
     }
+        // Helper function to convert uint to string
+    function uintToString(uint value) internal pure returns (string memory) {
+        if (value == 0) {
+            return "0";
+        }
+        uint temp = value;
+        uint digits;
+        while (temp != 0) {
+            digits++;
+            temp /= 10;
+        }
+        bytes memory buffer = new bytes(digits);
+        while (value != 0) {
+            digits -= 1;
+            buffer[digits] = bytes1(uint8(48 + value % 10));
+            value /= 10;
+        }
+        return string(buffer);
+    }
+
+    // Helper function to convert address to string
+   function addressToString(address addr) internal pure returns (string memory) {
+    bytes32 value = bytes32(uint256(uint160(addr)));
+    bytes memory alphabet = "0123456789abcdef";
+    bytes memory str = new bytes(42);
+    str[0] = "0";
+    str[1] = "x";
+    for (uint256 i = 0; i < 20; i++) {
+        str[2 + i * 2] = alphabet[uint8(value[i + 12] >> 4)];
+        str[3 + i * 2] = alphabet[uint8(value[i + 12] & 0x0f)];
+    }
+    return string(str);
+}
+
 }

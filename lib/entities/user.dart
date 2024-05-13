@@ -279,7 +279,7 @@ class _UserDetailsState extends State<UserDetails> {
                 width: 300,
                 decoration: BoxDecoration(
                   color: Theme.of(context).cardColor,
-                  border: Border.all(width: 0.3)
+                  border: Border.all(width: 0.3 , color: Theme.of(context).colorScheme.onError)
                 ),
                 padding: const EdgeInsets.all(7),
                 child: Column(

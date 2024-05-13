@@ -63,21 +63,21 @@ class Footer extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                     Image.network('https://i.ibb.co/QnyXWBP/bizlogo.png',
+                    // Image.asset('3dlogo.png',
                                   height: 64,
                                    // color: Colors.red,
                              ),
                           SizedBox(width: 8),
-                        
                         ],
                       ),
-                      SizedBox(height: 18),
-                      Text(
-                        '© Tezos-Homebase ${DateTime.now().year}',
-                        style: TextStyle(
-                          fontSize: 12,
+                      // SizedBox(height: 13),
+                      // Text(
+                      //   '© Tezos-Homebase ${DateTime.now().year}',
+                      //   style: TextStyle(
+                      //     fontSize: 12,
 
-                        ),
-                      ),
+                      //   ),
+                      // ),
                     ],
                   ),
                   Column(

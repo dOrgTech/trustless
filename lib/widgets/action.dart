@@ -135,6 +135,7 @@ class _ActionItemState extends State<ActionItem> {
                       padding: const EdgeInsets.only(top:8.0,left:0,bottom:8),
                       child: Row(
                         children: [
+                          SizedBox(width: 9),
                           FutureBuilder<Uint8List>(
                               future: generateAvatarAsync(hashString(widget.action.sender!)),  // Make your generateAvatar function return Future<Uint8List>
                               builder: (context, snapshot) {

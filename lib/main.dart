@@ -63,6 +63,7 @@ String sourceAddress="";
 // int valueInContracts=0;
 BigInt nativeEarned=BigInt.zero;
 BigInt usdtEarned=BigInt.zero;
+// GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 // String selectedNetwork='Etherlink Testnet';
 ContractFunctions cf=ContractFunctions();
 var prelaunchCollection = FirebaseFirestore.instance.collection('prelaunch');
@@ -74,11 +75,21 @@ var usersCollection;
     void main() async  {
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-      var apisnap= await statsCollection.doc("systen").get();
+      var apisnap= await statsCollection.doc("system").get();
       if (apisnap.exists){
         api=apisnap.data()!['api'];
       }else{print("could not find system collection;");}
-      projectsCollection=FirebaseFirestore.instance.collection("projects${Human().chain.name}");
+     await persist();
+       runApp(
+    ChangeNotifierProvider<Human>(
+        create: (context) => Human(),
+        child: MyApp(),
+      ));
+      }
+
+  persist()async{
+     users=[];projects=[];actions=[];
+     projectsCollection=FirebaseFirestore.instance.collection("projects${Human().chain.name}");
       transactionsCollection=FirebaseFirestore.instance.collection("transactions${Human().chain.name}");
       usersCollection=FirebaseFirestore.instance.collection("users${Human().chain.name}");      
       var statsSnapshot = await statsCollection.doc(Human().chain.name).get();
@@ -174,13 +185,8 @@ var usersCollection;
   await cf.getProjectsCounter();
   // await Human().signIn();
   print("we have this many projects: "+numberOfProjects.toString());
-  runApp(
-    ChangeNotifierProvider<Human>(
-        create: (context) => Human(),
-        child: MyApp(),
-      ));
-      listenForConsoleInputs();
-      }
+
+  }
 
 void listenForConsoleInputs() {
   // Listen for the custom event
@@ -204,8 +210,8 @@ String chatFunction(String prompt) {
 class MyApp extends StatelessWidget {
   // Create a global variable for the overlay entry
   OverlayEntry? _overlayEntry;
-
-  MyApp({super.key});
+  
+  MyApp({super.key, });
   @override
   Widget build(BuildContext context) {
       if (ethereum==null){
@@ -216,6 +222,7 @@ class MyApp extends StatelessWidget {
         Human().metamask=true;
     }
     return  MaterialApp(
+      navigatorKey: Human().navigatorKey,
       navigatorObservers: [OverlayControlNavigatorObserver()],
               themeMode: ThemeMode.system,
               debugShowCheckedModeBanner: false,

@@ -40,6 +40,7 @@ TextEditingController nameControlla = TextEditingController();
 TextEditingController descriptionControlla = TextEditingController();
 TextEditingController repoControlla = TextEditingController();
 int stage=0;
+bool turnback=true;
 // ignore: use_key_in_widget_constructors
 NewGenericProject( {required this.projectsState}) ;
   @override
@@ -292,8 +293,10 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                       var address = await cf.createProject(widget.project, widget.projectsState);
                       print("addresa care vine inapoin ${address}");
                       if (address.contains("not ok")){
+                        widget.turnback=false;
                         print("suntem pe not ok in generic proj");
                         setState(() {
+                          
                           widget.stage=7;
                         });
                       }else{
@@ -320,8 +323,9 @@ class _NewGenericProjectState extends State<NewGenericProject> {
                             setState(() {
                             widget.stage=7;
                             });
-                      
+                     if (widget.turnback){
                        Navigator.of(context).pushNamed("/projects/$address");
+                     } else{Navigator.of(context).pop();}
                       }
                   },
                   child:  const Center(

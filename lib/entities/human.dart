@@ -13,15 +13,22 @@ import '../main.dart';
 //https://docs.google.com/spreadsheets/d/1hHE1HXEXXr3Abmj47CUogAJKmsqSKNqqPGS-BeI9IEo/edit#gid=0
 //
 
-
+String prevChain="0xaa36a7";
 var chains={
- "0x5": Chain(id:5, name: "Goerli", nativeSymbol: "XTZ", decimals:0, rpcNode: "https://goerli.infura.io/v3/1081d644fc4144b587a4f762846ceede"),
- "0xaa36a7": Chain(id:11155111, name: "Sepolia", nativeSymbol: "sETH", decimals:0, rpcNode: "https://sepolia.infura.io/v3/1081d644fc4144b587a4f762846ceede"),
+ "0x5": Chain(id:5, name: "Goerli", nativeSymbol: "XTZ", decimals:18, rpcNode: "https://goerli.infura.io/v3/1081d644fc4144b587a4f762846ceede"),
+ "0xaa36a7": Chain(id:11155111, name: "Sepolia", nativeSymbol: "sETH", decimals:18, rpcNode: "https://sepolia.infura.io/v3/1081d644fc4144b587a4f762846ceede"),
 //  "0x1f47b": Chain(id:128123, name: "Etherlink-Testnet", nativeSymbol: "XTZ", decimals:0, rpcNode: "https://node.ghostnet.etherlink.com", ),
- "0x1f47b": Chain(id:128123, name: "Etherlink-Testnet", nativeSymbol: "XTZ", decimals:0, rpcNode: "https://rpc.etherlink-testnet.tz.soap.coffee", ),
+ "0x1f47b": Chain(id:128123, name: "Etherlink-Testnet", nativeSymbol: "XTZ", decimals:18, rpcNode: "https://rpc.etherlink-testnet.tz.soap.coffee", ),
 };
 
 class Human extends ChangeNotifier{
+   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey();
+     GlobalKey<NavigatorState> get navigatorKey => _navigatorKey;
+
+ void refreshPage() {
+  print("refreshing the page");
+    _navigatorKey.currentState?.pushNamed("/");
+  }
   bool busy=false;
   bool beta=false;
   bool wrongChain=false;
@@ -30,7 +37,7 @@ class Human extends ChangeNotifier{
   String chainNativeEarnings="0";
   String chainUSDTEarnings="0";
   String? address;
-  Chain chain=chains["0xaa36a7"]!;
+  Chain chain=chains[prevChain]!;
   bool metamask=true;
   bool allowed=false;
   Web3Provider? web3user;
@@ -86,8 +93,13 @@ class Human extends ChangeNotifier{
         }else{
           wrongChain=false;
           chain=chains[chainId]!;
+           persist().then((value){
+            print("users length ${users.length}");
+            // navigatorKey.currentState!.pushNamed("/");
+            refreshPage();
+            print("something");
+           });
           }
-        
         // Optionally update the chain information here
         notifyListeners(); // Notify listeners about the change
       }));
@@ -113,6 +125,9 @@ class Human extends ChangeNotifier{
         }else{
           wrongChain=false;
           chain=chains[chainaidi]!;
+          if (! (chain==chains[prevChain])){
+            await persist();
+            refreshPage();}
           }
       web3user = Web3Provider(ethereum!);
       // address="0xa9f8f9c0bf3188ceddb9684ae28655187552bae9";
@@ -124,6 +139,7 @@ class Human extends ChangeNotifier{
       return "nogo";
     }
   }
+
   getUser(){
     print("getting user");
      User us3r;

@@ -33,7 +33,7 @@ class SomethingWentWrong extends StatelessWidget {
             const Text("The transaction failed. Debug info can be found in the app's dev console or in the block explorer."),
             const SizedBox(height:35),
             ElevatedButton(onPressed: (){
-              Navigator.of(context).pushNamed("/projects/${project.contractAddress}");
+             Navigator.of(context).pop();
             }, child: Text("OK"))
            
           ],

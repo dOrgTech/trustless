@@ -33,6 +33,7 @@ class _AnimatedStatsDisplayState extends State<AnimatedStatsDisplay> with Ticker
     }
 
     super.initState();
+   
     int delay = 0;
     widget.data.forEach((key, value) {
       final numberController = AnimationController(
@@ -108,6 +109,9 @@ class _AnimatedStatsDisplayState extends State<AnimatedStatsDisplay> with Ticker
 
   @override
   Widget build(BuildContext context) {
+     if (MediaQuery.of(context).size.aspectRatio<1){
+      widget.data.remove("Total USDT Earned");
+    }
     List<Widget> statWidgets = List.generate(widget.data.length, (index) {
       String key = widget.data.keys.elementAt(index);
       return _buildStatItem(key, index);
@@ -116,14 +120,22 @@ class _AnimatedStatsDisplayState extends State<AnimatedStatsDisplay> with Ticker
     return LayoutBuilder(
       builder: (context, constraints) {
         // bool useVerticalLayout = constraints.maxWidth < 600;
-        return  Padding(
-          padding: const EdgeInsets.only(left:30.0, right:10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            // runAlignment: WrapAlignment.center,
-            // spacing:20, // Horizontal space between items
-            // runSpacing: 20, // Vertical space between lines
-            children: statWidgets,
+        return  Center(
+          child: Container(
+            padding: const EdgeInsets.only(top:20, left:30.0, right:10),
+            child:MediaQuery.of(context).size.aspectRatio<1? Wrap(
+              spacing:60, // Horizontal space between items
+              runSpacing: 12, // Vertical space between lines
+              children: statWidgets,
+            ):
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              // runAlignment: WrapAlignment.center,
+              // spacing:20, // Horizontal space between items
+              // runSpacing: 20, // Vertical space between lines
+              children: statWidgets,
+            )
+            ,
           ),
         );
       },

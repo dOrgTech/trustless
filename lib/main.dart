@@ -31,7 +31,6 @@ import 'screens/disputes.dart';
 import 'package:provider/provider.dart';
 import 'dart:html';
 import 'dart:js' as js;
-
 import 'widgets/bubbles.dart';
 
 class OverlayControlNavigatorObserver extends NavigatorObserver {
@@ -326,8 +325,6 @@ class MyApp extends StatelessWidget {
 
 class BaseScaffold extends StatefulWidget {
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>(); 
-// Call the dispose function
-
 
   final Widget body;
   final String title;
@@ -353,7 +350,6 @@ final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   State<BaseScaffold> createState() => _BaseScaffoldState();
 }
 
-
 class _BaseScaffoldState extends State<BaseScaffold> {
   Color blendColors(Color color1, Color color2, double amount) {
   amount = amount.clamp(0.0, 1.0);
@@ -368,12 +364,10 @@ class _BaseScaffoldState extends State<BaseScaffold> {
         widget.isUsers = position == 3;
         widget.isChat = position == 5;
     });
-      // butonDechat.createElement().state.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-  
   final List<String> chainNames =[];
    chains.forEach((key, value) {chainNames.add(value.name); });
 
@@ -383,7 +377,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
    height: widget.isTrustless?33:32,
   );
      Widget logotall=Image.network('https://i.ibb.co/QnyXWBP/bizlogo.png',
-   height:12,
+   height:72,
   );
     print("height ${MediaQuery.of(context).size.height}");
     Color indicatorColor = Theme.of(context).indicatorColor;
@@ -394,7 +388,49 @@ class _BaseScaffoldState extends State<BaseScaffold> {
     // final themeNotifier = Provider.of<ThemeNotifier>(context);
 
     List<Widget>buttall=[
- 
+      
+            const SizedBox(height: 30),
+            Center(
+              child: TextButton(
+                onPressed: (){
+                     Navigator.of(context).pushNamed("/projects");
+                 changeButton(1);
+                },
+                child: SizedBox(
+                  width:140,
+                  child: Center(
+                    child: Opacity(
+                      opacity: widget.isProjects?1:0.6,
+                      child: Row(children: [
+                        Icon(Icons.local_activity,size:30, color:widget.isProjects?Theme.of(context).indicatorColor:Theme.of(context).textTheme.bodyLarge!.color!),
+                        const SizedBox(width: 8),
+                        Text("PROJECTS", style: widget.isProjects?selectedMenuItem:nonSelectedMenuItem)
+                      ],),
+                    ),
+                  ),
+                ),
+              ),
+            )
+            ,
+            
+            const SizedBox(height: 60),
+               Center(
+                child: SizedBox( width:148,
+                  child: TextButton(onPressed: (){
+                  changeButton(3);
+                   Navigator.of(context).pushNamed("/users");
+                  }, child: 
+                            Opacity(
+                  opacity: widget.isUsers?1:0.6,
+                  child: Row(children: [
+                    Icon(Icons.people_alt_outlined,size:33,color:widget.isUsers?Theme.of(context).indicatorColor:Theme.of(context).textTheme.bodyLarge!.color!),
+                    const SizedBox(width: 8),
+                    Text("USERS", style: widget.isUsers?selectedMenuItem:nonSelectedMenuItem)
+                  ],),
+                            )
+                            ),
+                ),
+              ), 
     ];
     List<Widget>botoane=[
             Opacity(
@@ -403,7 +439,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                 width:170,
                 child: TextButton(onPressed: 
                 (){
-                   Navigator.pushNamed(context, '/');
+                Navigator.pushNamed(context, '/');
                  changeButton(1);
                             }, child:  logo
                 ),
@@ -454,13 +490,11 @@ class _BaseScaffoldState extends State<BaseScaffold> {
           // Apply scale factor to the entire Scaffold
           return Scaffold(
             key:widget._scaffoldKey,
-
-          endDrawer: Drawer(
+            endDrawer: Drawer(
             semanticLabel: "AI Helper",
             elevation: 10,
             width: 600,
             child: Bubbles()
-            
           ),
           // floatingActionButton:ExpandableFAB(),
           floatingActionButton: FloatingActionButton(
@@ -472,25 +506,23 @@ class _BaseScaffoldState extends State<BaseScaffold> {
           appBar: AppBar(
            toolbarHeight: 44,
            elevation: 1.8,
-           automaticallyImplyLeading: MediaQuery.of(context).size.aspectRatio < switchAspect,
+           automaticallyImplyLeading: MediaQuery.of(context).size.aspectRatio<switchAspect,
            title: 
            MediaQuery.of(context).size.aspectRatio >= switchAspect?
            Row(
             crossAxisAlignment: CrossAxisAlignment.center,
            children:
            [...botoane,]
-           ):  null,
+           ):null ,
           
            actions: <Widget>[
-           
-           MediaQuery.of(context).size.aspectRatio > switchAspect?
               Container(
                 height: 9,
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 decoration: BoxDecoration(
-                                border: Border.all(width: 0.1 , color: Theme.of(context).textTheme.bodyLarge!.color! ),
-                                color: Theme.of(context).indicatorColor.withOpacity(0.1)
-                              ),
+                        border: Border.all(width: 0.1 , color: Theme.of(context).textTheme.bodyLarge!.color! ),
+                        color: Theme.of(context).indicatorColor.withOpacity(0.1)
+                      ),
               child: Row(
                 children: [
                   Icon(Icons.connect_without_contact_sharp, size: 29,
@@ -504,13 +536,10 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                   )
                 ],
               )
-             )
-             :const Text(""),
-             const SizedBox(width: 35 ),
-          const SizedBox(width:200, child: WalletBTN()),
+             ),
            const SizedBox(width: 30),
-          
-           
+             MediaQuery.of(context).size.aspectRatio > switchAspect?WalletBTN():Text(""),
+           const SizedBox(width: 15),
            ],
            
                  ),
@@ -531,57 +560,30 @@ class _BaseScaffoldState extends State<BaseScaffold> {
           MediaQuery.of(context).size.aspectRatio <= switchAspect 
           ?
           Drawer(
-           child: ListView(
-           padding: EdgeInsets.zero,
+           child: Column(
            children: <Widget>[
-             DrawerHeader(
-               child: Theme.of(context).brightness==Brightness.light?
-           SizedBox(
-           width: 50,
-           child: ColorFiltered(
-                   colorFilter: const ColorFilter.matrix([
-                     -1.0, 0.0, 0.0, 0.0, 255.0, // red
-                     0.0, -1.0, 0.0, 0.0, 255.0, // green
-                     0.0, 0.0, -1.0, 0.0, 255.0, // blue
-                     0.0, 0.0, 0.0, 1.0, 0.0, // alpha
-                   ]),
-                   child:logotall,
-                 ),
-                 )
-                 :
-                 SizedBox(
-           width: 50,
-           child: logotall),
-             ),
+            SizedBox(height:20),
+             Opacity(
+              opacity: widget.isTrustless?0.85:0.7,
+              child: SizedBox(
+                width:170,
+                child: TextButton(onPressed: 
+                (){
+                Navigator.pushNamed(context, '/');
+                 changeButton(1);
+                  }, child:  logotall
+                ),
+              ),
+            ),
+            SizedBox(height:15),
+            Divider(),
+            SizedBox(height:30),
             ...buttall, 
-             Padding(
-               padding: const EdgeInsets.all(61.0),
-               child: SizedBox(
-                 width: 60,
-                 child: DropdownButton<String>(
-                         value: human.chain.name,
-                         focusColor: Colors.transparent,
-                         items: chainNames.map((String value) {
-                 return DropdownMenuItem<String>(
-                   value: value,
-                   child: Text(value),
-                 );
-                         }).toList(),
-                         onChanged: (String? newValue) {
-                  Chain? foundChain;
-                  for (Chain cgn in chains.values){
-                    if (newValue==cgn.name){
-                    foundChain=cgn;
-                  }}
-              
-              foundChain ??= Chain(id: 0, name: 'N/A', nativeSymbol: '', decimals: 0, rpcNode: '');
-               setState(() {
-                 human.chain=foundChain!;
-               });
-                   },
-                 ),
-                 ),
-               ),
+           const Spacer(),
+           const Padding(
+             padding: const EdgeInsets.symmetric(vertical: 38.0),
+             child: WalletBTN(),
+           )
              ],
            ),
            ):null,

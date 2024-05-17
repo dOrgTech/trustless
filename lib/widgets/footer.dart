@@ -56,6 +56,7 @@ class Footer extends StatelessWidget {
                       ),
                     ],
                   ), 
+                  MediaQuery.of(context).size.aspectRatio>1?
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -79,7 +80,7 @@ class Footer extends StatelessWidget {
                       //   ),
                       // ),
                     ],
-                  ),
+                  ):Text(""),
                   Column(
                     children: [
                       SizedBox(height: 20),
@@ -96,7 +97,7 @@ class Footer extends StatelessWidget {
                             ),
                           ),
                            InkWell(
-                    onTap: () {},
+                    onTap: () {launch("https://tezoscommons.org/");},
                     child: Text(
                       'Tezos Commons',
                       style: TextStyle(

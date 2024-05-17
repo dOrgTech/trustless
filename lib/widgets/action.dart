@@ -111,7 +111,12 @@ class _ActionItemState extends State<ActionItem> {
         // decoration: BoxDecoration(),
         padding: EdgeInsets.all(0.0),
         child: Padding(
-          padding: const EdgeInsets.only(left:0.0,right:15),
+          padding: const EdgeInsets.only(left:0.0,
+          right:
+          true ?
+          0.0:
+          15
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -294,7 +299,7 @@ class _ActionItemState extends State<ActionItem> {
                   ),
                 ),
                  Spacer(),
-         
+         MediaQuery.of(context).size.aspectRatio>=1?
               SizedBox(
                 width:180,
                 child: Align(
@@ -305,8 +310,8 @@ class _ActionItemState extends State<ActionItem> {
                     ),
                 )
 
-              ),
-             
+              ):Text(""),
+            MediaQuery.of(context).size.aspectRatio>=1?SizedBox(width: 20):Text("")   
             
             ],
           ),

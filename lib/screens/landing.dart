@@ -1,16 +1,19 @@
 
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:trustless/entities/human.dart';
+import 'package:trustless/widgets/action.dart';
 import 'package:trustless/widgets/governance.dart';
-
+import 'package:trustless/widgets/popTopLeft.dart';
 import '../main.dart';
 import '../utils/reusable.dart';
 import '../widgets/awe.dart';
 import '../widgets/footer.dart';
 import '../widgets/gameoflife.dart';
+import '../widgets/projectDetails.dart';
 
 class Landing extends StatefulWidget {
    bool done=false;
@@ -18,6 +21,7 @@ class Landing extends StatefulWidget {
   @override
   State<Landing> createState() => _LandingState();
 }
+
     double opa0 = 0;
     double opa1 = 0;
     double opa2 = 0;
@@ -109,7 +113,6 @@ Widget dreapta(){
                       BorderRadius.only(bottomLeft: Radius.circular(170))),
               child: Center(
                 child:BuyATN(),
-              
               )))
    ;
 }
@@ -195,7 +198,97 @@ Widget dreapta(){
   @override
   Widget build(BuildContext context) {
     
-    return  Container(
+    return  
+    MediaQuery.of(context).size.aspectRatio<1?
+     Container(
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+       child: Stack(
+         children: [
+        Opacity(
+                opacity: 0.05,
+                child: GameOfLife()),
+           ListView(
+             children: [
+              SizedBox(
+                width: 400,
+                child: AnimatedStatsDisplay()),
+               Container(
+                 color:Theme.of(context).colorScheme.onError.withOpacity(0.6),
+                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                   children: [
+                    const SizedBox(height: 30),
+                     Padding(
+                        padding: const EdgeInsets.all(28.0),
+                        child: TyperAnimatedTextKit(
+                      isRepeatingAnimation: false,
+                      pause: const Duration(seconds: 4),
+                      textAlign: TextAlign.center,
+                      speed: const Duration(milliseconds: 31),
+                      text: const ["Self-Sufficient\nDecentralized\nBusiness\nEnvironment"],
+                      textStyle:TextStyle(
+                        height: 1.5,
+                        fontSize: 23),
+                                  ),
+                                ),
+                        Container(
+                        height: 200,
+                            padding: const EdgeInsets.all(9.0),
+                            child: Center(
+                              child: Stack(
+                                children: [
+                                  Image.asset("assets/newlogo_layer3.png",height: 160,),
+                                  AnimatedOpacity(
+                                    duration: Duration(milliseconds: 1500),
+                                    opacity: opa2,
+                                    child: 
+                                  Image.asset("assets/newlogo_layer1.png",height: 160,)
+                                  ),
+                                ],
+                              ),
+                            ),
+                              ),
+                   ],
+                 ),
+               ),
+             AnimatedContainer(
+                    duration: Duration(milliseconds: 700),
+                    padding: EdgeInsets.symmetric(vertical: 4),
+                    // width: sime-MediaQuery.of(context).size.width/10,
+                    color: Theme.of(context).cardColor,
+                    child: Center(
+                        child: 
+                        
+                         Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text("Economy Contract address: ",
+                                  style: TextStyle(fontFamily: "Roboto Mono")),
+                                  SizedBox(width: 40),
+                                  Text(getShortAddress(sourceAddress)),
+                                  SizedBox(width: 8),
+                                  TextButton(onPressed: (){
+                                    copied(context, sourceAddress);
+                                  }, child: Icon(Icons.copy))
+        
+                            ],
+                          ),
+                        ),
+                  ), 
+                  Container(
+                    height: MediaQuery.of(context).size.height/2,
+                    child: ActivityFeed()
+                  ),  
+              Footer()
+             ],
+           ),
+         ],
+       ),
+     )
+    :
+    Container(
       height: MediaQuery.of(context).size.height+100,
       width: MediaQuery.of(context).size.width,
       child: Stack(

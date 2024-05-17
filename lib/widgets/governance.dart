@@ -73,9 +73,7 @@ class _BuyATNState extends State<BuyATN> with TickerProviderStateMixin {
     ];
     List<double> stops = [0.03, 5.8];
     return Consumer(
-      
       builder: (context,ref,child) {
-        
         return Opacity(
           opacity: 0.8,
           child: AnimatedContainer(
@@ -149,8 +147,7 @@ class _BuyATNState extends State<BuyATN> with TickerProviderStateMixin {
                     // width: sime-MediaQuery.of(context).size.width/10,
                     color: Theme.of(context).cardColor,
                     child: Center(
-                        child: 
-                        
+                        child:
                          Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -162,7 +159,6 @@ class _BuyATNState extends State<BuyATN> with TickerProviderStateMixin {
                                   TextButton(onPressed: (){
                                     copied(context, sourceAddress);
                                   }, child: Icon(Icons.copy))
-        
                             ],
                           ),
                         ),

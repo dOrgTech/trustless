@@ -124,8 +124,8 @@ class _AnimatedStatsDisplayState extends State<AnimatedStatsDisplay> with Ticker
           child: Container(
             padding: const EdgeInsets.only(top:20, left:30.0, right:10),
             child:MediaQuery.of(context).size.aspectRatio<1? Wrap(
-              spacing:60, // Horizontal space between items
-              runSpacing: 12, // Vertical space between lines
+              spacing:40, // Horizontal space between items
+              runSpacing: 8, // Vertical space between lines
               children: statWidgets,
             ):
             Row(

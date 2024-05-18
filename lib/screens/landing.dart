@@ -200,91 +200,94 @@ Widget dreapta(){
     
     return  
     MediaQuery.of(context).size.aspectRatio<1?
-     Container(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-       child: Stack(
-         children: [
-        Opacity(
-                opacity: 0.05,
-                child: GameOfLife()),
-           ListView(
-             children: [
-              SizedBox(
-                width: 400,
-                child: AnimatedStatsDisplay()),
-               Container(
-                 color:Theme.of(context).colorScheme.onError.withOpacity(0.6),
-                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                   children: [
-                    const SizedBox(height: 30),
-                     Padding(
-                        padding: const EdgeInsets.all(28.0),
-                        child: TyperAnimatedTextKit(
-                      isRepeatingAnimation: false,
-                      pause: const Duration(seconds: 4),
-                      textAlign: TextAlign.center,
-                      speed: const Duration(milliseconds: 31),
-                      text: const ["Self-Sufficient\nDecentralized\nBusiness\nEnvironment"],
-                      textStyle:TextStyle(
-                        height: 1.5,
-                        fontSize: 23),
+  MediaQuery(
+            data: MediaQuery.of(context).copyWith(textScaleFactor: 0.7),
+       child: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+         child: Stack(
+           children: [
+          Opacity(
+                  opacity: 0.05,
+                  child: GameOfLife()),
+             ListView(
+               children: [
+                SizedBox(
+                  width: 400,
+                  child: AnimatedStatsDisplay()),
+                 Container(
+                   color:Theme.of(context).colorScheme.onError.withOpacity(0.6),
+                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                     children: [
+                      const SizedBox(height: 30),
+                       Padding(
+                          padding: const EdgeInsets.all(28.0),
+                          child: TyperAnimatedTextKit(
+                        isRepeatingAnimation: false,
+                        pause: const Duration(seconds: 4),
+                        textAlign: TextAlign.center,
+                        speed: const Duration(milliseconds: 31),
+                        text: const ["Self-Sufficient\nDecentralized\nBusiness\nEnvironment"],
+                        textStyle:TextStyle(
+                          height: 1.5,
+                          fontSize: 23),
+                                    ),
                                   ),
+                          Container(
+                          height:150,
+                              padding: const EdgeInsets.all(9.0),
+                              child: Center(
+                                child: Stack(
+                                  children: [
+                                    Image.asset("assets/newlogo_layer3.png",height: 140,),
+                                    AnimatedOpacity(
+                                      duration: Duration(milliseconds: 1500),
+                                      opacity: opa2,
+                                      child: 
+                                    Image.asset("assets/newlogo_layer1.png",height: 140,)
+                                    ),
+                                  ],
                                 ),
-                        Container(
-                        height: 200,
-                            padding: const EdgeInsets.all(9.0),
-                            child: Center(
-                              child: Stack(
-                                children: [
-                                  Image.asset("assets/newlogo_layer3.png",height: 160,),
-                                  AnimatedOpacity(
-                                    duration: Duration(milliseconds: 1500),
-                                    opacity: opa2,
-                                    child: 
-                                  Image.asset("assets/newlogo_layer1.png",height: 160,)
-                                  ),
-                                ],
                               ),
-                            ),
-                              ),
-                   ],
+                                ),
+                     ],
+                   ),
                  ),
-               ),
-             AnimatedContainer(
-                    duration: Duration(milliseconds: 700),
-                    padding: EdgeInsets.symmetric(vertical: 4),
-                    // width: sime-MediaQuery.of(context).size.width/10,
-                    color: Theme.of(context).cardColor,
-                    child: Center(
-                        child: 
-                        
-                         Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text("Economy Contract address: ",
-                                  style: TextStyle(fontFamily: "Roboto Mono")),
-                                  SizedBox(width: 40),
-                                  Text(getShortAddress(sourceAddress)),
-                                  SizedBox(width: 8),
-                                  TextButton(onPressed: (){
-                                    copied(context, sourceAddress);
-                                  }, child: Icon(Icons.copy))
-        
-                            ],
+               AnimatedContainer(
+                      duration: Duration(milliseconds: 700),
+                      padding: EdgeInsets.symmetric(vertical: 4),
+                      // width: sime-MediaQuery.of(context).size.width/10,
+                      color: Theme.of(context).cardColor,
+                      child: Center(
+                          child: 
+                          
+                           Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text("Economy Contract address: ",
+                                    style: TextStyle(fontFamily: "Roboto Mono")),
+                                    SizedBox(width: 40),
+                                    Text(getShortAddress(sourceAddress)),
+                                    SizedBox(width: 8),
+                                    TextButton(onPressed: (){
+                                      copied(context, sourceAddress);
+                                    }, child: Icon(Icons.copy))
+          
+                              ],
+                            ),
                           ),
-                        ),
-                  ), 
-                  Container(
-                    height: MediaQuery.of(context).size.height/2,
-                    child: ActivityFeed()
-                  ),  
-              Footer()
-             ],
-           ),
-         ],
+                    ), 
+                    Container(
+                      height: MediaQuery.of(context).size.height/2,
+                      child: ActivityFeed()
+                    ),  
+                Footer()
+               ],
+             ),
+           ],
+         ),
        ),
      )
     :

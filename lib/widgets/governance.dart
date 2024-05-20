@@ -128,12 +128,12 @@ class _BuyATNState extends State<BuyATN> with TickerProviderStateMixin {
                          padding: const EdgeInsets.all(9.0),
                          child: Stack(
                            children: [
-                             Image.asset("assets/newlogo_layer3.png"),
+                             Image.network(drawingLayer2),
                              AnimatedOpacity(
                                duration: Duration(milliseconds: 1500),
                                opacity: widget.opa_aur,
                                child: 
-                             Image.asset("assets/newlogo_layer1.png")
+                             Image.network(drawingLayer1)
                              ),
                            ],
                          ),

@@ -148,7 +148,7 @@ class _PrelaunchState extends State<Prelaunch>with SingleTickerProviderStateMixi
             Positioned(
                 left: 0,
                 child: Container(
-                  padding: const EdgeInsets.only(left:320,top:180,bottom:130),
+                  padding: const EdgeInsets.only(left:280,top:120,bottom:50),
                     height: MediaQuery.of(context).size.height,
                     width: MediaQuery.of(context).size.width,
                     child: 
@@ -841,10 +841,10 @@ class _Pattern1State extends State<Pattern1> with TickerProviderStateMixin {
           animation: _controller2,
           builder: (context, child) {
             return Opacity(
-              opacity: 1,
+              opacity: 0.7,
               child: ImageFiltered(
                 imageFilter: ImageFilter.blur(sigmaX: _blur2.value, sigmaY: _blur2.value),
-                child: Image.asset("assets/newlogo_layer3.png"),
+                child: Image.network(drawingLayer1),
               ),
             );
           },
@@ -877,7 +877,7 @@ class _Pattern1State extends State<Pattern1> with TickerProviderStateMixin {
                   opacity: _opacity1.value,
                   child: ImageFiltered(
                     imageFilter: ImageFilter.blur(sigmaX: _blur1.value, sigmaY: _blur1.value),
-                    child: Image.asset("assets/newlogo_layer2.png"),
+                    child: Image.network(drawingLayer2),
                   ),
                 ),
               ),

@@ -68,15 +68,22 @@ ContractFunctions cf=ContractFunctions();
 var prelaunchCollection = FirebaseFirestore.instance.collection('prelaunch');
 // var voteCollection = FirebaseFirestore.instance.collection('vote');
 var statsCollection = FirebaseFirestore.instance.collection('stats');
+var systemCollection = FirebaseFirestore.instance.collection('system');
 var projectsCollection;
 var transactionsCollection;
 var usersCollection;
+String drawingLayer1="";
+String drawingLayer2="";
     void main() async  {
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-      var apisnap= await statsCollection.doc("system").get();
+      var apisnap= await systemCollection.doc("services").get();
       if (apisnap.exists){
-        api=apisnap.data()!['api'];
+        
+        api=apisnap.data()!['chat_api'];
+        drawingLayer1=apisnap.data()!['imageLayer1'];
+        drawingLayer2=apisnap.data()!['imageLayer2'];
+
       }else{print("could not find system collection;");}
      await persist();
        runApp(

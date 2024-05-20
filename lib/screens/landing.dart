@@ -236,17 +236,17 @@ Widget dreapta(){
                                     ),
                                   ),
                           Container(
-                          height:150,
+                          height:170,
                               padding: const EdgeInsets.all(9.0),
                               child: Center(
                                 child: Stack(
                                   children: [
-                                    Image.asset("assets/newlogo_layer3.png",height: 140,),
+                                    Image.network(drawingLayer2,height: 160,),
                                     AnimatedOpacity(
                                       duration: Duration(milliseconds: 1500),
                                       opacity: opa2,
                                       child: 
-                                    Image.asset("assets/newlogo_layer1.png",height: 140,)
+                                    Image.network(drawingLayer1,height: 160,)
                                     ),
                                   ],
                                 ),

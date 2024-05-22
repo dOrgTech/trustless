@@ -116,7 +116,7 @@ Widget stage0(){
                     FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
                   ],
                   onChanged: (value) {
-                    double calculation = double.parse(value) * pow(10, Human().chain.decimals).toInt();
+                    double calculation = double.parse(value) ;
                     amount = calculation.toString();
                   },
                   decoration: InputDecoration(

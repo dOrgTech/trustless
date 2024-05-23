@@ -2,7 +2,6 @@ import 'dart:isolate';
 import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/services.dart';
 import 'package:trustless/entities/human.dart';
 import 'package:trustless/main.dart';
 import 'package:trustless/widgets/somethingsWrong.dart';
@@ -171,19 +170,28 @@ Widget stage0(){
                           if (cevine.contains("nu merge")){
                               print("nu merge din setParty");
                               setState(() { widget.stage=2;});
+                              widget.stage=0;
                               return;
                             }
+                          bool storeUser=false;
+                          
                           if ( widget.project.contributions.containsKey(Human().address!)) {
                                 widget.project.contributions[Human().address!] = (BigInt.parse(widget.project.contributions[Human().address!]!) + BigInt.parse(amount)).toString();
                               } else {
                                 widget.project.contributions[Human().address!] = BigInt.parse(amount).toString();
                               }
-                         if (!Human().user!.projectsBacked.contains(widget.project.contractAddress)) {
+                          
+                          if (!Human().user!.projectsBacked.contains(widget.project.contractAddress)) {
                                 Human().user!.projectsBacked.add(widget.project.contractAddress!); 
+                                storeUser=true;
                           }
                          
                           if (!users.any((user) => user.address.toLowerCase()==Human().address!.toLowerCase())){
                             users.add(Human().user!);
+                            storeUser=true;
+                          }
+
+                          if (storeUser){
                             await usersCollection.doc(Human().address).set(Human().user!.toJson());
                           }
                          String newBalance =  await cf.getNativeBalance(widget.project.contractAddress!);

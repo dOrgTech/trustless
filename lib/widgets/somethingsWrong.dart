@@ -16,7 +16,7 @@ class SomethingWentWrong extends StatelessWidget {
       "https://i.ibb.co/jGg1DZ1/transaction-error1.png",
       "https://i.ibb.co/c2vLbQ3/transaction-error2.png"
    ];
-  SomethingWentWrong({super.key, required this.project});
+  SomethingWentWrong({super.key,required this.project});
 
   @override
   Widget build(BuildContext context) {

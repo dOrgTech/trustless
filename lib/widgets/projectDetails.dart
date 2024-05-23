@@ -21,6 +21,7 @@ import 'package:trustless/widgets/sign.dart';
 import 'package:trustless/widgets/updateSpendings.dart';
 import 'package:trustless/widgets/usercard.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:web3dart/web3dart.dart';
 import '../entities/project.dart';
 import '../main.dart';
 import '../widgets/withdraw.dart';
@@ -57,6 +58,7 @@ class ProjectDetailsState extends State<ProjectDetails> {
     ),
   );
 }
+
 String extractGitHubPath(String? repoUrl) {
   if (repoUrl == null) {
     return 'default/fallback/path'; // Provide a default path or handle as needed
@@ -64,13 +66,12 @@ String extractGitHubPath(String? repoUrl) {
   // Check if the URL contains "github.com/"
   int startIndex = repoUrl.indexOf('github.com/');
   if (startIndex == -1) {
-
     return 'default/fallback/path'; // Provide a default path or handle as needed
   }
   // Extract the part after "github.com/"
   String path = repoUrl.substring(startIndex + 'github.com/'.length);
-  return path.isEmpty ? 'default/fallback/path' : path; // Ensure the path is not empty
-}
+    return path.isEmpty ? 'default/fallback/path' : path; // Ensure the path is not empty
+  }
 
   Widget profileButton(Widget what, User user){
     return TextButton(onPressed: (){
@@ -88,14 +89,13 @@ String extractGitHubPath(String? repoUrl) {
 
   @override
   Widget build(BuildContext context) {
-
    if (widget.project.status=="pending") {
   final filteredTransactions = actions.where(
   (transaction) =>
     (transaction.functionName == 'setParties' ||
      transaction.functionName == 'createProject') &&
     transaction.contractAddress == widget.project.contractAddress,
-).toList();
+  ).toList();
     filteredTransactions.sort((a, b) => b.time.compareTo(a.time));
     print("filtered transactions ${filteredTransactions}");
     final latestSetPartiesTransaction = filteredTransactions.first;
@@ -620,11 +620,13 @@ String extractGitHubPath(String? repoUrl) {
                                         :
                                         Row(
                                           children: [
-
-                        Text(widget.project.holding.toString(),style: const TextStyle(
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.normal),
-                                  
+                              Text(
+                                EtherAmount.fromBigInt(EtherUnit.wei, BigInt.parse(widget.project.holding.toString())).
+                                getValueInUnit(EtherUnit.ether).
+                                toString()
+                                ,style: const TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.normal),
                                     ),
                                   Text(
                                     widget.project.isUSDT?" USDT":" "+ Human().chain.nativeSymbol,

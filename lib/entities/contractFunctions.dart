@@ -1,6 +1,7 @@
 
 import 'dart:convert';
 import 'dart:js_util';
+import 'dart:math';
 import 'dart:typed_data';
 import 'package:flutter_web3_provider/ethereum.dart';
 import 'package:flutter_web3_provider/ethers.dart';
@@ -254,12 +255,34 @@ getProjectsCounter() async {
       }
   }
 
+BigInt ethToWei(double ethAmount) {
+  // Convert the double to a string representation
+  String ethString = ethAmount.toStringAsFixed(18);
+  
+  // Split the string at the decimal point
+  List<String> parts = ethString.split('.');
+  
+  // If there's no decimal part, simply append 18 zeros
+  if (parts.length == 1) {
+    return BigInt.parse(parts[0]) * BigInt.from(pow(10, 18));
+  }
+
+  // Combine the integer and decimal parts, and adjust the exponent
+  String integerPart = parts[0];
+  String decimalPart = parts[1].substring(0, 18); // Ensure 18 digits
+  String combined = integerPart + decimalPart;
+  
+  // Parse to BigInt
+  BigInt weiAmount = BigInt.parse(combined);
+  
+  return weiAmount;
+}
 
   sendFunds(Project project, amount)async{
       print("sending funds");
       Human().busy=true;
-      final BigInt valueInWei = BigInt.from(int.parse(amount.toString()));
-      final txOptions = jsify({'value': valueInWei.toString()});
+      BigInt weiAmount=ethToWei(double.parse(amount));
+      final txOptions = jsify({'value':weiAmount.toString()});
       var sourceContract = Contract(project.contractAddress!, nativeProjectAbiString, Human().web3user);
         try {
           sourceContract = sourceContract.connect(Human().web3user!.getSigner());

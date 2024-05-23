@@ -62,9 +62,7 @@ class SetPartytate extends State<SetParty> {
     }
   }
  stage1(){
-     bool isButtonActive = widget.project.contractor!.length > 2 &&
-                      widget.project.arbiter!.length > 2 &&
-                      widget.project.termsHash!.length > 4;
+     bool isButtonActive = true;
     return Container(
       width:1200,
       // height:500,
@@ -98,12 +96,11 @@ class SetPartytate extends State<SetParty> {
       ),
       const TextSpan(
         text: " to learn more about the role of the arbiter.",
-      ),
-    ],
-  ),
-)
-,
-
+        ),
+      ],
+    ),
+  )
+  ,
           const SizedBox(height: 30),
           Center(
             child: Container(
@@ -212,8 +209,8 @@ class SetPartytate extends State<SetParty> {
                 ),
             ],),
           ],): const Center(child: Text("You already staked your half of the arbitration fee.")),
-          const Spacer(),
-          const SizedBox(height: 30),
+          // const Spacer(),
+          const SizedBox(height: 70),
                 Center(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -256,15 +253,8 @@ class SetPartytate extends State<SetParty> {
                             ),
                           ),
                         ),
-                        onPressed: isButtonActive ? () async {
-                        if (Human().address?.toString() != widget.project.author?.toString()) {
-                          showDialog(
-                            context: context,
-                            builder: (context) => const AlertDialog(
-                              content: SizedBox(height: 100, width: 400, child: Center(child: Text("You are not signed in as the Author of this Project.", textAlign: TextAlign.center,))),
-                            ),
-                          );
-                        } else {
+                        onPressed:  () async {
+                       
                           // Proceed with the transaction if the user is the author
                              setState(() {
                                 widget.waiting=true;
@@ -280,8 +270,8 @@ class SetPartytate extends State<SetParty> {
                           widget.project.status = "pending";
                           await projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
                           Navigator.of(context).pushNamed("/projects/${widget.project.contractAddress}");
-                        }
-                      } : null,
+                        },
+                     
                           
                           child: const Center(
                         child: Text("SUBMIT", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color:Colors.black),),

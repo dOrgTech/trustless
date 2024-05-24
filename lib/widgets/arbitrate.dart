@@ -48,6 +48,7 @@ class _ArbitrateState extends State<Arbitrate> {
         widget.project.hashedFileName=_fileName;
         _hash = digest.toString();
         widget.project.rulingHash=_hash;
+        _canSubmit = _hash.length>8 ;
       });
     }
   }
@@ -69,19 +70,31 @@ return main();
             return stage0();
       }
   }
+BigInt? subtractedAmount;
+BigInt calculateAwardToBackers(String holding, double sliderValue) {
+  try {
+    BigInt holdingAmount = BigInt.parse(holding);
+    BigInt oneEther = BigInt.parse(Human().chain.arbitrationFee);
+    subtractedAmount = holdingAmount - oneEther;
+    BigInt sliderBigInt = BigInt.from(sliderValue.toInt());
+    BigInt onePercent = subtractedAmount! ~/ BigInt.from(100);
+    BigInt awardToBackers = subtractedAmount! - sliderBigInt * onePercent;
+    return awardToBackers;
+  } catch (e) {
+    print('Error: $e');
+    return BigInt.zero; // or handle it in a way that fits your application's needs
+  }
+}
 
 Widget stage0(){
-    double onePercent = ((int.parse( widget.project.holding) - 200) /100) ;
-    double awardToBackers = _useSlider ? 
-    (int.parse( widget.project.holding) - 200) - _sliderValue * onePercent
-    : 
-    (int.parse( widget.project.holding) - 200) - (double.tryParse(_awardToContractorController.text) ?? 0);
     
-    double awardToContractor = _useSlider ?
-     _sliderValue  * onePercent
-    :
-     (double.tryParse(_awardToContractorController.text) ?? 0);
-    bool isNegative = awardToBackers < 0 || awardToContractor < 0;
+    BigInt onePercent = ((BigInt.parse( widget.project.holding) - BigInt.parse("1000000000000000000")) ~/ BigInt.from(100)) ;
+    
+    BigInt awardToBackers = calculateAwardToBackers(widget.project.holding, _sliderValue);
+    // : 
+    // (int.parse( widget.project.holding)  - BigInt.parse("1000000000000000000")) - (double.tryParse(_awardToContractorController.text) ?? 0);
+    
+    BigInt awardToContractor = ((BigInt.parse( widget.project.holding) - BigInt.parse("1000000000000000000")) - awardToBackers) ;
     return 
   //   ! (Human().address==widget.project.arbiter) ? 
   //  const SizedBox(
@@ -106,7 +119,7 @@ Widget stage0(){
         children: [
           Text("Arbitrate",  style: Theme.of(context).textTheme.headline5!,),
           const SizedBox(height: 20),
-          Text("Amount in Escrow: ${(int.parse( widget.project.holding) - 200)}",
+          Text("Amount in Escrow: ${cf.weiToEth(subtractedAmount.toString())} ${widget.project.isUSDT?"USDT": Human().chain.nativeSymbol}",
                style: Theme.of(context).textTheme.subtitle1!,
           ),
          const SizedBox(height: 20),
@@ -144,7 +157,7 @@ Widget stage0(){
                         setState(() {
                           _sliderValue = value;
                           percentage = ((value /100) * 100).round();
-                          _canSubmit = true;
+                         _canSubmit = _hash.length>8 ;
                         });
                       },
                     )
@@ -158,12 +171,15 @@ Widget stage0(){
                       ),
                       onChanged: (value) {
                         setState(() {
-                          _canSubmit = _hash.length>8 && double.tryParse(value) != null && double.parse(value) <= (int.parse( widget.project.holding) - 200);
+                          _canSubmit = _hash.length>8 
+                          
+                          ;
                         });
                       },
                     ),
             ],
           ),
+
           const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -176,8 +192,8 @@ Widget stage0(){
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    "${awardToBackers.toStringAsFixed(2)} (${(100-_sliderValue).toStringAsFixed(0)}%)",
-                    style: Theme.of(context).textTheme.subtitle1!.copyWith(color: isNegative ? Colors.red : null),
+                    "${cf.weiToEth(awardToBackers.toString())} (${(100-_sliderValue).toStringAsFixed(0)}%)",
+                    style: Theme.of(context).textTheme.subtitle1!,
                   ),
                 ],
               ),
@@ -189,8 +205,8 @@ Widget stage0(){
                   ),
                   const SizedBox(height: 10),
                   Text( 
-                    "${awardToContractor.toStringAsFixed(2)} (${_sliderValue.toStringAsFixed(0)}%)",
-                    style: Theme.of(context).textTheme.subtitle1!.copyWith(color: isNegative ? Colors.red : null),
+                    "${ cf.weiToEth(awardToContractor.toString())} (${_sliderValue.toStringAsFixed(0)}%)",
+                    style: Theme.of(context).textTheme.subtitle1!,
                   ),
                 ],
               ),
@@ -289,7 +305,8 @@ Widget stage0(){
                           // next line failing with Uncaught (in promise) Error: FormatException: Invalid double
                           // widget.project.arbiterAwardingContractor=double.parse( _awardToContractorController.text.toString());
                           // widget.project.arbiterAwardingContractor=double.parse( _awardToContractorController.text.toString());
-                          widget.project.arbiterAwardingContractor=(percentage*onePercent).toString();
+                          widget.project.arbiterAwardingContractor=awardToContractor.toString();
+                        
                           widget.project.status='closed';
                           await projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
                            try{

@@ -15,10 +15,8 @@ import '../main.dart';
 
 String prevChain="0x1f47b";
 var chains={
- "0x5": Chain(id:5, name: "Goerli", nativeSymbol: "XTZ", decimals:18, rpcNode: "https://goerli.infura.io/v3/1081d644fc4144b587a4f762846ceede"),
- "0xaa36a7": Chain(id:11155111, name: "Sepolia", nativeSymbol: "sETH", decimals:18, rpcNode: "https://sepolia.infura.io/v3/1081d644fc4144b587a4f762846ceede"),
-//  "0x1f47b": Chain(id:128123, name: "Etherlink-Testnet", nativeSymbol: "XTZ", decimals:0, rpcNode: "https://node.ghostnet.etherlink.com", ),
- "0x1f47b": Chain(id:128123, name: "Etherlink-Testnet", nativeSymbol: "XTZ", decimals:18, rpcNode: "https://rpc.etherlink-testnet.tz.soap.coffee", ),
+ "0xaa36a7": Chain(arbitrationFee: "1000000000000000000", id:11155111, name: "Sepolia", nativeSymbol: "sETH", decimals:18, rpcNode: "https://sepolia.infura.io/v3/1081d644fc4144b587a4f762846ceede", blockExplorer:"https://sepolia.etherscan.io"),
+ "0x1f47b": Chain(id:128123, name: "Etherlink-Testnet",arbitrationFee: "1000000000000000000", nativeSymbol: "XTZ", decimals:18, rpcNode: "https://rpc.etherlink-testnet.tz.soap.coffee", blockExplorer:"https://testnet-explorer.etherlink.com"),
 };
 
 class Human extends ChangeNotifier{
@@ -86,7 +84,7 @@ class Human extends ChangeNotifier{
         if (!chains.keys.contains(chainId)){
           print("schimbam la nimic");
           wrongChain=true;
-          chain=Chain(id: 0, name: 'N/A', nativeSymbol: '', decimals: 0, rpcNode: '');
+          chain=Chain(arbitrationFee: "", id: 0, name: 'N/A', nativeSymbol: '', decimals: 0, rpcNode: '', blockExplorer: "");
           
           notifyListeners();
           return "nogo";
@@ -119,7 +117,8 @@ class Human extends ChangeNotifier{
       if (!chains.keys.contains(chainaidi)){
           print("schimbam la nimic");
           wrongChain=true;
-          chain=Chain(id: 0, name: 'N/A', nativeSymbol: '', decimals: 0, rpcNode: '');
+          chain=Chain(arbitrationFee: "",
+            id: 0, name: 'N/A', nativeSymbol: '', decimals: 0, rpcNode: '', blockExplorer: "");
           notifyListeners();
           return "nogo";
         }else{
@@ -165,11 +164,17 @@ class Human extends ChangeNotifier{
 }
 
 class Chain{
-  Chain({required this.id, required this.name, required this.nativeSymbol, required this.decimals, required this.rpcNode});
+  Chain({required this.id, required this.name,
+   required this.nativeSymbol, required this.decimals, 
+   required this.rpcNode, required this.blockExplorer,
+   required this.arbitrationFee
+   });
   int id;
   String name;
+  String arbitrationFee;
   int decimals;
   String nativeSymbol;
+  String blockExplorer;
   String rpcNode;
   var fbCollection;
 }

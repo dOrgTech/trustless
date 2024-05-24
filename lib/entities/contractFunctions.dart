@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:js_util';
 import 'dart:math';
@@ -58,6 +57,45 @@ getProjectsCounter() async {
     numberOfProjects = rezultat;
     print('$rezultat ${rezultat.runtimeType}');
     return rezultat;
+  } catch (e) {
+    print('Error: $e');
+    // Log the full response body
+    print('Response Body:');
+    print(httpClient.toString());
+    rethrow;
+  }
+}
+
+
+getUserRep() async {
+  print("getting rep");
+  var httpClient = Client();
+  var ethClient = Web3Client(Human().chain.rpcNode, httpClient);
+  final ethAddress = EthereumAddress.fromHex(Human().address!);
+  final contractSursa = DeployedContract(
+    ContractAbi.fromJson(economyAbi, 'Economy'),
+    EthereumAddress.fromHex(sourceAddress),
+  );
+  var getRepToken = contractSursa.function('getUserRep');
+  print("function found");;
+  try {
+    var counter = await ethClient.call(
+      contract: contractSursa,
+      function: getRepToken,
+      params: [ethAddress],
+    );
+    // Log the RPC response
+    print('RPC Response:');
+    print(counter.toString()+" and type is ${counter.runtimeType}");
+    bool changes=false;
+    if (!(Human().user!.nativeEarned==counter[0].toString())){Human().user!.nativeEarned=counter[0].toString();changes=true;}
+    if (!(Human().user!.nativeSpent==counter[1].toString())){Human().user!.nativeSpent=counter[1].toString();changes=true;}
+    if (!(Human().user!.usdtEarned==counter[2].toString())){Human().user!.usdtEarned=counter[2].toString();changes=true;}
+    if (!(Human().user!.usdtSpent==counter[3].toString())){Human().user!.usdtSpent=counter[3].toString();changes=true;}
+    if (changes){
+      print("we have changes");
+      await  usersCollection.doc(Human().address).set(Human().user!.toJson());
+    }else{print("nothing changed.");}
   } catch (e) {
     print('Error: $e');
     // Log the full response body
@@ -141,7 +179,7 @@ getProjectsCounter() async {
 
     Map<String, dynamic> txOptions = project.status == "open" 
         ? {} 
-        : {'value': BigInt.from(100).toString()};
+        : {'value': BigInt.from(500000000000000000).toString()};
 
     var sourceContract = Contract(sourceAddress, sourceAbiString, Human().web3user);
       try {
@@ -206,10 +244,10 @@ getProjectsCounter() async {
 
 
   setNativeParties(Project project,state)async{
-      final BigInt valueInWei = BigInt.from(100);
+      
       final txOptions = jsify({'value': BigInt.from(
         project.status=="open"?
-        100:0
+        500000000000000000:0
         ).toString()});
       var sourceContract = Contract(project.contractAddress!, nativeProjectAbiString, Human().web3user);
         try {
@@ -254,6 +292,12 @@ getProjectsCounter() async {
       return "nu merge final" ;
       }
   }
+
+String weiToEth(String amount){
+      return EtherAmount.fromBigInt(EtherUnit.wei, BigInt.parse(amount)).
+                                getValueInUnit(EtherUnit.ether).
+                                toStringAsFixed(2);
+}
 
 BigInt ethToWei(double ethAmount) {
   // Convert the double to a string representation
@@ -328,8 +372,8 @@ BigInt ethToWei(double ethAmount) {
 
   sign(Project project)async{
       print("signing...");
-      final BigInt valueInWei = BigInt.from(100);
-      final txOptions = jsify({'value': BigInt.from(100).toString()});
+  
+      final txOptions = jsify({'value': "500000000000000000"});
       var sourceContract = Contract(project.contractAddress!, nativeProjectAbiString, Human().web3user);
         try {
           sourceContract = sourceContract.connect(Human().web3user!.getSigner());
@@ -727,6 +771,8 @@ BigInt ethToWei(double ethAmount) {
         return "nu merge final" ;
       }
   }
+
+  
 
   arbitrate(Project project, percentage, rulingHash)async{
       var sourceContract = Contract(project.contractAddress!, nativeProjectAbiString, Human().web3user);

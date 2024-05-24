@@ -5,6 +5,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:trustless/entities/human.dart';
 import 'package:trustless/utils/reusable.dart';
+import 'package:web3dart/web3dart.dart';
 import '../entities/project.dart';
 import 'package:intl/intl.dart';
 
@@ -89,8 +90,6 @@ class PCard extends StatelessWidget {
                     padding: const EdgeInsets.only(left:8.0, top:10),
                     child: Column(
                         children: [
-                         
-                         
                           Container(
                             padding: EdgeInsets.all(8),
                             decoration: BoxDecoration(color:Theme.of(context).canvasColor,
@@ -99,7 +98,12 @@ class PCard extends StatelessWidget {
                             child: Column(
                               children: [
                                 // Text("Holding" , textAlign: TextAlign.center, style: TextStyle( fontWeight: FontWeight.w100, fontSize: 14 ) ,),
-                                Text(project!.holding!.toString(), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 19)),
+                                Text(
+                                   EtherAmount.fromBigInt(EtherUnit.wei, BigInt.parse(project!.holding.toString())).
+                                   getValueInUnit(EtherUnit.ether).
+                                   toString()
+                                  
+                                  , style: TextStyle(fontWeight: FontWeight.bold, fontSize: 19)),
                                 Text(
                                   project!.isUSDT?
                                   "USDT":"XTZ" , textAlign: TextAlign.center, 
@@ -173,7 +177,14 @@ class ProjectCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                      Text(project!.holding!.toString(), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 19)),
+                      Text(
+                        
+                         EtherAmount.fromBigInt(EtherUnit.wei, BigInt.parse(project!.holding.toString())).
+                                   getValueInUnit(EtherUnit.ether).
+                                   toString()
+                        
+                        
+                        , style: TextStyle(fontWeight: FontWeight.bold, fontSize: 19)),
                                 SizedBox(width: 9),
                                 Text(
                                   project!.isUSDT?

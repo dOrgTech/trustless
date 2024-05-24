@@ -12,6 +12,7 @@ class Profile extends StatefulWidget {
    Profile({super.key});
    bool done=false;
    bool madeInvolvements=false;
+   bool refreshing=false;
    List<Widget> involvements=[];
    String oldAbout=Human().user!.about??"";
    String oldlink=Human().user!.link??"";
@@ -35,6 +36,7 @@ class Profile extends StatefulWidget {
     double w2 = 20;
     double h3 = 0;
     double w3 = 20;
+    
 class _ProfileState extends State<Profile> {
      @override
   void initState() {
@@ -78,7 +80,9 @@ class _ProfileState extends State<Profile> {
   }
 
    Widget balance(ce, cat) {
-    return Column(
+    return 
+    widget.refreshing?CircularProgressIndicator():
+    Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [        
@@ -426,7 +430,7 @@ Widget overview(lumina){
                           child: Center(
                               child: balance(
                                   "USDT Earmed",
-                                 Human().user!.usdtEarned.toString()
+                                 cf.weiToEth(Human().user!.usdtEarned.toString())
                                   )),
                         )), 
                         AnimatedContainer(
@@ -447,7 +451,7 @@ Widget overview(lumina){
                           child: Center(
                               child: balance(
                                   "${Human().chain.nativeSymbol} Spent",
-                                 Human().user!.nativeSpent.toString()
+                                 cf.weiToEth(Human().user!.nativeSpent.toString())
                                   )),
                         )),  
                    AnimatedContainer(
@@ -468,11 +472,27 @@ Widget overview(lumina){
                           child: Center(
                               child: balance(
                                   "USDT Spent",
-                                 Human().user!.usdtSpent.toString()
+                                 cf.weiToEth(Human().user!.usdtSpent.toString())
                                   )),
                         )),  
                          ],),
                          const SizedBox( height: 30),
+                         SizedBox (width: 200,
+                         height: 50,
+                         child: TextButton(
+                          onPressed: ()async{
+                            setState((){widget.refreshing=true;});
+                            await cf.getUserRep();
+                            setState((){widget.refreshing=false;});
+                          },
+                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [Icon(Icons.refresh),
+                            Text(" Refresh stats")
+                            ],
+                           ),
+                         ),
+                         ),
                     //      Wrap(
                     //       spacing: 30,
                     //       runSpacing: 20,

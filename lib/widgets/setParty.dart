@@ -21,16 +21,27 @@ bool done=false;
 bool error=false;
 Project project;
 bool waiting=false;
+String? oldArbiter;
+String? oldContractor;
 // ignore: use_key_in_widget_constructors
 SetParty({required this.project}) ;
 TextEditingController arbiterControlla = TextEditingController();
 TextEditingController contractorControlla = TextEditingController();
+
   @override
   SetPartytate createState() => SetPartytate();
 }
 int pmttoken=0;
 class SetPartytate extends State<SetParty> {
   
+  @override
+  void initState() {
+    widget.oldArbiter=widget.project.arbiter!;
+    widget.oldContractor=widget.project.contractor!;
+    super.initState();
+  }
+
+
   @override
   Widget build(BuildContext context) {
  
@@ -107,9 +118,9 @@ class SetPartytate extends State<SetParty> {
                       constraints: const BoxConstraints(maxHeight: 70, maxWidth: 600),
                       child:  TextField(
                         controller: widget.contractorControlla,
-                        onChanged: (value){setState(() {
+                        onChanged: (value){
                           widget.project.contractor=value;
-                        });},
+                        },
                         style: const TextStyle(fontSize: 13),
                         decoration:  const InputDecoration(
                           labelText: "Contractor Address",
@@ -122,9 +133,9 @@ class SetPartytate extends State<SetParty> {
                       constraints: const BoxConstraints(maxHeight: 70, maxWidth: 600),
                       child: TextField(
                         controller: widget.arbiterControlla,
-                         onChanged: (value){setState(() {
+                         onChanged: (value){
                           widget.project.arbiter=value;
-                        });},
+                        },
                         style: const TextStyle(fontSize: 13),
                         decoration:  const InputDecoration(
                           labelText: "Arbiter Address",
@@ -260,6 +271,7 @@ class SetPartytate extends State<SetParty> {
                                 widget.waiting=true;
                               });
                           String cevine = await cf.setNativeParties(widget.project, this);
+                
                           if (cevine.contains("nu merge")){
                             print("nu merge din setParty");
                             setState(() {
@@ -267,8 +279,13 @@ class SetPartytate extends State<SetParty> {
                             });
                             return;
                           }
-                          widget.project.status = "pending";
-                          await projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
+                          if (!widget.error){
+                            widget.project.status = "pending";
+                            await projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
+                          }else{
+                            widget.project.arbiter=widget.oldArbiter;
+                            widget.project.contractor=widget.oldContractor;
+                          }
                           Navigator.of(context).pushNamed("/projects/${widget.project.contractAddress}");
                         },
                      

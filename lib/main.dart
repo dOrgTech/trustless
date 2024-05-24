@@ -93,6 +93,7 @@ String drawingLayer2="";
       ));
       }
 
+
   persist()async{
      users=[];projects=[];actions=[];
      projectsCollection=FirebaseFirestore.instance.collection("projects${Human().chain.name}");
@@ -188,30 +189,11 @@ String drawingLayer2="";
 
   actions.sort((a, b) => b.time.compareTo(a.time));
 
-  await cf.getProjectsCounter();
+  // await cf.getProjectsCounter();
   // await Human().signIn();
-  print("we have this many projects: "+numberOfProjects.toString());
+  // print("we have this many projects: "+numberOfProjects.toString());
 
   }
-
-void listenForConsoleInputs() {
-  // Listen for the custom event
-  window.addEventListener('consoleInput', (event) {
-    final CustomEvent customEvent = event as CustomEvent;
-    final input = customEvent.detail;
-    print('Received input from console: $input');
-    // Here, you can call your chat function with the input
-    String response = chatFunction(input);
-    print(response); // This will log the response back to the console
-  });
-}
-
-
-String chatFunction(String prompt) {
-  // This function simulates chat interaction. Replace with actual functionality.
-  return "Responding to '$prompt'.";
-}
-
 
 class MyApp extends StatelessWidget {
   // Create a global variable for the overlay entry
@@ -240,7 +222,7 @@ class MyApp extends StatelessWidget {
           WidgetBuilder builder;
           if (settings.name == '/') {
             builder = (_) => 
-            // BaseScaffold(body: Bubbles(), title: "title",  selectedItem: 0);
+            // BaseScaffold(body: Profile(), title: "title",  selectedItem: 0);
             // ProjectDetails(project: projects[0]);
             // Prelaunch();
             // Poll();  

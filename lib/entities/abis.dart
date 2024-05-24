@@ -2,6 +2,8 @@ List<String> sourceAbiString=[
   'function createProject (string,address,address,string,string) payable',
 ];
 
+String oldSource="0xadD7FA1D171B5Bf9188e9aC540D55C61030C84Ed";
+
 
 List<String> nativeProjectAbiString=[
   'function setParties (address, address, string) payable',
@@ -55,6 +57,19 @@ r'''
 		"outputs": [],
 		"stateMutability": "payable",
 		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "contractAddress",
+				"type": "address"
+			}
+		],
+		"name": "NewProject",
+		"type": "event"
 	},
 	{
 		"inputs": [
@@ -138,6 +153,40 @@ r'''
 		"inputs": [],
 		"name": "getNumberOfProjects",
 		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "userAddress",
+				"type": "address"
+			}
+		],
+		"name": "getUserRep",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
 			{
 				"internalType": "uint256",
 				"name": "",

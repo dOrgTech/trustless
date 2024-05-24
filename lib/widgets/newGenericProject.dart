@@ -249,12 +249,12 @@ class _NewGenericProjectState extends State<NewGenericProject> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(widget.project.isUSDT?"160.0 USDT":"200.00 ${Human().chain.nativeSymbol}"),
+                Text(widget.project.isUSDT?"160.0 USDT":"1.00 ${Human().chain.nativeSymbol}"),
                 const SizedBox(height: 8),
                 Text(
                   widget.project.status=="pending"
                          ?
-                  widget.project.isUSDT?"80.0 USDT":"100.00 ${Human().chain.nativeSymbol}"
+                  widget.project.isUSDT?"80.0 USDT":"0.5 ${Human().chain.nativeSymbol}"
                          :
                  widget.project.isUSDT?"0.00 USDT":"0.00 ${Human().chain.nativeSymbol}"
                 ),

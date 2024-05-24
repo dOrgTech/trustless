@@ -256,33 +256,33 @@ class _WidthdrawAsContractorState extends State<WidthdrawAsContractor>{
                             borderRadius: BorderRadius.circular(7.0),
                           ),
                         ),
-                      ),
-                      onPressed: ()async{
-                      setState(() {widget.stage="waiting";});
-                           print("Signing contract");
-                            String cevine = await cf.withdrawAsContractor(widget.project);
-                           print("dupa cevine");
-                          if (cevine.contains("nu merge")){
-                              print("nu merge din setParty");
-                              setState(() { widget.stage="error";});
-                              return;
-                          }
+                        ),
+                        onPressed: ()async{
+                        setState(() {widget.stage="waiting";});
+                            print("Signing contract");
+                              String cevine = await cf.withdrawAsContractor(widget.project);
+                            print("dupa cevine");
+                            if (cevine.contains("nu merge")){
+                                print("nu merge din setParty");
+                                setState(() { widget.stage="error";});
+                                return;
+                           }
                         projectsCollection.doc(widget.project.contractAddress).set(widget.project.toJson());
-                        try{
+                        try
+                            {
                               String oldEarned = Human().user!.nativeEarned;
                               String newEarned=oldEarned;
                               cf.getNativeEarned( Human().user!.address).then((value){
                                 newEarned=value;
-                                if ( BigInt.parse(newEarned) > BigInt.parse(oldEarned) ){
+                                if (!( BigInt.parse(newEarned) == BigInt.parse(oldEarned)) ){
                                   print("avem diferente");
-                                   Human().user!.nativeEarned=newEarned;
-                                  usersCollection.doc(Human().user!.address).set(Human().user!.toJson());}
+                                  Human().user!.nativeEarned=newEarned;}
                               });
                         }catch (Exception) 
                         {if (kDebugMode) {
                           print("helo");
                         }}
-                        usersCollection.doc(Human().address).set(Human().user!.toJson());
+                        await usersCollection.doc(Human().address).set(Human().user!.toJson());
                         // ignore: use_build_context_synchronously
                         Navigator.of(context).pushNamed("/projects/${widget.project.contractAddress}");
                       },

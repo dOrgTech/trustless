@@ -199,7 +199,6 @@ String extractGitHubPath(String? repoUrl) {
       );
     });
     return BaseScaffold(
-     
       selectedItem: 1,
       title: "Project",
       body: Container(
@@ -521,7 +520,7 @@ String extractGitHubPath(String? repoUrl) {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Text("Dispute resolved with ${widget.project.arbiterAwardingContractor } ${widget.project.isUSDT? "USDC": Human().chain.nativeSymbol} awarded to Contractor",style: const TextStyle(fontSize: 20),),
+                                  Text("Dispute resolved with ${cf.weiToEth(widget.project.arbiterAwardingContractor.toString()) } ${widget.project.isUSDT? "USDC": Human().chain.nativeSymbol} awarded to Contractor",style: const TextStyle(fontSize: 20),),
                                  Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -703,18 +702,18 @@ String extractGitHubPath(String? repoUrl) {
                                     child: Row(
                                       children: [
                                         Text(
-                                          "${
+                                        cf.weiToEth("${
                                             widget.project.contributorsReleasing.values.fold(BigInt.zero, (sum, value) {
                                                 return sum + BigInt.parse(value);
                                               })
                                               
-                                          } ",
+                                          } "),
                                           style: const TextStyle(
                                               fontSize: 21,
                                               fontWeight: FontWeight.normal),
                                         ),
                                         Text(
-                                          widget.project.isUSDT?"USDT":Human().chain.nativeSymbol,
+                                          widget.project.isUSDT?"USDT" :" "+Human().chain.nativeSymbol,
                                           style: const TextStyle(
                                               fontSize: 21,
                                               fontWeight: FontWeight.normal),
@@ -752,17 +751,17 @@ String extractGitHubPath(String? repoUrl) {
                                     child: Row(
                                       children: [
                                         Text(
-                                          "${
+                                        cf.weiToEth(  "${
                                            widget.project.contributorsDisputing.values.fold(BigInt.zero, (sum, value) {
                                                 return sum + BigInt.parse(value);
                                               })
-                                            } ",
+                                            } "),
                                           style: const TextStyle(
                                               fontSize: 21,
                                               fontWeight: FontWeight.normal),
                                         ),
                                         Text(
-                                          widget.project.isUSDT?"USDT":Human().chain.nativeSymbol,
+                                          widget.project.isUSDT?" USDT":" "+Human().chain.nativeSymbol,
                                           style: const TextStyle(
                                               fontSize: 21,
                                               fontWeight: FontWeight.normal),
@@ -1017,7 +1016,9 @@ class _BackersListState extends State<BackersList> {
           :
           widget.project.contributorsDisputing.containsKey(key) &&  BigInt.parse (widget.project.contributorsDisputing[key]!) > BigInt.zero ?
           Image.asset('assets/scale2.png', height:25, color:Colors.red) 
+          
           :
+          
           const Text("")),
               TextButton(
                 onPressed: (){
@@ -1035,7 +1036,7 @@ class _BackersListState extends State<BackersList> {
           const Spacer(), // Adjust as needed
           Padding(
             padding: const EdgeInsets.only(right:88.0),
-            child: Text("$value"),
+            child: Text(cf.weiToEth( value)),
           ),
         ],
       ),
@@ -1062,8 +1063,9 @@ class _BackersListState extends State<BackersList> {
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: const [
-               SizedBox(width: 40,),  Text("Address"),  SizedBox(width: 210,),  Text("Amount"),const SizedBox(width: 10,) 
+                children:  [
+               SizedBox(width: 40,),  Text("Address"),  SizedBox(width: 210,),  Text("Amount (" + Human().chain.nativeSymbol.toString() +")"),
+               const SizedBox(width: 10,) 
               ],),
               const SizedBox(height: 10),
               ...rows,

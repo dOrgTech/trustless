@@ -84,7 +84,7 @@ class TTransaction{
     required this.hash
   })
   {
-    blockExplorerUrl= "https://${Human().chain.name}.etherscan.io/tx/${hash}";
+    blockExplorerUrl= "${Human().chain.blockExplorer}/tx/${hash}";
   }
   String sender;
   String functionName;

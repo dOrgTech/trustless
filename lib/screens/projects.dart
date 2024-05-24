@@ -132,7 +132,7 @@ class ProjectsState extends State<Projects> {
                 builder: (context) => const AlertDialog(
             
                       content: SizedBox(height:100, width: 400,child:Center(child: 
-                      Text("Connect your wallet firrst.")
+                      Text("Connect your wallet first.")
                       )),
                     ))
                     : 

@@ -123,7 +123,7 @@ Widget stage0(){
                   ),
                 ),
               ),
-            SizedBox(height: 160),
+           const SizedBox(height: 160),
             Padding(
               padding: const EdgeInsets.only(bottom: 25),
               child:  Row(
@@ -176,9 +176,12 @@ Widget stage0(){
                           bool storeUser=false;
                           
                           if ( widget.project.contributions.containsKey(Human().address!)) {
-                                widget.project.contributions[Human().address!] = (BigInt.parse(widget.project.contributions[Human().address!]!) + BigInt.parse(amount)).toString();
+                                widget.project.contributions[Human().address!] = (BigInt.parse(widget.project.contributions[Human().address!]!) 
+                                + 
+                               cf.ethToWei(double.parse(amount))
+                                ).toString();
                               } else {
-                                widget.project.contributions[Human().address!] = BigInt.parse(amount).toString();
+                                widget.project.contributions[Human().address!] =cf.ethToWei(double.parse(amount)).toString();
                               }
                           
                           if (!Human().user!.projectsBacked.contains(widget.project.contractAddress)) {

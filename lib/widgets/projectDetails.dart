@@ -605,6 +605,11 @@ String extractGitHubPath(String? repoUrl) {
                                            )
                                         ],
                                       ),
+
+                                      // before 857.4335 XTZ
+                                      //contribution - 2
+                                      //dispute percentage: 50
+
                                       const SizedBox(
                                         height: 8,
                                       ),
@@ -620,9 +625,7 @@ String extractGitHubPath(String? repoUrl) {
                                         Row(
                                           children: [
                               Text(
-                                EtherAmount.fromBigInt(EtherUnit.wei, BigInt.parse(widget.project.holding.toString())).
-                                getValueInUnit(EtherUnit.ether).
-                                toString()
+                                cf.weiToEth(widget.project.holding)
                                 ,style: const TextStyle(
                                   fontSize: 25,
                                   fontWeight: FontWeight.normal),

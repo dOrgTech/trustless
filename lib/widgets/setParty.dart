@@ -213,10 +213,10 @@ class SetPartytate extends State<SetParty> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(widget.project.isUSDT?"160.0 USDT":"200.00 ${Human().chain.nativeSymbol}"),
+                Text(widget.project.isUSDT?"160.0 USDT":"${cf.weiToEth(Human().chain.arbitrationFee)} ${Human().chain.nativeSymbol}"),
                 const SizedBox(height: 8),
                 Text(
-                  widget.project.isUSDT?"80.0 USDT":"100.00 ${Human().chain.nativeSymbol}"
+                  widget.project.isUSDT?"80.0 USDT":"${ double.parse(cf.weiToEth(Human().chain.arbitrationFee)) / 2 } ${Human().chain.nativeSymbol}"
                 ),
             ],),
           ],): const Center(child: Text("You already staked your half of the arbitration fee.")),

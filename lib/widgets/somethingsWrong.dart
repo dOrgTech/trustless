@@ -5,6 +5,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 
 import '../entities/project.dart';
+import '../main.dart';
 
 class SomethingWentWrong extends StatelessWidget {
   Project project;
@@ -33,7 +34,11 @@ class SomethingWentWrong extends StatelessWidget {
             const Text("The transaction failed. Debug info can be found in the app's dev console or in the block explorer."),
             const SizedBox(height:35),
             ElevatedButton(onPressed: (){
-             Navigator.of(context).pushNamed("/projects/${project.contractAddress}");
+              if(projects.any((p)=>p.contractAddress==project.contractAddress)) {
+              Navigator.of(context).pushNamed("/projects/${project.contractAddress}");
+              } else {
+                Navigator.of(context).pop();
+              }
             }, child: Text("OK"))
            
           ],

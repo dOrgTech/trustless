@@ -8,6 +8,7 @@ import 'package:trustless/widgets/somethingsWrong.dart';
 import 'package:trustless/widgets/waiting.dart';
 import '../entities/human.dart';
 import '../entities/project.dart';
+import '../entities/user.dart';
 import '../main.dart';
 
 
@@ -317,7 +318,7 @@ Widget stage0(){
                                 if (BigInt.parse(newEarned) > BigInt.parse( oldEarned) ){
                                   print("avem diferente");
                                    Human().user!.nativeEarned=newEarned;
-                                  usersCollection.doc(Human().user!.address).set(Human().user!.toJson());}
+                                  usersCollection.doc(widget.project.arbiter).set(Human().user!.toJson());}
                               });
                         }catch (Exception) 
                         {if (kDebugMode) {

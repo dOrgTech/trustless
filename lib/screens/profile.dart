@@ -409,7 +409,7 @@ Widget overview(lumina){
                           child: Center(
                               child: balance(
                                   "${Human().chain.nativeSymbol} Earned",
-                                 Human().user!.nativeEarned.toString()
+                                cf.weiToEth( Human().user!.nativeEarned.toString())
                                   )),
                         )),  
                   AnimatedContainer(

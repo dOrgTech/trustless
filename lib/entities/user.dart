@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:trustless/entities/project.dart';
@@ -161,27 +160,36 @@ class _UserDetailsState extends State<UserDetails> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        FutureBuilder<Uint8List>(
+                       FutureBuilder<Uint8List>(
                                 future: generateAvatarAsync(hashString(p.contractAddress!)),  // Make your generateAvatar function return Future<Uint8List>
                                 builder: (context, snapshot) {
                                   // Future.delayed(Duration(milliseconds: 500));
                                   if (snapshot.connectionState == ConnectionState.waiting) {
+                                    
+                                    
                                     return Container(
-                                      width: 20.0,
-                                      height:20.0,
-                                      color: Theme.of(context).canvasColor,
                                      
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(25.0),
+                                          color: Theme.of(context).canvasColor,
+                                      ),
+                                      width: 50.0,
+                                      height:50.0,
+                                    
                                     );
                                   } else if (snapshot.hasData) {
                                     
-                                    return SizedBox(width: 20,height: 20,  child: Image.memory(snapshot.data!));
+                                    return Container(width: 50,height: 50,  
+                                     decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(25.0)
+                                      ),
+                                    child: Image.memory(snapshot.data!));
                                     
                                   } else {
                                     return Container(
-                                      width: 20.0,
-                                      height: 20.0,
-                                      color: Theme.of(context).canvasColor, 
-                                       // Error color
+                                      width: 50.0,
+                                      height: 50.0,
+                                      color: Theme.of(context).canvasColor,  // Error color
                                     );
                                   }
                                 },
@@ -289,7 +297,7 @@ class _UserDetailsState extends State<UserDetails> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text( Human().chain.nativeSymbol.toString() +" spent: "+widget.human.nativeSpent.toString()),
+                          Text( Human().chain.nativeSymbol.toString() +" spent: "+ cf.weiToEth( widget.human.nativeSpent)),
                            Text( "USDT spent: "+widget.human.usdtSpent.toString())
                         ],),
                     ),
@@ -298,7 +306,7 @@ class _UserDetailsState extends State<UserDetails> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text( Human().chain.nativeSymbol.toString() +" earned: "+widget.human.nativeEarned.toString()),
+                          Text( Human().chain.nativeSymbol.toString() +" earned: "+cf.weiToEth( widget.human.nativeEarned)),
                           Text( "USDT earned: "+widget.human.usdtEarned.toString())
                         ],),
                     ),

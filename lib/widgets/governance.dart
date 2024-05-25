@@ -116,7 +116,7 @@ class _BuyATNState extends State<BuyATN> with TickerProviderStateMixin {
                     pause: const Duration(seconds: 4),
                     textAlign: TextAlign.center,
                     speed: const Duration(milliseconds: 31),
-                    text: const ["Self-Sufficient\nDecentralized\nBusiness\nEnvironment"],
+                    text: const ["Self-Sufficient\nPermissionless\nBusiness\nEnvironment"],
                     textStyle:TextStyle(
                         height: 1.5,
                        

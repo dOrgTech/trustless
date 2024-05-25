@@ -4,12 +4,12 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'package:flutter_web3_provider/ethereum.dart';
 import 'package:flutter_web3_provider/ethers.dart';
+import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart';
 import 'package:trustless/entities/abis.dart';
 import 'package:trustless/entities/project.dart';
 import 'package:trustless/entities/user.dart';
 import 'package:trustless/main.dart';
-import 'package:web3dart/web3dart.dart';
 import 'human.dart';
 int numberOfProjects=0;
 
@@ -94,7 +94,8 @@ getUserRep() async {
     if (!(Human().user!.usdtSpent==counter[3].toString())){Human().user!.usdtSpent=counter[3].toString();changes=true;}
     if (changes){
       print("we have changes");
-      await  usersCollection.doc(Human().address).set(Human().user!.toJson());
+      User u  = users.firstWhere((user) => user.address.toLowerCase()  == Human().address!.toLowerCase());
+      await  usersCollection.doc(u.address).set(Human().user!.toJson());
     }else{print("nothing changed.");}
   } catch (e) {
     print('Error: $e');
@@ -294,9 +295,12 @@ getUserRep() async {
   }
 
 String weiToEth(String amount){
-      return EtherAmount.fromBigInt(EtherUnit.wei, BigInt.parse(amount)).
+      String ethAmount = EtherAmount.fromBigInt(EtherUnit.wei, BigInt.parse(amount)).
                                 getValueInUnit(EtherUnit.ether).
                                 toStringAsFixed(2);
+
+      if(BigInt.parse(amount) < BigInt.parse("10")){ethAmount="0.00";}
+      return ethAmount;
 }
 
 BigInt ethToWei(double ethAmount) {

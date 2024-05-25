@@ -9,6 +9,8 @@ import 'package:web3dart/web3dart.dart';
 import '../entities/project.dart';
 import 'package:intl/intl.dart';
 
+import '../main.dart';
+
 class PCard extends StatelessWidget {
 
    PCard({super.key, this.project});
@@ -179,9 +181,7 @@ class ProjectCard extends StatelessWidget {
                 children: [
                       Text(
                         
-                         EtherAmount.fromBigInt(EtherUnit.wei, BigInt.parse(project!.holding.toString())).
-                                   getValueInUnit(EtherUnit.ether).
-                                   toString()
+                       cf.weiToEth(project!.holding)
                         
                         
                         , style: TextStyle(fontWeight: FontWeight.bold, fontSize: 19)),

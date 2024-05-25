@@ -28,7 +28,7 @@ class Human extends ChangeNotifier{
     _navigatorKey.currentState?.pushNamed("/");
   }
   bool busy=false;
-  bool beta=true;
+  bool beta=false;
   bool wrongChain=false;
   String session_id=generateWalletAddress();
   int chainID=5;
@@ -85,10 +85,10 @@ class Human extends ChangeNotifier{
           print("schimbam la nimic");
           wrongChain=true;
           chain=Chain(arbitrationFee: "", id: 0, name: 'N/A', nativeSymbol: '', decimals: 0, rpcNode: '', blockExplorer: "");
-          
           notifyListeners();
           return "nogo";
         }else{
+          web3user = Web3Provider(ethereum!);
           wrongChain=false;
           chain=chains[chainId]!;
            persist().then((value){

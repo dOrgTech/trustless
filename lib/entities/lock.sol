@@ -6,7 +6,7 @@ contract Economy {
     // Array to hold addresses of deployed projects
     address[] public deployedProjects;
     mapping(address => bool) public isProjectContract;
-    uint public arbitrationFee=200;
+    uint public arbitrationFee=1000000000000000000;
     mapping (address => uint) public nativeEarned;
     mapping (address => uint) public nativeSpent;
     mapping (address => uint) public usdtEarned;
@@ -17,6 +17,11 @@ contract Economy {
         return deployedProjects.length;
     }
 
+    function getUserRep(address userAddress) public view returns (uint, uint, uint, uint) {
+        return (nativeEarned[userAddress], nativeSpent[userAddress], usdtEarned[userAddress], usdtSpent[userAddress]);
+    }
+
+    event NewProject(address contractAddress);
     function createProject(
     string memory name, 
     address contractor,
@@ -26,8 +31,6 @@ contract Economy {
     ) public payable {
     NativeProject newProject;
     if (contractor != address(0) && arbiter != address(0)) {
-        // If both contractor and arbiter are specified, the project will be in "pending" stage
-        // and require staking half the arbitration fee.
         require(msg.value >= arbitrationFee / 2, "Must stake half the arbitration fee.");
         newProject = (new NativeProject){value: msg.value}(
             address(this),name,msg.sender,contractor,arbiter,termsHash,repo,arbitrationFee
@@ -40,7 +43,10 @@ contract Economy {
         }
         deployedProjects.push(address(newProject));
         isProjectContract[address(newProject)] = true;
+        emit NewProject(address(newProject));
     }
+
+
     function updateEarnings(address user, uint amount, bool native) external {
         require(isProjectContract[msg.sender], "Only Project contracts can call this function.");
         if (native){nativeEarned[user] += amount;}else{usdtEarned[user] += amount;}
@@ -118,7 +124,6 @@ contract NativeProject {
         return string(abi.encodePacked(
             "{",
             '"coolingOffPeriodEnds":', uintToString(coolingOffPeriodEnds), ",",
-            '"name":"', name, '",',
             '"stage":"', stage, '",',
             '"repo":"', repo, '",',
             '"projectValue":"', uintToString(projectValue), '",',
@@ -128,16 +133,8 @@ contract NativeProject {
         ));
     }
 
-    function getParties() public view returns (string memory){
-        return string(abi.encodePacked(
-            "{",
-            '"author":"', addressToString(author), '",',
-            '"contractor":"', addressToString(contractor), '",',
-            '"arbiter":"', addressToString(arbiter), '",',
-            "}"
-        ));
-    }
-
+   
+    event SetParties(address _contractor, address _arbiter, string _termsHash);
     function setParties(address _contractor, address _arbiter, string memory _termsHash) public payable{
         require(keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("open")) || 
         keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("pending")), 
@@ -151,15 +148,18 @@ contract NativeProject {
         contractor=_contractor;
         arbiter=_arbiter;
         termsHash=_termsHash;
+        emit SetParties(_contractor, _arbiter, _termsHash);
         stage="pending";
     }
 
+    event SendFunds(address who, uint256 howMuch);
     function sendFunds() public payable {
         require(keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("open")) ||
          keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("pending")),
           "Funding is only allowed when the project is in 'open' or 'pending' stage.");
         contributors[msg.sender] += msg.value;
         backers.push(msg.sender);
+        emit SendFunds(msg.sender, msg.value);
         projectValue += msg.value;
     }
 
@@ -300,6 +300,7 @@ contract NativeProject {
         stage = "dispute";
         emit ProjectDisputed(msg.sender);
     }
+
 
     function arbitrate(uint256 percent, string memory rulingHash) public {
         require(keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("dispute")), "Arbitration can only occur if the project is in dispute.");

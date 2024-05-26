@@ -104,7 +104,6 @@ class Human extends ChangeNotifier{
     }
   }
 
-
   signIn()async{    
    try {
       var accounts = await promiseToFuture(

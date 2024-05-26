@@ -156,52 +156,57 @@ var sc=ScrollController();
     bool lumina=Theme.of(context).brightness==Brightness.dark;
     
     ScrollController sc=ScrollController();
-    return SizedBox(
-        //  height: MediaQuery.of(context).size.height,
-          child: DefaultTabController(
-          initialIndex: 0,
-          length: 5, 
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-            Container(
-              alignment: Alignment.topLeft,
-              height: 50,width: 760,
-              child: TabBar(
-                labelStyle: TextStyle(color: Theme.of(context).focusColor),
-                labelColor:Theme.of(context).brightness==Brightness.dark? Colors.white:Colors.black,
-                automaticIndicatorColorAdjustment: false,
-                // overlayColor:MaterialStateProperty.all(Colors.white),
-                unselectedLabelColor: Theme.of(context).hintColor,
-                tabs: [
-             const Tab(text: "OVERVIEW"),
-              Tab(text: "AUTHOR (${Human().user!.projectsAuthored.length})"),
-              Tab(text: "CONTRACTOR (${Human().user!.projectsContracted.length})"),
-              Tab(text: "ARBITER (${Human().user!.projectsArbitrated.length})"),
-              Tab(text: "BACKER (${Human().user!.projectsBacked.length})"),
-               ])),
-            Container(
-              height: MediaQuery.of(context).size.height,
+    return  MediaQuery(
+            data: MediaQuery.of(context).copyWith(textScaleFactor:
+            MediaQuery.of(context).size.aspectRatio>1?1:
+             0.85),
+      child: SizedBox(
+          //  height: MediaQuery.of(context).size.height,
+            child: DefaultTabController(
+            initialIndex: 0,
+            length: 5, 
+            child: SizedBox(
               width: MediaQuery.of(context).size.width,
-              child:  TabBarView(
-                    children: [
-                    Scrollbar(child: SingleChildScrollView(child: Column(
+              child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+              Container(
+                alignment: Alignment.topLeft,
+                height: 50,width: 760,
+                child: TabBar(
+                  labelStyle: TextStyle(color: Theme.of(context).focusColor),
+                  labelColor:Theme.of(context).brightness==Brightness.dark? Colors.white:Colors.black,
+                  automaticIndicatorColorAdjustment: false,
+                  // overlayColor:MaterialStateProperty.all(Colors.white),
+                  unselectedLabelColor: Theme.of(context).hintColor,
+                  tabs: [
+               const Tab(text: "OVERVIEW"),
+                Tab(text: "AUTHOR (${Human().user!.projectsAuthored.length})"),
+                Tab(text: "CONTRACTOR (${Human().user!.projectsContracted.length})"),
+                Tab(text: "ARBITER (${Human().user!.projectsArbitrated.length})"),
+                Tab(text: "BACKER (${Human().user!.projectsBacked.length})"),
+                 ])),
+              Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                child:  TabBarView(
                       children: [
-                        overview(lumina),
-                        const SizedBox(height:130),
-                      ],
-                    ))),
-             Projects(main:false, capacity: "authored",),
-             Projects(main:false, capacity: "contracted",),
-             Projects(main:false, capacity: "arbitrated",),
-             Projects(main:false, capacity: "backed",),
-                    ]),
-              ),
-              Footer(),
-              ],),
-          )),
+                      Scrollbar(child: SingleChildScrollView(child: Column(
+                        children: [
+                          overview(lumina),
+                          const SizedBox(height:130),
+                        ],
+                      ))),
+               Projects(main:false, capacity: "authored",),
+               Projects(main:false, capacity: "contracted",),
+               Projects(main:false, capacity: "arbitrated",),
+               Projects(main:false, capacity: "backed",),
+                      ]),
+                ),
+                Footer(),
+                ],),
+            )),
+      ),
     );
   }
 
@@ -245,8 +250,10 @@ Widget overview(lumina){
               const SizedBox(height: 60,),
               Container(
                 // padding: EdgeInsets.only(left:100),
-                height: 360,
-                child: Row(
+                height: MediaQuery.of(context).size.aspectRatio>1?360:500,
+                child: 
+                MediaQuery.of(context).size.aspectRatio>1?
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Row(
@@ -254,6 +261,7 @@ Widget overview(lumina){
                           Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children:const [
+                      
                        SizedBox(
                         height: 50,
                         child: Center(child: Text("Alias:")),
@@ -384,9 +392,142 @@ Widget overview(lumina){
                         ],
                       )))
                   ],
+                )
+                :
+              MediaQuery(
+            data: MediaQuery.of(context).copyWith(textScaleFactor: 0.94),
+                  child: Container(
+                    height:double.infinity,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Row(
+                          
+                          children: [
+                             
+                        const SizedBox(width: 20),
+                        Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children:  [
+                           SizedBox(
+                            width: 300,
+                            height: 90,
+                            child: TextField(
+                              controller: widget.aliasControlla,
+                              maxLines: 1,
+                              maxLength: 25,
+                              onChanged: widget.valuesChanged==true?null: (value) {
+                               if (!(value==widget.oldAlias)){
+                                  setState(() {
+                                    widget.valuesChanged=true;
+                                  });
+                               }
+                              },
+                              decoration: InputDecoration(
+                                hintText: "Set an Alias"
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          SizedBox(
+                            width: 450,
+                            height: 160,
+                            child: TextField(
+                             controller: widget.aboutControlla,
+                              maxLines: 5,
+                              maxLength: 500,
+                              onChanged:widget.valuesChanged==true?null:  (value) {
+                               if (!(value==widget.oldAbout)){
+                                 setState(() {
+                                    widget.valuesChanged=true;
+                                  });
+                               }
+                              },
+                              decoration: InputDecoration(
+                                hintText: "Brief profile description"
+                              ),
+                            ),
+                          ),
+                              SizedBox(
+                            width: 450,
+                            height: 80,
+                            child: TextField(
+                               controller: widget.linkControlla,
+                              maxLines: 1,
+                              maxLength: 150,
+                              onChanged: widget.valuesChanged==true?null: (value) {
+                               if (!(value==widget.oldlink)){
+                                  setState(() {
+                                    widget.valuesChanged=true;
+                                  });
+                               }
+                              },
+                              decoration: InputDecoration(
+                                hintText: "https://link-to-additional-context..."
+                              ),
+                            ),
+                          ),
+                        ],
+                        ),
+                          ],
+                        ),
+                
+                        ElevatedButton(
+                          style: ButtonStyle(
+                                foregroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+                        // Return blue when enabled, implicitly use default for other states
+                        if (!states.contains(MaterialState.disabled)) {
+                          return Theme.of(context).canvasColor; // Active (enabled) text color
+                        }
+                        // Since a Color must always be returned and we don't want to explicitly set a disabled color,
+                        // we return the default foreground color for the ElevatedButton theme.
+                        // This approach assumes the theme's default aligns with your desired disabled state appearance.
+                        return ElevatedButtonTheme.of(context).style?.foregroundColor?.resolve({}) ?? Colors.white;
+                       }),
+                          ),
+                          onPressed: widget.valuesChanged?()async{
+                            Human().user!.about=widget.aboutControlla.text;
+                            Human().user!.link=widget.linkControlla.text;
+                            Human().user!.name=widget.aliasControlla.text;
+                            await usersCollection.doc(Human().address).set(Human().user!.toJson());
+                            setState(() {
+                              widget.valuesChanged=false;
+                            });
+                        ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          // The content of the SnackBar.
+                          content: Center(
+                              child: Text(
+                            'Settings saved',
+                            style: TextStyle(fontSize: 15),
+                          )),
+                          // The duration of the SnackBar.
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                          }: null
+                          , child: 
+                        SizedBox(
+                          height: 80,
+                          width: 90,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: const [
+                              Icon(Icons.save, size: 20),
+                              SizedBox(height: 7),
+                              Text("SAVE",style: TextStyle(fontSize: 20)),
+                            ],
+                          )))
+                      
+                      ],
+                    ),
+                  ),
                 ),
+                
               ),
-              SizedBox(height: 30),
+             
+                    SizedBox(height:80),
               Wrap(
                 spacing: 57,
                 runSpacing: 40,

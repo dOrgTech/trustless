@@ -25,39 +25,36 @@ class UserCard extends StatelessWidget {
                   child: Row(
                     children: [
                       FutureBuilder<Uint8List>(
-                                future: generateAvatarAsync(hashString(user.address)),  // Make your generateAvatar function return Future<Uint8List>
-                                builder: (context, snapshot) {
-                                  // Future.delayed(Duration(milliseconds: 500));
-                                  if (snapshot.connectionState == ConnectionState.waiting) {
-                                    
-                                    
-                                    return Container(
-                                     
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(25.0),
-                                          color: Theme.of(context).canvasColor,
-                                      ),
-                                      width: 50.0,
-                                      height:50.0,
-                                    
-                                    );
-                                  } else if (snapshot.hasData) {
-                                    
-                                    return Container(width: 50,height: 50,  
-                                     decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(25.0)
-                                      ),
-                                    child: Image.memory(snapshot.data!));
-                                    
-                                  } else {
-                                    return Container(
-                                      width: 50.0,
-                                      height: 50.0,
-                                      color: Theme.of(context).canvasColor,  // Error color
-                                    );
-                                  }
-                                },
-                              ),
+                          future: generateAvatarAsync(hashString(user.address)),  // Make your generateAvatar function return Future<Uint8List>
+                          builder: (context, snapshot) {
+                            // Future.delayed(Duration(milliseconds: 500));
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              
+                              
+                              return Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(25.0),
+                                    color: Theme.of(context).canvasColor,
+                                ),
+                                width: 50.0,
+                                height:50.0,
+                              );
+                            } else if (snapshot.hasData) {
+                              return Container(width: 50,height: 50,  
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(25.0)
+                                ),
+                              child: Image.memory(snapshot.data!));
+                              
+                            } else {
+                              return Container(
+                                width: 50.0,
+                                height: 50.0,
+                                color: Theme.of(context).canvasColor,  // Error color
+                              );
+                            }
+                          },
+                        ),
                       const SizedBox(width: 10),
                       Text(
                         shortenString(user.address!),

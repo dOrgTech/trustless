@@ -64,7 +64,30 @@ class ProjectsState extends State<Projects> {
         List<Widget> projectsMenu=[
         Padding(
                 padding: const EdgeInsets.only(left:5.0),
-                child: SizedBox(
+                child: 
+              MediaQuery.of(context).size.aspectRatio<1?
+                SizedBox(
+                  width: 
+                    MediaQuery.of(context).size.width-30,
+                  child: TextField(
+                    style: const TextStyle(fontSize: 20),
+                    onChanged: (value){
+                        setState(() {
+                        widget.query = value;
+                      });
+                    },
+                    decoration: InputDecoration(
+
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(width: 0.1),
+                        ),
+                      prefixIcon: const Icon(Icons.search),
+                      hintText: 'Search project',
+                    ),
+                  ),
+                )
+                : SizedBox(
                   width: 
                   MediaQuery.of(context).size.width>1200?
                   500:
@@ -124,7 +147,7 @@ class ProjectsState extends State<Projects> {
                         
                           const SizedBox(width: 60),
             // HoverExpandWidget(projectsState: this),
-            widget.main?
+            widget.main && MediaQuery.of(context).size.aspectRatio>1 ?
             ElevatedButton(onPressed: (){
                         Human().address==null?
                      showDialog(

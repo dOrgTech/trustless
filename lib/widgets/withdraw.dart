@@ -201,7 +201,6 @@ class _WidthdrawAsContractorState extends State<WidthdrawAsContractor>{
             ),
           ),
           // width: MediaQuery.of(context).size.width*0.7,
-          
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -272,12 +271,7 @@ class _WidthdrawAsContractorState extends State<WidthdrawAsContractor>{
                             {
                               String oldEarned = Human().user!.nativeEarned;
                               String newEarned=oldEarned;
-                              cf.getNativeEarned( Human().user!.address).then((value){
-                                newEarned=value;
-                                if (!( BigInt.parse(newEarned) == BigInt.parse(oldEarned)) ){
-                                  print("avem diferente");
-                                  Human().user!.nativeEarned=newEarned;}
-                              });
+                              cf.getUserRep();
                         }catch (Exception) 
                         {if (kDebugMode) {
                           print("helo");

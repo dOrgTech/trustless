@@ -223,12 +223,12 @@ class MyApp extends StatelessWidget {
           if (settings.name == '/') {
             builder = (_) => 
             // BaseScaffold(body: Profile(), title: "title",  selectedItem: 0);
-            // ProjectDetails(project: projects[0]);
+            // ProjectDetails(project: projects[1]);
             // Prelaunch();
-            // Poll();  
-            
+            // Poll();
             // Scaffold(body: SetParty(project: projects[0]));
-            //  BaseScaffold(selectedItem: 0, body: const Users(), title: "Users");
+            //  BaseScaffold(selectedItem: 0, body:  Profile(), title: "Users");
+            //  BaseScaffold(selectedItem: 0, body:  Users(), title: "Users");
              Human().beta ?  BaseScaffold(
               selectedItem: 0, body: Landing(), title: "Trustless Business") : Prelaunch();
             // BaseScaffold(selectedItem: 1,body: Projects( main: true, capacity: ""), title: "Projects");
@@ -262,7 +262,7 @@ class MyApp extends StatelessWidget {
             ), );
             } 
           else if (settings.name == '/users') {
-            builder = (_) => BaseScaffold(selectedItem: 3, body: const Users(), title: "Users");
+            builder = (_) => BaseScaffold(selectedItem: 3, body:  Users(), title: "Users");
             } else if (settings.name == '/') {
             builder = (_) => BaseScaffold(selectedItem: 0, body: Landing(), title: "Trustless Business");
           } else if (settings.name == '/projects') {

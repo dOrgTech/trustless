@@ -205,8 +205,11 @@ class _ActionItemState extends State<ActionItem> {
           ),
         ),
     ), 
-      Spacer(),
-    ["createProject"].contains(widget.action.functionName)?
+    MediaQuery.of(context).size.aspectRatio>1?
+      Spacer():Text(""),
+          MediaQuery.of(context).size.aspectRatio>1
+          ?
+    ["createProject"].contains(widget.action.functionName) ?
     Container(
      
      width: 210,
@@ -247,7 +250,7 @@ class _ActionItemState extends State<ActionItem> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                  
+                   MediaQuery.of(context).size.aspectRatio>=1?
                         FutureBuilder<Uint8List>(
                                 future: generateAvatarAsync(hashString(p.contractAddress!)),  // Make your generateAvatar function return Future<Uint8List>
                                 builder: (context, snapshot) {
@@ -272,8 +275,9 @@ class _ActionItemState extends State<ActionItem> {
                                     );
                                   }
                                 },
-                              ),
+                              ):Text(""),
                         const SizedBox(width: 10),
+                       MediaQuery.of(context).size.aspectRatio>=1?
                         TextButton(
                           style: TextButton.styleFrom(
                               padding: EdgeInsets.zero, // Minimize padding
@@ -292,13 +296,15 @@ class _ActionItemState extends State<ActionItem> {
                                 ,
                               style: GoogleFonts.dmMono(fontSize: 14,)),
                           ),
-                        ),
+                        ):Text(""),
                         const SizedBox(width: 30),
                       ],
                     ),
                   ),
-                ),
-                 Spacer(),
+                ):Text(""),
+
+                 MediaQuery.of(context).size.aspectRatio>1?
+      Spacer():Text(""),
          MediaQuery.of(context).size.aspectRatio>=1?
               SizedBox(
                 width:180,

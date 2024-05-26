@@ -13,10 +13,9 @@ import 'human.dart';
 String workingHash ="0x71436760615bde646197979c0be8a86c1c6179cd17ae7492355e76ff79949bbc";
 
 class User{
-  
   User({this.about,this.link, this.name, required this.lastActive,  required this.address,required this.nativeEarned,
   required this.usdtEarned,required this.usdtSpent,required this.nativeSpent,required this.projectsContracted,
-  required this.projectsArbitrated,required this.projectsBacked, 
+  required this.projectsArbitrated,required this.projectsBacked,
   required this.projectsAuthored});
   List<TTransaction>actions=[];
   String address;
@@ -35,7 +34,6 @@ class User{
   UserCard getCard() {
     return UserCard(user: this);
   } 
-
   Map<String, dynamic> toJson() => {
         'nativeEarned': nativeEarned,
         'link':link,
@@ -51,7 +49,6 @@ class User{
         'lastActive': lastActive,
       };
   factory User.fromNew(String address){
-
 
     User u= User(lastActive: DateTime.now(), address: address, 
     nativeEarned: "0", 
@@ -134,15 +131,13 @@ class TTransaction{
 
 class UserDetails extends StatefulWidget {
   User human;
-  UserDetails({required this.human,super.key});
+  UserDetails({required this.human,super.key, });
 
   @override
   State<UserDetails> createState() => _UserDetailsState();
 }
 
 class _UserDetailsState extends State<UserDetails> {
-
-
    Widget involvement(String address, String type){
     Project p= projects.firstWhere(
                                 (element) => element.contractAddress==address,

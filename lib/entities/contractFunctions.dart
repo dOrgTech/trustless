@@ -17,55 +17,49 @@ const String etherlink_testnet = 'https://node.ghostnet.etherlink.com';
 class ContractFunctions{
 
 getProjectsCounter() async {
-  var httpClient = Client();
-  var ethClient = Web3Client(Human().chain.rpcNode, httpClient);
-
-  final contractSursa = DeployedContract(
-    ContractAbi.fromJson(economyAbi, 'Economy'),
-    EthereumAddress.fromHex(sourceAddress),
-  );
-
-  var getRepToken = contractSursa.function('getNumberOfProjects');
-  Uint8List encodedData = getRepToken.encodeCall([]);
-
-  try {
-    // Log the RPC request
-    print('RPC Request:');
-    print(jsonEncode({
-      'jsonrpc': '2.0',
-      'method': 'eth_call',
-      'params': [
-        {
-          'to': sourceAddress,
-          'data': '0x' + bytesToHex(encodedData),
-        },
-        'latest',
-      ],
-      'id': 1,
-    }));
-
-    var counter = await ethClient.call(
-      contract: contractSursa,
-      function: getRepToken,
-      params: [],
+    var httpClient = Client();
+    var ethClient = Web3Client(Human().chain.rpcNode, httpClient);
+    final contractSursa = DeployedContract(
+      ContractAbi.fromJson(economyAbi, 'Economy'),
+      EthereumAddress.fromHex(sourceAddress),
     );
-
-    // Log the RPC response
-    print('RPC Response:');
-    print(counter.toString());
-    int rezultat = int.parse(counter[0].toString()) as int;
-    numberOfProjects = rezultat;
-    print('$rezultat ${rezultat.runtimeType}');
-    return rezultat;
-  } catch (e) {
-    print('Error: $e');
-    // Log the full response body
-    print('Response Body:');
-    print(httpClient.toString());
-    rethrow;
-  }
+    var getRepToken = contractSursa.function('getNumberOfProjects');
+    Uint8List encodedData = getRepToken.encodeCall([]);
+    try {
+      // Log the RPC request
+      print('RPC Request:');
+      print(jsonEncode({
+        'jsonrpc': '2.0',
+        'method': 'eth_call',
+        'params': [
+          {
+            'to': sourceAddress,
+            'data': '0x' + bytesToHex(encodedData),
+          },
+          'latest',
+        ],
+        'id': 1,
+      }));
+      var counter = await ethClient.call(
+        contract: contractSursa,
+        function: getRepToken,
+        params: [],
+      );
+      // Log the RPC response
+      print('RPC Response:');
+      print(counter.toString());
+      int rezultat = int.parse(counter[0].toString()) as int;
+      numberOfProjects = rezultat;
+      print('$rezultat ${rezultat.runtimeType}');
+      return rezultat;
+    } catch (e) {
+      print('Error: $e');
+      // Log the full response body
+      print('Response Body:');
+      print(httpClient.toString());
+      rethrow;
+    }
 }
-
 
 getUserRep() async {
   print("getting rep");

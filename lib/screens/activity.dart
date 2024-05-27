@@ -13,12 +13,11 @@ class AllActivity extends StatefulWidget {
 class _AllActivityState extends State<AllActivity> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return 
+    Container(
+      padding: const EdgeInsets.symmetric(horizontal: 50),
        alignment: Alignment.topCenter,
           height: MediaQuery.of(context).size.height-65,
-          child: ListView(
-            children:[ActivityFeed()],
-          )
-    );
+          child: ActivityFeed(landing:false)) ;
   }
 }

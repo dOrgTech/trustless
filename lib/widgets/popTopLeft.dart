@@ -25,7 +25,7 @@ class _AnimatedStatsDisplayState extends State<AnimatedStatsDisplay> with Ticker
 
   @override
   void initState() {
-    widget.data['Total ${Human().chain.nativeSymbol} Earned']=0;
+    widget.data['Total ${Human().chain.nativeSymbol} Earned']=int.parse(Human().chainNativeEarnings);
     widget.data['Stakeholders']=users.length;
     for (Project p in projects){
       widget.data['Total Projects']=widget.data['Total Projects']!+1;

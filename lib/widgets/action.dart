@@ -332,9 +332,9 @@ class _ActionItemState extends State<ActionItem> {
 
 
 class ActivityFeed extends StatefulWidget {
-  
+  bool landing;
 
-  ActivityFeed();
+  ActivityFeed({this.landing=true});
 
   @override
   _ActivityFeedState createState() => _ActivityFeedState();
@@ -347,25 +347,45 @@ class _ActivityFeedState extends State<ActivityFeed> {
   @override
   void initState() {
     super.initState();
-if (projects.length>0){
-
-Future.delayed(Duration(milliseconds: 400)).then((value) {
-  timer = Timer.periodic(Duration(milliseconds: 24), (timer) {
-    if (displayedActions.length >= actions.length) {
-      timer.cancel();
-    } else if (displayedActions.length < 15) {
-      setState(() {
-        displayedActions.add(actions[displayedActions.length]);
-      });
-    } else {
-      setState(() {
-        displayedActions.addAll(actions.sublist(displayedActions.length));
+  if (projects.length>0 && widget.landing){
+  Future.delayed(const Duration(milliseconds: 400)).then((value) {
+    timer = Timer.periodic(Duration(milliseconds: 24), (timer) {
+      if (displayedActions.length >= actions.length) {
         timer.cancel();
-      });
-    }
-  });
-});
-}
+      } else if (displayedActions.length < 15) {
+        setState(() {
+          displayedActions.add(actions[displayedActions.length]);
+        });
+      } else {
+        setState(() {
+          displayedActions.addAll(actions.sublist(displayedActions.length, 19));
+          timer.cancel();
+        });
+      }
+    });
+    });
+  }
+
+     if (projects.length>0 && !widget.landing){
+  Future.delayed(const Duration(milliseconds: 400)).then((value) {
+    timer = Timer.periodic(Duration(milliseconds: 24), (timer) {
+      if (displayedActions.length >= actions.length) {
+        timer.cancel();
+      } else if (displayedActions.length < 15) {
+        setState(() {
+          displayedActions.add(actions[displayedActions.length]);
+        });
+      } else {
+        setState(() {
+          displayedActions.addAll(actions.sublist(displayedActions.length));
+          timer.cancel();
+        });
+      }
+    });
+    });
+  } 
+
+
   }
 
   @override
@@ -447,16 +467,44 @@ Future.delayed(Duration(milliseconds: 400)).then((value) {
             // ________________________________________END_HEADER_________________________________
             
           
-      Expanded(
-            child: ListView.builder(
-              itemCount: displayedActions.length,
-              itemBuilder: (context, index) {
-                return Opacity(opacity: 0.85, child: ActionItem(
-                  landingPage: true,
-                  action: displayedActions[index])); // Your list item
-              },
+Expanded(
+  child: ListView.builder(
+    itemCount: displayedActions.length + (displayedActions.length > 15 ? 1 : 0),
+    itemBuilder: (context, index) {
+      if (index == displayedActions.length) {
+        // Display the "see all transactions" widget only if list length > 15
+        if (displayedActions.length > 15 && widget.landing==true) {
+          return Center(
+            child: SizedBox(
+              height:40,
+              child: TextButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed("/activity");
+                },
+                child: Text("See all transactions"),
+              ),
             ),
+          );
+        } else {
+          // Return an empty container if list length <= 15
+          return Container();
+        }
+      } else {
+        // Display the existing items from displayedActions
+        return Opacity(
+          opacity: 0.85,
+          child: ActionItem(
+            landingPage: true,
+            action: displayedActions[index],
           ),
+        );
+      }
+    },
+  ),
+)
+
+
+
         ],
       ),
 

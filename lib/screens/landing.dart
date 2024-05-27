@@ -281,7 +281,7 @@ Widget dreapta(){
                     ), 
                     Container(
                       height: MediaQuery.of(context).size.height/2,
-                      child: ActivityFeed()
+                      child: ActivityFeed(landing:true)
                     ),  
                 Footer()
                ],

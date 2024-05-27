@@ -9,6 +9,7 @@ import 'package:flutter_web3_provider/ethereum.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:trustless/entities/contractFunctions.dart';
+import 'package:trustless/screens/activity.dart';
 import 'package:trustless/screens/landing.dart';
 import 'package:trustless/screens/poll.dart';
 import 'package:trustless/screens/prelaunch.dart';
@@ -225,6 +226,7 @@ class MyApp extends StatelessWidget {
             // BaseScaffold(body: Profile(), title: "title",  selectedItem: 0);
             // ProjectDetails(project: projects[1]);
             // Prelaunch();
+            // BaseScaffold(selectedItem: 1, body: AllActivity(), title:"Activity");
             // Poll();
             // Scaffold(body: SetParty(project: projects[0]));
             //  BaseScaffold(selectedItem: 0, body:  Profile(), title: "Users");
@@ -255,7 +257,6 @@ class MyApp extends StatelessWidget {
                 constraints: BoxConstraints(
                   maxWidth: 800
                 ),
-                
                 child: Bubbles(),
               ),
             ), );
@@ -266,6 +267,8 @@ class MyApp extends StatelessWidget {
             builder = (_) => BaseScaffold(selectedItem: 0, body: Landing(), title: "Trustless Business");
           } else if (settings.name == '/projects') {
             builder = (_) => BaseScaffold(selectedItem: 1, body: Projects(main:true, capacity: "",), title: "Projects");
+          } else if (settings.name == '/activity') {
+            builder = (_) => BaseScaffold(selectedItem: 1, body: AllActivity(), title:"Activity");
           } else {
             // Handle other routes or unknown routes
             builder = (_) =>  BaseScaffold(
@@ -273,7 +276,6 @@ class MyApp extends StatelessWidget {
               title: "Not a valid URL",
               body: const Center(child:Text("This is nothing.", style: TextStyle(fontSize: 40),)),);
           }
-        
           // Implementing the crossfade transition
           return PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) => builder(context),
@@ -291,6 +293,7 @@ class MyApp extends StatelessWidget {
       
   }
 }
+
 // class AppState extends ChangeNotifier {
 //   bool _ignoreInput = false;
 //   bool _showDialog = false; // Add this line
@@ -485,12 +488,14 @@ class _BaseScaffoldState extends State<BaseScaffold> {
             child: Bubbles()
           ),
           // floatingActionButton:ExpandableFAB(),
-          floatingActionButton: FloatingActionButton(
+          floatingActionButton: 
+          MediaQuery.of(context).size.aspectRatio>1?
+          FloatingActionButton(
             backgroundColor: Theme.of(context).colorScheme.onError,
             child: const Icon(Icons.contact_support, size: 57,),
             onPressed: (){
            widget. _scaffoldKey.currentState?.openEndDrawer();
-          }),
+          }):null,
           appBar: AppBar(
            toolbarHeight: 44,
            elevation: 1.8,

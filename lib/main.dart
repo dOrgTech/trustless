@@ -239,7 +239,6 @@ class MyApp extends StatelessWidget {
               project = projects.firstWhere(
             (proj)=>proj.contractAddress == projectId
               );
-              
             } catch (e) {
               project = null;
             }

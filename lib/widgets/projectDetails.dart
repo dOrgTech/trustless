@@ -530,6 +530,7 @@ String extractGitHubPath(String? repoUrl) {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
+                                 
                                   Text("Dispute resolved with ${cf.weiToEth(widget.project.arbiterAwardingContractor.toString()) } ${widget.project.isUSDT? "USDC": Human().chain.nativeSymbol} awarded to Contractor",style: const TextStyle(fontSize: 20),),
                                  Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -1248,6 +1249,7 @@ String extractGitHubPath(String? repoUrl) {
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
+                                     MediaQuery.of(context).size.aspectRatio<1?const SizedBox(height:30):Text(""),
                                     Text("Dispute resolved with ${cf.weiToEth(widget.project.arbiterAwardingContractor.toString()) }  ${widget.project.isUSDT? "USDC": Human().chain.nativeSymbol} awarded to Contractor",
                                      textAlign:TextAlign.center,
                                      style: const TextStyle(fontSize: 20),),
@@ -1402,7 +1404,7 @@ String extractGitHubPath(String? repoUrl) {
                                   children: [
                                 
                                     Text(
-                                      "Voting to release  ",
+                                      "Voting to release   ",
                                       style: TextStyle(
                                           fontSize: 17,
                                           color: Theme.of(context)

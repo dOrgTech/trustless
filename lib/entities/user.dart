@@ -146,7 +146,8 @@ class _UserDetailsState extends State<UserDetails> {
     child: Row(
 
       children: [
-      const  SizedBox(width: 60),
+
+      SizedBox(width:  MediaQuery.of(context).size.aspectRatio>1? 60 : 3),
           SizedBox(
                  height: 40,
                   child:  Padding
@@ -155,15 +156,13 @@ class _UserDetailsState extends State<UserDetails> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
+                         MediaQuery.of(context).size.aspectRatio>1?
                        FutureBuilder<Uint8List>(
                                 future: generateAvatarAsync(hashString(p.contractAddress!)),  // Make your generateAvatar function return Future<Uint8List>
                                 builder: (context, snapshot) {
                                   // Future.delayed(Duration(milliseconds: 500));
                                   if (snapshot.connectionState == ConnectionState.waiting) {
-                                    
-                                    
                                     return Container(
-                                     
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(25.0),
                                           color: Theme.of(context).canvasColor,
@@ -188,7 +187,7 @@ class _UserDetailsState extends State<UserDetails> {
                                     );
                                   }
                                 },
-                              ),
+                              ):const Text(""),
                         const SizedBox(width: 10),
                         TextButton(
                           style: TextButton.styleFrom(
@@ -235,167 +234,173 @@ class _UserDetailsState extends State<UserDetails> {
     for (String address in widget.human.projectsBacked){involvements.add(involvement( address, "Backer"));}
     for (String address in widget.human.projectsContracted){involvements.add(involvement( address, "Contractor"));}
     involvements.shuffle(Random());
-    return Padding(
-      padding: const EdgeInsets.only(left:18,top:10),
-      child: ListView(
-        // mainAxisAlignment: MainAxisAlignment.start,
-        // crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Padding(
-              padding: const EdgeInsets.only(top:8.0,left:15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  FutureBuilder<Uint8List>(
-                      future: generateAvatarAsync(hashString(widget.human.address)),  // Make your generateAvatar function return Future<Uint8List>
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return Container(
-                            width: 40.0,
-                            height: 40.0,
-                            color: Colors.grey,
-                          );
-                        } else if (snapshot.hasData) {
-                          return Image.memory(snapshot.data!);
-                        } else {
-                          return Container(
-                            width: 40.0,
-                            height: 40.0,
-                            color: Colors.red,  // Error color
-                          );
-                        }
-                      },
-                    ),
-                  const SizedBox(width: 10),
-                  Text(widget.human.address, style: const TextStyle(fontSize: 13),),
-                  const SizedBox(width: 10),
-                  TextButton(onPressed: (){
-                    copied(context, widget.human.address);
-                  }, child: const Icon(Icons.copy))
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: 300,
-              child: Container(
-                width: 300,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).cardColor,
-                  border: Border.all(width: 0.3 , color: Theme.of(context).colorScheme.onError)
-                ),
-                padding: const EdgeInsets.all(7),
-                child: Column(
+    return  MediaQuery(
+            data: MediaQuery.of(context).copyWith(textScaleFactor:
+             MediaQuery.of(context).size.aspectRatio>1?1: 0.80),
+      child: Padding(
+        padding: const EdgeInsets.only(left:18,top:10),
+        child: ListView(
+          // mainAxisAlignment: MainAxisAlignment.start,
+          // crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+                padding: const EdgeInsets.only(top:8.0,left:15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                     Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text( Human().chain.nativeSymbol.toString() +" spent: "+ cf.weiToEth( widget.human.nativeSpent)),
-                           Text( "USDT spent: "+widget.human.usdtSpent.toString())
-                        ],),
-                    ),
-                      Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text( Human().chain.nativeSymbol.toString() +" earned: "+cf.weiToEth( widget.human.nativeEarned)),
-                          Text( "USDT earned: "+widget.human.usdtEarned.toString())
-                        ],),
-                    ),
+                    FutureBuilder<Uint8List>(
+                        future: generateAvatarAsync(hashString(widget.human.address)),  // Make your generateAvatar function return Future<Uint8List>
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return Container(
+                              width: 40.0,
+                              height: 40.0,
+                              color: Colors.grey,
+                            );
+                          } else if (snapshot.hasData) {
+                            return Image.memory(snapshot.data!);
+                          } else {
+                            return Container(
+                              width: 40.0,
+                              height: 40.0,
+                              color: Colors.red,  // Error color
+                            );
+                          }
+                        },
+                      ),
+                    const SizedBox(width: 10),
+                    Text(
+                      MediaQuery.of(context).size.aspectRatio<1?
+                      getShortAddress(widget.human.address):widget.human.address, style: const TextStyle(fontSize: 13),),
+                    const SizedBox(width: 10),
+                    TextButton(onPressed: (){
+                      copied(context, widget.human.address);
+                    }, child: const Icon(Icons.copy))
                   ],
                 ),
               ),
-            ),
-          const SizedBox(height: 39),
-          SizedBox(
-            // height: MediaQuery.of(context).size.height-400,
-            width: 450,
-          child: DefaultTabController(
-            length: 3, 
-            initialIndex: 0,
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height-400,
-              width: 450,
-              child: Column(
-                children: [
-                  Container(
-                    height: 50,
-                    width: 400,
-                    alignment: Alignment.center,
-                    child:  TabBar(
-                      labelColor: Theme.of(context).textTheme.bodyLarge!.color,
-                      tabs: [Tab(text:"ABOUT"),Tab(text:"INVOLVEMENTS"),Tab(text:"ACTIVITY")]),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: 300,
+                child: Container(
+                  width: 300,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
+                    border: Border.all(width: 0.3 , color: Theme.of(context).colorScheme.onError)
                   ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height-450,
-                    child: TabBarView(children: [
-                      Column(children: [
-                        const SizedBox(height: 40),
-                        Text(widget.human.name??"(no alias set)", style:GoogleFonts.lato(
-                          color: Theme.of(context).indicatorColor,
-                          fontSize: 20)),
-                        const SizedBox(height: 10),
-                        OldSchoolLink(
-                            text: widget.human.link ?? "no link",
-                            url: widget.human.link ?? "no link",
-                          ),
-                        const SizedBox(height: 15),
-                        Text("Last seen: ${widget.human.lastActive}", style: const TextStyle(fontSize: 13),),
-                        const SizedBox(height: 40),
-                        !(widget.human.about==null)?
-                         SizedBox(
-                          width: 390,
-                          child:Text(widget.human.about!),
-                        ):SizedBox(
-                          width: 390,
-                          height: MediaQuery.of(context).size.height/2 - 300,
-                          child: const Center(child: 
-                          Opacity(
-                            opacity: 0.3,
-                            child: Text("No description provided",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize:24),
-                            ),
-                          )),
-                        ),
-                      ],),  
-                      SizedBox(
-                        child: Column(
+                  padding: const EdgeInsets.all(7),
+                  child: Column(
+                    children: [
+                       Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            const SizedBox(height: 30),
-                                  Padding(
-                                    padding:  const EdgeInsets.only(left:38.0),
-                                    child: Row(
-                                      children: const [
-                                        SizedBox(width: 50),
-                                        Text("Project"),
-                                        Spacer(),
-                                        Text("Stakeholder Type"),
-                                        SizedBox(width: 50)
-                                      ],
-                                    ),
-                                  ),
-                                  const Divider(),
-                                  ...involvements
-                          ],
-                        ),
+                            Text( Human().chain.nativeSymbol.toString() +" spent: "+ cf.weiToEth( widget.human.nativeSpent)),
+                             Text( "USDT spent: "+widget.human.usdtSpent.toString())
+                          ],),
                       ),
-                     ListView(children: activity),
-                    
-                    ]),
-                  )
-                ],
+                        Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text( Human().chain.nativeSymbol.toString() +" earned: "+cf.weiToEth( widget.human.nativeEarned)),
+                            Text( "USDT earned: "+widget.human.usdtEarned.toString())
+                          ],),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            )
-          ),
-         ),
-       
-          // Text("orice frate, orice")
-              ],)
-           
+            const SizedBox(height: 39),
+            SizedBox(
+              // height: MediaQuery.of(context).size.height-400,
+              width: 450,
+            child: DefaultTabController(
+              length: 3, 
+              initialIndex: 0,
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height-400,
+                width: 450,
+                child: Column(
+                  children: [
+                    Container(
+                      height: 50,
+                      width: 400,
+                      alignment: Alignment.center,
+                      child:  TabBar(
+                        labelColor: Theme.of(context).textTheme.bodyLarge!.color,
+                        tabs: [Tab(text:"ABOUT"),Tab(text:"INVOLVEMENTS"),Tab(text:"ACTIVITY")]),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height-450,
+                      child: TabBarView(children: [
+                        Column(children: [
+                          const SizedBox(height: 40),
+                          Text(widget.human.name??"(no alias set)", style:GoogleFonts.lato(
+                            color: Theme.of(context).indicatorColor,
+                            fontSize: 20)),
+                          const SizedBox(height: 10),
+                          OldSchoolLink(
+                              text: widget.human.link ?? "no link",
+                              url: widget.human.link ?? "no link",
+                            ),
+                          const SizedBox(height: 15),
+                          Text("Last seen: ${widget.human.lastActive}", style: const TextStyle(fontSize: 13),),
+                          const SizedBox(height: 40),
+                          !(widget.human.about==null)?
+                           SizedBox(
+                            width: 390,
+                            child:Text(widget.human.about!),
+                          ):SizedBox(
+                            width: 390,
+                            height: MediaQuery.of(context).size.height/2 - 300,
+                            child: const Center(child: 
+                            Opacity(
+                              opacity: 0.3,
+                              child: Text("No description provided",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize:24),
+                              ),
+                            )),
+                          ),
+                        ],),  
+                        SizedBox(
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 30),
+                                    Padding(
+                                      padding:  const EdgeInsets.only(left:38.0),
+                                      child: Row(
+                                        children:  [
+                                         SizedBox(width:  MediaQuery.of(context).size.aspectRatio>1? 50 : 3),
+                                          Text("Project"),
+                                          Spacer(),
+                                          Text("Stakeholder Type"),
+                                          SizedBox(width: 50)
+                                        ],
+                                      ),
+                                    ),
+                                    const Divider(),
+                                    ...involvements
+                            ],
+                          ),
+                        ),
+                       ListView(children: activity),
+                      
+                      ]),
+                    )
+                  ],
+                ),
+              )
+            ),
+           ),
+         
+            // Text("orice frate, orice")
+                ],)
+             
+      ),
     );
   }
 }

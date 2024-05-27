@@ -25,17 +25,19 @@ class Users extends StatefulWidget {
 }
  
 class _UsersState extends State<Users> {
-    @override
-  void initState() {
   
- 
- 
-  }
   int _selectedCardIndex = -1;
 
   @override
   Widget build(BuildContext context) {
-    widget.userCards=[];
+    if (widget._selectedOption=="Top Arbiters"){
+  users.sort((a, b) => b.projectsArbitrated.length.compareTo(a.projectsArbitrated.length));
+  }else if(widget._selectedOption=="Top Contractors"){
+  users.sort((a, b) => b.projectsContracted.length.compareTo(a. projectsContracted.length));
+  }else{
+  users.sort((a, b) => b.projectsBacked.length.compareTo(a.projectsBacked.length));
+  }
+    widget.userCards.clear();
   for (int i = 0; i < 12 && i < users.length; i++) {
     if (
         users[i].address.toLowerCase().contains(widget.query)
@@ -46,15 +48,8 @@ class _UsersState extends State<Users> {
       widget.userCards.add(users[i].getCard());
     }
   }
-  if (widget._selectedOption=="Top Arbiters"){
-  widget.userCards.sort((a, b) => b.user.projectsArbitrated.length.compareTo(a.user.projectsArbitrated.length));
-  }else if(widget._selectedOption=="Top Contractors"){
-  widget.userCards.sort((a, b) => b.user.projectsContracted.length.compareTo(a.user. projectsContracted.length));
-  }else{
-  widget.userCards.sort((a, b) => b.user.projectsBacked.length.compareTo(a.user.projectsBacked.length));
-  }
-    return 
-      MediaQuery.of(context).size.aspectRatio>1?wide():tall();
+  
+return   MediaQuery.of(context).size.aspectRatio>1?wide():tall();
           }
   Widget selectAnItem(){
     return Column(
@@ -190,16 +185,17 @@ class _UsersState extends State<Users> {
                                 Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const [
+                                children: [
                                   Padding(
                                     padding: EdgeInsets.only(left:24.0),
                                     child: Text("Addressss"),
                                   ),
                                   Text("            Involvements"),
+                                  MediaQuery.of(context).size.aspectRatio>1?
                                   Padding(
                                     padding: EdgeInsets.only(right:14),
                                     child: Text("   Last Active"),
-                                  ),
+                                  ):Text(""),
                                 ],
                               ),
                                 ...widget.userCards.asMap().entries.map((entry) {
@@ -210,9 +206,6 @@ class _UsersState extends State<Users> {
                             setState(() {
                               _selectedCardIndex = index;
                             });
-                      
-                            
-                         
                               },
                               child: Container(
                             decoration: BoxDecoration(
@@ -249,7 +242,7 @@ class _UsersState extends State<Users> {
   }
   tall(){
     return   MediaQuery(
-            data: MediaQuery.of(context).copyWith(textScaleFactor: 0.88),
+            data: MediaQuery.of(context).copyWith(textScaleFactor: 0.80),
       child: Container(
             alignment: Alignment.topCenter,
             height: MediaQuery.of(context).size.height-65,
@@ -316,7 +309,7 @@ class _UsersState extends State<Users> {
             },
           ),
           const Text('Top Contractors'),
-          SizedBox(width: 50),
+          SizedBox(width: 20),
           Radio<String>(
             value: 'Top Arbiters',
             groupValue: widget._selectedOption,
@@ -328,7 +321,7 @@ class _UsersState extends State<Users> {
             },
           ),
           const Text('Top Arbiters'),
-          SizedBox(width: 50),
+          SizedBox(width: 20),
           Radio<String>(
             value: 'Top Backers',
             groupValue: widget._selectedOption,
@@ -357,18 +350,15 @@ class _UsersState extends State<Users> {
                           child: Column(
                             children: [
                               Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: const [
                                 Padding(
                                   padding: EdgeInsets.only(left:24.0),
-                                  child: Text("Addressss"),
+                                  child: Text("Addressss      "),
                                 ),
-                                Text("            Involvements"),
-                                Padding(
-                                  padding: EdgeInsets.only(right:14),
-                                  child: Text("   Last Active"),
-                                ),
+                                Text("Involvements"),
+                               
                               ],
                             ),
                               ...widget.userCards.asMap().entries.map((entry) {

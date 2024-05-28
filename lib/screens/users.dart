@@ -38,7 +38,7 @@ class _UsersState extends State<Users> {
   users.sort((a, b) => b.projectsBacked.length.compareTo(a.projectsBacked.length));
   }
     widget.userCards.clear();
-  for (int i = 0; i < 12 && i < users.length; i++) {
+  for (int i = 0;  i < users.length; i++) {
     if (
         users[i].address.toLowerCase().contains(widget.query)
           ||
@@ -69,7 +69,7 @@ return   MediaQuery.of(context).size.aspectRatio>1?wide():tall();
   wide(){
     return  Container(
           alignment: Alignment.topCenter,
-          height: MediaQuery.of(context).size.height-65,
+          // height: MediaQuery.of(context).size.height-65,
           child: ListView( // Start of ListView
             shrinkWrap: true,
             children: [
@@ -179,47 +179,46 @@ return   MediaQuery.of(context).size.aspectRatio>1?wide():tall();
                         SizedBox(
                           height: MediaQuery.of(context).size.height-180,
                           width: 500,
-                          child: SingleChildScrollView(
-                            child: Column(
+                          child: ListView(
+                            shrinkWrap: true,
+                            children: [
+                              Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(left:24.0),
-                                    child: Text("Addressss"),
-                                  ),
-                                  Text("            Involvements"),
-                                  MediaQuery.of(context).size.aspectRatio>1?
-                                  Padding(
-                                    padding: EdgeInsets.only(right:14),
-                                    child: Text("   Last Active"),
-                                  ):Text(""),
-                                ],
-                              ),
-                                ...widget.userCards.asMap().entries.map((entry) {
-                            var index = entry.key;
-                            var userCard = entry.value;
-                            return InkWell(
-                              onTap: () {
-                            setState(() {
-                              _selectedCardIndex = index;
-                            });
-                              },
-                              child: Container(
-                            decoration: BoxDecoration(
-                              border: _selectedCardIndex == index
-                                  ? Border.all(color:Theme.of(context).indicatorColor)
-                                  : null,
+                                Padding(
+                                  padding: EdgeInsets.only(left:24.0),
+                                  child: Text("Addressss"),
+                                ),
+                                Text("            Involvements"),
+                                
+                                Padding(
+                                  padding: EdgeInsets.only(right:14),
+                                  child: Text("   Last Active"),
+                                )
+                              ],
                             ),
-                            child: userCard,
-                              ),
-                            );
-                              }).toList(),
-                                 ],
-                               ),
+                              ...widget.userCards.asMap().entries.map((entry) {
+                          var index = entry.key;
+                          var userCard = entry.value;
+                          return InkWell(
+                            onTap: () {
+                          setState(() {
+                            _selectedCardIndex = index;
+                          });
+                            },
+                            child: Container(
+                          decoration: BoxDecoration(
+                            border: _selectedCardIndex == index
+                                ? Border.all(color:Theme.of(context).indicatorColor)
+                                : null,
                           ),
+                          child: userCard,
+                            ),
+                          );
+                            }).toList(),
+                               ],
+                             ),
                         ),
                           Expanded(
                             child: Container(

@@ -136,8 +136,9 @@ String drawingLayer2="";
           projectsAuthored:  List<String>.from(author)
           )
         );
+        
       }
-
+    
       for(var doc in transactionsSnapshot.docs){ 
         actions.add(TTransaction(
           hash:doc.id.toString(),
@@ -178,7 +179,7 @@ String drawingLayer2="";
     projects.add(p);
     // p.contributions.forEach((key, value) { valueInContracts+=value;});
   }
-
+    // await createUsers(); 
   // if (projects.length>0) {await createUsers();}
   //   print("greater than zero adding MockTransactions");
   //   var punem= actions.length;
@@ -468,17 +469,13 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                     const SizedBox(width: 8),
                     Text("USERS", style: widget.isUsers?selectedMenuItem:nonSelectedMenuItem)
                   ],),
-                            )
-                            ),
+                    )
+                ),
                 ),
               ), 
           ];
           var human = Provider.of<Human>(context);
           final double scaleFactor = MediaQuery.of(context).size.width * MediaQuery.of(context).size.height < 1600000 ? 0.8 : 1.0;
-         
-        // final double scaleFactor = MediaQuery.of(context).size.width * MediaQuery.of(context).size.height < 1400000 ? 0.8 : 1.0;
-          
-          // Apply scale factor to the entire Scaffold
           return Scaffold(
             key:widget._scaffoldKey,
             endDrawer: Drawer(

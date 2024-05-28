@@ -9,7 +9,7 @@ List<TTransaction> mockTansactions=[];
 
 
 createUsers(){
-  for (int i = 0; i < 20; i++) {
+  for (int i = 0; i < 120; i++) {
     String address = generateWalletAddress();
       User user=User(address: address, nativeEarned: Random().nextInt(15400).toString(),
        usdtSpent: Random().nextInt(15400).toString(), 

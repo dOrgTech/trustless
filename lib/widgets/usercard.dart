@@ -8,6 +8,7 @@ import '../utils/reusable.dart';
 import 'membersList.dart';
 
 class UserCard extends StatelessWidget {
+  String get userId => user.address;
   UserCard({super.key, required this.user});
   User user;
 

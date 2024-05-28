@@ -62,13 +62,13 @@ contract NativeProject {
     // state variables
     Economy public economy;
     uint public coolingOffPeriodEnds;
+    uint public disputeStarted;
     string public name;
     address public author;
     address public contractor;
     address public arbiter;
     string public termsHash;
     string public repo;
-    bool reimbursement;
     address[] public backers;
     mapping (address => uint) public contributors;
     mapping (address => uint) public contributorsReleasing;
@@ -132,7 +132,15 @@ contract NativeProject {
             "}"
         ));
     }
-
+ 
+    function arbitrationPeriodExpired() public payable {
+        require(keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("dispute"))
+        &&
+        disputeStarted + 150 days > block.timestamp, 
+        "This can only be called if the arbiter doesn't rule within 150 days after dispute started");
+        stage = "closed";
+        emit ProjectClosed(msg.sender);
+    }
    
     event SetParties(address _contractor, address _arbiter, string _termsHash);
     function setParties(address _contractor, address _arbiter, string memory _termsHash) public payable{
@@ -298,6 +306,7 @@ contract NativeProject {
         require(msg.sender == contractor, "Only the designated Contractor can call this function");
         require(keccak256(abi.encodePacked(stage)) == keccak256(abi.encodePacked("ongoing")), "This can only be called while the project is ongoing");
         stage = "dispute";
+        disputeStarted = block.timestamp;
         emit ProjectDisputed(msg.sender);
     }
 

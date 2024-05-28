@@ -29,7 +29,7 @@ class Human extends ChangeNotifier{
     _navigatorKey.currentState?.pushNamed("/");
   }
   bool busy=false;
-  bool beta=false;
+  bool beta=true;
   bool wrongChain=false;
   String session_id=generateWalletAddress();
   int chainID=5;

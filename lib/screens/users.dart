@@ -176,10 +176,13 @@ return   MediaQuery.of(context).size.aspectRatio>1?wide():tall();
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        
                         SizedBox(
                           height: MediaQuery.of(context).size.height-180,
                           width: 500,
-                          child: ListView(
+                          child: 
+                          widget.userCards.length>0?
+                          ListView(
                             shrinkWrap: true,
                             children: [
                               Row(
@@ -198,14 +201,15 @@ return   MediaQuery.of(context).size.aspectRatio>1?wide():tall();
                                 )
                               ],
                             ),
-                              ...widget.userCards.asMap().entries.map((entry) {
+                            
+                          ...widget.userCards.asMap().entries.map((entry) {
                           var index = entry.key;
                           var userCard = entry.value;
                           return InkWell(
                             onTap: () {
-                          setState(() {
-                            _selectedCardIndex = index;
-                          });
+                            setState(() {
+                              _selectedCardIndex = index;
+                            });
                             },
                             child: Container(
                           decoration: BoxDecoration(
@@ -218,18 +222,21 @@ return   MediaQuery.of(context).size.aspectRatio>1?wide():tall();
                           );
                             }).toList(),
                                ],
-                             ),
+                             ):Text(""),
                         ),
+                          widget.userCards.length>1?
                           Expanded(
                             child: Container(
                               padding: const EdgeInsets.all(14),
                               child:
-                              _selectedCardIndex==-1?
+                            _selectedCardIndex==-1?
                             
                              selectAnItem():
                               UserDetails( human: users[_selectedCardIndex])
                             ),
-                          ),
+                          ):Expanded(child: Container(
+                              padding: const EdgeInsets.all(14),
+                              child: UserDetails(human: widget.userCards[0].user)))
                         ],
                       ),
                     )

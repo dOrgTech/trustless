@@ -136,6 +136,7 @@ String drawingLayer2="";
           projectsAuthored:  List<String>.from(author)
           )
         );
+        // Human().chainNativeEarnings=Human().chainNativeEarnings+doc.data()['usdtEarned'];
         
       }
     

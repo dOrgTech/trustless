@@ -122,18 +122,24 @@ String drawingLayer2="";
         List<dynamic> author= doc.data()['projectsAuthored'];
         List<dynamic> backer= doc.data()['projectsBacked'];
         users.add(
-          User(address: doc.id.toString(), nativeEarned: doc.data()['nativeEarned'],
-          nativeSpent: doc.data()['nativeSpent'],
-          usdtEarned: doc.data()['usdtEarned'],
-          usdtSpent: doc.data()['usdtSpent'],
-          lastActive: (doc.data()['lastActive'] as Timestamp).toDate(),
-          projectsContracted: List<String>.from(contractor), 
-          projectsArbitrated:  List<String>.from(arbiter),  
-          projectsBacked:  List<String>.from(backer),
-          name:doc.data()['name'],
-          link:doc.data()['link'],
-          about:doc.data()['about'],
-          projectsAuthored:  List<String>.from(author)
+          User(
+            address: doc.id.toString(), 
+            nativeEarned: doc.data()['nativeEarned'].toString(),
+            nativeSpent: doc.data()['nativeSpent'].toString(),
+            usdtEarned: doc.data()['usdtEarned'].toString(),
+            usdtSpent: doc.data()['usdtSpent'].toString(),
+            // nativeEarned: "0",
+            // nativeSpent: "0",
+            // usdtEarned: "0",
+            // usdtSpent: "0",
+            lastActive: (doc.data()['lastActive'] as Timestamp).toDate(),
+            projectsContracted: List<String>.from(contractor), 
+            projectsArbitrated:  List<String>.from(arbiter),  
+            projectsBacked:  List<String>.from(backer),
+            name:doc.data()['name'],
+            link:doc.data()['link'],
+            about:doc.data()['about'],
+            projectsAuthored:  List<String>.from(author)
           )
         );
         // Human().chainNativeEarnings=Human().chainNativeEarnings+doc.data()['usdtEarned'];

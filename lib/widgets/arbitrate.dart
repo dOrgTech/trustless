@@ -13,7 +13,6 @@ import '../main.dart';
 
 
 const String escape = '\uE00C';
-
 class Arbitrate extends StatefulWidget {
   final Project project;
   String stage="main";
@@ -36,7 +35,7 @@ class _ArbitrateState extends State<Arbitrate> {
     super.dispose();
   }
   int percentage=0;
-   String _hash = '';
+  String _hash = '';
   String _fileName = '';
     Future<void> _pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
@@ -88,13 +87,10 @@ BigInt calculateAwardToBackers(String holding, double sliderValue) {
 }
 
 Widget stage0(){
-    
     BigInt onePercent = ((BigInt.parse( widget.project.holding) - BigInt.parse("1000000000000000000")) ~/ BigInt.from(100)) ;
-    
     BigInt awardToBackers = calculateAwardToBackers(widget.project.holding, _sliderValue);
     // : 
     // (int.parse( widget.project.holding)  - BigInt.parse("1000000000000000000")) - (double.tryParse(_awardToContractorController.text) ?? 0);
-    
     BigInt awardToContractor = ((BigInt.parse( widget.project.holding) - BigInt.parse("1000000000000000000")) - awardToBackers) ;
     return 
   //   ! (Human().address==widget.project.arbiter) ? 
@@ -317,7 +313,7 @@ Widget stage0(){
                                 newEarned=value;
                                 if (BigInt.parse(newEarned) > BigInt.parse( oldEarned) ){
                                   print("avem diferente");
-                                   Human().user!.nativeEarned=newEarned;
+                                   Human().user!.nativeEarned=newEarned.toString();
                                   usersCollection.doc(widget.project.arbiter).set(Human().user!.toJson());}
                               });
                         }catch (Exception) 

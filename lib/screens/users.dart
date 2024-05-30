@@ -201,7 +201,6 @@ return   MediaQuery.of(context).size.aspectRatio>1?wide():tall();
                                 )
                               ],
                             ),
-                            
                           ...widget.userCards.asMap().entries.map((entry) {
                           var index = entry.key;
                           var userCard = entry.value;
@@ -229,8 +228,7 @@ return   MediaQuery.of(context).size.aspectRatio>1?wide():tall();
                             child: Container(
                               padding: const EdgeInsets.all(14),
                               child:
-                            _selectedCardIndex==-1?
-                            
+                            _selectedCardIndex==-1?          
                              selectAnItem():
                               UserDetails( human: users[_selectedCardIndex])
                             ),

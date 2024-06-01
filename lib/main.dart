@@ -24,6 +24,7 @@ import 'package:trustless/widgets/setParty.dart';
 import 'package:trustless/widgets/wrongChain.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:web3dart/web3dart.dart';
+import 'check.dart';
 import 'entities/human.dart';
 import 'entities/project.dart';
 import 'entities/user.dart';
@@ -33,6 +34,7 @@ import 'package:provider/provider.dart';
 import 'dart:html';
 import 'dart:js' as js;
 import 'widgets/bubbles.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 
 class OverlayControlNavigatorObserver extends NavigatorObserver {
   @override
@@ -51,6 +53,7 @@ class OverlayControlNavigatorObserver extends NavigatorObserver {
    print("contracting or something");
   }
 }
+
 
 String? api;
 String metamask="https://i.ibb.co/HpmDHg0/metamask.png";
@@ -76,11 +79,15 @@ var usersCollection;
 String drawingLayer1="";
 String drawingLayer2="";
     void main() async  {
+      print("app check enabled");  
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+      final appCheck = FirebaseAppCheck.instance;
+      appCheck.activate(
+        webProvider: ReCaptchaV3Provider(appCheckToken),
+      );
       var apisnap= await systemCollection.doc("services").get();
       if (apisnap.exists){
-        
         api=apisnap.data()!['chat_api'];
         drawingLayer1=apisnap.data()!['imageLayer1'];
         drawingLayer2=apisnap.data()!['imageLayer2'];

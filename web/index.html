@@ -23,7 +23,7 @@
   <link rel="icon" type="image/png" sizes="16x16" href="https://i.ibb.co/Qv8F2KW/favicon-16x16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="https://i.ibb.co/Pr14TVT/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="https://i.ibb.co/pn2RBXj/Icon-192.png">
-
+  <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-app-check.js"></script>
   <script>
     window.addEventListener('flutterInAppWebviewPlatformReady', function(event) {
       window.flutter_inappwebview.callHandler('consoleLog').then(function() {
@@ -103,6 +103,12 @@
   
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
+    const appCheck = initializeAppCheck(app, {
+    provider: new ReCaptchaV3Provider('6LebUe4pAAAAAPhiX8vw4qeaS1AvbRIE3ytRcqn2'),
+    // Optional argument. If true, the SDK automatically refreshes App Check
+    // tokens as needed.
+    isTokenAutoRefreshEnabled: true
+  });
     const analytics = getAnalytics(app);
     const db = getFirestore(app);
   </script>

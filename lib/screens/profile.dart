@@ -9,7 +9,7 @@ import "../widgets/action.dart";
 
 
 class Profile extends StatefulWidget {
-   Profile({super.key});
+   Profile({ super.key});
    bool done=false;
    bool madeInvolvements=false;
    bool refreshing=false;

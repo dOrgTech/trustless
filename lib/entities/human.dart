@@ -18,6 +18,7 @@ var chains={
  "0xaa36a7": Chain(arbitrationFee: "1000000000000000000", id:11155111, name: "Sepolia", nativeSymbol: "sETH", decimals:18, rpcNode: "https://sepolia.infura.io/v3/1081d644fc4144b587a4f762846ceede", blockExplorer:"https://sepolia.etherscan.io"),
 //  "0x1f47b": Chain(id:128123, name: "Etherlink-Testnet",arbitrationFee: "1000000000000000000", nativeSymbol: "XTZ", decimals:18, rpcNode: "https://rpc.etherlink-testnet.tz.soap.coffee", blockExplorer:"https://testnet-explorer.etherlink.com"),
  "0x1f47b": Chain(id:128123, name: "Etherlink-Testnet",arbitrationFee: "1000000000000000000", nativeSymbol: "XTZ", decimals:18, rpcNode: "https://node.ghostnet.etherlink.com", blockExplorer:"https://testnet-explorer.etherlink.com"),
+ "0xa729": Chain(id:42793, name: "Etherlink",arbitrationFee: "1000000000000000000", nativeSymbol: "XTZ", decimals:18, rpcNode: "https://node.mainnet.etherlink.com", blockExplorer:"https://explorer.etherlink.com"),
 };
 
 class Human extends ChangeNotifier{

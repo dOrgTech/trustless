@@ -78,21 +78,48 @@ var transactionsCollection;
 var usersCollection;
 String drawingLayer1="";
 String drawingLayer2="";
+
+// Future<void> main() async {
+//  WidgetsFlutterBinding.ensureInitialized();
+//  await WidgetsFlutterBinding.ensureInitialized();
+//  await Firebase.initializeApp(options: DefaultFirebaseOptions.web);
+//   try {
+//   await FirebaseAppCheck.instance.activate(
+//   webProvider: ReCaptchaV3Provider(
+//     kWebRecaptchaSiteKey,
+//    ),
+//  );
+
+//  } catch (e) {
+//    print("Error with app check $e");
+//  }}
+
+
+
     void main() async  {
-      print("app check enabled");  
+      print("entered");  
       WidgetsFlutterBinding.ensureInitialized();
-      await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-      final appCheck = FirebaseAppCheck.instance;
-      appCheck.activate(
+      print("1");  
+      await Firebase.initializeApp(options: DefaultFirebaseOptions.web);
+      print("2");  
+      final appCheck =  FirebaseAppCheck.instance;
+      print("3");  
+      await appCheck.activate(
         webProvider: ReCaptchaV3Provider(appCheckToken),
       );
+      print("4");  
       var apisnap= await systemCollection.doc("services").get();
+      print("5");  
       if (apisnap.exists){
+      print("exists");  
         api=apisnap.data()!['chat_api'];
+      print("api");  
         drawingLayer1=apisnap.data()!['imageLayer1'];
+      print("layer1");  
         drawingLayer2=apisnap.data()!['imageLayer2'];
+      print("layer2");  
 
-      }else{print("could not find system collection;");}
+      // }else{print("could not find system collection;");}
      await persist();
        runApp(
     ChangeNotifierProvider<Human>(
@@ -100,7 +127,7 @@ String drawingLayer2="";
         child: MyApp(),
       ));
       }
-
+    }
 
   persist()async{
      users=[];projects=[];actions=[];

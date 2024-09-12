@@ -779,7 +779,7 @@ class _WalletBTNState extends State<WalletBTN> {
   // Light Theme
   final ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
-    canvasColor:const Color.fromARGB(255, 235, 235, 235),
+    canvasColor:Color.fromARGB(255, 145, 15, 15),
     primaryColor: const Color.fromARGB(255, 155, 155, 155), // Main background color
     accentColor: _lightThemeHighlightColor, // Primary accent/highlight color
     colorScheme:const  ColorScheme.light(

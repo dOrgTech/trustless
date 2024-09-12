@@ -103,12 +103,12 @@
   
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
-    const appCheck = initializeAppCheck(app, {
-    provider: new ReCaptchaV3Provider('6LebUe4pAAAAAPhiX8vw4qeaS1AvbRIE3ytRcqn2'),
-    // Optional argument. If true, the SDK automatically refreshes App Check
-    // tokens as needed.
-    isTokenAutoRefreshEnabled: true
-  });
+  //   const appCheck = initializeAppCheck(app, {
+  //   provider: new ReCaptchaV3Provider('6LebUe4pAAAAAPhiX8vw4qeaS1AvbRIE3ytRcqn2'),
+  //   // Optional argument. If true, the SDK automatically refreshes App Check
+  //   // tokens as needed.
+  //   isTokenAutoRefreshEnabled: true
+  // });
     const analytics = getAnalytics(app);
     const db = getFirestore(app);
   </script>

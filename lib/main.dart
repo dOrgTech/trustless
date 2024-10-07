@@ -24,7 +24,7 @@ import 'package:trustless/widgets/setParty.dart';
 import 'package:trustless/widgets/wrongChain.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:web3dart/web3dart.dart';
-import 'check.dart';
+// import 'package:trustless/check.dart';
 import 'entities/human.dart';
 import 'entities/project.dart';
 import 'entities/user.dart';
@@ -104,9 +104,9 @@ String drawingLayer2="";
       print("2");  
       final appCheck =  FirebaseAppCheck.instance;
       print("3");  
-      await appCheck.activate(
-        webProvider: ReCaptchaV3Provider(appCheckToken),
-      );
+      // await appCheck.activate(
+      //   webProvider: ReCaptchaV3Provider(appCheckToken),
+      // );
       print("4");  
       var apisnap= await systemCollection.doc("services").get();
       print("5");  

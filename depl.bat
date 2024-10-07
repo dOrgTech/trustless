@@ -42,8 +42,6 @@ CALL git commit -m "%~1"
 IF ERRORLEVEL 1 EXIT /B 1
 CALL git push -u origin master
 IF ERRORLEVEL 1 EXIT /B 1
-CALL git push -u dorg master
-IF ERRORLEVEL 1 EXIT /B 1
 EXIT /B 0
 
 REM A subroutine to perform flutter and firebase operations
